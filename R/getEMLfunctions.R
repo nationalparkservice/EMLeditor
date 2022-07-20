@@ -231,24 +231,24 @@ get.authorList<-function(emlObject){
 #' get.DOI(emlObject)
 get.DOI<-function(emlObject){
   #where EMLassemblyline stores DOIs.
-  doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
-
+  pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
+  if(is.null(pid)){
+    stop("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
+  }
   #if a DOI exists, report that it already exists and prompt to edit:
-  if(!is.null(doc)){
-    mylist<-NULL
-    if(length(doc)>1){
-      for(i in 1:length(names(doc))){
-        if(stringr::str_detect(doc[i], "doi:" )){
-          mylist<-append(mylist, doc[i])
-        }
+  mylist<-NULL
+  if(length(doc)>1){
+    for(i in 1:length(names(doc))){
+      if(stringr::str_detect(doc[i], "doi:" )){
+        mylist<-append(mylist, doc[i])
       }
     }
-    else{
-      mylist<-doc
-    }
-    doi<-mylist[[1]]
-    doi<-gsub('doi:', 'https://doi.org/', doi)
   }
+  else{
+    mylist<-doc
+  }
+  doi<-mylist[[1]]
+  doi<-gsub('doi:', 'https://doi.org/', doi)
 }
 
 #' returns the park unit connections
@@ -264,6 +264,9 @@ get.DOI<-function(emlObject){
 #' get.parkUnits(emlObject)
 get.parkUnits<-function(emlObject){
   units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")[[1]]
+  if(is.null(units)){
+    stop("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
+  }
   punits<-NULL
   for(i in 1:length(units)){
     if(stringr::str_detect(units[i], "NPS Unit Connections:")){
