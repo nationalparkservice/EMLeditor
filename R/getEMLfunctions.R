@@ -383,11 +383,18 @@ get.fileInfo<-function(emlObject){
 get.DRRdoi<-function(emlObject){
   doi<-arcticdatautils::eml_get_simple(emlObject, "useageCitation")
   if(is.null(doi)){
-    stop("You have not specified a DRR associated with this datapackage. To specify a DRR, use set.DRRdoi().")
+    warning("You have not specified a DRR associated with this datapackage. If you have an associated DRR, specify its DOI using set.DRRdoi().")
+    DRRdoi<-NA #to do: test whether NA needs quotes for write.README.
   }
-  for(i in 1:length(doi)){
-    if(stringr::str_detect(doi[i], "DRR: https://doi.org/")){
-      DRRdoi<-doi[i]
+  else{
+    DRRdoi<-NULL
+    for(i in 1:length(doi)){
+      if(stringr::str_detect(doi[i], "DRR: https://doi.org/")){
+        DRRdoi<-doi[i]
+      }
+      else{
+        warning("You have not specified a DRR associated with this datapackage. If you have an associated DRR, specify its DOI using set.DRRdoi().")
+      }
     }
   }
   return(DRRdoi)
