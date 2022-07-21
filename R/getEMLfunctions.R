@@ -277,18 +277,22 @@ get.DOI<-function(emlObject){
 #' @example
 #' get.parkUnits(emlObject)
 get.parkUnits<-function(emlObject){
-  units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")[[1]]
+  units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")#[[1]]
   if(is.null(units)){
-    stop("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
+    warning("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
+    punits<-NA #to do: test whether NA needs quotes for write.README.
   }
+  else{
   punits<-NULL
-  for(i in 1:length(units)){
-    if(stringr::str_detect(units[i], "NPS Unit Connections:")){
-      punits<-units[i]
+    for(i in 1:length(units)){
+      if(stringr::str_detect(units[i], "NPS Unit Connections:")){
+        punits<-units[i]
+      }
     }
-  }
-  if(is.null(punits)){
-    stop("Your EML does not appear to have NPS Unit Connections specified. Please use set.parkUnits() to add unit connections")
+    if(is.null(punits)){
+      warning("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
+      punits<-NA #to do: test whether NA needs quotes for write.README.
+    }
   }
   return(punits[[1]])
 }
