@@ -10,7 +10,14 @@
 #' @examples
 #' get.beginDate(emlObject)
 get.beginDate<-function(emlObject){
-  begin<-arcticdatautils::eml_get_simple(emlObject, "beginDate") %>% as.Date %>% format("%d %B %Y")
+  begin<-arcticdatautils::eml_get_simple(emlObject, "beginDate")
+  if(is.null(begin)){
+    warning("Your metadata lacks a begining date.")
+    begin<-NA #to do: test whether NA needs quotes for write.README.
+  }
+  else{
+  begin %>% as.Date %>% format("%d %B %Y")
+  }
 }
 
 #' returns the last date
@@ -25,7 +32,14 @@ get.beginDate<-function(emlObject){
 #' @examples
 #' get.endDate(emlObject)
 get.endDate<-function(emlObject){
-  begin<-arcticdatautils::eml_get_simple(emlObject, "endDate") %>% as.Date %>% format("%d %B %Y")
+  end<-arcticdatautils::eml_get_simple(emlObject, "endDate")
+  if(is.null(end)){
+    warning("Your metadata lacks an ending date.")
+    end<-NA #to do: test whether NA needs quotes for write.README.
+  }
+  else{
+  end %>% as.Date %>% format("%d %B %Y")
+  }
 }
 
 
