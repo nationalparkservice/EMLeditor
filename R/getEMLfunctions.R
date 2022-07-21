@@ -277,7 +277,7 @@ get.DOI<-function(emlObject){
 #' @example
 #' get.parkUnits(emlObject)
 get.parkUnits<-function(emlObject){
-  units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")#[[1]]
+  units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")
   if(is.null(units)){
     warning("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
     punits<-NA #to do: test whether NA needs quotes for write.README.
