@@ -141,7 +141,7 @@ get.DSRefID<-function(emlObject){
 get.citation<-function(emlObject){
   #assemble the pieces:
 
-  pid<-get.DOI(emlObject)
+  doi<-get.DOI(emlObject)
 
   authorList<-get.authorList(emlObject)
 
@@ -360,23 +360,29 @@ get.fileInfo<-function(emlObject){
   #get file names
   file.name<-arcticdatautils::eml_get_simple(emlObject, "objectName")
 
-  #get file sizes (assumes in bytes)
-  filesize<-arcticdatautils::eml_get_simple(emlObject, "size")
-  filesize<-suppressWarnings(as.numeric(filesize))
-  filebyte<-unique(filesize)
-  filebyte<-filebyte[!is.na(filebyte)]
-  readable<-gdata::humanReadable(filebyte, standard="Unix") %>%
-    paste0("B")
+  if(is.null(file.name)){
+    warning("you have not specified data file names, sizes, or descripions.")
+    print("NA")
+  }
+  else{
+    #get file sizes (assumes in bytes)
+    filesize<-arcticdatautils::eml_get_simple(emlObject, "size")
+    filesize<-suppressWarnings(as.numeric(filesize))
+    filebyte<-unique(filesize)
+    filebyte<-filebyte[!is.na(filebyte)]
+    readable<-gdata::humanReadable(filebyte, standard="Unix") %>%
+      paste0("B")
 
-  #get file descriptions
-  file.descript<-arcticdatautils::eml_get_simple(emlObject, "entityDescription")
+    #get file descriptions
+    file.descript<-arcticdatautils::eml_get_simple(emlObject, "entityDescription")
 
-  #generate dataframe for display:
-  dat<-data.frame(file.name, readable, file.descript)
-  colnames(dat)<-c("FileName", "Size", "Description")
+    #generate dataframe for display:
+    dat<-data.frame(file.name, readable, file.descript)
+    colnames(dat)<-c("FileName", "Size", "Description")
 
-  print("Current filenames and file descriptions:")
-  print(dat)
+    print("Current filenames and file descriptions:")
+    print(dat)
+  }
 }
 
 #' returns the DOI of the associated DRR
