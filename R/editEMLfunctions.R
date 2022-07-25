@@ -1,7 +1,7 @@
 #' Check & set a DOI
 #'
 #' @details
-#' This function checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI. If there is a DOI, the function alerts the users to this fact, reports the existing DOI, and suggests using a separate function to edit an existing DOI (edit.DOI()).
+#' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI. If there is a DOI, the function alerts the users to this fact, reports the existing DOI, and suggests using a separate function to edit an existing DOI (edit.DOI()).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DOI is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
