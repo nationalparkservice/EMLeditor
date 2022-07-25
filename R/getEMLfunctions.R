@@ -93,7 +93,7 @@ get.abstract<-function(emlObject){
 #' get.title(emlObject)
 get.title<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "title")[1]
-  if(is.nul(doc)){
+  if(is.null(doc)){
     doc<-NA
   }
   return(doc)
