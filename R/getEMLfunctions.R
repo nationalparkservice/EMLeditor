@@ -58,21 +58,23 @@ get.endDate<-function(emlObject){
 get.abstract<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
-    stop("Your EML lacks an abstract. Use set.abstract() to add one.")
+    warning("Your EML lacks an abstract. Use set.abstract() to add one.")
+    txt<-NA #to do: test whether NA needs quotes for write.README.
   }
-
-  Encoding(doc)<-"UTF-8" #helps with weird characters
-  txt<-NULL
-  for(i in 1:length(doc)){
-    if(nchar(doc[i])>0){
-      mypara <- gsub("[\r?\n|\r]", "", doc[i]) #get rid of line breaks and carriage returns
-      mypara <- gsub("&#13;", " ", mypara) #get rid of carriage symbols
-      mypara <- gsub("&amp;#13;", ". ", mypara)
-      mypara <- gsub("<literalLayout>", "", mypara) #get rid of literalLayout tag
-      mypara <- gsub("<para>", "", mypara) #get rid of para tag
-      mypara <- gsub("</para>", "", mypara) #get rid of close para tag
-      mypara <- gsub("</literalLayout>", "", mypara) #get rid of close par tag
-      txt<-paste(txt, mypara, sep="\n\n\t")
+  else{
+    Encoding(doc)<-"UTF-8" #helps with weird characters
+    txt<-NULL
+    for(i in 1:length(doc)){
+      if(nchar(doc[i])>0){
+        mypara <- gsub("[\r?\n|\r]", "", doc[i]) #get rid of line breaks and carriage returns
+        mypara <- gsub("&#13;", " ", mypara) #get rid of carriage symbols
+        mypara <- gsub("&amp;#13;", ". ", mypara)
+        mypara <- gsub("<literalLayout>", "", mypara) #get rid of literalLayout tag
+        mypara <- gsub("<para>", "", mypara) #get rid of para tag
+        mypara <- gsub("</para>", "", mypara) #get rid of close para tag
+        mypara <- gsub("</literalLayout>", "", mypara) #get rid of close par tag
+        txt<-paste(txt, mypara, sep="\n\n\t")
+      }
     }
   }
   return(txt)
@@ -91,6 +93,10 @@ get.abstract<-function(emlObject){
 #' get.title(emlObject)
 get.title<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "title")[1]
+  if(is.nul(doc)){
+    doc<-NA
+  }
+  return(doc)
 }
 
 #' returns the DataStore Reference ID
@@ -107,14 +113,17 @@ get.title<-function(emlObject){
 get.DSRefID<-function(emlObject){
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
-    stop("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
+    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
+    RefID<-NA # to do: check write.readMe whether NA needs to be in quotes.
   }
-  for(i in 1:length(pid)){
-    if(stringr::str_detect(pid[i], "doi:10.")){
-      doi<-pid[i]
+  else{
+    for(i in 1:length(pid)){
+      if(stringr::str_detect(pid[i], "doi:10.")){
+        doi<-pid[i]
+      }
     }
+    RefID<-stringr::str_sub(doi, start=-7)
   }
-  RefID<-stringr::str_sub(doi, start=-7)
   return(RefID)
 }
 
@@ -247,22 +256,22 @@ get.DOI<-function(emlObject){
   #where EMLassemblyline stores DOIs.
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
-    stop("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
-  }
-  #if a DOI exists, report that it already exists and prompt to edit:
-  mylist<-NULL
-  if(length(doc)>1){
-    for(i in 1:length(names(doc))){
-      if(stringr::str_detect(doc[i], "doi:" )){
-        mylist<-append(mylist, doc[i])
-      }
-    }
+    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
+    doi<-NA #to do: does NA need to be in quotes for write.ReadMe?
   }
   else{
-    mylist<-doc
+    mylist<-NULL
+    if(length(pid)>=1){
+      for(i in 1:length(pid)){
+        if(stringr::str_detect(pid[i], "doi:" )){
+          mylist<-append(mylist, pid[i])
+        }
+      }
+    }
+    doi<-mylist[[1]]
+    doi<-gsub('doi:', 'https://doi.org/', doi)
   }
-  doi<-mylist[[1]]
-  doi<-gsub('doi:', 'https://doi.org/', doi)
+  return(doi)
 }
 
 #' returns the park unit connections
