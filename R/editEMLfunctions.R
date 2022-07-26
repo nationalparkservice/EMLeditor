@@ -1,7 +1,7 @@
 #' Check & set a DOI
 #'
 #' @details
-#' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI. If there is a DOI, the function alerts the users to this fact, reports the existing DOI, and suggests using a separate function to edit an existing DOI (edit.DOI()).
+#' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
@@ -14,19 +14,25 @@ set.DOI<-function(emlObject, DSref){
   #If there is no existing DOI, add a DOI to the metadata
   if(is.null(doc)){
     emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
+    doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
+    doc<-sub(".*? ", "", doc)
+    #print the new DOI to the screen:
+    cat("Your newly specified DOI is: ", doc)
   }
 
   #If there is a DOI, find the correct doi by searching for the text "doi: ".
   else{
     mylist<-NULL
-    #doc<-unlist(doc)
+
+    #hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
     if(length(doc)>1){
-      for(i in 1:length(names(doc))){
+      for(i in 1:length(doc)){
         if(stringr::str_detect(doc[i], "doi:" )){
           mylist<-append(mylist, doc[i])
         }
       }
     }
+    #if there is only one alternateIdentifier:
     else{
       mylist<-doc
     }
