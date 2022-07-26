@@ -387,7 +387,7 @@ get.fileInfo<-function(emlObject){
   file.name<-arcticdatautils::eml_get_simple(emlObject, "objectName")
 
   if(is.null(file.name)){
-    warning("you have not specified data file names, sizes, or descripions.")
+    warning("You have not specified data file names, sizes, or descripions. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undifined units will often cause this problem.")
     print("NA")
   }
   else{
@@ -424,7 +424,7 @@ get.fileInfo<-function(emlObject){
 get.DRRdoi<-function(emlObject){
   doi<-arcticdatautils::eml_get_simple(emlObject, "useageCitation")
   if(is.null(doi)){
-    warning("You have not specified a DRR associated with this datapackage. If you have an associated DRR, specify its DOI using set.DRRdoi().")
+    warning("You have not specified a DRR associated with this datapackage. If you have an associated DRR, specify its DOI using set.DRRdoi.")
     DRRdoi<-NA #to do: test whether NA needs quotes for write.README.
   }
   else{
@@ -432,9 +432,6 @@ get.DRRdoi<-function(emlObject){
     for(i in 1:length(doi)){
       if(stringr::str_detect(doi[i], "DRR: https://doi.org/")){
         DRRdoi<-doi[i]
-      }
-      else{
-        warning("You have not specified a DRR associated with this datapackage. If you have an associated DRR, specify its DOI using set.DRRdoi().")
       }
     }
   }
