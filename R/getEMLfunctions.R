@@ -290,7 +290,7 @@ get.DOI<-function(emlObject){
       }
     }
     doi<-mylist[[1]]
-    doi<-gsub('doi:', 'https://doi.org/', doi)
+    doi<-gsub('doi:', '', doi)
   }
   return(doi)
 }
