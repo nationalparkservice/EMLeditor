@@ -193,65 +193,69 @@ get.citation<-function(emlObject){
 get.authorList<-function(emlObject){
   #get author names & affiliations
   authors<-arcticdatautils::eml_get_simple(emlObject, "creator")
-  authors<-unlist(authors)
 
-  #extract givenName; should handle middle names too!
-  FirstName<-NULL
-  first<-NULL
-  for(i in 1:length(authors)){
-    if(stringr::str_detect(names(authors)[i], "givenName\\b")){
-      FirstName<-append(FirstName, authors[i][[1]])
-    }
-    else if(stringr::str_detect(names(authors)[i], "givenName1\\b")){
-      first_middle<-paste0(authors[i], " ", authors[i+1])
-      FirstName<-append(FirstName, first_middle)
-    }
-
-    if(length(first>0)){
-      first_middle<-paste0(first, " ", middle)
-      FirstName<-append(FirstName, first_middle)
-    }
+  #if no authors are specified (not really possible with EMLassemblyline)
+  if(is.null(authors)){
+    warning("No authors specified in the <creator> tag.")
+    Last.First<-NA
   }
 
-  #extract surName
-  LastName<-NULL
-  for(i in 1:length(authors)){
-    if(stringr::str_detect(names(authors)[i], "surName")){
-      LastName<-append(LastName, authors[i][[1]])
+  else{
+    authors<-unlist(authors)
+
+    #extract givenName; should handle middle names too!
+    FirstName<-NULL
+    first<-NULL
+    for(i in 1:length(authors)){
+      if(stringr::str_detect(names(authors)[i], "givenName\\b")){
+        FirstName<-append(FirstName, authors[i][[1]])
+      }
+      else if(stringr::str_detect(names(authors)[i], "givenName1\\b")){
+        first_middle<-paste0(authors[i], " ", authors[i+1])
+        FirstName<-append(FirstName, first_middle)
+      }
+      if(length(first>0)){
+        first_middle<-paste0(first, " ", middle)
+        FirstName<-append(FirstName, first_middle)
+      }
     }
-  }
 
-  #create a single object that is a string consisting of the ith author, formatted according to the Chicago manual of style, Journal article:
-
-  author<-NULL
-  Last.First<-NULL
-  if(length(LastName)>0){
-    #single author:
-    if(length(LastName)==1){
-      author<-paste0(LastName, ", ", FirstName, ".")
-      Last.First<-author
+    #extract surName
+    LastName<-NULL
+    for(i in 1:length(authors)){
+      if(stringr::str_detect(names(authors)[i], "surName")){
+        LastName<-append(LastName, authors[i][[1]])
+      }
     }
 
-    #multi-author:
-    else{
-      for(i in 1:length(LastName)){
-        if(i==1){
-        }
-        if(i>1 && i<length(LastName)){
-          author<-paste0(FirstName[i], " ", LastName[i])
-        }
-        if(i>1 && i==length(LastName)){
-          author<-paste0("and ", FirstName[i], " ", LastName[i], ".")
-        }
-        Last.First<-append(Last.First, author)
+    #create a single object that is a string consisting of the ith author, formatted according to the Chicago manual of style, Journal article:
+    author<-NULL
+    Last.First<-NULL
+    if(length(LastName)>0){
+      #single author:
+      if(length(LastName)==1){
+        author<-paste0(LastName, ", ", FirstName, ".")
+        Last.First<-author
       }
 
-      #make it a string, not a list:
-      Last.First<-toString(Last.First)
-    }
+    #multi-author:
+      else{
+        for(i in 1:length(LastName)){
+          if(i==1){
+          }
+          if(i>1 && i<length(LastName)){
+            author<-paste0(FirstName[i], " ", LastName[i])
+          }
+          if(i>1 && i==length(LastName)){
+            author<-paste0("and ", FirstName[i], " ", LastName[i], ".")
+          }
+          Last.First<-append(Last.First, author)
+        }
+        #make it a string, not a list:
+        Last.First<-toString(Last.First)
+      }
+   }
   }
-
-
 }
 
 #' returns the DOI
@@ -333,25 +337,30 @@ get.parkUnits<-function(emlObject){
 get.CUI<-function(emlObject){
   cui<-arcticdatautils::eml_get_simple(emlObject, "CUI")
   if(is.null(cui)){
-    stop("No CUI specified. Use the set.CUI() function to add a properly formatted CUI code.")
+    warning("No CUI specified. Use the set.CUI() function to add a properly formatted CUI code.")
+    cui<-"No CUI specified."
   }
-  if(cui=="FED ONLY"){
-    cui<-"Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)"
+  else if(cui=="FED ONLY"){
+    cui<-"Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)."
   }
-  if(cui=="FEDCON"){
-    cui<-"Contains CUI. Only federal employees and federal contractors should have access (also very much like current \"internal only\" setting in DataStore)"
+  else if(cui=="FEDCON"){
+    cui<-"Contains CUI. Only federal employees and federal contractors should have access (also very much like current \"internal only\" setting in DataStore)."
   }
-  if(cui=="DL ONLY"){
-    cui<-"Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)"
+  else if(cui=="DL ONLY"){
+    cui<-"Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)."
   }
-  if(cui=="NOCON"){
+  else if(cui=="NOCON"){
     cui<-"Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot."
   }
-  if(cui=="PUBVER"){
+  else if(cui=="PUBVER"){
     cui<-"Does NOT contain CUI. The original data contained CUI, but in this datapackage CUI have been obscured so that it no longer contains CUI."
   }
-  if(cui=="PUBFUL"){
+  else if(cui=="PUBFUL"){
     cui<-"Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
+  }
+  else{
+    warning("CUI not properly specified. User set.CUI to update the CUI code.")
+    cui<-NA
   }
   return(cui)
 }
