@@ -161,6 +161,19 @@ get.citation<-function(emlObject){
   #print(doi)
 
   #piece it together:
+  if(is.null(doi)){
+    warning("No doi specified. Please use set.DOI to add a DOI.")
+  }
+  if(is.null(authorList)){
+    warning("No authors listed. Please add authors as \"creator\" in EMLassemlbyline.")
+  }
+  if(is.null(title)){
+    warning("No title specified.")
+  }
+  if(is.null(pubDate)){
+    warning("No publication date specified.")
+  }
+
   data.Citation<-paste0(authorList, " ", pubYear, ". ", title, ". ", publisher, location, doi)
 
   return(data.Citation)
