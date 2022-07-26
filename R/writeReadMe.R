@@ -49,7 +49,11 @@ write.readMe<-function(emlObject, outfile){
 
   cat(paste0("End date: ", end), file=outfile, sep="\n", append=TRUE)
 
-  cat(units, file=outfile, sep="\n", append=TRUE)
+  if(!is.na(units)){
+  cat(units, file=outfile, sep="\n", append=TRUE)}
+  if(is.na(units)){
+    cat(paste0("Park Unit Connections: ", units), file=outfile, sep="\n", append=TRUE)
+  }
 
   cat(paste0("Sensitivity: ", CUI), file=outfile, sep="\n", append=TRUE)
 
