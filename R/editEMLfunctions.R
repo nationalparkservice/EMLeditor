@@ -4,13 +4,20 @@
 #' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI. If there is a DOI, the function alerts the users to this fact, reports the existing DOI, and suggests using a separate function to edit an existing DOI (edit.DOI()).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DOI is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
+#' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
 #' @returns an EML-formatted R object
 #' @export
-set.DOI<-function(emlObject, DOI){
+set.DOI<-function(emlObject, DSref){
+  #Look for an existing datapackage DOI:
   doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier") #where EMLassemblyline stores DOIs.
-  #if a DOI exists, report that it already exists and prompt to edit:
-  if(!is.null(doc)){
+
+  #If there is no existing DOI, add a DOI to the metadata
+  if(is.null(doc)){
+    emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
+  }
+
+  #If there is a DOI, find the correct doi by searching for the text "doi: ".
+  else{
     mylist<-NULL
     #doc<-unlist(doc)
     if(length(doc)>1){
@@ -24,11 +31,24 @@ set.DOI<-function(emlObject, DOI){
       mylist<-doc
     }
     doi<-mylist[[1]]
-    cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n",  doi, "\n\nIf this is correct, no further action is needed. To edit your existing DOI, run \'edit.DOI()\'")
-  }
-  #if there is no DOI, add it directly:
-  else{
-    emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DOI)
+
+    #If a DOI exists, ask the user what to do about it:
+    var1<-readline(prompt=cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n\n",  doi, "\n\nEnter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
+    #if User opts to retain DOI, retain it
+    if(var1==1){
+      #print the existing DOI to the screen:
+      doi<-sub(".*? ", "", doi)
+      cat("Your DOI remains: ", doi)
+    }
+    #if User opts to change DOI, change it:
+    if(var1==2){
+      emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
+      #get the new DOI:
+      doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
+      doc<-sub(".*? ", "", doc)
+      #print the new DOI to the screen:
+      cat("Your newly specified DOI is: ", doc)
+    }
   }
   return(emlObject)
 }
@@ -41,11 +61,11 @@ set.DOI<-function(emlObject, DOI){
 #' If a DOI already exists in the <alternateidentifier> tag (get.DOI() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DOI is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
+#' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
 #' @returns an EML-formatted R object
 #' @export
-edit.DOI<-function(emlObject, DOI){
-  emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DOI)
+edit.DOI<-function(emlObject, DSref){
+  emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
   return(emlObject)
 }
 
@@ -149,7 +169,7 @@ set.CUI<-function(emlObject, CUI){
 #' @examples
 #' set.DRRdoi(emlObject, "2293234")
 set.DRRdoi<-function(emlObject, DRRrefID){
-  doi<-paste0("DRR: https://doi.org/10.57830", DRRdoi)
+  doi<-paste0("DRR: https://doi.org/10.36967", DRRdoi)
   emlObject$dataset$useageCitation<-doi
   return(emlObject)
 }
