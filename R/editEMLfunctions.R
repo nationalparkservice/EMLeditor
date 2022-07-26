@@ -28,7 +28,7 @@ set.DOI<-function(emlObject, DOI){
   }
   #if there is no DOI, add it directly:
   else{
-    emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830", DOI)
+    emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DOI)
   }
   return(emlObject)
 }
@@ -45,7 +45,7 @@ set.DOI<-function(emlObject, DOI){
 #' @returns an EML-formatted R object
 #' @export
 edit.DOI<-function(emlObject, DOI){
-  emlObject$dataset$alternateIdentifier<-paste0("doi:", DOI)
+  emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DOI)
   return(emlObject)
 }
 
