@@ -4,7 +4,7 @@
 #' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
+#' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
 #' @returns an EML-formatted R object
 #' @export
 set.DOI<-function(emlObject, DSref){
@@ -177,5 +177,22 @@ set.CUI<-function(emlObject, CUI){
 set.DRRdoi<-function(emlObject, DRRrefID){
   doi<-paste0("DRR: https://doi.org/10.36967", DRRdoi)
   emlObject$dataset$useageCitation<-doi
+  return(emlObject)
+}
+
+#' adds an abstract
+#'
+#' @description set.abstract adds (or replaces) a simple abstract.
+#'
+#' @details adds an abstract for the data package in the <abstract> tag. Does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text adeotr such as notepad and make sure there are no stray charactgers. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#'
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
+#'returns an EML-formatted R object
+#' @export
+#' @examples
+#' set.abstract(emlObject "This is a very short abstract")
+set.abstract<-function(emlObject, abstract){
+  emlObject$eml$dataset$abstract<-paste0(abstract)
   return(emlObject)
 }
