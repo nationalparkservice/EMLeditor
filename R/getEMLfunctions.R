@@ -118,11 +118,15 @@ get.DSRefID<-function(emlObject){
   }
   else{
     for(i in 1:length(pid)){
-      if(stringr::str_detect(pid[i], "doi:10.")){
+      if(stringr::str_detect(pid[i], "doi: ")){
         doi<-pid[i]
       }
     }
     RefID<-stringr::str_sub(doi, start=-7)
+    if(suppressWarnings(is.na(as.numeric(RefID)))){
+      warning("Your DOI is not consistent with an NPS DOI. Use set.DOI to update your DOI.")
+      RefID<-NA
+    }
   }
   return(RefID)
 }
