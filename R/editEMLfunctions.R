@@ -184,7 +184,7 @@ set.DRRdoi<-function(emlObject, DRRrefID){
 #'
 #' @description set.abstract adds (or replaces) a simple abstract.
 #'
-#' @details adds an abstract for the data package in the <abstract> tag. Does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text adeotr such as notepad and make sure there are no stray charactgers. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set.abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
@@ -193,6 +193,27 @@ set.DRRdoi<-function(emlObject, DRRrefID){
 #' @examples
 #' set.abstract(emlObject "This is a very short abstract")
 set.abstract<-function(emlObject, abstract){
-  emlObject$eml$dataset$abstract<-paste0(abstract)
+  doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
+  if(is.null(doc)){
+    emlObject$eml$dataset$abstract<-paste0(abstract)
+    print("No previous abstract was detected. Your new abstract has been added. View the current abstract using get.abstract.")
+  }
+  else{
+    var1<-readline(prompt="Your EML already has an abstract. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+    #if User opts to retain DOI, retain it
+    if(var1==1){
+      #print the existing DOI to the screen:
+      emlObject$eml$dataset$abstract<-paste0(abstract)
+      print("You have replaced your abstract. View the current abstract using get.abstract.")
+    }
+    #if User opts to change DOI, change it:
+    if(var1==2){
+      print("Your original abstract was retained. View the current abstract using get.abstract.")
+    }
+  }
   return(emlObject)
 }
+
+
+
+
