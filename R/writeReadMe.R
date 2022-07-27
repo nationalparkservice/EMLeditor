@@ -36,7 +36,7 @@ write.readMe<-function(emlObject, outfile){
   DRRdoi<-get.DRRdoi(emlObject) #DOI of accompanying DRR
   citation<-get.citation(emlObject) #citation
 
-  #Write to the components to the textfile specified in "outfile".
+  #Write to the components to the text file specified in "outfile".
   cat(paste0("ReadMe file for DataStore reference# ", Ref), file=outfile, sep="\n")
 
   cat(paste0("Digital Object Identifier (DOI): ", doi, "\n"), file=outfile, sep="\n", append=TRUE)
@@ -73,7 +73,3 @@ write.readMe<-function(emlObject, outfile){
 
   cat(citation, file=outfile, sep="\n", append=TRUE)
 }
-
-###############################################################################
-####################### end write.readMe() ####################################
-###############################################################################
