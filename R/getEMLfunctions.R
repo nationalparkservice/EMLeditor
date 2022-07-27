@@ -1,6 +1,6 @@
 #' returns the first date
 #'
-#' @description get.beginDate returns the date of the earliest data point in the datapackage
+#' @description get.beginDate returns the date of the earliest data point in the data package
 #'
 #' @details returns the date from the <beginDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check for a few other common formats and return the date as a text string: "DD Month YYYY"
 #'
@@ -22,7 +22,7 @@ get.beginDate<-function(emlObject){
 
 #' returns the last date
 #'
-#' @description get.endDate returns the date of the last data point in the datapackage
+#' @description get.endDate returns the date of the last data point in the data package
 #'
 #' @details returns the date from the <endDate> tag. Although dates should be formatted accoriding to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"
 #'
@@ -80,11 +80,11 @@ get.abstract<-function(emlObject){
   return(txt)
 }
 
-#' returns the datapackage title
+#' returns the data package title
 #'
-#' @description returns a text string that is the title of the datapackage
+#' @description returns a text string that is the title of the data package
 #'
-#' @details accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire datapackage and returns it as a text string, ignoring the contents of all other <title> tags.
+#' @details accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire data package and returns it as a text string, ignoring the contents of all other <title> tags.
 #'
 #' #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
@@ -131,11 +131,11 @@ get.DSRefID<-function(emlObject){
   return(RefID)
 }
 
-#' returns the datapackage citation
+#' returns the data package citation
 #'
-#' @description returns a Chicago manual of style citation for the datapackage
+#' @description returns a Chicago manual of style citation for the data package
 #'
-#' @details allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or datapackages. In compliance wiht DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
+#' @details allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance wiht DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
 #'
 #' #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
@@ -264,7 +264,7 @@ get.authorList<-function(emlObject){
 
 #' returns the DOI
 #'
-#' @description returns a text string that is the DOI for the datapackage
+#' @description returns a text string that is the DOI for the data package
 #'
 #' @details accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
 #'
@@ -357,7 +357,7 @@ get.CUI<-function(emlObject){
     cui<-"Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot."
   }
   else if(cui=="PUBVER"){
-    cui<-"Does NOT contain CUI. The original data contained CUI, but in this datapackage CUI have been obscured so that it no longer contains CUI."
+    cui<-"Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
   }
   else if(cui=="PUBFUL"){
     cui<-"Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
@@ -424,7 +424,7 @@ get.fileInfo<-function(emlObject){
 get.DRRdoi<-function(emlObject){
   doi<-arcticdatautils::eml_get_simple(emlObject, "useageCitation")
   if(is.null(doi)){
-    warning("You have not specified a DRR associated with this datapackage. If you have an associated DRR, specify its DOI using set.DRRdoi.")
+    warning("You have not specified a DRR associated with this data package. If you have an associated DRR, specify its DOI using set.DRRdoi.")
     DRRdoi<-NA #to do: test whether NA needs quotes for write.README.
   }
   else{
