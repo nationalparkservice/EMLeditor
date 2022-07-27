@@ -1,14 +1,14 @@
 #' Check & set a DOI
 #'
 #' @details
-#' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
+#' This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
 #' @returns an EML-formatted R object
 #' @export
 set.DOI<-function(emlObject, DSref){
-  #Look for an existing datapackage DOI:
+  #Look for an existing data package DOI:
   doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier") #where EMLassemblyline stores DOIs.
 
   #If there is no existing DOI, add a DOI to the metadata
@@ -67,7 +67,7 @@ set.DOI<-function(emlObject, DSref){
 #' If a DOI already exists in the <alternateidentifier> tag (get.DOI() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.
+#' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and thedata package prefix - those will all automatically be added in by the function.
 #' @returns an EML-formatted R object
 #' @export
 edit.DOI<-function(emlObject, DSref){
@@ -141,7 +141,7 @@ set.parkUnits<-function(emlObject, ParkUnits){
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 #' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
-#' PUBVER - Does NOT contain CUI. The original data contained CUI, but in this datapackage CUI have been obscured so that it no longer contains CUI.
+#' PUBVER - Does NOT contain CUI. The original data contained CUI, but in thisdata package CUI have been obscured so that it no longer contains CUI.
 #' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package
 #' @returns an EML-formatted R object
 #' @export
@@ -169,7 +169,7 @@ set.CUI<-function(emlObject, CUI){
 #' @details adds uses the DataStore Reference ID for an associate DRR to the <useageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <useageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other useageCitation info.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DRRrefID a 7-digit string that is the DataStore Reference ID for the DRR associated with the datapackage.
+#' @param DRRrefID a 7-digit string that is the DataStore Reference ID for the DRR associated with thedata package.
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
@@ -184,7 +184,7 @@ set.DRRdoi<-function(emlObject, DRRrefID){
 #'
 #' @description set.abstract adds (or replaces) a simple abstract.
 #'
-#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set.abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set.abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characers. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
