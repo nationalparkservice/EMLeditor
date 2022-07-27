@@ -14,7 +14,7 @@ FED ONLY - Contains CUI. Only federal employees should have access (similar to "
 FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
-PUBVER - Does NOT contain CUI. The original data contained CUI, but in this datapackage CUI have been obscured so that it no longer contains CUI.
+PUBVER - Does NOT contain CUI. The original data contained CUI, but in thisdata package CUI have been obscured so that it no longer contains CUI.
 PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package}
 }
 \value{

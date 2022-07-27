@@ -2,7 +2,7 @@
 % Please edit documentation in R/getEMLfunctions.R
 \name{get.citation}
 \alias{get.citation}
-\title{returns the datapackage citation}
+\title{returns the data package citation}
 \usage{
 get.citation(emlObject)
 }
@@ -10,10 +10,10 @@ get.citation(emlObject)
 a text string
 }
 \description{
-returns a Chicago manual of style citation for the datapackage
+returns a Chicago manual of style citation for the data package
 }
 \details{
-allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or datapackages. In compliance wiht DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
+allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance wiht DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
 
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 }

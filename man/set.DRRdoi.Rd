@@ -9,7 +9,7 @@ set.DRRdoi(emlObject, DRRrefID)
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{DRRrefID}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the datapackage.}
+\item{DRRrefID}{a 7-digit string that is the DataStore Reference ID for the DRR associated with thedata package.}
 }
 \value{
 an EML-formatted R object

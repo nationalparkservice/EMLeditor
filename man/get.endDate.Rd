@@ -10,7 +10,7 @@ get.endDate(emlObject)
 a text sting
 }
 \description{
-get.endDate returns the date of the last data point in the datapackage
+get.endDate returns the date of the last data point in the data package
 }
 \details{
 returns the date from the <endDate> tag. Although dates should be formatted accoriding to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"

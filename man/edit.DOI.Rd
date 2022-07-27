@@ -4,12 +4,12 @@
 \alias{edit.DOI}
 \title{Force-edits an existing DOI}
 \usage{
-\method{edit}{DOI}(emlObject, DOI)
+\method{edit}{DOI}(emlObject, DSref)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{DOI}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.}
+\item{DSref}{is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and thedata package prefix - those will all automatically be added in by the function.}
 }
 \value{
 an EML-formatted R object

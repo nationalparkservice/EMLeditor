@@ -16,5 +16,5 @@ a text string
 get.DRRdoi returns a text string with the associated Data Release Report (DRR)'s DOI.
 }
 \details{
-get.DRRdoi accesses the <useageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contenst of that tag are returned. If the <useageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
+get.DRRdoi accesses the <useageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <useageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
 }

@@ -4,12 +4,12 @@
 \alias{set.DOI}
 \title{Check & set a DOI}
 \usage{
-set.DOI(emlObject, DOI)
+set.DOI(emlObject, DSref)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{DOI}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated. Don't worry about the https://wwww.doi.org and the datapackage prefix - those will all automatically be added in by the function.}
+\item{DSref}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.}
 }
 \value{
 an EML-formatted R object
@@ -18,5 +18,5 @@ an EML-formatted R object
 Check & set a DOI
 }
 \details{
-This function checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores datapackage DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI. If there is a DOI, the function alerts the users to this fact, reports the existing DOI, and suggests using a separate function to edit an existing DOI (edit.DOI()).
+This function  checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 }

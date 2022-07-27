@@ -13,7 +13,7 @@ get.DOI(emlObject)
 a text string
 }
 \description{
-returns a text string that is the DOI for the datapackage
+returns a text string that is the DOI for the data package
 }
 \details{
 accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.

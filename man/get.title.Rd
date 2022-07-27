@@ -2,7 +2,7 @@
 % Please edit documentation in R/getEMLfunctions.R
 \name{get.title}
 \alias{get.title}
-\title{returns the datapackage title}
+\title{returns the data package title}
 \usage{
 get.title(emlObject)
 }
@@ -10,10 +10,10 @@ get.title(emlObject)
 a text string
 }
 \description{
-returns a text string that is the title of the datapackage
+returns a text string that is the title of the data package
 }
 \details{
-accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire datapackage and returns it as a text string, ignoring the contents of all other <title> tags.
+accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire data package and returns it as a text string, ignoring the contents of all other <title> tags.
 
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 }
