@@ -437,3 +437,24 @@ get.DRRdoi<-function(emlObject){
   }
   return(DRRdoi)
 }
+
+
+#' Get literature cited
+#'
+#' @description get.lit prints bibtex fromated literature cited to the screen.
+#'
+#' @details get.lit currently only supports bibtex formated references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
+#'
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
+#' @return character string
+#' @export
+#'
+#' @examples lit<-get.lit(emLObject); writeLines(lit)
+#'
+get.lit<-function(emlObject){
+  lit<-EML::eml_get(emlObject, "literatureCited")
+  lit2<-lit$citation$bibtex
+  writeLines(lit2)
+  return(lit2)
+}
