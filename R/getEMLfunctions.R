@@ -453,8 +453,5 @@ get.DRRdoi<-function(emlObject){
 #' @examples lit<-get.lit(emLObject); writeLines(lit)
 #'
 get.lit<-function(emlObject){
-  lit<-EML::eml_get(emlObject, "literatureCited")
-  lit2<-lit$citation$bibtex
-  writeLines(lit2)
-  return(lit2)
+  lit<-eml_get_simple(emlObject, "literatureCited")
 }
