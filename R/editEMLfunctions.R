@@ -214,6 +214,45 @@ set.abstract<-function(emlObject, abstract){
   return(emlObject)
 }
 
+#' Edit literature cited
+#'
+#' @description set.lit is an interactive method for editing the literature cited sections.
+#'
+#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formated literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
+#' @param emlObject  is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @param bibtex is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
+#'
+#' @return an EML object
+#' @export
+#'
+#' @examples
+#' litcited2<-set.lit(emlObject, "bibfile.bib")
+set.lit<-function(emlObject, bibtex_file){
+  bibtex_citation<-readr::read_file(bibtex_file)
+  lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")
+  if(is.null(lit)){
+    emlObject$dataset$literatureCited$bibtex<-bibtex_citation
+  }
+  else{
+    var1<-readline(prompt="You have already specified literature cited. To view your current literature cited, use get.litCited. Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
+    if(var1==1){
+      print("No changes were made to literature cited.")
+    }
+    if(var1==2){
+      print("Your literature cited section has been replaced. To view your new literature cited use get.lit")
+      emlObject$dataset$literatureCited$bibtex<-bibtex_citation
+    }
+    if(var1==3){
+      bib2<-paste0(lit, "\n", bibtex_citation, sep="")
+      emlObject$dataset$literatureCited$bibtex<-bib2
+      print("You have added to your literature cited section. To view your new literature cited use get.lit")
+
+    }
+
+  }
+  return(emlObject)
+}
+
 
 
 
