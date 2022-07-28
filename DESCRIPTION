@@ -17,5 +17,6 @@ Depends:
     stringr,
     gdata,
     stargazer, 
-    lubridate
+    lubridate, 
+    reader
 Remotes: NCEAS/arcticdatautils
