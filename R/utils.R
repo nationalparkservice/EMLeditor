@@ -25,7 +25,7 @@ eml_getNPS<-function(...)EML::eml_get()
 #'
 #' @description injects static NPS-specific info into eml documents
 #'
-#' @details checks to see if it exists, and if not injects NPS-specific info into eml such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
+#' @details checks to see if it exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
 
 #' @param emlObject
 #'
@@ -50,9 +50,3 @@ set.NPSpublisher<-function(emlObject){
     }
   return(emlObject)
 }
-
-
-test$dataset$publisher<-list(organizationName = "NSF Arctic Data Center",
-     onlineUrl = "http://arcticdata.io",
-     userId = list(directory = "https://www.wikidata.org/", userId = "Q77285095"),
-     electronicMailAddress = "support@arcticdata.io")
