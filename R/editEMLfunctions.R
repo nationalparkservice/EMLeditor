@@ -5,9 +5,10 @@
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
-set.DOI<-function(emlObject, DSref){
+set.DOI<-function(emlObject, DSref, NPS=TRUE){
   #Look for an existing data package DOI:
   doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier") #where EMLassemblyline stores DOIs.
 
@@ -56,6 +57,12 @@ set.DOI<-function(emlObject, DSref){
       cat("Your newly specified DOI is: ", doc)
     }
   }
+
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
+
   return(emlObject)
 }
 
@@ -68,12 +75,20 @@ set.DOI<-function(emlObject, DSref){
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and thedata package prefix - those will all automatically be added in by the function.
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
-edit.DOI<-function(emlObject, DSref){
+edit.DOI<-function(emlObject, DSref, NPS=TRUE){
   emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
+
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
+
   return(emlObject)
-}
+
+  }
 
 
 # Add Park Unit Connections to metadata
@@ -87,12 +102,13 @@ edit.DOI<-function(emlObject, DSref){
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param ParkUnits a string of comma-separated park unit codes
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
 #' ParkUnits<-("ROMO, GRSD, TRYME")
 #' set.parkUnits(emlObject, ParkUnits)
-set.parkUnits<-function(emlObject, ParkUnits){
+set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   #get geographic coverage from emlObject
   doc<-EML::eml_get(emlObject, "geographicCoverage")
 
@@ -126,6 +142,12 @@ set.parkUnits<-function(emlObject, ParkUnits){
     #write over the existing geographic coverage
     emlObject$dataset$coverage$geographicCoverage<-mylist
   }
+
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
+
   return(emlObject)
 }
 
@@ -143,11 +165,12 @@ set.parkUnits<-function(emlObject, ParkUnits){
 #' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
 #' PUBVER - Does NOT contain CUI. The original data contained CUI, but in thisdata package CUI have been obscured so that it no longer contains CUI.
 #' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
 #' set.CUI(emlObject, "PUBFUL")
-set.CUI<-function(emlObject, CUI){
+set.CUI<-function(emlObject, CUI, NPS=TRUE){
   #add those random spaces in case people forget
   if(CUI=="FEDONLY"){
     CUI=="FED ONLY"
@@ -157,6 +180,12 @@ set.CUI<-function(emlObject, CUI){
   }
   #add CUI to EML
   emlObject$additionalMetadata$metadata$CUI<-CUI
+
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
+
   return(emlObject)
 }
 
@@ -169,14 +198,19 @@ set.CUI<-function(emlObject, CUI){
 #' @details adds uses the DataStore Reference ID for an associate DRR to the <useageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <useageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other useageCitation info.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DRRrefID a 7-digit string that is the DataStore Reference ID for the DRR associated with thedata package.
+#' @param DRRrefID a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
 #' set.DRRdoi(emlObject, "2293234")
-set.DRRdoi<-function(emlObject, DRRrefID){
+set.DRRdoi<-function(emlObject, DRRrefID, NPS=TRUE){
   doi<-paste0("DRR: https://doi.org/10.36967", DRRdoi)
   emlObject$dataset$useageCitation<-doi
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
   return(emlObject)
 }
 
@@ -188,11 +222,12 @@ set.DRRdoi<-function(emlObject, DRRrefID){
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
-#'returns an EML-formatted R object
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#' @returns an EML-formatted R object
 #' @export
 #' @examples
 #' set.abstract(emlObject "This is a very short abstract")
-set.abstract<-function(emlObject, abstract){
+set.abstract<-function(emlObject, abstract, NPS=TRUE){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
     emlObject$eml$dataset$abstract<-paste0(abstract)
@@ -211,6 +246,10 @@ set.abstract<-function(emlObject, abstract){
       print("Your original abstract was retained. View the current abstract using get.abstract.")
     }
   }
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
   return(emlObject)
 }
 
@@ -218,16 +257,16 @@ set.abstract<-function(emlObject, abstract){
 #'
 #' @description set.lit is an interactive method for editing the literature cited sections.
 #'
-#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formated literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
+#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
 #' @param emlObject  is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param bibtex is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
-#'
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @return an EML object
 #' @export
 #'
 #' @examples
 #' litcited2<-set.lit(emlObject, "bibfile.bib")
-set.lit<-function(emlObject, bibtex_file){
+set.lit<-function(emlObject, bibtex_file, NPS=TRUE){
   bibtex_citation<-readr::read_file(bibtex_file)
   lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")
   if(is.null(lit)){
@@ -248,11 +287,10 @@ set.lit<-function(emlObject, bibtex_file){
       print("You have added to your literature cited section. To view your new literature cited use get.lit")
 
     }
-
+  }
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
   }
   return(emlObject)
 }
-
-
-
-
