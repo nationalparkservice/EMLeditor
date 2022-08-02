@@ -19,3 +19,40 @@ eml_get_simpleNPS<-function(...)arcticdatautils::eml_get_simple()
 #' @param elment is the name of the element to be extracted. If multiple occurrences are found, will extract all.
 #' @export
 eml_getNPS<-function(...)EML::eml_get()
+
+
+#' inject NPS info into metadata
+#'
+#' @description injects static NPS-specific info into eml documents
+#'
+#' @details checks to see if it exists, and if not injects NPS-specific info into eml such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
+
+#' @param emlObject
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set.NPSpublisher<-function(emlObject){
+  #check for and isert publisher information:
+  publish<-arcticdatautils::eml_get_simple(emlObject, "publisher")
+    if(is.null(publish)){
+        emlObject$dataset$publisher <-list(organizationName = "U.S. National Park Service",
+                                      onlineUrl = "http://www.nps.gov",
+                                      userId = "https://ror.org/044zqqy65",
+                                      electronicMailAddress = "irma@nps.gov")
+        #note: oddly defaults to alphabetical order in .xml. Not sure why or how to stop this not sure it matters.
+        emlObject$dataset$publisher$address<-list(deliveryPoint = "1201 Oakridge Drive, Suite 150",
+                                                  city = "Fort Collins",
+                                                  administrativeArea = "CO",
+                                                  postalCode = "80525",
+                                                  country = "USA")
+    }
+  return(emlObject)
+}
+
+
+test$dataset$publisher<-list(organizationName = "NSF Arctic Data Center",
+     onlineUrl = "http://arcticdata.io",
+     userId = list(directory = "https://www.wikidata.org/", userId = "Q77285095"),
+     electronicMailAddress = "support@arcticdata.io")
