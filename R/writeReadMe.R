@@ -1,12 +1,3 @@
-
-
-#emlObject is an R object read in from a *.metadata.xml file formatted as EML using the EML::read_eml() function.
-#outfile is the name of the file you want to write to, in quotes. Typically, "ReadMe.txt"
-
-#example:
-#emldoc<-EML::read_eml("ReadMeTest.xml", from="xml")
-#write.readMe(emldoc, "ReadMe2.txt")
-
 #' Writes a README file
 #'
 #' @description write.readMe writes a readme file based on the current metadata
@@ -73,3 +64,4 @@ write.readMe<-function(emlObject, outfile){
 
   cat(citation, file=outfile, sep="\n", append=TRUE)
 }
+
