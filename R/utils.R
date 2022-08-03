@@ -50,3 +50,45 @@ set.NPSpublisher<-function(emlObject){
     }
   return(emlObject)
 }
+
+#' Add EMLeditory version
+#'
+#' @description set.version adds the current version of EMLeditor to the metadata
+#'
+#' @details set.version adds the current version of EMLeditor to the metadata, specifically in the
+#' @param emlObject
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set.version<-function(emlObject){
+  currentvers<-"v0.1.0-beta" #hard coding needs updating with each new release
+
+  release<-arcticdatautils::eml_get_simple(emlObject, "emlEeditor")
+
+  #Test for existence of EMLeditor documentation; if doesn't exit, add it to additionalMetadata:
+  app<-NULL
+  for(i in 1:length(release)){
+    if(stringr::str_detect(release[i])=="EMLeditor"){
+      app<-EMLeditor
+    }
+  }
+  if(is.null(app)){
+    #Write in EMLeditor tags
+  }
+  #Look for existing EMLeditor documentation: if exists, test whether it's the current version. If not current version, update to current version.
+  for(i in 1:length(release)){
+    if(stringr::str_detect(release[i], "EMLeditor"))
+      if(release[i+1]!=currentvers){
+        #overwrite EMLeditor tags
+      }
+    }
+  return(emlObject)
+}
+
+
+
+  if(is.null(release)){
+    emlObject$eml$additionalMetadata$metadata$emlEditor<-list(app="EMLeditor", release="v0.1.0-beda")
+  }
