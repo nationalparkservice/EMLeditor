@@ -62,33 +62,68 @@ set.NPSpublisher<-function(emlObject){
 #' @export
 #'
 #' @examples
+#' set.version(emlObject)
 set.version<-function(emlObject){
   currentvers<-"v0.1.0-beta" #hard coding needs updating with each new release
+  #access additionalMetadata elements about emlEditor(s):
+  release<-EML::eml_get(emlObject, "emlEditor")
 
-  release<-arcticdatautils::eml_get_simple(emlObject, "emlEeditor")
+  #if no info on EMLeditors, add in EMLeditor and version:
+  if(sum(names(release)!="@context")==0){
+    emlObject$additionalMetadata$metadata$emlEditor<-list(app="EMLeditor", release=currentvers)
+  }
 
-  #Test for existence of EMLeditor documentation; if doesn't exit, add it to additionalMetadata:
-  app<-NULL
-  for(i in 1:length(release)){
-    if(stringr::str_detect(release[i])=="EMLeditor"){
-      app<-EMLeditor
-    }
-  }
-  if(is.null(app)){
-    #Write in EMLeditor tags
-  }
-  #Look for existing EMLeditor documentation: if exists, test whether it's the current version. If not current version, update to current version.
-  for(i in 1:length(release)){
-    if(stringr::str_detect(release[i], "EMLeditor"))
-      if(release[i+1]!=currentvers){
-        #overwrite EMLeditor tags
+  #if there is info about emlEditors:
+  if(sum(names(release)!="@context")>0){
+
+    #does it include EMLeditor?
+    app<-NULL
+    for(i in 1:length(release)){
+      if(suppressWarnings(stringr::str_detect(release[i], "EMLeditor"))){
+        app<-"EMLeditor"
       }
     }
+
+    #if no info, add EMLeditor to additionalMetadata
+    if(is.null(app)){
+      existlist<-NULL
+      for(i in 1:length(names(release))){
+        if(!names(release)[i]=='@context'){
+          existlist<-append(existlist, release[i])
+        }
+      }
+    #construct new additionalMetadata list:
+    existlist<-list(existlist)
+    emleds<-list(app="EMLeditor", release=currentvers)
+    existlist<-append(existlist, list(emleds))
+    #overwrite existing additionalMetadata:
+    emlObject$additionalMetadata$metadata$emlEditor<-existlist
+    }
+
+    #if EMLeditor is included, but the version is wrong, update version
+    if(!is.null(app)){
+      for(i in 1:length(release)){
+        if(suppressWarnings(stringr::str_detect(release[i], "EMLeditor"))){
+          #could prob remove if statement and just sub it in no matter what
+          if(release[[i]][2]!=currentvers){
+            #sub old version with new version:
+            release[[i]][2]<-currentvers
+          }
+        }
+      }
+      mylist<-NULL
+      for(i in 1:length(names(release))){
+        if(!names(release)[i]=='@context'){
+          mylist<-append(mylist, release[i])
+        }
+      }
+      #names to null critical for writing to xml
+      names(mylist)<-NULL
+      #overwrite existing additionalMetadata with new version info
+      emlObject$additionalMetadata$metadata$emlEditor<-mylist
+    }
+  }
   return(emlObject)
 }
 
 
-
-  if(is.null(release)){
-    emlObject$eml$additionalMetadata$metadata$emlEditor<-list(app="EMLeditor", release="v0.1.0-beda")
-  }
