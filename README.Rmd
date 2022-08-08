@@ -73,16 +73,16 @@ my_eml<-EML::read_eml("my_EML_metadata.xml", from="xml")
 
 #Do some stuff with your EML metadata in R.
 #For instance, add a literature cited section.
-#bibtex_file is a file with your literature cited in bibtex format, typically with a .bib suffix.
+#bibtex_file is a file with your literature cited in bibtex format, typically with a .bib extension.
 #Set NPS=FALSE if you do NOT want NPS listed as the publisher. 
 #If NPS is the publisher, this defaults to TRUE and need not be specified.
 my_eml2<-set.lit(my_eml, bibtex_file, NPS=FALSE)
 
 #writes a .txt file to your working directory.
-#FYI Lit cited doesn't show up in the mock readme
+#(FYI Lit cited doesn't show up in the mock readme)
 write.readMe(my_eml2, "MockReadMe.txt")
 
-#Assumig you're happy with the readme file generated, write the object back to XML:
+#Assuming you're happy with the readme file generated, write the object to XML:
 EML::write_eml(my_eml2, "my_EML2_metadata.xml")
 ```
 
