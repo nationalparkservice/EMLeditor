@@ -58,7 +58,8 @@ library(EML)
 #load a pre-existing EML-formated xml file:
 eml<-EML::read_eml("EML_metadata.xml", from="xml")
 
-#the 7-digit number is your DataStore Reference number automatically generated when you initiate a draft Reference. Your DOI is reserved but will not be registered/activated until publication.
+#the 7-digit number is your DataStore Reference number automatically generated when you initiate a draft Reference.
+#Your DOI is reserved but will not be registered/activated until publication.
 eml2<-set.DOI(eml, "1234567")
 
 #write the new R object back to XML:
@@ -80,7 +81,8 @@ eml<-EML::read_eml("EML_metadata.xml", from="xml")
 #Do some stuff with your EML metadata in R.
 #For instance, add a literature cited section.
 #bibtex_file is a file with your literature cited in bibtex format, typically with a .bib suffix.
-#Set NPS=FALSE if you do NOT want NPS listed as the publisher. If NPS is the publisher, this defaults to TRUE and need not be specified.
+#Set NPS=FALSE if you do NOT want NPS listed as the publisher. 
+#If NPS is the publisher, this defaults to TRUE and need not be specified.
 eml2<-set.lit(eml, bibtex_file, NPS=FALSE)
 
 #writes a .txt file to your working directory.
