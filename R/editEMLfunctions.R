@@ -119,7 +119,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   }
 
   #if there are already geographicCoverage(s)
-  #(unfortunately currently there is no way to ad id="UnitConnections" in this case)
+  #(unfortunately currently there is no way to add id="UnitConnections" in this case)
   else{
     mylist<-NULL
     #ditch the '@context' list from the goeCoverage:
