@@ -4,12 +4,14 @@
 \alias{set.DRRdoi}
 \title{adds DRR connection}
 \usage{
-set.DRRdoi(emlObject, DRRrefID)
+set.DRRdoi(emlObject, DRRrefID, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{DRRrefID}{a 7-digit string that is the DataStore Reference ID for the DRR associated with thedata package.}
+\item{DRRrefID}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
 \value{
 an EML-formatted R object

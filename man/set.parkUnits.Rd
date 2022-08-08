@@ -4,12 +4,14 @@
 \alias{set.parkUnits}
 \title{Adds Park Unit Connections to metadata}
 \usage{
-set.parkUnits(emlObject, ParkUnits)
+set.parkUnits(emlObject, ParkUnits, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
 \item{ParkUnits}{a string of comma-separated park unit codes}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
 \value{
 an EML-formatted R object

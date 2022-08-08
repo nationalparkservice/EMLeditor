@@ -4,7 +4,7 @@
 \alias{set.CUI}
 \title{Adds CUI to metadata}
 \usage{
-set.CUI(emlObject, CUI)
+set.CUI(emlObject, CUI, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
@@ -16,6 +16,8 @@ DL ONLY - Contains CUI. Should only be available to a names list of individuals 
 NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
 PUBVER - Does NOT contain CUI. The original data contained CUI, but in thisdata package CUI have been obscured so that it no longer contains CUI.
 PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
 \value{
 an EML-formatted R object

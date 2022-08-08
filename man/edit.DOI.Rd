@@ -4,12 +4,14 @@
 \alias{edit.DOI}
 \title{Force-edits an existing DOI}
 \usage{
-\method{edit}{DOI}(emlObject, DSref)
+\method{edit}{DOI}(emlObject, DSref, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
 \item{DSref}{is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and thedata package prefix - those will all automatically be added in by the function.}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
 \value{
 an EML-formatted R object

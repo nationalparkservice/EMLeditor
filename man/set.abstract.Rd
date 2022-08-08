@@ -4,13 +4,17 @@
 \alias{set.abstract}
 \title{adds an abstract}
 \usage{
-set.abstract(emlObject, abstract)
+set.abstract(emlObject, abstract, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
-\item{abstract}{is a text string that is your abstract. You can generate this directly in R or import a .txt file.
-returns an EML-formatted R object}
+\item{abstract}{is a text string that is your abstract. You can generate this directly in R or import a .txt file.}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
+}
+\value{
+an EML-formatted R object
 }
 \description{
 set.abstract adds (or replaces) a simple abstract.

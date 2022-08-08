@@ -4,12 +4,14 @@
 \alias{set.DOI}
 \title{Check & set a DOI}
 \usage{
-set.DOI(emlObject, DSref)
+set.DOI(emlObject, DSref, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
 \item{DSref}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
 \value{
 an EML-formatted R object

@@ -4,10 +4,12 @@
 \alias{set.lit}
 \title{Edit literature cited}
 \usage{
-set.lit(emlObject, bibtex_file)
+set.lit(emlObject, bibtex_file, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 
 \item{bibtex}{is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.}
 }
@@ -18,7 +20,7 @@ an EML object
 set.lit is an interactive method for editing the literature cited sections.
 }
 \details{
-looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formated literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
+looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
 }
 \examples{
 litcited2<-set.lit(emlObject, "bibfile.bib")
