@@ -86,8 +86,10 @@ edit.DOI<-function(emlObject, DSref, NPS=TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
 
-  return(emlObject)
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
 
+  return(emlObject)
   }
 
 
@@ -148,6 +150,9 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
 
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
+
   return(emlObject)
 }
 
@@ -186,6 +191,9 @@ set.CUI<-function(emlObject, CUI, NPS=TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
 
+  #add/updated EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
+
   return(emlObject)
 }
 
@@ -211,6 +219,8 @@ set.DRRdoi<-function(emlObject, DRRrefID, NPS=TRUE){
   if(NPS==TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
   return(emlObject)
 }
 
@@ -250,6 +260,8 @@ set.abstract<-function(emlObject, abstract, NPS=TRUE){
   if(NPS==TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
   return(emlObject)
 }
 
@@ -292,5 +304,7 @@ set.lit<-function(emlObject, bibtex_file, NPS=TRUE){
   if(NPS==TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
   return(emlObject)
 }
