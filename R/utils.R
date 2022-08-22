@@ -67,7 +67,7 @@ set.version<-function(emlObject){
 
 
 
-  currentvers<-"00.0.9000" #hard coding needs updating with each new release
+  currentvers<-as.character(packageVersion("EMLeditor")) #hard coding needs updating with each new release
   #access additionalMetadata elements about emlEditor(s):
   release<-EML::eml_get(emlObject, "emlEditor")
 
