@@ -64,7 +64,10 @@ set.NPSpublisher<-function(emlObject){
 #' @examples
 #' set.version(emlObject)
 set.version<-function(emlObject){
-  currentvers<-"v0.1.0-beta" #hard coding needs updating with each new release
+
+
+
+  currentvers<-"00.0.9000" #hard coding needs updating with each new release
   #access additionalMetadata elements about emlEditor(s):
   release<-EML::eml_get(emlObject, "emlEditor")
 
