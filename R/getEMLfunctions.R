@@ -64,7 +64,7 @@ get.abstract<-function(emlObject){
   else{
     Encoding(doc)<-"UTF-8" #helps with weird characters
     txt<-NULL
-    for(i in 1:length(doc)){
+    for(i in seq_along(doc)){
       if(nchar(doc[i])>0){
         mypara <- gsub("[\r?\n|\r]", "", doc[i]) #get rid of line breaks and carriage returns
         mypara <- gsub("&#13;", " ", mypara) #get rid of carriage symbols
@@ -117,7 +117,7 @@ get.DSRefID<-function(emlObject){
     RefID<-NA # to do: check write.readMe whether NA needs to be in quotes.
   }
   else{
-    for(i in 1:length(pid)){
+    for(i in seq_along(pid)){
       if(stringr::str_detect(pid[i], "doi: ")){
         doi<-pid[i]
       }
@@ -210,7 +210,7 @@ get.authorList<-function(emlObject){
     #extract givenName; should handle middle names too!
     FirstName<-NULL
     first<-NULL
-    for(i in 1:length(authors)){
+    for(i in seq_along(authors)){
       if(stringr::str_detect(names(authors)[i], "givenName\\b")){
         FirstName<-append(FirstName, authors[i][[1]])
       }
@@ -226,7 +226,7 @@ get.authorList<-function(emlObject){
 
     #extract surName
     LastName<-NULL
-    for(i in 1:length(authors)){
+    for(i in seq_along(authors)){
       if(stringr::str_detect(names(authors)[i], "surName")){
         LastName<-append(LastName, authors[i][[1]])
       }
@@ -244,7 +244,7 @@ get.authorList<-function(emlObject){
 
     #multi-author:
       else{
-        for(i in 1:length(LastName)){
+        for(i in seq_along(LastName)){
           if(i==1){
           }
           if(i>1 && i<length(LastName)){
@@ -283,7 +283,7 @@ get.DOI<-function(emlObject){
   else{
     mylist<-NULL
     if(length(pid)>=1){
-      for(i in 1:length(pid)){
+      for(i in seq_along(pid)){
         if(stringr::str_detect(pid[i], "doi:" )){
           mylist<-append(mylist, pid[i])
         }
@@ -314,7 +314,7 @@ get.parkUnits<-function(emlObject){
   }
   else{
   punits<-NULL
-    for(i in 1:length(units)){
+    for(i in seq_along(units)){
       if(stringr::str_detect(units[i], "NPS Unit Connections:")){
         punits<-units[i]
       }
@@ -429,7 +429,7 @@ get.DRRdoi<-function(emlObject){
   }
   else{
     DRRdoi<-NULL
-    for(i in 1:length(doi)){
+    for(i in seq_along(doi)){
       if(stringr::str_detect(doi[i], "DRR: https://doi.org/")){
         DRRdoi<-doi[i]
       }
