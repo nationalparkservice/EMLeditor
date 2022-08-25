@@ -27,7 +27,7 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
 
     #hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
     if(length(doc)>1){
-      for(i in 1:length(doc)){
+      for(i in seq_along(doc)){
         if(stringr::str_detect(doc[i], "doi:" )){
           mylist<-append(mylist, doc[i])
         }
@@ -125,7 +125,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   else{
     mylist<-NULL
     #ditch the '@context' list from the goeCoverage:
-    for(i in 1:length(names(doc))){
+    for(i in seq_along(names(doc))){
       if(!names(doc)[i]=='@context')
         mylist<-append(mylist, doc[i])
     }

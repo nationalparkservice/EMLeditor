@@ -81,7 +81,7 @@ set.version<-function(emlObject){
 
     #does it include EMLeditor?
     app<-NULL
-    for(i in 1:length(release)){
+    for(i in seq_along(release)){
       if(suppressWarnings(stringr::str_detect(release[i], "EMLeditor"))){
         app<-"EMLeditor"
       }
@@ -90,7 +90,7 @@ set.version<-function(emlObject){
     #if no info, add EMLeditor to additionalMetadata
     if(is.null(app)){
       existlist<-NULL
-      for(i in 1:length(names(release))){
+      for(i in seq_along(names(release))){
         if(!names(release)[i]=='@context'){
           existlist<-append(existlist, release[i])
         }
@@ -105,7 +105,7 @@ set.version<-function(emlObject){
 
     #if EMLeditor is included, but the version is wrong, update version
     if(!is.null(app)){
-      for(i in 1:length(release)){
+      for(i in seq_along(release)){
         if(suppressWarnings(stringr::str_detect(release[i], "EMLeditor"))){
           #could prob remove if statement and just sub it in no matter what
           if(release[[i]][2]!=currentvers){
@@ -115,7 +115,7 @@ set.version<-function(emlObject){
         }
       }
       mylist<-NULL
-      for(i in 1:length(names(release))){
+      for(i in seq_along(names(release))){
         if(!names(release)[i]=='@context'){
           mylist<-append(mylist, release[i])
         }
