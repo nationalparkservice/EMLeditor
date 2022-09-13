@@ -1,3 +1,47 @@
+#' Edit data package title
+#'
+#' @details The set.Title function checks to see if there is an existing title and then asks the user if they would like to change the title. Some work is still needed on this function as get_eml() automatically returns all instances of a given tag. Specifying which title will be important for this function to work well.
+#'
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param DataPackageTitle is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.
+#' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#'
+#' @return an EML-formatted R object
+#' @export
+#'
+#' @examples
+#' DataPackageTitle<-"New Title. Must match DataStore Reference title."
+#' set.title(emlObject, DataPackageTitle)
+set.title<-function(emlObject, DataPackageTitle, NPS=TRUE){
+  doc<-arcticdatautils::eml_get_simple(emlObject, "title")
+  if(is.null(doc)){
+    emlObject$eml$dataset$title<-paste0(DataPackageTitle)
+    print("No previous title was detected. Your new title has been added. View the current title using get.title.")
+  }
+  else{
+    var1<-readline(prompt="Your EML already has an title. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+  #if User opts to retain DOI, retain it
+    if(var1==1){
+      #print the existing DOI to the screen:
+      emlObject$eml$dataset$title<-paste0(DataPackageTitle)
+      print("You have replaced your title. View the current title using get.title.")
+    }
+    #if User opts to change DOI, change it:
+    if(var1==2){
+      print("Your original title was retained. View the current abstract using get.title.")
+    }
+  }
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
+  return(emlObject)
+  }
+
+
+
 #' Check & set a DOI
 #'
 #' @details
@@ -5,7 +49,7 @@
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
 set.DOI<-function(emlObject, DSref, NPS=TRUE){
@@ -203,7 +247,7 @@ set.CUI<-function(emlObject, CUI, NPS=TRUE){
 #'
 #' @description set.DRRdoi adds the DOI of an associated DRR
 #'
-#' @details adds uses the DataStore Reference ID for an associate DRR to the <useageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <useageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other useageCitation info.
+#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other usageCitation info.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DRRrefID a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
@@ -214,7 +258,7 @@ set.CUI<-function(emlObject, CUI, NPS=TRUE){
 #' set.DRRdoi(emlObject, "2293234")
 set.DRRdoi<-function(emlObject, DRRrefID, NPS=TRUE){
   doi<-paste0("DRR: https://doi.org/10.36967", DRRdoi)
-  emlObject$dataset$useageCitation<-doi
+  emlObject$dataset$usageCitation<-doi
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     emlObject<-set.NPSpublisher(emlObject)
@@ -228,7 +272,7 @@ set.DRRdoi<-function(emlObject, DRRrefID, NPS=TRUE){
 #'
 #' @description set.abstract adds (or replaces) a simple abstract.
 #'
-#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set.abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characers. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set.abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
