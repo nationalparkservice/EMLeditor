@@ -20,7 +20,7 @@ an EML-formatted R object
 set.DRRdoi adds the DOI of an associated DRR
 }
 \details{
-adds uses the DataStore Reference ID for an associate DRR to the <useageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <useageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other useageCitation info.
+adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other usageCitation info.
 }
 \examples{
 set.DRRdoi(emlObject, "2293234")
