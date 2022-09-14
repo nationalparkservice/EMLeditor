@@ -181,8 +181,9 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
     mylist<-NULL
     #ditch the '@context' list from the goeCoverage:
     for(i in seq_along(names(doc))){
-      if(!names(doc)[i]=='@context')
+      if(!names(doc)[i]=='@context'){
         mylist<-append(mylist, doc[i])
+      }
     }
     #remove names from list (critical for writing back to xml)
     names(mylist)<-NULL
@@ -224,18 +225,34 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 #' @export
 #' @examples
 #' set.CUI(emlObject, "PUBFUL")
-set.CUI<-function(emlObject, CUI=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), NPS=TRUE){
+set.CUI<-function(emlObject, CUIcode=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), NPS=TRUE){
 
-  CUI<-match.arg(CUI)
+  CUIcode<-match.arg(CUIcode)
 
-  if(CUI=="FEDONLY"){
-    CUI=="FED ONLY"
+  myCUI<-list(metadata=list(CUI=CUIcode))
+
+  #get existing additional metadata elements:
+  doc<-EML::eml_get(emlObject, "additionalMetadata")
+
+  if(is.null(doc)){
+    myCUI<-list(metadata=list(CUI=CUIcode))
+    emlObject$additionalMetadata<-myCUI
   }
-  if(CUI=="DLONLY"){
-    CUI=="DL ONLY"
+  else{
+    mylist<-NULL
+    #ditch the '@context' list from the goeCoverage:
+    for(i in seq_along(names(doc))){
+      if(!names(doc)[i]=='@context'){
+        mylist<-append(mylist, doc[i])
+      }
+    #remove names from list (critical for writing back to xml)
+    }
+    names(mylist)<-NULL
+
+    mylist<-append(list(myCUI), mylist)
+
+    emlObject$additionalMetadata<-mylist
   }
-  #add CUI to EML
-  emlObject$additionalMetadata$metadata$CUI<-CUI
 
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
