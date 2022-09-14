@@ -212,20 +212,22 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 #' @details set.CUI adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param CUI a string consisting of one of 5 potential CUI codes. Pay attention to the spaces:
+#' @param CUI a string consisting of one of 6 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 #' FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 #' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
-#' PUBVER - Does NOT contain CUI. The original data contained CUI, but in thisdata package CUI have been obscured so that it no longer contains CUI.
+#' PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
 #' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
 #' set.CUI(emlObject, "PUBFUL")
-set.CUI<-function(emlObject, CUI, NPS=TRUE){
-  #add those random spaces in case people forget
+set.CUI<-function(emlObject, CUI=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), NPS=TRUE){
+
+  CUI<-match.arg(CUI)
+
   if(CUI=="FEDONLY"){
     CUI=="FED ONLY"
   }
