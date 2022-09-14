@@ -64,69 +64,68 @@ set.NPSpublisher<-function(emlObject){
 #' @examples
 #' set.version(emlObject)
 set.version<-function(emlObject){
+  #get current EMLeditor package version:
+  currentvers<-as.character(packageVersion("EMLeditor"))
 
+  #set up additionalMetadata elements for EMLeditor:
+  EMLed<-list(metadata=list(emlEditor=
+                            list(app="EMLeditor",
+                            release=currentvers)),
+                            id="emlEditor")
 
+  #access additionalMetadata elements:
+  addMeta<-EML::eml_get(emlObject, "additionalMetadata")
 
-  currentvers<-as.character(packageVersion("EMLeditor")) #hard coding needs updating with each new release
-  #access additionalMetadata elements about emlEditor(s):
-  release<-EML::eml_get(emlObject, "emlEditor")
-
-  #if no info on EMLeditors, add in EMLeditor and version:
-  if(sum(names(release)!="@context")==0){
-    emlObject$additionalMetadata$metadata$emlEditor<-list(app="EMLeditor", release=currentvers)
+  #if no additionalMetadata, add in EMLeditor and current version:
+  if(sum(names(addMeta)!="@context")==0){
+    emlObject$additionalMetadata<-EMLed
   }
 
-  #if there is info about emlEditors:
-  if(sum(names(release)!="@context")>0){
+  #if there are existing additionalMetadata elements:
+  if(sum(names(addMeta)!="@context")>0){
 
     #does it include EMLeditor?
     app<-NULL
-    for(i in seq_along(release)){
-      if(suppressWarnings(stringr::str_detect(release[i], "EMLeditor"))){
+    for(i in seq_along(addMeta)){
+      if(suppressWarnings(stringr::str_detect(addMeta[i], "EMLeditor"))){
         app<-"EMLeditor"
       }
     }
 
-    #if no info, add EMLeditor to additionalMetadata
+    #if no info on EMLeditor, add EMLeditor to additionalMetadata
     if(is.null(app)){
-      existlist<-NULL
-      for(i in seq_along(names(release))){
-        if(!names(release)[i]=='@context'){
-          existlist<-append(existlist, release[i])
-        }
-      }
-    #construct new additionalMetadata list:
-    existlist<-list(existlist)
-    emleds<-list(app="EMLeditor", release=currentvers)
-    existlist<-append(existlist, list(emleds))
-    #overwrite existing additionalMetadata:
-    emlObject$additionalMetadata$metadata$emlEditor<-existlist
-    }
-
-    #if EMLeditor is included, but the version is wrong, update version
-    if(!is.null(app)){
-      for(i in seq_along(release)){
-        if(suppressWarnings(stringr::str_detect(release[i], "EMLeditor"))){
-          #could prob remove if statement and just sub it in no matter what
-          if(release[[i]][2]!=currentvers){
-            #sub old version with new version:
-            release[[i]][2]<-currentvers
-          }
-        }
-      }
-      mylist<-NULL
-      for(i in seq_along(names(release))){
-        if(!names(release)[i]=='@context'){
-          mylist<-append(mylist, release[i])
-        }
-      }
-      #names to null critical for writing to xml
-      names(mylist)<-NULL
-      #overwrite existing additionalMetadata with new version info
-      emlObject$additionalMetadata$metadata$emlEditor<-mylist
+      emlObject$additionalMetadata<-EMLed
     }
   }
-  return(emlObject)
 }
+
+##################################################
+#To add in later: update EML version if it is out of date. What follows is some old code for a first attempt:
+##################################################
+#if EMLeditor is included, but the version is wrong, update version
+#    if(!is.null(app)){
+#      for(i in seq_along(addMeta)){
+#        if(suppressWarnings(stringr::str_detect#(addMeta[i], "EMLeditor"))){
+          #could prob remove if statement and just sub it in no matter what
+#          if(release[[i]][2]!=currentvers){
+            #sub old version with new version:
+#            release[[i]][2]<-currentvers
+#          }
+#        }
+#      }
+#      mylist<-NULL
+#      for(i in seq_along(names(release))){
+#        if(!names(release)[i]=='@context'){
+#          mylist<-append(mylist, release[i])
+#        }
+#      }
+      #names to null critical for writing to xml
+#      names(mylist)<-NULL
+      #overwrite existing additionalMetadata with new version info
+#      emlObject$additionalMetadata$metadata$emlEditor<-mylist
+#   }
+#  }
+#  return(emlObject)
+#}
 
 
