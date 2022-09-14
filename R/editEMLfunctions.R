@@ -252,22 +252,35 @@ set.CUI<-function(emlObject, CUI, NPS=TRUE){
 #'
 #' @description set.DRRdoi adds the DOI of an associated DRR
 #'
-#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other usageCitation info.
+#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the default NPS=TRUE sets the DRR creator organization to NPS. If you do NOT want the organization name for the DRR to be NPS, set NPS="Your Favorite Organization". sets the id flag for this usageCitation to "associatedDRR".
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DRRrefID a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#' @param DRRtitle the title of the DRR as it appears in the DataStore Reference.
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#' set.DRRdoi(emlObject, "2293234")
-set.DRRdoi<-function(emlObject, DRRrefID, NPS=TRUE){
-  doi<-paste0("DRR: https://doi.org/10.36967", DRRdoi)
-  emlObject$dataset$usageCitation<-doi
+#' DRRtitle<-"Data Release Report for Data Package 1234"
+#' set.DRRdoi(emlObject, "2293234", DRRtitle)
+set.DRRdoi<-function(emlObject, DRRrefID, DRRtitle, NPS=TRUE){
+  if(NPS==TRUE){org<-"NPS"}
+  else{org<-NPS}
+
+  doi<-paste0("DRR: https://doi.org/10.36967/", DRRrefID)
+
+  cite<-EML::eml$usageCitation(alternateIdentifier = doi,
+                  title = DRRtitle,
+                  creator = EML::eml$creator(
+                    organizationName = org),
+                  report = EML::eml$report(reportNumber = DRRrefID),
+                  id = "associatedDRR")
+
+  emlObject$dataset$usageCitation<-cite
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     emlObject<-set.NPSpublisher(emlObject)
-  }
+    }
   #add/update EMLeditor and version to metadata:
   emlObject<-set.version(emlObject)
   return(emlObject)
