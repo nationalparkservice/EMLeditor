@@ -155,13 +155,24 @@ edit.DOI<-function(emlObject, DSref, NPS=TRUE){
 #' ParkUnits<-("ROMO, GRSD, TRYME")
 #' set.parkUnits(emlObject, ParkUnits)
 set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
+  #add text to indicate that these are park unit connections. Note that bounding coordinates are DUMMY COORDINATES
+  units<-paste0("NPS Unit Connections: ", ParkUnits)
+
+  geocov2<-EML::eml$geographicCoverage(
+    geographicDescription = "TRY ME",
+    boundingCoordinates = EML::eml$boundingCoordinates(
+      northBoundingCoordinate = 0,
+      eastBoundingCoordinate = 0,
+      southBoundingCoordinate = 0,
+      westBoundingCoordinate = 0),
+    id="UnitConnections")
+
   #get geographic coverage from emlObject
   doc<-EML::eml_get(emlObject, "geographicCoverage")
 
   #if there is no geo coverage, add it directly to emlObject
   if(is.null(doc)){
-    emlObject$dataset$coverage$geographicCoverage$id<-"UnitConnections"
-    emlObject$dataset$coverage$geographicCoverage$geographicDescription<-paste0("NPS Unit Connections: ",ParkUnits)
+    emlObject$dataset$coverage$geographicCoverage<-list(geocov2)
   }
 
   #if there are already geographicCoverage(s)
@@ -175,12 +186,6 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
     }
     #remove names from list (critical for writing back to xml)
     names(mylist)<-NULL
-
-    #add text to indicate that these are park unit connections:
-    units<-paste0("NPS Unit Connections: ", ParkUnits)
-
-    #generate the new geographic coverage elements:
-    geocov2<-list(geographicDescription=units)
 
     #combine new and old geo coverages (new always at the top!)
     mylist<-append(list(geocov2), mylist)
