@@ -20,7 +20,7 @@ an EML-formatted R object
 Adds Park Unit Connections to metadata
 }
 \details{
-Add the Park Unit Connection(s) to a <geographicDescription> tag under <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). If there are already =items listed under geographicCoverage, Park Unit Connections will be inserted as the first item in the list of geographicCoverages and will be prefaced by the string "NPS Unit Connections:".
+Add the Park Unit Connection(s) to a <geographicDescription> tag under <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). If there are already =items listed under geographicCoverage, Park Unit Connections will be inserted as the first item in the list of geographicCoverages and will be prefaced by the string "NPS Unit Connections:". Geographic coverage for park unit connections id is set to "UnitConnections". For Unit Connections, required child elements are generated and populated with dummy data (all bounding coordinates are set to zero).
 }
 \examples{
 ParkUnits<-("ROMO, GRSD, TRYME")
