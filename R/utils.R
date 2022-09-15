@@ -51,11 +51,11 @@ set.NPSpublisher<-function(emlObject){
   return(emlObject)
 }
 
-#' Add EMLeditory version
+#' Add/update EMLeditor version
 #'
-#' @description set.version adds the current version of EMLeditor to the metadata
+#' @description set.version adds the current version of EMLeditor to the EML document.
 #'
-#' @details set.version adds the current version of EMLeditor to the metadata, specifically in the
+#' @details set.version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 #' @param emlObject
 #'
 #' @return
@@ -63,6 +63,7 @@ set.NPSpublisher<-function(emlObject){
 #'
 #' @examples
 #' set.version(emlObject)
+#'
 set.version<-function(emlObject){
   #get current EMLeditor package version:
   currentvers<-as.character(packageVersion("EMLeditor"))
@@ -100,7 +101,7 @@ set.version<-function(emlObject){
 }
 
 ##################################################
-#To add in later: update EML version if it is out of date. What follows is some old code for a first attempt:
+#To add in later: update EML version if it is out of date. What follows is some old/eneffective code for a first attempt:
 ##################################################
 #if EMLeditor is included, but the version is wrong, update version
 #    if(!is.null(app)){
