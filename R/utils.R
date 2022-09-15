@@ -25,8 +25,8 @@ eml_getNPS<-function(...)EML::eml_get()
 #'
 #' @description injects static NPS-specific info into eml documents
 #'
-#' @details checks to see if it exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
-
+#' @details checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
+#'
 #' @param emlObject
 #'
 #' @return
@@ -37,16 +37,17 @@ set.NPSpublisher<-function(emlObject){
   #check for and isert publisher information:
   publish<-arcticdatautils::eml_get_simple(emlObject, "publisher")
     if(is.null(publish)){
-        emlObject$dataset$publisher <-list(organizationName = "U.S. National Park Service",
-                                      onlineUrl = "http://www.nps.gov",
-                                      userId = "https://ror.org/044zqqy65",
-                                      electronicMailAddress = "irma@nps.gov")
-        #note: oddly defaults to alphabetical order in .xml. Not sure why or how to stop this not sure it matters.
-        emlObject$dataset$publisher$address<-list(deliveryPoint = "1201 Oakridge Drive, Suite 150",
-                                                  city = "Fort Collins",
-                                                  administrativeArea = "CO",
-                                                  postalCode = "80525",
-                                                  country = "USA")
+      emlObject$dataset$publisher<- list(organizationName =
+                      "U.S. National Park Service",
+                      address = list(deliveryPoint = "1201 Oakridge Drive, Suite 150",
+                                  city = "Fort Collins",
+                                  administrativeArea="CO",
+                                  postalCode="80525",
+                                  country="USA"),
+                      onlineUrl = "http://www.nps.gov",
+                      electronicMailAddress = "irma@nps.gov",
+                      userId = list(directory="https://ror.org/", userId="https://ror.org/044zqqy65"))
+
     }
   return(emlObject)
 }
