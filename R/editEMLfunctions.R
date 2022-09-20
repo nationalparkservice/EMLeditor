@@ -208,7 +208,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   }
 
   #add/update EMLeditor and version to metadata:
-  #emlObject<-set.version(emlObject)
+  emlObject<-set.version(emlObject)
 
   return(emlObject)
 }
