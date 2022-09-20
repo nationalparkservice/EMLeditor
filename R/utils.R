@@ -86,6 +86,15 @@ set.version<-function(emlObject){
   #if there are existing additionalMetadata elements:
   if(sum(names(addMeta)!="@context")>0){
 
+    mylist<-NULL
+    #ditch the '@context' list from the goeCoverage:
+    for(i in seq_along(names(addMeta))){
+      if(!names(addMeta)[i]=='@context'){
+        mylist<-append(mylist, addMeta[i])
+      }
+    }
+    names(mylist)<-NULL
+
     #does it include EMLeditor?
     app<-NULL
     for(i in seq_along(addMeta)){
@@ -96,9 +105,11 @@ set.version<-function(emlObject){
 
     #if no info on EMLeditor, add EMLeditor to additionalMetadata
     if(is.null(app)){
-      emlObject$additionalMetadata<-EMLed
+      getmylist<-append(list(EMLed), mylist)
+      emlObject$additionalMetadata<-getmylist
     }
   }
+  return(emlObject)
 }
 
 ##################################################
