@@ -130,7 +130,20 @@ set.version<-function(emlObject){
 #  return(emlObject)
 #}
 
-get.UnitPolygon <- function(Unit_Code) {
+#' Get Park Unit Polygon
+#'
+#' @description get.unitPolygon gets the polygon for a given park unit.
+#'
+#' @details retrieves a geoJSON string for a polygon of a park unit from NPS Rest services. Note: This is not the official boundary (erm... ok then what is it?!?).
+#'
+#' @param Unit_Code a string (typically 4 characters) that is the park unit code.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' poly<-get.unitPolygon("BICY")
+get.unitPolygon <- function(Unit_Code) {
   # get geography from NPS Rest Services
   UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", Unit_Code, "/geography")
   xml <- httr::content(httr::GET(UnitsURL))
