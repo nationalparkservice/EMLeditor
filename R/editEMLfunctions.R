@@ -137,17 +137,15 @@ edit.DOI<-function(emlObject, DSref, NPS=TRUE){
   }
 
 
-# Add Park Unit Connections to metadata
-#if geographic coverage exists, add to it.
-#if geographic coverage exists, doesn't yet add in id= attribute. Grr.
 
-#' Adds Park Unit Connections to metadata
+#' Add Park Unit Connections to metadata
 #'
-#' @details
-#' Add the Park Unit Connection(s) to a <geographicDescription> tag under <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). If there are already =items listed under geographicCoverage, Park Unit Connections will be inserted as the first item in the list of geographicCoverages and will be prefaced by the string "NPS Unit Connections:". Geographic coverage for park unit connections id is set to "UnitConnections". For Unit Connections, required child elements are generated and populated with dummy data (all bounding coordinates are set to zero).
+#' @description adds all specified park unit connections and their N, E, S, W bounding boxes to <geographicCoverage>.
+#'
+#' @details Adds the Park Unit Connection(s) to a <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit connection is given a separate <geographicCoverage> element. For each park unit connection, the unit name will be listed under <geographicDescription> and prefaced with "NPS Unit Connections:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set.parkUnits will add to them, not overwrite them. If not other <geographicCoverage> elements exist, set.parkUnits will create a new set of <geographicCoverage> elements.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param ParkUnits a string of comma-separated park unit codes
+#' @param ParkUnits a list of comma-separated strings where each string is a park unit code.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
@@ -158,21 +156,30 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   #add text to indicate that these are park unit connections. Note that bounding coordinates are DUMMY COORDINATES
   units<-paste0("NPS Unit Connections: ", ParkUnits)
 
-  geocov2<-EML::eml$geographicCoverage(
-    geographicDescription = "TRY ME",
-    boundingCoordinates = EML::eml$boundingCoordinates(
-      northBoundingCoordinate = 0,
-      eastBoundingCoordinate = 0,
-      southBoundingCoordinate = 0,
-      westBoundingCoordinate = 0),
-    id="UnitConnections")
+  unit_list<-NULL
+  for(i in seq_along(ParkUnits)){
+    poly<-get.UnitPolygon(ParkUnits[i])
+    poly<-as.data.frame(poly[[1]][1])
+    N<-max(poly[,2])
+    S<-min(poly[,2])
+    W<-max(poly[,1])
+    E<-min(poly[,1])
+    geocov<- EML::eml$geographicCoverage(geographicDescription =
+                    paste0("NPS Unit Connections: ", ParkUnits[i]),
+                    boundingCoordinates = EML::eml$boundingCoordinates(
+                      northBoundingCoordinate = N,
+                      eastBoundingCoordinate = E,
+                      southBoundingCoordinate = S,
+                      westBoundingCoordinate = W))
+    unit_list<-append(unit_list, list(geocov))
+  }
 
   #get geographic coverage from emlObject
   doc<-EML::eml_get(emlObject, "geographicCoverage")
 
   #if there is no geo coverage, add it directly to emlObject
   if(is.null(doc)){
-    emlObject$dataset$coverage$geographicCoverage<-list(geocov2)
+    emlObject$dataset$coverage$geographicCoverage<-unit_list
   }
 
   #if there are already geographicCoverage(s)
@@ -189,7 +196,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
     names(mylist)<-NULL
 
     #combine new and old geo coverages (new always at the top!)
-    mylist<-append(list(geocov2), mylist)
+    mylist<-append(unit_list, mylist)
 
     #write over the existing geographic coverage
     emlObject$dataset$coverage$geographicCoverage<-mylist
@@ -201,7 +208,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   }
 
   #add/update EMLeditor and version to metadata:
-  emlObject<-set.version(emlObject)
+  #emlObject<-set.version(emlObject)
 
   return(emlObject)
 }
