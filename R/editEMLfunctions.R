@@ -158,7 +158,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 
   unit_list<-NULL
   for(i in seq_along(ParkUnits)){
-    poly<-get.UnitPolygon(ParkUnits[i])
+    poly<-get.unitPolygon(ParkUnits[i])
     poly<-as.data.frame(poly[[1]][1])
     N<-max(poly[,2])
     S<-min(poly[,2])
