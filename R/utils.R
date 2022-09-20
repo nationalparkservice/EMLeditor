@@ -130,4 +130,13 @@ set.version<-function(emlObject){
 #  return(emlObject)
 #}
 
+get.UnitPolygon <- function(Unit_Code) {
+  # get geography from NPS Rest Services
+  UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", Unit_Code, "/geography")
+  xml <- httr::content(httr::GET(UnitsURL))
 
+  # Create spatial feature from polygon info returned from NPS
+  parkpolygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
+
+  return(parkpolygon)
+}
