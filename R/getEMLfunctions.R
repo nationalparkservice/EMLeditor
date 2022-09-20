@@ -313,18 +313,32 @@ get.parkUnits<-function(emlObject){
     punits<-NA #to do: test whether NA needs quotes for write.README.
   }
   else{
-  punits<-NULL
+    #pull out just geographic description for unit connections:
+    unitcons<-NULL
     for(i in seq_along(units)){
       if(stringr::str_detect(units[i], "NPS Unit Connections:")){
-        punits<-units[i]
+        unitcons<-append(unitcons, units[i])
       }
     }
-    if(is.null(punits)){
-      warning("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
-      punits<-NA #to do: test whether NA needs quotes for write.README.
+
+    #make a string that is just comma separated unit connection codes:
+    punits<-NULL
+    for(i in seq_along(unitcons)){
+      if(unitcons[i]== tail(unitcons, 1)){
+          remtext<-sub('NPS Unit Connections: ', '', unitcons[i])
+          punits<-append(punits, remtext)
+      }
+      else{
+          remtext<-sub('NPS Unit Connections: ', '', unitcons[i])
+          punits<-append(punits, paste0(remtext, ", "))
+      }
     }
+    list.units<-paste(unlist(punits), collapse="", sep=",")
+
+    #add "NPS Unit Connections: " prefix back in to the sting:
+    list.units<-paste0("NPS Unit Connections: ", list.units)
   }
-  return(punits[[1]])
+  return(list.units)
 }
 
 #' returns a CUI statement
