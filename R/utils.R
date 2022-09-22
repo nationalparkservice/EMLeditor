@@ -71,9 +71,9 @@ set.version<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:
   EMLed<-list(metadata=list(emlEditor=
-                            list(app="EMLeditor",
-                            release=currentvers)),
-                            id="emlEditor")
+                              list(app="EMLeditor",
+                                   release=currentvers)),
+              id="emlEditor")
 
   #access additionalMetadata elements:
   addMeta<-EML::eml_get(emlObject, "additionalMetadata")
@@ -89,11 +89,11 @@ set.version<-function(emlObject){
     mylist<-NULL
     #ditch the '@context' list from the goeCoverage:
     for(i in seq_along(names(addMeta))){
-      if(!names(addMeta)[i]=='@context'){
+      if(!names(addMeta)[i]=='@context' && !names(addMeta)[i]=="id"){
         mylist<-append(mylist, addMeta[i])
       }
     }
-    names(mylist)<-NULL
+    x<-length(mylist)
 
     #does it include EMLeditor?
     app<-NULL
@@ -105,12 +105,17 @@ set.version<-function(emlObject){
 
     #if no info on EMLeditor, add EMLeditor to additionalMetadata
     if(is.null(app)){
-      getmylist<-append(list(EMLed), mylist)
-      emlObject$additionalMetadata<-getmylist
+      if(x==1){
+        emlObject$additionalMetadata<-list(EMLed, emlObject$additionalMetadata)
+      }
+      if(x>1){
+        emlObject$additionalMetadata[[x+1]]<-EMLed
+      }
     }
   }
   return(emlObject)
 }
+
 
 ##################################################
 #To add in later: update EML version if it is out of date. What follows is some old/eneffective code for a first attempt:
