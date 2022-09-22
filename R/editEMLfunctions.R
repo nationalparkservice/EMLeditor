@@ -183,10 +183,9 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   }
 
   #if there are already geographicCoverage(s)
-  #(unfortunately currently there is no way to add id="UnitConnections" in this case)
   else{
     mylist<-NULL
-    #ditch the '@context' list from the goeCoverage:
+    #ditch the '@context' list from the geographicCoverage:
     for(i in seq_along(names(doc))){
       if(!names(doc)[i]=='@context'){
         mylist<-append(mylist, doc[i])
@@ -234,31 +233,52 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 #' set.CUI(emlObject, "PUBFUL")
 set.CUI<-function(emlObject, CUIcode=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), NPS=TRUE){
 
+  #verify CUI code entry; stop if does not equal one of six valid codes listed above:
   CUIcode<-match.arg(CUIcode)
 
-  myCUI<-list(metadata=list(CUI=CUIcode))
+  #Generate new CUI element for additionalMetadata
+  myCUI<-list(metadata=list(CUI=CUIcode), id="CUI")
 
-  #get existing additional metadata elements:
+  #get existing additionalMetadata elements:
   doc<-EML::eml_get(emlObject, "additionalMetadata")
 
-  if(is.null(doc)){
-    myCUI<-list(metadata=list(CUI=CUIcode))
+  #if no prior additionalMetadata elements, add CUI to additionalMetadata:
+  if(sum(names(doc)!="@context")==0){
     emlObject$additionalMetadata<-myCUI
   }
-  else{
+
+  #if additionalMetadata already exists:
+  if(sum(names(doc)!="@context")>0){
     mylist<-NULL
-    #ditch the '@context' list from the goeCoverage:
+    #ditch the '@context' list from doc:
     for(i in seq_along(names(doc))){
-      if(!names(doc)[i]=='@context'){
+      if(!names(doc)[i]=='@context' && !names(doc)[i]=="id"){
         mylist<-append(mylist, doc[i])
       }
-    #remove names from list (critical for writing back to xml)
+    x<-length(mylist)
     }
-    names(mylist)<-NULL
 
-    mylist<-append(list(myCUI), mylist)
+    #Is CUI already specified?
+    existCUI<-NULL
+    for(i in seq_along(doc)){
+      if(suppressWarnings(stringr::str_detect(doc[i], "CUI"))){
+        existCUI<-"CUI"
+      }
+    }
 
-    emlObject$additionalMetadata<-mylist
+    #If existing CUI, stop.
+    if(!is.null(existCUI)){
+      stop("CUI has already been specified")
+    }
+    #If no existing CUI, add it in:
+    if(is.null(existCUI)){
+      if(x==1){
+        emlObject$additionalMetadata<-list(myCUI, emlObject$additionalMetadata)
+      }
+      if(x>1){
+        emlObject$additionalMetadata[[x+1]]<-myCUI
+      }
+    }
   }
 
   #Set NPS publisher, if it doesn't already exist
