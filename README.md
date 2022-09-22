@@ -26,7 +26,8 @@ not to generate them from scratch. A suggested workflow is:
 2)  Use the EML::read_eml() function to load your EML file into R as an
     R object.
 3)  Use EMLeditor functions to edit the metadata in R and evaluate
-    whether your metadata is acceptable.
+    whether your metadata is acceptable (don’t forget to use
+    EML::eml_validate() to make sure you are generating valid EML).
 4)  Use the EML::write_eml() function to write the R object back to XML
     (remember the NPS naming convention for metadata files is
     \*\_metadata.xml).
@@ -58,9 +59,13 @@ library(EML)
 #load a pre-existing EML-formated xml file:
 my_eml<-EML::read_eml("EML_metadata.xml", from="xml")
 
-#the 7-digit number is your DataStore Reference number automatically generated when you initiate a draft Reference.
+#the 7-digit number is your DataStore Reference number.
+#It is automatically generated when you initiate a draft Reference.
 #Your DOI is reserved but will not be registered/activated until publication.
 my_eml2<-set.DOI(my_eml, "1234567")
+
+#make sure your EML is valid.
+EML::eml_validate(my_eml2)
 
 #write the new R object back to XML:
 write_eml(my_eml2, "EML_metadata.xml")
@@ -86,6 +91,9 @@ my_eml<-EML::read_eml("my_EML_metadata.xml", from="xml")
 #Set NPS=FALSE if you do NOT want NPS listed as the publisher. 
 #If NPS is the publisher, this defaults to TRUE and need not be specified.
 my_eml2<-set.lit(my_eml, bibtex_file, NPS=FALSE)
+
+#make sure your EML is valid:
+EML::eml_validate(my_eml2)
 
 #writes a .txt file to your working directory.
 #(FYI Lit cited doesn't show up in the mock readme)
