@@ -112,7 +112,7 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
 
 #' Force-edits an existing DOI
 #'
-#' @description edit.DOI forces changes to an existing DOI
+#' @description new.DOI forces changes to an existing DOI
 #'
 #' @details
 #' If a DOI already exists in the <alternateidentifier> tag (get.DOI() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
@@ -121,15 +121,15 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
 #'
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and the data package prefix - those will all automatically be added in by the function.
 #'
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE.
 #'
 #' @returns an EML-formatted R object
 #'
 #' @export
 #'
 #' @example
-#' edit.DOI(emlObject, "1111111")
-edit.DOI<-function(emlObject, DSref, NPS=TRUE){
+#' new.DOI(emlObject, "1111111")
+new.DOI<-function(emlObject, DSref, NPS=TRUE){
   emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
 
   #Set NPS publisher, if it doesn't already exist
@@ -226,19 +226,20 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 #' @details set.CUI adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param CUI a string consisting of one of 6 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
+#' @param CUIcode a string consisting of one of 6 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 #' FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 #' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
 #' PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
-#' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package
+#' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
+#' NPSONLY - Contains CUI. For NPS access only.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
 #' set.CUI(emlObject, "PUBFUL")
-set.CUI<-function(emlObject, CUIcode=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), NPS=TRUE){
+set.CUI<-function(emlObject, CUIcode=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), NPS=TRUE){
 
   #verify CUI code entry; stop if does not equal one of six valid codes listed above:
   CUIcode<-match.arg(CUIcode)
@@ -351,7 +352,7 @@ set.DRRdoi<-function(emlObject, DRRrefID, DRRtitle, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#' set.abstract(emlObject "This is a very short abstract")
+#' set.abstract(emlObject, "This is a very short abstract")
 set.abstract<-function(emlObject, abstract, NPS=TRUE){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
@@ -386,7 +387,7 @@ set.abstract<-function(emlObject, abstract, NPS=TRUE){
 #'
 #' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
 #' @param emlObject  is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param bibtex is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
+#' @param bibtex_file is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @return an EML object
 #' @export
