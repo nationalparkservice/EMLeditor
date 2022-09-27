@@ -226,7 +226,7 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 #' @details set.CUI adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param CUIcode a string consisting of one of 6 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
+#' @param CUIcode a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 #' FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)

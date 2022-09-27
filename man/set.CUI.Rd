@@ -13,7 +13,7 @@ set.CUI(
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{CUIcode}{a string consisting of one of 6 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
+\item{CUIcode}{a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
