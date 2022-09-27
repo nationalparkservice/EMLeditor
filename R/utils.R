@@ -34,7 +34,7 @@ eml_getNPS<-function(...)EML::eml_get()
 #'
 #' @examples
 set.NPSpublisher<-function(emlObject){
-  #check for and isert publisher information:
+  #check for and insert publisher information:
   publish<-arcticdatautils::eml_get_simple(emlObject, "publisher")
     if(is.null(publish)){
       emlObject$dataset$publisher<- list(organizationName =
