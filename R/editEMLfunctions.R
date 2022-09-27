@@ -118,10 +118,17 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
 #' If a DOI already exists in the <alternateidentifier> tag (get.DOI() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and thedata package prefix - those will all automatically be added in by the function.
+#'
+#' @param DSref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://wwww.doi.org and the data package prefix - those will all automatically be added in by the function.
+#'
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#'
 #' @returns an EML-formatted R object
+#'
 #' @export
+#'
+#' @example
+#' edit.DOI(emlObject, "1111111")
 edit.DOI<-function(emlObject, DSref, NPS=TRUE){
   emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
 
