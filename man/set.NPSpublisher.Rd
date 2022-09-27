@@ -7,11 +7,17 @@
 set.NPSpublisher(emlObject)
 }
 \arguments{
-\item{emlObject}{}
+\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+}
+\value{
+emlObject
 }
 \description{
 injects static NPS-specific info into eml documents
 }
 \details{
 checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
+}
+\examples{
+set.NPSpublisher(emlObject)
 }

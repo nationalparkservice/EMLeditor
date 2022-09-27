@@ -7,7 +7,10 @@
 set.version(emlObject)
 }
 \arguments{
-\item{emlObject}{}
+\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+}
+\value{
+emlObject
 }
 \description{
 set.version adds the current version of EMLeditor to the EML document.

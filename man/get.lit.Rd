@@ -16,9 +16,8 @@ character string
 get.lit prints bibtex fromated literature cited to the screen.
 }
 \details{
-get.lit currently only supports bibtex formated references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
+get.lit currently only supports bibtex formatted references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
 }
 \examples{
-lit<-get.lit(emLObject); writeLines(lit)
-
+get.lit(emlObject)
 }
