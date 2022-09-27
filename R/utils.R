@@ -34,20 +34,24 @@ eml_getNPS<-function(...)EML::eml_get()
 #'
 #' @examples
 set.NPSpublisher<-function(emlObject){
-  #check for and insert publisher information:
-  publish<-arcticdatautils::eml_get_simple(emlObject, "publisher")
-    if(is.null(publish)){
-      emlObject$dataset$publisher<- list(organizationName =
-                      "U.S. National Park Service",
-                      address = list(deliveryPoint = "1201 Oakridge Drive, Suite 150",
-                                  city = "Fort Collins",
-                                  administrativeArea="CO",
-                                  postalCode="80525",
-                                  country="USA"),
-                      onlineUrl = "http://www.nps.gov",
-                      electronicMailAddress = "irma@nps.gov",
-                      userId = list(directory="https://ror.org/", userId="https://ror.org/044zqqy65"))
+  #get existing publisher info for the data package:
+  publish<-emlObject$dataset$publisher
 
+  #create desired publisher info:
+  pubset<- list(organizationName =
+            "U.S. National Park Service",
+          address = list(deliveryPoint = "1201 Oakridge Drive, Suite 150",
+                         city = "Fort Collins",
+                         administrativeArea="CO",
+                         postalCode="80525",
+                         country="USA"),
+          onlineUrl = "http://www.nps.gov",
+          electronicMailAddress = "irma@nps.gov",
+          userId = list(directory="https://ror.org/", userId="https://ror.org/044zqqy65"))
+
+  #if existing and desired publisher don't match, replace existing with desired.
+  if(!identical(publish, pubset)){
+    emlObject$dataset$publisher<-pubset
     }
   return(emlObject)
 }
