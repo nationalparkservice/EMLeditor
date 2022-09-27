@@ -5,9 +5,10 @@
 #' @details returns the date from the <beginDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check for a few other common formats and return the date as a text string: "DD Month YYYY"
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
 #' @return a text string
 #' @export
-#' @examples
+#' @example
 #' get.beginDate(emlObject)
 get.beginDate<-function(emlObject){
   begin<-arcticdatautils::eml_get_simple(emlObject, "beginDate")
@@ -26,10 +27,10 @@ get.beginDate<-function(emlObject){
 #'
 #' @details returns the date from the <endDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"
 #'
-#' #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text sting
 #' @export
-#' @examples
+#' @example
 #' get.endDate(emlObject)
 get.endDate<-function(emlObject){
   end<-arcticdatautils::eml_get_simple(emlObject, "endDate")
@@ -86,7 +87,7 @@ get.abstract<-function(emlObject){
 #'
 #' @details accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire data package and returns it as a text string, ignoring the contents of all other <title> tags.
 #'
-#' #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @example
@@ -137,7 +138,7 @@ get.DSRefID<-function(emlObject){
 #'
 #' @details allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance wiht DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
 #'
-#' #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @example
@@ -189,7 +190,8 @@ get.citation<-function(emlObject){
 #'
 #' @details get.authorList assumes every author has at least 1 first name (either <givenName> or <givenName1>) and only one last name (<surName>). Middle names (<givenName2>) are optional. The author List is formatted with the last name, comma,  first name for the first author and the fist name, last name for all subsequent authors. The last author's name is preceeded by an 'and'.
 #'
-#' #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
 #' @return a text string
 #' @export
 #' @example
@@ -269,6 +271,7 @@ get.authorList<-function(emlObject){
 #' @details accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
 #' @return a text string
 #' @export
 #' @example
@@ -391,6 +394,7 @@ get.CUI<-function(emlObject){
 #' @details returns the file names (listed in the <objectName> tag), the size of the files (listed in the <size> tag) and converts it from bytes (B) to a more easily interpretable unit (KB, MB, GB, etc). Technically this uses powers of 2^10 so that KB is actually a kibibyte (1024 bytes) and not a kilobyte (1000 bytes). Similarly MB is a mebibyte not a megabyte, GB is a gibibyte not a gigabyte, etc. But for most practical purposes this is probably irrelevant. Finally, a short description is provided for each file (from the <entityDescription> tag).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
 #' @return a text string
 #' @export
 #' @example
@@ -431,6 +435,7 @@ get.fileInfo<-function(emlObject){
 #'
 #' @details get.DRRdoi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
 #' @return a text string
 #' @export
 #' @example
@@ -457,15 +462,15 @@ get.DRRdoi<-function(emlObject){
 #'
 #' @description get.lit prints bibtex fromated literature cited to the screen.
 #'
-#' @details get.lit currently only supports bibtex formated references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
+#' @details get.lit currently only supports bibtex formatted references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
 #' @return character string
 #' @export
 #'
-#' @examples lit<-get.lit(emLObject); writeLines(lit)
-#'
+#' @examples
+#' get.lit(emlObject)
 get.lit<-function(emlObject){
-  lit<-eml_get_simple(emlObject, "literatureCited")
+  lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")
 }
