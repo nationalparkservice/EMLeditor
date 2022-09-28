@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{set.forByNPS}
 \alias{set.forByNPS}
-\title{Set For or By NPS}
+\title{Set "For or By" NPS}
 \usage{
 set.forByNPS(emlObject)
 }
@@ -13,7 +13,7 @@ set.forByNPS(emlObject)
 emlObject
 }
 \description{
-adds an element to additionalMetadata with For or By NPS set to TRUE.
+set.forByNPS adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
 }
 \examples{
 set.forByNPS(emlObject)
