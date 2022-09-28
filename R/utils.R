@@ -127,9 +127,9 @@ get.unitPolygon <- function(Unit_Code) {
   return(parkpolygon)
 }
 
-#' Set For or By NPS
+#' Set "For or By" NPS
 #'
-#' @description adds an element to additionalMetadata with For or By NPS set to TRUE.
+#' @description set.forByNPS adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
@@ -142,9 +142,9 @@ get.unitPolygon <- function(Unit_Code) {
 set.forByNPS<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:
-  forby<-list(metadata=list(For_or_by_NPS=
-                              list(For_or_by_NPS="TRUE")),
-              id="For_or_by_NPS")
+  forby<-list(metadata=list(For_or_by_NPS="TRUE",
+                            agencyOriginated="NPS"),
+                            id="agencyOriginated")
 
   #access additionalMetadata elements:
   addMeta<-EML::eml_get(emlObject, "additionalMetadata")
