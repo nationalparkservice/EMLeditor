@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{set.NPSpublisher}
 \alias{set.NPSpublisher}
-\title{inject NPS info into metadata}
+\title{inject NPS Publisher info into metadata}
 \usage{
 set.NPSpublisher(emlObject)
 }
@@ -13,10 +13,10 @@ set.NPSpublisher(emlObject)
 emlObject
 }
 \description{
-injects static NPS-specific info into eml documents
+injects static NPS-specific publisher info into eml documents. Calls the sub-function set.forOrByNPS, which adds an additionalMetadata element with for or by NPS = TRUE.
 }
 \details{
-checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
+checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?).
 }
 \examples{
 set.NPSpublisher(emlObject)
