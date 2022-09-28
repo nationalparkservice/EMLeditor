@@ -1,8 +1,8 @@
-#' inject NPS info into metadata
+#' inject NPS Publisher info into metadata
 #'
-#' @description injects static NPS-specific info into eml documents
+#' @description injects static NPS-specific publisher info into eml documents. Calls the sub-function set.forOrByNPS, which adds an additionalMetadata element with for or by NPS = TRUE.
 #'
-#' @details checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?)
+#' @details checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
@@ -30,7 +30,11 @@ set.NPSpublisher<-function(emlObject){
   #if existing and desired publisher don't match, replace existing with desired.
   if(!identical(publish, pubset)){
     emlObject$dataset$publisher<-pubset
-    }
+  }
+
+  #since the publisher is NPS, sets an additionalMetadata field for For or By NPS to TRUE.
+  set.forByNPS(emlObject)
+
   return(emlObject)
 }
 
@@ -56,7 +60,7 @@ set.version<-function(emlObject){
   EMLed<-list(metadata=list(emlEditor=
                               list(app="EMLeditor",
                                    release=currentvers)),
-              id="emlEditor")
+                                   id="emlEditor")
 
   #access additionalMetadata elements:
   addMeta<-EML::eml_get(emlObject, "additionalMetadata")
@@ -99,36 +103,6 @@ set.version<-function(emlObject){
   return(emlObject)
 }
 
-
-##################################################
-#To add in later: update EML version if it is out of date. What follows is some old/eneffective code for a first attempt:
-##################################################
-#if EMLeditor is included, but the version is wrong, update version
-#    if(!is.null(app)){
-#      for(i in seq_along(addMeta)){
-#        if(suppressWarnings(stringr::str_detect#(addMeta[i], "EMLeditor"))){
-          #could prob remove if statement and just sub it in no matter what
-#          if(release[[i]][2]!=currentvers){
-            #sub old version with new version:
-#            release[[i]][2]<-currentvers
-#          }
-#        }
-#      }
-#      mylist<-NULL
-#      for(i in seq_along(names(release))){
-#        if(!names(release)[i]=='@context'){
-#          mylist<-append(mylist, release[i])
-#        }
-#      }
-      #names to null critical for writing to xml
-#      names(mylist)<-NULL
-      #overwrite existing additionalMetadata with new version info
-#      emlObject$additionalMetadata$metadata$emlEditor<-mylist
-#   }
-#  }
-#  return(emlObject)
-#}
-
 #' Get Park Unit Polygon
 #'
 #' @description get.unitPolygon gets the polygon for a given park unit.
@@ -151,4 +125,57 @@ get.unitPolygon <- function(Unit_Code) {
   parkpolygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
 
   return(parkpolygon)
+}
+
+#' Set For or By NPS
+#'
+#' @description adds an element to additionalMetadata with For or By NPS set to TRUE.
+#'
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#'
+#' @return emlObject
+#'
+#' @export
+#'
+#' @examples
+#' set.forByNPS(emlObject)
+set.forByNPS<-function(emlObject){
+
+  #set up additionalMetadata elements for EMLeditor:
+  forby<-list(metadata=list(For_or_by_NPS=
+                              list(For_or_by_NPS="TRUE")),
+              id="For_or_by_NPS")
+
+  #access additionalMetadata elements:
+  addMeta<-EML::eml_get(emlObject, "additionalMetadata")
+  addMeta<-within(addMeta, rm('@context'))
+
+  #if no additionalMetadata, add in EMLeditor and current version:
+  if(seq_along(names(addMeta))==0){
+    emlObject$additionalMetadata<-forby
+  }
+
+  #if there are existing additionalMetadata elements:
+  if(seq_along(names(addMeta))>0){
+    x<-length(addMeta)
+
+    #does it include EMLeditor?
+    For_or_by_NPS<-NULL
+    for(i in seq_along(addMeta)){
+      if(suppressWarnings(stringr::str_detect(addMeta[i], "For_or_by_NPS"))){
+        For_or_by_NPS<-"TRUE"
+      }
+    }
+
+    #if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
+    if(is.null(For_or_by_NPS)){
+      if(x==1){
+        emlObject$additionalMetadata<-list(forby, emlObject$additionalMetadata)
+      }
+      if(x>1){
+        emlObject$additionalMetadata[[x+1]]<-forby
+      }
+    }
+  }
+  return(emlObject)
 }
