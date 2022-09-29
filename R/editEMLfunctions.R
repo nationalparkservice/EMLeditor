@@ -107,6 +107,8 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
 
+  emlObject<-set.version(emlObject)
+
   return(emlObject)
 }
 
