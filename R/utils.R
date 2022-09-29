@@ -151,12 +151,12 @@ set.forByNPS<-function(emlObject){
   addMeta<-within(addMeta, rm('@context'))
 
   #if no additionalMetadata, add in EMLeditor and current version:
-  if(seq_along(names(addMeta))==0){
+  if(length(names(addMeta))==0){
     emlObject$additionalMetadata<-forby
   }
 
   #if there are existing additionalMetadata elements:
-  if(seq_along(names(addMeta))>0){
+  if(length(names(addMeta))>0){
     x<-length(addMeta)
 
     #does it include EMLeditor?
