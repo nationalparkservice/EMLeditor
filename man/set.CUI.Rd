@@ -34,5 +34,7 @@ set.CUI adds CUI codes to EML metadata
 set.CUI adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
 }
 \examples{
+ \dontrun{
 set.CUI(emlObject, "PUBFUL")
+}
 }

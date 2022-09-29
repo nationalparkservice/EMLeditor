@@ -10,8 +10,10 @@
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' DataPackageTitle<-"New Title. Must match DataStore Reference title."
-#' set.title(emlObject, DataPackageTitle)
+#' emlObject<-set.title(emlObject, DataPackageTitle)
+#' }
 set.title<-function(emlObject, DataPackageTitle, NPS=TRUE){
   doc<-arcticdatautils::eml_get_simple(emlObject, "title")
   if(is.null(doc)){
@@ -52,6 +54,10 @@ set.title<-function(emlObject, DataPackageTitle, NPS=TRUE){
 #' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
 #' @export
+#' @examples
+#'  \dontrun{
+#'  emlObject<-set.DOI(emlObject, DSref)
+#'  }
 set.DOI<-function(emlObject, DSref, NPS=TRUE){
   #Look for an existing data package DOI:
   doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier") #where EMLassemblyline stores DOIs.
@@ -107,6 +113,7 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
 
+  #add/update EMLeditor and version to metadata:
   emlObject<-set.version(emlObject)
 
   return(emlObject)
@@ -130,7 +137,9 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
 #' @export
 #'
 #' @example
-#' new.DOI(emlObject, "1111111")
+#'  \dontrun{
+#'  emlObject<-new.DOI(emlObject, "1111111")
+#' }
 new.DOI<-function(emlObject, DSref, NPS=TRUE){
   emlObject$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", DSref)
 
@@ -159,8 +168,10 @@ new.DOI<-function(emlObject, DSref, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
+#'  \dontrun{
 #' ParkUnits<-("ROMO, GRSD, TRYME")
 #' set.parkUnits(emlObject, ParkUnits)
+#' }
 set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
   #add text to indicate that these are park unit connections. Note that bounding coordinates are DUMMY COORDINATES
   units<-paste0("NPS Unit Connections: ", ParkUnits)
@@ -240,7 +251,9 @@ set.parkUnits<-function(emlObject, ParkUnits, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
+#'  \dontrun{
 #' set.CUI(emlObject, "PUBFUL")
+#' }
 set.CUI<-function(emlObject, CUIcode=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), NPS=TRUE){
 
   #verify CUI code entry; stop if does not equal one of six valid codes listed above:
@@ -317,8 +330,10 @@ set.CUI<-function(emlObject, CUIcode=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
+#'  \dontrun{
 #' DRRtitle<-"Data Release Report for Data Package 1234"
 #' set.DRRdoi(emlObject, "2293234", DRRtitle)
+#' }
 set.DRRdoi<-function(emlObject, DRRrefID, DRRtitle, NPS=TRUE){
   if(NPS==TRUE){org<-"NPS"}
   else{org<-NPS}
@@ -354,7 +369,9 @@ set.DRRdoi<-function(emlObject, DRRrefID, DRRtitle, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#' set.abstract(emlObject, "This is a very short abstract")
+#'  \dontrun{
+#' emlObject<-set.abstract(emlObject, "This is a very short abstract")
+#' }
 set.abstract<-function(emlObject, abstract, NPS=TRUE){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
@@ -395,7 +412,9 @@ set.abstract<-function(emlObject, abstract, NPS=TRUE){
 #' @export
 #'
 #' @examples
-#' litcited2<-set.lit(emlObject, "bibfile.bib")
+#'  \dontrun{
+#' emlObject<-litcited2<-set.lit(emlObject, "bibfile.bib")
+#' }
 set.lit<-function(emlObject, bibtex_file, NPS=TRUE){
   bibtex_citation<-readr::read_file(bibtex_file)
   lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")

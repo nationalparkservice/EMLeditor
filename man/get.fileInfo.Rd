@@ -13,7 +13,7 @@ get.fileInfo(emlObject)
 a text string
 }
 \description{
-returns a plain-text table containing file names, file sizes, and short descriptions of the files.
+get.fileInfo returns a plain-text table containing file names, file sizes, and short descriptions of the files.
 }
 \details{
 returns the file names (listed in the <objectName> tag), the size of the files (listed in the <size> tag) and converts it from bytes (B) to a more easily interpretable unit (KB, MB, GB, etc). Technically this uses powers of 2^10 so that KB is actually a kibibyte (1024 bytes) and not a kilobyte (1000 bytes). Similarly MB is a mebibyte not a megabyte, GB is a gibibyte not a gigabyte, etc. But for most practical purposes this is probably irrelevant. Finally, a short description is provided for each file (from the <entityDescription> tag).

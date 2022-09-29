@@ -16,5 +16,7 @@ get.unitPolygon gets the polygon for a given park unit.
 retrieves a geoJSON string for a polygon of a park unit from NPS Rest services. Note: This is not the official boundary (erm... ok then what is it?!?).
 }
 \examples{
+ \dontrun{
 poly<-get.unitPolygon("BICY")
+}
 }

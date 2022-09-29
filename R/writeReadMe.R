@@ -11,7 +11,9 @@
 #' @export
 #'
 #' @examples
-#' write.readme(emlObject, "TestReadMe.txt")
+#'  \dontrun{
+#' write.readMe(emlObject, "TestReadMe.txt")
+#' }
 write.readMe<-function(emlObject, outfile){
 
   #get components:

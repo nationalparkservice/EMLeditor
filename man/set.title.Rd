@@ -23,6 +23,8 @@ Edit data package title
 The set.Title function checks to see if there is an existing title and then asks the user if they would like to change the title. Some work is still needed on this function as get_eml() automatically returns all instances of a given tag. Specifying which title will be important for this function to work well.
 }
 \examples{
+ \dontrun{
 DataPackageTitle<-"New Title. Must match DataStore Reference title."
-set.title(emlObject, DataPackageTitle)
+emlObject<-set.title(emlObject, DataPackageTitle)
+}
 }

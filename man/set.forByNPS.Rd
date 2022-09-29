@@ -16,5 +16,7 @@ emlObject
 set.forByNPS adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
 }
 \examples{
+ \dontrun{
 set.forByNPS(emlObject)
+}
 }

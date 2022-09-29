@@ -19,5 +19,7 @@ get.lit prints bibtex fromated literature cited to the screen.
 get.lit currently only supports bibtex formatted references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
 }
 \examples{
+\dontrun{
 get.lit(emlObject)
+}
 }

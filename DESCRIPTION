@@ -22,4 +22,5 @@ Remotes: NCEAS/arcticdatautils
 Imports: 
     httr,
     readr,
-    sf
+    sf,
+    utils

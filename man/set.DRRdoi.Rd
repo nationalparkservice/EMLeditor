@@ -25,6 +25,8 @@ set.DRRdoi adds the DOI of an associated DRR
 adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the default NPS=TRUE sets the DRR creator organization to NPS. If you do NOT want the organization name for the DRR to be NPS, set NPS="Your Favorite Organization". sets the id flag for this usageCitation to "associatedDRR".
 }
 \examples{
+ \dontrun{
 DRRtitle<-"Data Release Report for Data Package 1234"
 set.DRRdoi(emlObject, "2293234", DRRtitle)
+}
 }

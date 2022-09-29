@@ -10,7 +10,9 @@
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' set.NPSpublisher(emlObject)
+#' }
 set.NPSpublisher<-function(emlObject){
   #get existing publisher info for the data package:
   publish<-emlObject$dataset$publisher
@@ -50,11 +52,12 @@ set.NPSpublisher<-function(emlObject){
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' set.version(emlObject)
-#'
+#' }
 set.version<-function(emlObject){
   #get current EMLeditor package version:
-  currentvers<-as.character(packageVersion("EMLeditor"))
+  currentvers<-as.character(utils::packageVersion("EMLeditor"))
 
   #set up additionalMetadata elements for EMLeditor:
   EMLed<-list(metadata=list(emlEditor=
@@ -115,7 +118,9 @@ set.version<-function(emlObject){
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' poly<-get.unitPolygon("BICY")
+#' }
 get.unitPolygon <- function(Unit_Code) {
   # get geography from NPS Rest Services
   UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", Unit_Code, "/geography")
@@ -138,7 +143,9 @@ get.unitPolygon <- function(Unit_Code) {
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' set.forByNPS(emlObject)
+#' }
 set.forByNPS<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:

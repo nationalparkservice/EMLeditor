@@ -23,6 +23,8 @@ adds all specified park unit connections and their N, E, S, W bounding boxes to 
 Adds the Park Unit Connection(s) to a <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit connection is given a separate <geographicCoverage> element. For each park unit connection, the unit name will be listed under <geographicDescription> and prefaced with "NPS Unit Connections:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set.parkUnits will add to them, not overwrite them. If not other <geographicCoverage> elements exist, set.parkUnits will create a new set of <geographicCoverage> elements.
 }
 \examples{
+ \dontrun{
 ParkUnits<-("ROMO, GRSD, TRYME")
 set.parkUnits(emlObject, ParkUnits)
+}
 }
