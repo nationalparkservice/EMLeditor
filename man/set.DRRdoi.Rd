@@ -4,14 +4,16 @@
 \alias{set.DRRdoi}
 \title{adds DRR connection}
 \usage{
-set.DRRdoi(emlObject, DRRrefID, NPS = TRUE)
+set.DRRdoi(emlObject, DRRrefID, DRRtitle, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
 \item{DRRrefID}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.}
 
-\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
+\item{DRRtitle}{the title of the DRR as it appears in the DataStore Reference.}
+
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".}
 }
 \value{
 an EML-formatted R object
@@ -20,8 +22,9 @@ an EML-formatted R object
 set.DRRdoi adds the DOI of an associated DRR
 }
 \details{
-adds uses the DataStore Reference ID for an associate DRR to the <useageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <useageCitation> tag. ####CAUTION: in the current implimentation this may overwrite any other useageCitation info.
+adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the default NPS=TRUE sets the DRR creator organization to NPS. If you do NOT want the organization name for the DRR to be NPS, set NPS="Your Favorite Organization". sets the id flag for this usageCitation to "associatedDRR".
 }
 \examples{
-set.DRRdoi(emlObject, "2293234")
+DRRtitle<-"Data Release Report for Data Package 1234"
+set.DRRdoi(emlObject, "2293234", DRRtitle)
 }

@@ -4,18 +4,23 @@
 \alias{set.CUI}
 \title{Adds CUI to metadata}
 \usage{
-set.CUI(emlObject, CUI, NPS = TRUE)
+set.CUI(
+  emlObject,
+  CUIcode = c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"),
+  NPS = TRUE
+)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{CUI}{a string consisting of one of 5 potential CUI codes. Pay attention to the spaces:
+\item{CUIcode}{a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
-PUBVER - Does NOT contain CUI. The original data contained CUI, but in thisdata package CUI have been obscured so that it no longer contains CUI.
-PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package}
+PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
+PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
+NPSONLY - Contains CUI. For NPS access only.}
 
 \item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }

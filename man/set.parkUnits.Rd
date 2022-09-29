@@ -2,14 +2,14 @@
 % Please edit documentation in R/editEMLfunctions.R
 \name{set.parkUnits}
 \alias{set.parkUnits}
-\title{Adds Park Unit Connections to metadata}
+\title{Add Park Unit Connections to metadata}
 \usage{
 set.parkUnits(emlObject, ParkUnits, NPS = TRUE)
 }
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{ParkUnits}{a string of comma-separated park unit codes}
+\item{ParkUnits}{a list of comma-separated strings where each string is a park unit code.}
 
 \item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
@@ -17,10 +17,10 @@ set.parkUnits(emlObject, ParkUnits, NPS = TRUE)
 an EML-formatted R object
 }
 \description{
-Adds Park Unit Connections to metadata
+adds all specified park unit connections and their N, E, S, W bounding boxes to <geographicCoverage>.
 }
 \details{
-Add the Park Unit Connection(s) to a <geographicDescription> tag under <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). If there are already =items listed under geographicCoverage, Park Unit Connections will be inserted as the first item in the list of geographicCoverages and will be prefaced by the string "NPS Unit Connections:".
+Adds the Park Unit Connection(s) to a <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit connection is given a separate <geographicCoverage> element. For each park unit connection, the unit name will be listed under <geographicDescription> and prefaced with "NPS Unit Connections:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set.parkUnits will add to them, not overwrite them. If not other <geographicCoverage> elements exist, set.parkUnits will create a new set of <geographicCoverage> elements.
 }
 \examples{
 ParkUnits<-("ROMO, GRSD, TRYME")

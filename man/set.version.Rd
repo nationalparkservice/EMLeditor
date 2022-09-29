@@ -2,19 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{set.version}
 \alias{set.version}
-\title{Add EMLeditory version}
+\title{Add/update EMLeditor version}
 \usage{
 set.version(emlObject)
 }
 \arguments{
-\item{emlObject}{}
+\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+}
+\value{
+emlObject
 }
 \description{
-set.version adds the current version of EMLeditor to the metadata
+set.version adds the current version of EMLeditor to the EML document.
 }
 \details{
-set.version adds the current version of EMLeditor to the metadata, specifically in the
+set.version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 }
 \examples{
 set.version(emlObject)
+
 }

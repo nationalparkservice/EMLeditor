@@ -6,6 +6,9 @@
 \usage{
 get.endDate(emlObject)
 }
+\arguments{
+\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+}
 \value{
 a text sting
 }
@@ -13,10 +16,5 @@ a text sting
 get.endDate returns the date of the last data point in the data package
 }
 \details{
-returns the date from the <endDate> tag. Although dates should be formatted accoriding to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"
-
-#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-}
-\examples{
-get.endDate(emlObject)
+returns the date from the <endDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"
 }

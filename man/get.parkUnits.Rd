@@ -16,5 +16,5 @@ a text string
 returns a string with the park unit codes where the data were collected
 }
 \details{
-accesses the contents of the <geographicDescription> tags and returns the contents of the tag that containst the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set.parkUnits() function.
+accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set.parkUnits() function.
 }

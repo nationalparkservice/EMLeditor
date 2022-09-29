@@ -11,7 +11,7 @@ set.DOI(emlObject, DSref, NPS = TRUE)
 
 \item{DSref}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.}
 
-\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
+\item{NPS}{is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
 \value{
 an EML-formatted R object
