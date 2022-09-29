@@ -9,7 +9,9 @@
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.beginDate(emlObject)
+#' }
 get.beginDate<-function(emlObject){
   begin<-arcticdatautils::eml_get_simple(emlObject, "beginDate")
   if(is.null(begin)){
@@ -31,7 +33,9 @@ get.beginDate<-function(emlObject){
 #' @return a text sting
 #' @export
 #' @example
+#'  \dontrun{
 #' get.endDate(emlObject)
+#' }
 get.endDate<-function(emlObject){
   end<-arcticdatautils::eml_get_simple(emlObject, "endDate")
   if(is.null(end)){
@@ -54,8 +58,10 @@ get.endDate<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' abstract<-get.abstract(emlObject)
 #' writeLines(abstract)
+#' }
 get.abstract<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
@@ -91,7 +97,9 @@ get.abstract<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.title(emlObject)
+#' }
 get.title<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "title")[1]
   if(is.null(doc)){
@@ -110,7 +118,9 @@ get.title<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.DSRefID(emlObject)
+#'  \dontrun{
 get.DSRefID<-function(emlObject){
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
@@ -142,7 +152,9 @@ get.DSRefID<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.citation(emlObject)
+#' }
 get.citation<-function(emlObject){
   #assemble the pieces:
 
@@ -195,7 +207,9 @@ get.citation<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.authorList(emlObject)
+#' }
 get.authorList<-function(emlObject){
   #get author names & affiliations
   authors<-arcticdatautils::eml_get_simple(emlObject, "creator")
@@ -275,7 +289,9 @@ get.authorList<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.DOI(emlObject)
+#'  \dontrun{
 get.DOI<-function(emlObject){
   #where EMLassemblyline stores DOIs.
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
@@ -308,7 +324,9 @@ get.DOI<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.parkUnits(emlObject)
+#' }
 get.parkUnits<-function(emlObject){
   units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")
   if(is.null(units)){
@@ -327,7 +345,7 @@ get.parkUnits<-function(emlObject){
     #make a string that is just comma separated unit connection codes:
     punits<-NULL
     for(i in seq_along(unitcons)){
-      if(unitcons[i]== tail(unitcons, 1)){
+      if(unitcons[i]== utils::tail(unitcons, 1)){
           remtext<-sub('NPS Unit Connections: ', '', unitcons[i])
           punits<-append(punits, remtext)
       }
@@ -354,7 +372,9 @@ get.parkUnits<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.CUI(emlObject)
+#' }
 get.CUI<-function(emlObject){
   cui<-arcticdatautils::eml_get_simple(emlObject, "CUI")
   if(is.null(cui)){
@@ -389,17 +409,20 @@ get.CUI<-function(emlObject){
 
 #' displays file names, sizes, and descriptions
 #'
-#' @description returns a plain-text table containing file names, file sizes, and short descriptions of the files.
+#' @description get.fileInfo returns a plain-text table containing file names, file sizes, and short descriptions of the files.
 #'
 #' @details returns the file names (listed in the <objectName> tag), the size of the files (listed in the <size> tag) and converts it from bytes (B) to a more easily interpretable unit (KB, MB, GB, etc). Technically this uses powers of 2^10 so that KB is actually a kibibyte (1024 bytes) and not a kilobyte (1000 bytes). Similarly MB is a mebibyte not a megabyte, GB is a gibibyte not a gigabyte, etc. But for most practical purposes this is probably irrelevant. Finally, a short description is provided for each file (from the <entityDescription> tag).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
+#' @importFrom magrittr %>%
+#'
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.fileInfo(emlObject)
-#gets & displays the filenames (from objectName) and file descriptions (from entityDescription):
+#' }
 get.fileInfo<-function(emlObject){
   #get file names
   file.name<-arcticdatautils::eml_get_simple(emlObject, "objectName")
@@ -414,8 +437,7 @@ get.fileInfo<-function(emlObject){
     filesize<-suppressWarnings(as.numeric(filesize))
     filebyte<-unique(filesize)
     filebyte<-filebyte[!is.na(filebyte)]
-    readable<-gdata::humanReadable(filebyte, standard="Unix") %>%
-      paste0("B")
+    readable<-gdata::humanReadable(filebyte, standard="Unix") %>% paste0("B")
 
     #get file descriptions
     file.descript<-arcticdatautils::eml_get_simple(emlObject, "entityDescription")
@@ -439,7 +461,9 @@ get.fileInfo<-function(emlObject){
 #' @return a text string
 #' @export
 #' @example
+#'  \dontrun{
 #' get.DRRdoi(emlObject)
+#' }
 get.DRRdoi<-function(emlObject){
   doi<-arcticdatautils::eml_get_simple(emlObject, "usageCitation")
   if(is.null(doi)){
@@ -470,7 +494,10 @@ get.DRRdoi<-function(emlObject){
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' get.lit(emlObject)
+#' }
 get.lit<-function(emlObject){
   lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")
+  return(lit)
 }

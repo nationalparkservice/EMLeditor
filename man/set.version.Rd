@@ -19,6 +19,7 @@ set.version adds the current version of EMLeditor to the EML document.
 set.version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 }
 \examples{
+ \dontrun{
 set.version(emlObject)
-
+}
 }

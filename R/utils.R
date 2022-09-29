@@ -10,7 +10,9 @@
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' set.NPSpublisher(emlObject)
+#' }
 set.NPSpublisher<-function(emlObject){
   #get existing publisher info for the data package:
   publish<-emlObject$dataset$publisher
@@ -33,7 +35,7 @@ set.NPSpublisher<-function(emlObject){
   }
 
   #since the publisher is NPS, sets an additionalMetadata field for For or By NPS to TRUE.
-  set.forByNPS(emlObject)
+  emlObject<-set.forByNPS(emlObject)
 
   return(emlObject)
 }
@@ -50,11 +52,12 @@ set.NPSpublisher<-function(emlObject){
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' set.version(emlObject)
-#'
+#' }
 set.version<-function(emlObject){
   #get current EMLeditor package version:
-  currentvers<-as.character(packageVersion("EMLeditor"))
+  currentvers<-as.character(utils::packageVersion("EMLeditor"))
 
   #set up additionalMetadata elements for EMLeditor:
   EMLed<-list(metadata=list(emlEditor=
@@ -115,7 +118,9 @@ set.version<-function(emlObject){
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' poly<-get.unitPolygon("BICY")
+#' }
 get.unitPolygon <- function(Unit_Code) {
   # get geography from NPS Rest Services
   UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", Unit_Code, "/geography")
@@ -138,7 +143,9 @@ get.unitPolygon <- function(Unit_Code) {
 #' @export
 #'
 #' @examples
+#'  \dontrun{
 #' set.forByNPS(emlObject)
+#' }
 set.forByNPS<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:
@@ -151,12 +158,12 @@ set.forByNPS<-function(emlObject){
   addMeta<-within(addMeta, rm('@context'))
 
   #if no additionalMetadata, add in EMLeditor and current version:
-  if(seq_along(names(addMeta))==0){
+  if(length(names(addMeta))==0){
     emlObject$additionalMetadata<-forby
   }
 
   #if there are existing additionalMetadata elements:
-  if(seq_along(names(addMeta))>0){
+  if(length(names(addMeta))>0){
     x<-length(addMeta)
 
     #does it include EMLeditor?
