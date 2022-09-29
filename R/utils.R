@@ -33,7 +33,7 @@ set.NPSpublisher<-function(emlObject){
   }
 
   #since the publisher is NPS, sets an additionalMetadata field for For or By NPS to TRUE.
-  set.forByNPS(emlObject)
+  emlObject<-set.forByNPS(emlObject)
 
   return(emlObject)
 }
