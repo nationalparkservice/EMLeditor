@@ -149,7 +149,7 @@ get.unitPolygon <- function(Unit_Code) {
 set.forByNPS<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:
-  forby<-list(metadata=list(For_or_by_NPS="TRUE",
+  forby<-list(metadata=list(byOrForNPS="TRUE",
                             agencyOriginated="NPS"),
                             id="agencyOriginated")
 
@@ -166,10 +166,10 @@ set.forByNPS<-function(emlObject){
   if(length(names(addMeta))>0){
     x<-length(addMeta)
 
-    #does it include EMLeditor?
+    #does it include byOrForNPS?
     For_or_by_NPS<-NULL
     for(i in seq_along(addMeta)){
-      if(suppressWarnings(stringr::str_detect(addMeta[i], "For_or_by_NPS"))){
+      if(suppressWarnings(stringr::str_detect(addMeta[i], "byOrForNPS"))){
         For_or_by_NPS<-"TRUE"
       }
     }
