@@ -22,3 +22,8 @@ new.DOI forces changes to an existing DOI
 \details{
 If a DOI already exists in the <alternateidentifier> tag (get.DOI() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
 }
+\examples{
+ \dontrun{
+ emlObject<-new.DOI(emlObject, "1111111")
+}
+}

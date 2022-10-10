@@ -18,3 +18,8 @@ get.CUI returns an english-language translation of the CUI codes
 \details{
 get.CUI accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get.CUI alerts the user and suggests specifying CUI using the set.CUI() funciton.
 }
+\examples{
+ \dontrun{
+get.CUI(emlObject)
+}
+}

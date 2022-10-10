@@ -18,3 +18,8 @@ get.DRRdoi returns a text string with the associated Data Release Report (DRR)'s
 \details{
 get.DRRdoi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
 }
+\examples{
+ \dontrun{
+get.DRRdoi(emlObject)
+}
+}

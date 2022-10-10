@@ -114,7 +114,7 @@ set.version<-function(emlObject){
 #'
 #' @param Unit_Code a string (typically 4 characters) that is the park unit code.
 #'
-#' @return
+#' @return a park polygon
 #' @export
 #'
 #' @examples

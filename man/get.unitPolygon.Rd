@@ -9,6 +9,9 @@ get.unitPolygon(Unit_Code)
 \arguments{
 \item{Unit_Code}{a string (typically 4 characters) that is the park unit code.}
 }
+\value{
+a park polygon
+}
 \description{
 get.unitPolygon gets the polygon for a given park unit.
 }
