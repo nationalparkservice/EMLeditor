@@ -18,3 +18,8 @@ get.DSRefID returns the DataStore Reference ID as a string of text.
 \details{
 accesses the DOI listed in the <alternateIdentifier> tag and trims to to the last 7 digits, which should be identical to the DataStore Reference ID. If the <alternateIdentifier> tag is empty, it notifies the user that there is no DOI associate with the metadata and suggests adding one using set.DOI() (edit.DOI() would also work).
 }
+\examples{
+ \dontrun{
+get.DSRefID(emlObject)
+ }
+}

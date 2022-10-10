@@ -18,3 +18,9 @@ returns the text from the <abstract> tag.
 \details{
 returns the text from the <abstract> tag and attempts to clean up common text issues, such as enforcing UTF-8 formatting, getting rid of carriage returns, new lines, <para> and <literalLayout> tags and mucks about with layout, line breaks, etc. IF you see characters you don't like in the abstract, make sure to edit your abstract in a text editor (e.g. Notepad and NOT a Word). You should save the text to a new object and view it using writeLines()
 }
+\examples{
+ \dontrun{
+abstract<-get.abstract(emlObject)
+writeLines(abstract)
+}
+}

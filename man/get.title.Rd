@@ -18,3 +18,8 @@ returns a text string that is the title of the data package
 \details{
 accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire data package and returns it as a text string, ignoring the contents of all other <title> tags.
 }
+\examples{
+ \dontrun{
+get.title(emlObject)
+}
+}

@@ -8,7 +8,7 @@
 #'
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.beginDate(emlObject)
 #' }
@@ -32,7 +32,7 @@ get.beginDate<-function(emlObject){
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text sting
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.endDate(emlObject)
 #' }
@@ -57,7 +57,7 @@ get.endDate<-function(emlObject){
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' abstract<-get.abstract(emlObject)
 #' writeLines(abstract)
@@ -96,7 +96,7 @@ get.abstract<-function(emlObject){
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.title(emlObject)
 #' }
@@ -117,10 +117,10 @@ get.title<-function(emlObject){
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.DSRefID(emlObject)
-#'  \dontrun{
+#'  }
 get.DSRefID<-function(emlObject){
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
@@ -146,12 +146,12 @@ get.DSRefID<-function(emlObject){
 #'
 #' @description returns a Chicago manual of style citation for the data package
 #'
-#' @details allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance wiht DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
+#' @details allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance with DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.citation(emlObject)
 #' }
@@ -206,7 +206,7 @@ get.citation<-function(emlObject){
 #'
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.authorList(emlObject)
 #' }
@@ -225,17 +225,12 @@ get.authorList<-function(emlObject){
 
     #extract givenName; should handle middle names too!
     FirstName<-NULL
-    first<-NULL
     for(i in seq_along(authors)){
       if(stringr::str_detect(names(authors)[i], "givenName\\b")){
         FirstName<-append(FirstName, authors[i][[1]])
       }
       else if(stringr::str_detect(names(authors)[i], "givenName1\\b")){
         first_middle<-paste0(authors[i], " ", authors[i+1])
-        FirstName<-append(FirstName, first_middle)
-      }
-      if(length(first>0)){
-        first_middle<-paste0(first, " ", middle)
         FirstName<-append(FirstName, first_middle)
       }
     }
@@ -251,6 +246,8 @@ get.authorList<-function(emlObject){
     #create a single object that is a string consisting of the ith author, formatted according to the Chicago manual of style, Journal article:
     author<-NULL
     Last.First<-NULL
+
+    #single author:
     if(length(LastName)>0){
       #single author:
       if(length(LastName)==1){
@@ -262,6 +259,7 @@ get.authorList<-function(emlObject){
       else{
         for(i in seq_along(LastName)){
           if(i==1){
+          author<-paste0(LastName[i], ", ", FirstName[i])
           }
           if(i>1 && i<length(LastName)){
             author<-paste0(FirstName[i], " ", LastName[i])
@@ -288,7 +286,7 @@ get.authorList<-function(emlObject){
 #'
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.DOI(emlObject)
 #'  \dontrun{
@@ -323,7 +321,7 @@ get.DOI<-function(emlObject){
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.parkUnits(emlObject)
 #' }
@@ -371,7 +369,7 @@ get.parkUnits<-function(emlObject){
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.CUI(emlObject)
 #' }
@@ -419,7 +417,7 @@ get.CUI<-function(emlObject){
 #'
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.fileInfo(emlObject)
 #' }
@@ -460,7 +458,7 @@ get.fileInfo<-function(emlObject){
 #'
 #' @return a text string
 #' @export
-#' @example
+#' @examples
 #'  \dontrun{
 #' get.DRRdoi(emlObject)
 #' }

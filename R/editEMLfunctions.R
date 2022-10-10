@@ -136,7 +136,7 @@ set.DOI<-function(emlObject, DSref, NPS=TRUE){
 #'
 #' @export
 #'
-#' @example
+#' @examples
 #'  \dontrun{
 #'  emlObject<-new.DOI(emlObject, "1111111")
 #' }

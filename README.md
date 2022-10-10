@@ -10,12 +10,16 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+# Overview
+
 The goal of EMLeditor is to edit EML-formatted xml files. Specifically,
 EMLeditor provides many functions that will be useful to the U.S.
 National Park Service when generating metadata for statistical data
 packages uploaded to DataStore. NPS affiliation is assumed as default.
 However, some of the functions for viewing and editing metadata may be
 useful to people outside the NPS.
+
+# Workflow outline
 
 EMLeditor’s primary objective is to edit and view EML formatted files,
 not to generate them from scratch. A suggested workflow is:
@@ -43,7 +47,7 @@ EMLeditor will also add information about the version of EMLeditor you
 used to edit your metadata (for instance if you used “set” class
 functions).
 
-## Installation
+# Installation
 
 You can install the development version of EMLeditor from
 [GitHub](https://github.com/) with:
@@ -52,6 +56,13 @@ You can install the development version of EMLeditor from
 # install.packages("devtools")
 devtools::install_github("nationalparkservice/EMLeditor")
 ```
+
+# Details
+
+For a detailed description of how to use EML editor functions and a
+guide on which functions are required to complete EML metadata creation
+to construct an NPS data package for uploading to DataStore, see the
+complete guide.
 
 ## Example 1:
 
