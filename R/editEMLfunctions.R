@@ -457,7 +457,7 @@ emlObject<-"mymeta"
 #' @details inserts the unit code into the metadataProvider element. Currently cannot add to existing metadataProvider fields; it will just over-write them. It also currently only handles a single producing unit. See @param NPS for details on subfunctions. Addtionally, information about the version of EML editor used will be injected into the metadata.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param prodUnit A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")
+#' @param prodUnits A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
 #' @return an EML object
@@ -473,15 +473,13 @@ emlObject<-"mymeta"
 #' set.producingUnits(emlObject, "ABCD")
 #' }
 set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
-#set.producingUnit<-function(emlObject, prodUnit=c(...), NPS=TRUE){
-
-
+  #get existing metadataProvider info, if any:
   doc<-EML::eml_get(emlObject, "metadataProvider")
 
+  #make metadataProvider fields with producing units filled in:
   if(length(prodUnits==1)){
   plist<-EML::eml$metadataProvider(organizationName=prodUnits)
   }
-
   if(length(prodUnits>1)){
   plist<-NULL
     for(i in seq_along(prodUnits)){
@@ -490,20 +488,21 @@ set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
     }
   }
 
+  #if no existing metadataprovider info:
   if(is.null(doc)){
     emlObject$dataset$metadataProvider<-plist
     cat("No previous producing Units were detected. \nYour new producing units have been added. \nView the current title using get.producingUnits")
   }
+  #if there *is* existing metadataProvider info, choose whether to overwrite or not:
   else{
     cat("Your metadata already contain Producing Units (use get.producingUnits to view them). Are you sure you want to replace the existing Producing Units?")
     var1<-readline(prompt="Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
-    #if User opts to retain DOI, retain it
+    #if User opts to replace metadataProvider, replace it:
     if(var1==1){
-      #print the existing DOI to the screen:
       emlObject$dataset$metadataProvider<-plist
       cat("You have replaced your producing Units.\nView the current producing units using get.producingUnits.")
     }
-    #if User opts to change DOI, change it:
+    #if User opts to retain metadataProvider, retain it:
     if(var1==2){
       cat("Your original producing Units were retained.\nView the current producing units using get.producingUnits.")
     }
@@ -520,6 +519,13 @@ set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
   return(emlObject)
 }
 
+set.project<-function(emlObject, ProtocolRef){
+  #use rest API to fill out all the fields needed for a project. The project is where we hold PROTOCOL information.
+
+  #Qs: can relatedProjects be added later or do they need to be added at the same time?
+
+
+}
 
 
 

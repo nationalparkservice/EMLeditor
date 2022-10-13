@@ -9,9 +9,9 @@ set.producingUnits(emlObject, prodUnits, NPS = TRUE)
 \arguments{
 \item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.}
+\item{prodUnits}{A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")}
 
-\item{prodUnit}{A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")}
+\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.}
 }
 \value{
 an EML object
