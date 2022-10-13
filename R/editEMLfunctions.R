@@ -519,6 +519,13 @@ set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
   return(emlObject)
 }
 
+set.project<-function(emlObject, ProtocolRef){
+  #use rest API to fill out all the fields needed for a project. The project is where we hold PROTOCOL information.
+
+  #Qs: can relatedProjects be added later or do they need to be added at the same time?
+
+
+}
 
 
 
