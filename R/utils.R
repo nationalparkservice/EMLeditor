@@ -149,9 +149,10 @@ get.unitPolygon <- function(Unit_Code) {
 set.forByNPS<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:
-  forby<-list(metadata=list(byOrForNPS="TRUE",
-                            agencyOriginated="NPS"),
-                            id="agencyOriginated")
+  forby<-list(metadata=list(agencyOriginated=list(
+                            agency="NPS",
+                            byOrForNPS="TRUE"),
+                            id="agencyOriginated"))
 
   #access additionalMetadata elements:
   addMeta<-EML::eml_get(emlObject, "additionalMetadata")
