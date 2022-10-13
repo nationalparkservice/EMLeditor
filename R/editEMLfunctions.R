@@ -473,15 +473,13 @@ emlObject<-"mymeta"
 #' set.producingUnits(emlObject, "ABCD")
 #' }
 set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
-#set.producingUnit<-function(emlObject, prodUnit=c(...), NPS=TRUE){
-
-
+  #get existing metadataProvider info, if any:
   doc<-EML::eml_get(emlObject, "metadataProvider")
 
+  #make metadataProvider fields with producing units filled in:
   if(length(prodUnits==1)){
   plist<-EML::eml$metadataProvider(organizationName=prodUnits)
   }
-
   if(length(prodUnits>1)){
   plist<-NULL
     for(i in seq_along(prodUnits)){
@@ -490,20 +488,21 @@ set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
     }
   }
 
+  #if no existing metadataprovider info:
   if(is.null(doc)){
     emlObject$dataset$metadataProvider<-plist
     cat("No previous producing Units were detected. \nYour new producing units have been added. \nView the current title using get.producingUnits")
   }
+  #if there *is* existing metadataProvider info, choose whether to overwrite or not:
   else{
     cat("Your metadata already contain Producing Units (use get.producingUnits to view them). Are you sure you want to replace the existing Producing Units?")
     var1<-readline(prompt="Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
-    #if User opts to retain DOI, retain it
+    #if User opts to replace metadataProvider, replace it:
     if(var1==1){
-      #print the existing DOI to the screen:
       emlObject$dataset$metadataProvider<-plist
       cat("You have replaced your producing Units.\nView the current producing units using get.producingUnits.")
     }
-    #if User opts to change DOI, change it:
+    #if User opts to retain metadataProvider, retain it:
     if(var1==2){
       cat("Your original producing Units were retained.\nView the current producing units using get.producingUnits.")
     }
