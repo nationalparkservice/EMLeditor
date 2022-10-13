@@ -454,45 +454,53 @@ emlObject<-"mymeta"
 #'
 #' @description inserts the unit code for the producing unit for the data/metadata into the EML metdata file.
 #'
-#' @details inserts the unit code into the metadataProvider element. Currently cannot add to existing metadataProvider fields; it will just over-write them. It also currently only handles a single producing unit.
+#' @details inserts the unit code into the metadataProvider element. Currently cannot add to existing metadataProvider fields; it will just over-write them. It also currently only handles a single producing unit. See @param NPS for details on subfunctions. Addtionally, information about the version of EML editor used will be injected into the metadata.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
-#' @param prodUnit A string that is the producing unit Unit Code
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#' @param prodUnit A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")
+#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
+#'
 #' @return an EML object
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' set.producingUnits(emlObject, "ROMO")
+#' prodUnits<-c("ABCD", "EFGH")
+#' set.producingUnits(emlObject, prodUnits
+#'
+#' set.producingUnits(emlObject, c("ABCD", "EFGH"))
+#'
+#' set.producingUnits(emlObject, "ABCD")
 #' }
-set.producingUnits<-function(emlObject, prodUnit, NPS=TRUE){
+set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
 #set.producingUnit<-function(emlObject, prodUnit=c(...), NPS=TRUE){
 
 
-    doc<-EML::eml_get(emlObject, "metadataProvider")
+  doc<-EML::eml_get(emlObject, "metadataProvider")
 
-  punit<-EML::eml$metadataProvider(organizationName=prodUnit)
+  if(length(prodUnits==1)){
+  plist<-EML::eml$metadataProvider(organizationName=prodUnits)
+  }
 
-  #TO DO: generate list of producing unit for metadata:
-    #plist<-NULL
-    #for(i in seq_along(prodUnit)){
-    #punit<-EML::eml$metadataProvider(organizationName = prodUnit[i])
-    #plist<-append(plist,punit)
-    #}
+  if(length(prodUnits>1)){
+  plist<-NULL
+    for(i in seq_along(prodUnits)){
+      punit<-EML::eml$metadataProvider(organizationName = prodUnits[i])
+      plist<-append(plist,list(punit))
+    }
+  }
 
   if(is.null(doc)){
-    emlObject$dataset$metadataProvider<-punit
+    emlObject$dataset$metadataProvider<-plist
     cat("No previous producing Units were detected. \nYour new producing units have been added. \nView the current title using get.producingUnits")
   }
   else{
-    var1<-readline(prompt="Your metadata already contain Producing Units.\n
-    Use get.prodUnits to view the current Producint Units.\n
-    Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+    cat("Your metadata already contain Producing Units (use get.producingUnits to view them). Are you sure you want to replace the existing Producing Units?")
+    var1<-readline(prompt="Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
     #if User opts to retain DOI, retain it
     if(var1==1){
       #print the existing DOI to the screen:
-      emlObject$dataset$metadataProvider<-punit
+      emlObject$dataset$metadataProvider<-plist
       cat("You have replaced your producing Units.\nView the current producing units using get.producingUnits.")
     }
     #if User opts to change DOI, change it:
