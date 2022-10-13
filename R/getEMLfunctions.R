@@ -499,3 +499,21 @@ get.lit<-function(emlObject){
   lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")
   return(lit)
 }
+
+#' Returns the Producing Units
+#'
+#' @description get.producingUnits returns whatever is in the metadataProvider eml element. Set this to the producing units using the set.producingUnits function.
+#'
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
+#' @return a character sting
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get.producingUnits(emlObject)
+#' }
+get.producingUnits<-function(emlObject){
+  punit<-arcticdatautils::eml_get_simple(emlObject, "metadataProvider")
+  return(punit)
+}
