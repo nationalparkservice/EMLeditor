@@ -519,13 +519,86 @@ set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
   return(emlObject)
 }
 
-set.project<-function(emlObject, ProtocolRef){
-  #use rest API to fill out all the fields needed for a project. The project is where we hold PROTOCOL information.
-
-  #Qs: can relatedProjects be added later or do they need to be added at the same time?
 
 
+#' Set the human language used for metadata
+#'
+#' @description set.language allows the user to specify the language that the metadata (and data) were constructed in. This field is intended to hold the human language, i.e. English, Spanish, Cherokee.
+#'
+#' @details The English words for the language the data and metadata were constructed in (e.g. "English") is automatically converted to the the 3-letter codes for languages listed in ISO 639-2 (available at https://www.loc.gov/standards/iso639-2/php/code_list.php) and inserted into the metadata.
+#'
+#' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
+#' @param lang is a string consisting of the language the data and metadata were constructed in, for example, "English", "Spanish", "Navajo". Capitalization does not matter, but spelling does!
+#'
+#' @param NPS Logical. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
+#'
+#' @return emlObject
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' set.language(emlObject, "english")
+#' set.language(emlObject, "Spanish")
+#' set.language(emlObject, "nAvAjO")
+#' }
+set.language<-function(emlObject, lang, NPS=TRUE){
+  #enforces ISO capitalization formatting:
+  lang<-stringr::str_to_title(lang)
+
+  #a few common one-off name translations. Probably could improve the dplyr filter to filter for anything containing, but then you run into issues. There are 5 different languages whose English language name includes the word "English" ("English", "English, Old", "Creole and pigeons, English based", etc)).
+
+  if(lang=="Spanish"){
+    lang<-"Spanish; Castilian"
+  }
+  if(lang=="Iroquois"){
+    lang<="Iroquoian languages"
+  }
+
+  #get ISO language codes
+  langcodes<-ISOcodes::ISO_639_2
+
+  #get language code in the ISO language codes?
+  nlang<-dplyr::filter(langcodes, Name==lang)[[1]]
+
+  if(!nchar(nlang==3)){
+    stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
+  }
+
+  lng<-emlObject$dataset$language
+
+  if(is.null(lng)){
+    emlObject$dataset$language<-nlang
+    cat("The language has been set to ", nlang, "the ISO 639-2 code for ",lang,".")
+  }
+  else{
+    if(nchar(lng)==3){
+      fulllang<-dplyr::filter(langcodes, Alpha_3_B==lng)[[4]]
+      cat("the current language is set to ", lng," the ISO 639-2 code for ", fulllang, ".")
+    }
+    else{
+      cat("the current language is set to", lng,".")
+    }
+
+    var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+
+    if(var1==1){
+      emlObject$dataset$language<-nlang
+      cat("You have replaced the language with", crayon::blue$bold(nlang), "the 3-letter ISO-639-2 code for", crayon::blue$bold(lang), ".")
+    }
+    #if User opts to retain metadataProvider, retain it:
+    if(var1==2){
+      cat("Your original language was retained.")
+    }
+  }
+
+  #Set NPS publisher, if it doesn't already exist
+  if(NPS==TRUE){
+    emlObject<-set.NPSpublisher(emlObject)
+  }
+
+  #add/update EMLeditor and version to metadata:
+  emlObject<-set.version(emlObject)
+
+  return(emlObject)
 }
-
-
-
