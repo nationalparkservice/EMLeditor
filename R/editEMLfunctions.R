@@ -529,7 +529,7 @@ set.producingUnits<-function(emlObject, prodUnits, NPS=TRUE){
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
-#' @param lang is a string consisting of the language the data and metadata were constructed in, for example, "English", "Spanish", "Navajo". Capitalization does not matter, but spelling does!
+#' @param lang is a string consisting of the language the data and metadata were constructed in, for example, "English", "Spanish", "Navajo". Capitalization does not matter, but spelling does! The input provided here will be converted to 3-digit ISO 639-2 codes.
 #'
 #' @param NPS Logical. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
@@ -561,16 +561,21 @@ set.language<-function(emlObject, lang, NPS=TRUE){
   #get language code in the ISO language codes?
   nlang<-dplyr::filter(langcodes, Name==lang)[[1]]
 
+  #if the language supplied is not part of ISO 639-2 (spelling?):
   if(!nchar(nlang==3)){
     stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
   }
 
+  #get current language from the metadata provided:
   lng<-emlObject$dataset$language
 
+  #if there is no language specified in the metadata:
   if(is.null(lng)){
     emlObject$dataset$language<-nlang
     cat("The language has been set to ", nlang, "the ISO 639-2 code for ",lang,".")
   }
+
+  #if the language is already specified in the metadata:
   else{
     if(nchar(lng)==3){
       fulllang<-dplyr::filter(langcodes, Alpha_3_B==lng)[[4]]
@@ -580,19 +585,22 @@ set.language<-function(emlObject, lang, NPS=TRUE){
       cat("The current language is set to ", crayon::blue$bold(lng),".", sep="")
     }
 
+    #does the user want to change the language?
     var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
 
+    #if yes, change the language and report the change:
     if(var1==1){
       emlObject$dataset$language<-nlang
       cat("You have replaced the language with ", crayon::blue$bold(nlang), ", the 3-letter ISO-639-2 code for ", crayon::blue$bold(lang), ".", sep="")
     }
+
     #if User opts to retain metadataProvider, retain it:
     if(var1==2){
       cat("Your original language was retained.")
     }
   }
 
-  #Set NPS publisher, if it doesn't already exist
+  #Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
   if(NPS==TRUE){
     emlObject<-set.NPSpublisher(emlObject)
   }
