@@ -574,17 +574,17 @@ set.language<-function(emlObject, lang, NPS=TRUE){
   else{
     if(nchar(lng)==3){
       fulllang<-dplyr::filter(langcodes, Alpha_3_B==lng)[[4]]
-      cat("the current language is set to ", lng," the ISO 639-2 code for ", fulllang, ".")
+      cat("The current language is set to ", crayon::blue$bold(lng),", the ISO 639-2 code for ", fulllang, ".", sep="")
     }
     else{
-      cat("the current language is set to", lng,".")
+      cat("The current language is set to ", crayon::blue$bold(lng),".", sep="")
     }
 
     var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
 
     if(var1==1){
       emlObject$dataset$language<-nlang
-      cat("You have replaced the language with", crayon::blue$bold(nlang), "the 3-letter ISO-639-2 code for", crayon::blue$bold(lang), ".")
+      cat("You have replaced the language with ", crayon::blue$bold(nlang), ", the 3-letter ISO-639-2 code for ", crayon::blue$bold(lang), ".", sep="")
     }
     #if User opts to retain metadataProvider, retain it:
     if(var1==2){
