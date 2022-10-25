@@ -4,10 +4,10 @@
 \alias{set_lit}
 \title{Edit literature cited}
 \usage{
-set_lit(emlObject, bibtex_file, NPS = TRUE)
+set_lit(eml_object, bibtex_file, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
 \item{bibtex_file}{is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.}
 
@@ -24,6 +24,6 @@ looks for literature cited in the <literatureCited> tag and if it finds none, in
 }
 \examples{
  \dontrun{
-emlObject<-litcited2<-set_lit(emlObject, "bibfile.bib")
+eml_object<-litcited2<-set_lit(eml_object, "bibfile.bib")
 }
 }

@@ -4,14 +4,14 @@
 \alias{set_drr_doi}
 \title{adds DRR connection}
 \usage{
-set_drr_doi(emlObject, DRRrefID, DRRtitle, NPS = TRUE)
+set_drr_doi(eml_object, drr_ref_id, drr_title, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{DRRrefID}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.}
+\item{drr_ref_id}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.}
 
-\item{DRRtitle}{the title of the DRR as it appears in the DataStore Reference.}
+\item{drr_title}{the title of the DRR as it appears in the DataStore Reference.}
 
 \item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".}
 }
@@ -26,7 +26,7 @@ adds uses the DataStore Reference ID for an associate DRR to the <usageCitation>
 }
 \examples{
  \dontrun{
-DRRtitle<-"Data Release Report for Data Package 1234"
-set_drr_doi(emlObject, "2293234", DRRtitle)
+drr_title<-"Data Release Report for Data Package 1234"
+set_drr_doi(eml_object, "2293234", drr_title)
 }
 }

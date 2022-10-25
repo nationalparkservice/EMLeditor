@@ -4,12 +4,12 @@
 \alias{set_park_units}
 \title{Add Park Unit Connections to metadata}
 \usage{
-set_park_units(emlObject, ParkUnits, NPS = TRUE)
+set_park_units(eml_object, park_units, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{ParkUnits}{a list of comma-separated strings where each string is a park unit code.}
+\item{park_units}{a list of comma-separated strings where each string is a park unit code.}
 
 \item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
@@ -24,7 +24,7 @@ Adds the Park Unit Connection(s) to a <coverage>. Park Unit Connection(s) are th
 }
 \examples{
  \dontrun{
-ParkUnits<-("ROMO, GRSD, TRYME")
-set_park_units(emlObject, ParkUnits)
+park_units<-("ROMO, GRSD, TRYME")
+set_park_units(eml_object, park_units)
 }
 }

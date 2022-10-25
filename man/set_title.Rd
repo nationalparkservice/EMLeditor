@@ -4,12 +4,12 @@
 \alias{set_title}
 \title{Edit data package title}
 \usage{
-set_title(emlObject, DataPackageTitle, NPS = TRUE)
+set_title(eml_object, data_package_title, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
-\item{DataPackageTitle}{is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.}
+\item{data_package_title}{is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.}
 
 \item{NPS}{is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
 }
@@ -24,7 +24,7 @@ The set_title function checks to see if there is an existing title and then asks
 }
 \examples{
  \dontrun{
-DataPackageTitle<-"New Title. Must match DataStore Reference title."
-emlObject<-set_title(emlObject, DataPackageTitle)
+data_package_title<-"New Title. Must match DataStore Reference title."
+eml_object<-set_title(eml_object, data_package_title)
 }
 }

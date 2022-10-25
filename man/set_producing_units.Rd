@@ -4,12 +4,12 @@
 \alias{set_producing_units}
 \title{Sets Producing Units for use in DataStore}
 \usage{
-set_producing_units(emlObject, prodUnits, NPS = TRUE)
+set_producing_units(eml_object, prod_units, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{prodUnits}{A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")}
+\item{prod_units}{A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")}
 
 \item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.}
 }
@@ -24,11 +24,11 @@ inserts the unit code into the metadataProvider element. Currently cannot add to
 }
 \examples{
 \dontrun{
-prodUnits<-c("ABCD", "EFGH")
-set_producing_units(emlObject, prodUnits
+prod_units<-c("ABCD", "EFGH")
+set_producing_units(eml_object, prod_units
 
-set_producing_units(emlObject, c("ABCD", "EFGH"))
+set_producing_units(eml_object, c("ABCD", "EFGH"))
 
-set_producing_units(emlObject, "ABCD")
+set_producing_units(eml_object, "ABCD")
 }
 }
