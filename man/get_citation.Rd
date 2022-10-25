@@ -4,10 +4,10 @@
 \alias{get_citation}
 \title{returns the data package citation}
 \usage{
-get_citation(emlObject)
+get_citation(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ get_citation allows the user to preview the what the citation will look like. Th
 }
 \examples{
  \dontrun{
-get_citation(emlObject)
+get_citation(eml_object)
 }
 }

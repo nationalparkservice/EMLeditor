@@ -4,10 +4,10 @@
 \alias{get_doi}
 \title{returns the DOI}
 \usage{
-get_doi(emlObject)
+get_doi(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string

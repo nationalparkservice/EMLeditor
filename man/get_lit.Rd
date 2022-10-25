@@ -4,10 +4,10 @@
 \alias{get_lit}
 \title{Get literature cited}
 \usage{
-get_lit(emlObject)
+get_lit(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 character string
@@ -20,6 +20,6 @@ get_lit currently only supports bibtex formatted references. get_lit gets items 
 }
 \examples{
 \dontrun{
-get_lit(emlObject)
+get_lit(eml_object)
 }
 }

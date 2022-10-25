@@ -4,19 +4,19 @@
 \alias{.set_for_by_nps}
 \title{Set "For or By" NPS}
 \usage{
-.set_for_by_nps(emlObject)
+.set_for_by_nps(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 }
 \value{
-emlObject
+eml_object
 }
 \description{
 .set_for_by_nps adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
 }
 \examples{
  \dontrun{
-.set_for_by_nps(emlObject)
+.set_for_by_nps(eml_object)
 }
 }

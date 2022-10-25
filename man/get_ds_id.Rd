@@ -4,10 +4,10 @@
 \alias{get_ds_id}
 \title{returns the DataStore Reference ID}
 \usage{
-get_ds_id(emlObject)
+get_ds_id(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ accesses the DOI listed in the <alternateIdentifier> tag and trims to to the las
 }
 \examples{
  \dontrun{
-get_ds_id(emlObject)
+get_ds_id(eml_object)
  }
 }

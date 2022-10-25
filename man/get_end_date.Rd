@@ -4,10 +4,10 @@
 \alias{get_end_date}
 \title{returns the last date}
 \usage{
-get_end_date(emlObject)
+get_end_date(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text sting
@@ -20,6 +20,6 @@ returns the date from the <endDate> tag. Although dates should be formatted acco
 }
 \examples{
  \dontrun{
-get_end_date(emlObject)
+get_end_date(eml_object)
 }
 }

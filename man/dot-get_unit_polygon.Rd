@@ -4,10 +4,10 @@
 \alias{.get_unit_polygon}
 \title{Get Park Unit Polygon}
 \usage{
-.get_unit_polygon(Unit_Code)
+.get_unit_polygon(unit_code)
 }
 \arguments{
-\item{Unit_Code}{a string (typically 4 characters) that is the park unit code.}
+\item{unit_code}{a string (typically 4 characters) that is the park unit code.}
 }
 \value{
 a park polygon

@@ -4,13 +4,13 @@
 \alias{.set_version}
 \title{Add/update EMLeditor version}
 \usage{
-.set_version(emlObject)
+.set_version(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 }
 \value{
-emlObject
+eml_object
 }
 \description{
 .set_version adds the current version of EMLeditor to the EML document.
@@ -20,6 +20,6 @@ emlObject
 }
 \examples{
  \dontrun{
-.set_version(emlObject)
+.set_version(eml_object)
 }
 }

@@ -4,13 +4,13 @@
 \alias{.set_npspublisher}
 \title{inject NPS Publisher info into metadata}
 \usage{
-.set_npspublisher(emlObject)
+.set_npspublisher(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
-emlObject
+eml_object
 }
 \description{
 .set_npspublisher injects static NPS-specific publisher info into eml documents. Calls the sub-function set.forOrByNPS, which adds an additionalMetadata element with for or by NPS = TRUE.
@@ -20,6 +20,6 @@ checks to see if the publisher element exists, and if not injects NPS-specific i
 }
 \examples{
  \dontrun{
-.set_npspublisher(emlObject)
+.set_npspublisher(eml_object)
 }
 }

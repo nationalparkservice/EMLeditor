@@ -4,10 +4,10 @@
 \alias{get_park_units}
 \title{returns the park unit connections}
 \usage{
-get_park_units(emlObject)
+get_park_units(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ get_park_units accesses the contents of the <geographicDescription> tags and ret
 }
 \examples{
  \dontrun{
-get_park_units(emlObject)
+get_park_units(eml_object)
 }
 }

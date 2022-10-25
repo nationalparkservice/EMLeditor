@@ -4,10 +4,10 @@
 \alias{set_abstract}
 \title{adds an abstract}
 \usage{
-set_abstract(emlObject, abstract, NPS = TRUE)
+set_abstract(eml_object, abstract, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{abstract}{is a text string that is your abstract. You can generate this directly in R or import a .txt file.}
 
@@ -24,6 +24,6 @@ checks for an abstract. If no abstract is found, it inserts the abstract given i
 }
 \examples{
  \dontrun{
-emlObject<-set_abstract(emlObject, "This is a very short abstract")
+eml_object<-set_abstract(eml_object, "This is a very short abstract")
 }
 }

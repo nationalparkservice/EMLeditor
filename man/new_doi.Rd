@@ -4,12 +4,12 @@
 \alias{new_doi}
 \title{Force-edits an existing DOI}
 \usage{
-new_doi(emlObject, DSref, NPS = TRUE)
+new_doi(eml_object, ds_ref, NPS = TRUE)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{DSref}{is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://www.doi.org and the data package prefix - those will all automatically be added in by the function.}
+\item{ds_ref}{is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://www.doi.org and the data package prefix - those will all automatically be added in by the function.}
 
 \item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE.}
 }
@@ -24,6 +24,6 @@ If a DOI already exists in the <alternateidentifier> tag (get_doi() to check), t
 }
 \examples{
  \dontrun{
- emlObject<-new_doi(emlObject, "1111111")
+ eml_object<-new_doi(eml_object, "1111111")
 }
 }

@@ -4,10 +4,10 @@
 \alias{get_title}
 \title{returns the data package title}
 \usage{
-get_title(emlObject)
+get_title(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ accesses all of the <title> tags (there can be several, if each file was given a
 }
 \examples{
  \dontrun{
-get_title(emlObject)
+get_title(eml_object)
 }
 }

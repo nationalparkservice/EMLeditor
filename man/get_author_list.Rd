@@ -4,10 +4,10 @@
 \alias{get_author_list}
 \title{returns the authors}
 \usage{
-get_author_list(emlObject)
+get_author_list(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ get_author_list assumes every author has at least 1 first name (either <givenNam
 }
 \examples{
  \dontrun{
-get_author_list(emlObject)
+get_author_list(eml_object)
 }
 }

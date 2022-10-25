@@ -4,10 +4,10 @@
 \alias{get_producing_units}
 \title{Returns the Producing Units}
 \usage{
-get_producing_units(emlObject)
+get_producing_units(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a character sting
@@ -17,6 +17,6 @@ get_producing_units returns whatever is in the metadataProvider eml element. Set
 }
 \examples{
 \dontrun{
-get_producing_units(emlObject)
+get_producing_units(eml_object)
 }
 }

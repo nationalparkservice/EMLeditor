@@ -4,10 +4,10 @@
 \alias{get_abstract}
 \title{returns the abstract}
 \usage{
-get_abstract(emlObject)
+get_abstract(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,7 +20,7 @@ get_abstract returns the text from the <abstract> tag and attempts to clean up c
 }
 \examples{
  \dontrun{
-abstract<-get_abstract(emlObject)
+abstract<-get_abstract(eml_object)
 writeLines(abstract)
 }
 }

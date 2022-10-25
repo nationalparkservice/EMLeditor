@@ -4,10 +4,10 @@
 \alias{get_drr_doi}
 \title{returns the DOI of the associated DRR}
 \usage{
-get_drr_doi(emlObject)
+get_drr_doi(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR
 }
 \examples{
  \dontrun{
-get_drr_doi(emlObject)
+get_drr_doi(eml_object)
 }
 }

@@ -4,10 +4,10 @@
 \alias{get_file_info}
 \title{displays file names, sizes, and descriptions}
 \usage{
-get_file_info(emlObject)
+get_file_info(eml_object)
 }
 \arguments{
-\item{emlObject}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 }
 \value{
 a text string
@@ -20,6 +20,6 @@ get_file_info returns the file names (listed in the <objectName> tag), the size 
 }
 \examples{
  \dontrun{
-get_file_info(emlObject)
+get_file_info(eml_object)
 }
 }
