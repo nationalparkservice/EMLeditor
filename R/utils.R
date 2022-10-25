@@ -1,6 +1,6 @@
 #' inject NPS Publisher info into metadata
 #'
-#' @description injects static NPS-specific publisher info into eml documents. Calls the sub-function set.forOrByNPS, which adds an additionalMetadata element with for or by NPS = TRUE.
+#' @description .set_npspublisher injects static NPS-specific publisher info into eml documents. Calls the sub-function set.forOrByNPS, which adds an additionalMetadata element with for or by NPS = TRUE.
 #'
 #' @details checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?).
 #'
@@ -11,9 +11,9 @@
 #'
 #' @examples
 #'  \dontrun{
-#' set.NPSpublisher(emlObject)
+#' .set_npspublisher(emlObject)
 #' }
-set.NPSpublisher<-function(emlObject){
+.set_npspublisher<-function(emlObject){
   #get existing publisher info for the data package:
   publish<-emlObject$dataset$publisher
 
@@ -35,16 +35,16 @@ set.NPSpublisher<-function(emlObject){
   }
 
   #since the publisher is NPS, sets an additionalMetadata field for For or By NPS to TRUE.
-  emlObject<-set.forByNPS(emlObject)
+  emlObject<-.set_for_by_nps(emlObject)
 
   return(emlObject)
 }
 
 #' Add/update EMLeditor version
 #'
-#' @description set.version adds the current version of EMLeditor to the EML document.
+#' @description .set_version adds the current version of EMLeditor to the EML document.
 #'
-#' @details set.version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
+#' @details .set_version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
@@ -53,9 +53,9 @@ set.NPSpublisher<-function(emlObject){
 #'
 #' @examples
 #'  \dontrun{
-#' set.version(emlObject)
+#' .set_version(emlObject)
 #' }
-set.version<-function(emlObject){
+.set_version<-function(emlObject){
   #get current EMLeditor package version:
   currentvers<-as.character(utils::packageVersion("EMLeditor"))
 
@@ -108,7 +108,7 @@ set.version<-function(emlObject){
 
 #' Get Park Unit Polygon
 #'
-#' @description get.unitPolygon gets the polygon for a given park unit.
+#' @description .get_unit_polygon gets the polygon for a given park unit.
 #'
 #' @details retrieves a geoJSON string for a polygon of a park unit from NPS Rest services. Note: This is not the official boundary (erm... ok then what is it?!?).
 #'
@@ -119,9 +119,9 @@ set.version<-function(emlObject){
 #'
 #' @examples
 #'  \dontrun{
-#' poly<-get.unitPolygon("BICY")
+#' poly<-.get_unit_polygon("BICY")
 #' }
-get.unitPolygon <- function(Unit_Code) {
+.get_unit_polygon <- function(Unit_Code) {
   # get geography from NPS Rest Services
   UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", Unit_Code, "/geography")
   xml <- httr::content(httr::GET(UnitsURL))
@@ -134,7 +134,7 @@ get.unitPolygon <- function(Unit_Code) {
 
 #' Set "For or By" NPS
 #'
-#' @description set.forByNPS adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
+#' @description .set_for_by_nps adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
@@ -144,9 +144,9 @@ get.unitPolygon <- function(Unit_Code) {
 #'
 #' @examples
 #'  \dontrun{
-#' set.forByNPS(emlObject)
+#' .set_for_by_nps(emlObject)
 #' }
-set.forByNPS<-function(emlObject){
+.set_for_by_nps<-function(emlObject){
 
   #set up additionalMetadata elements for EMLeditor:
   forby<-list(metadata=list(agencyOriginated=list(

@@ -1,6 +1,6 @@
 #' returns the first date
 #'
-#' @description get.beginDate returns the date of the earliest data point in the data package
+#' @description get_begin_date returns the date of the earliest data point in the data package
 #'
 #' @details returns the date from the <beginDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check for a few other common formats and return the date as a text string: "DD Month YYYY"
 #'
@@ -10,9 +10,9 @@
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.beginDate(emlObject)
+#' get_begin_date(emlObject)
 #' }
-get.beginDate<-function(emlObject){
+get_begin_date<-function(emlObject){
   begin<-arcticdatautils::eml_get_simple(emlObject, "beginDate")
   if(is.null(begin)){
     warning("Your metadata lacks a begining date.")
@@ -25,7 +25,7 @@ get.beginDate<-function(emlObject){
 
 #' returns the last date
 #'
-#' @description get.endDate returns the date of the last data point in the data package
+#' @description get_end_date returns the date of the last data point in the data package
 #'
 #' @details returns the date from the <endDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"
 #'
@@ -34,9 +34,9 @@ get.beginDate<-function(emlObject){
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.endDate(emlObject)
+#' get_end_date(emlObject)
 #' }
-get.endDate<-function(emlObject){
+get_end_date<-function(emlObject){
   end<-arcticdatautils::eml_get_simple(emlObject, "endDate")
   if(is.null(end)){
     warning("Your metadata lacks an ending date.")
@@ -52,17 +52,17 @@ get.endDate<-function(emlObject){
 #'
 #' @description returns the text from the <abstract> tag.
 #'
-#' @details returns the text from the <abstract> tag and attempts to clean up common text issues, such as enforcing UTF-8 formatting, getting rid of carriage returns, new lines, <para> and <literalLayout> tags and mucks about with layout, line breaks, etc. IF you see characters you don't like in the abstract, make sure to edit your abstract in a text editor (e.g. Notepad and NOT a Word). You should save the text to a new object and view it using writeLines()
+#' @details get_abstract returns the text from the <abstract> tag and attempts to clean up common text issues, such as enforcing UTF-8 formatting, getting rid of carriage returns, new lines, <para> and <literalLayout> tags and mucks about with layout, line breaks, etc. IF you see characters you don't like in the abstract, make sure to edit your abstract in a text editor (e.g. Notepad and NOT a Word). You should save the text to a new object and view it using writeLines()
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @examples
 #'  \dontrun{
-#' abstract<-get.abstract(emlObject)
+#' abstract<-get_abstract(emlObject)
 #' writeLines(abstract)
 #' }
-get.abstract<-function(emlObject){
+get_abstract<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
     warning("Your EML lacks an abstract. Use set.abstract() to add one.")
@@ -89,7 +89,7 @@ get.abstract<-function(emlObject){
 
 #' returns the data package title
 #'
-#' @description returns a text string that is the title of the data package
+#' @description get_title returns a text string that is the title of the data package
 #'
 #' @details accesses all of the <title> tags (there can be several, if each file was given a separate title). Assumes that the first instance of <title> referes to the entire data package and returns it as a text string, ignoring the contents of all other <title> tags.
 #'
@@ -98,9 +98,9 @@ get.abstract<-function(emlObject){
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.title(emlObject)
+#' get_title(emlObject)
 #' }
-get.title<-function(emlObject){
+get_title<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "title")[1]
   if(is.null(doc)){
     doc<-NA
@@ -110,18 +110,18 @@ get.title<-function(emlObject){
 
 #' returns the DataStore Reference ID
 #'
-#' @description get.DSRefID returns the DataStore Reference ID as a string of text.
+#' @description get_ds_id returns the DataStore Reference ID as a string of text.
 #'
-#' @details accesses the DOI listed in the <alternateIdentifier> tag and trims to to the last 7 digits, which should be identical to the DataStore Reference ID. If the <alternateIdentifier> tag is empty, it notifies the user that there is no DOI associate with the metadata and suggests adding one using set.DOI() (edit.DOI() would also work).
+#' @details accesses the DOI listed in the <alternateIdentifier> tag and trims to to the last 7 digits, which should be identical to the DataStore Reference ID. If the <alternateIdentifier> tag is empty, it notifies the user that there is no DOI associate with the metadata and suggests adding one using set_doi() (edit_doi() would also work).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.DSRefID(emlObject)
+#' get_ds_id(emlObject)
 #'  }
-get.DSRefID<-function(emlObject){
+get_ds_id<-function(emlObject){
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
     warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
@@ -146,23 +146,23 @@ get.DSRefID<-function(emlObject){
 #'
 #' @description returns a Chicago manual of style citation for the data package
 #'
-#' @details allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance with DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
+#' @details get_citation allows the user to preview the what the citation will look like. The Harper's Ferry Style Guide recommends using the Chicago Manual of Style for formatting citations. The citation is formatted according to to a modified version of the Chicago Manual of Style's Author-Date journal article format because currently there is no Chicago Manual of Style format specified for datasets or data packages. In compliance with DataCite's recommendations regarding including DOIs in citations, the citation displays the entire DOI as https://www.doi.org/10.58370/xxxxxx".
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.citation(emlObject)
+#' get_citation(emlObject)
 #' }
-get.citation<-function(emlObject){
+get_citation<-function(emlObject){
   #assemble the pieces:
 
-  doi<-get.DOI(emlObject)
+  doi<-get_doi(emlObject)
 
-  authorList<-get.authorList(emlObject)
+  authorList<-get_author_list(emlObject)
 
-  title<-get.title(emlObject)
+  title<-get_title(emlObject)
 
   pubDate<-arcticdatautils::eml_get_simple(emlObject, "pubDate")
   pubDate<-lubridate::parse_date_time(pubDate, orders="Y-m-d")
@@ -198,9 +198,9 @@ get.citation<-function(emlObject){
 
 #' returns the authors
 #'
-#' @description get.authorList returns a text string with all of the authors listed under the <creator> tag.
+#' @description get_author_list returns a text string with all of the authors listed under the <creator> tag.
 #'
-#' @details get.authorList assumes every author has at least 1 first name (either <givenName> or <givenName1>) and only one last name (<surName>). Middle names (<givenName2>) are optional. The author List is formatted with the last name, comma,  first name for the first author and the fist name, last name for all subsequent authors. The last author's name is preceeded by an 'and'.
+#' @details get_author_list assumes every author has at least 1 first name (either <givenName> or <givenName1>) and only one last name (<surName>). Middle names (<givenName2>) are optional. The author List is formatted with the last name, comma,  first name for the first author and the fist name, last name for all subsequent authors. The last author's name is preceeded by an 'and'.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
@@ -208,9 +208,9 @@ get.citation<-function(emlObject){
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.authorList(emlObject)
+#' get_author_list(emlObject)
 #' }
-get.authorList<-function(emlObject){
+get_author_list<-function(emlObject){
   #get author names & affiliations
   authors<-arcticdatautils::eml_get_simple(emlObject, "creator")
 
@@ -280,7 +280,7 @@ get.authorList<-function(emlObject){
 #'
 #' @description returns a text string that is the DOI for the data package
 #'
-#' @details accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
+#' @details get_doi accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
@@ -288,9 +288,9 @@ get.authorList<-function(emlObject){
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.DOI(emlObject)
+#' get_doi(emlObject)
 #'  \dontrun{
-get.DOI<-function(emlObject){
+get_doi<-function(emlObject){
   #where EMLassemblyline stores DOIs.
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
@@ -316,16 +316,16 @@ get.DOI<-function(emlObject){
 #'
 #' @description returns a string with the park unit codes where the data were collected
 #'
-#' @details accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set.parkUnits() function.
+#' @details get_park_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set.parkUnits() function.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.parkUnits(emlObject)
+#' get_park_units(emlObject)
 #' }
-get.parkUnits<-function(emlObject){
+get_park_units<-function(emlObject){
   units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")
   if(is.null(units)){
     warning("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
@@ -362,18 +362,18 @@ get.parkUnits<-function(emlObject){
 
 #' returns a CUI statement
 #'
-#' @description get.CUI returns an english-language translation of the CUI codes
+#' @description get_cui returns an english-language translation of the CUI codes
 #'
-#' @details get.CUI accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get.CUI alerts the user and suggests specifying CUI using the set.CUI() funciton.
+#' @details get_cui accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.CUI(emlObject)
+#' get_cui(emlObject)
 #' }
-get.CUI<-function(emlObject){
+get_cui<-function(emlObject){
   cui<-arcticdatautils::eml_get_simple(emlObject, "CUI")
   if(is.null(cui)){
     warning("No CUI specified. Use the set.CUI() function to add a properly formatted CUI code.")
@@ -407,9 +407,9 @@ get.CUI<-function(emlObject){
 
 #' displays file names, sizes, and descriptions
 #'
-#' @description get.fileInfo returns a plain-text table containing file names, file sizes, and short descriptions of the files.
+#' @description get_file_info returns a plain-text table containing file names, file sizes, and short descriptions of the files.
 #'
-#' @details returns the file names (listed in the <objectName> tag), the size of the files (listed in the <size> tag) and converts it from bytes (B) to a more easily interpretable unit (KB, MB, GB, etc). Technically this uses powers of 2^10 so that KB is actually a kibibyte (1024 bytes) and not a kilobyte (1000 bytes). Similarly MB is a mebibyte not a megabyte, GB is a gibibyte not a gigabyte, etc. But for most practical purposes this is probably irrelevant. Finally, a short description is provided for each file (from the <entityDescription> tag).
+#' @details get_file_info returns the file names (listed in the <objectName> tag), the size of the files (listed in the <size> tag) and converts it from bytes (B) to a more easily interpretable unit (KB, MB, GB, etc). Technically this uses powers of 2^10 so that KB is actually a kibibyte (1024 bytes) and not a kilobyte (1000 bytes). Similarly MB is a mebibyte not a megabyte, GB is a gibibyte not a gigabyte, etc. But for most practical purposes this is probably irrelevant. Finally, a short description is provided for each file (from the <entityDescription> tag).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
@@ -419,9 +419,9 @@ get.CUI<-function(emlObject){
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.fileInfo(emlObject)
+#' get_file_info(emlObject)
 #' }
-get.fileInfo<-function(emlObject){
+get_file_info<-function(emlObject){
   #get file names
   file.name<-arcticdatautils::eml_get_simple(emlObject, "objectName")
 
@@ -451,18 +451,18 @@ get.fileInfo<-function(emlObject){
 
 #' returns the DOI of the associated DRR
 #'
-#' @description get.DRRdoi returns a text string with the associated Data Release Report (DRR)'s DOI.
+#' @description get_drr_doi returns a text string with the associated Data Release Report (DRR)'s DOI.
 #'
-#' @details get.DRRdoi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
+#' @details get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
 #' @return a text string
 #' @export
 #' @examples
 #'  \dontrun{
-#' get.DRRdoi(emlObject)
+#' get_drr_doi(emlObject)
 #' }
-get.DRRdoi<-function(emlObject){
+get_drr_doi<-function(emlObject){
   doi<-arcticdatautils::eml_get_simple(emlObject, "usageCitation")
   if(is.null(doi)){
     warning("You have not specified a DRR associated with this data package. If you have an associated DRR, specify its DOI using set.DRRdoi.")
@@ -482,9 +482,9 @@ get.DRRdoi<-function(emlObject){
 
 #' Get literature cited
 #'
-#' @description get.lit prints bibtex fromated literature cited to the screen.
+#' @description get_lit prints bibtex fromated literature cited to the screen.
 #'
-#' @details get.lit currently only supports bibtex formatted references. get.lit gets items from the <literatureCited> tag and prints them to the screen.
+#' @details get_lit currently only supports bibtex formatted references. get_lit gets items from the <literatureCited> tag and prints them to the screen.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
@@ -493,16 +493,16 @@ get.DRRdoi<-function(emlObject){
 #'
 #' @examples
 #' \dontrun{
-#' get.lit(emlObject)
+#' get_lit(emlObject)
 #' }
-get.lit<-function(emlObject){
+get_lit<-function(emlObject){
   lit<-arcticdatautils::eml_get_simple(emlObject, "literatureCited")
   return(lit)
 }
 
 #' Returns the Producing Units
 #'
-#' @description get.producingUnits returns whatever is in the metadataProvider eml element. Set this to the producing units using the set.producingUnits function.
+#' @description get_producing_units returns whatever is in the metadataProvider eml element. Set this to the producing units using the set_producing_units function.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
@@ -511,9 +511,9 @@ get.lit<-function(emlObject){
 #'
 #' @examples
 #' \dontrun{
-#' get.producingUnits(emlObject)
+#' get_producing_units(emlObject)
 #' }
-get.producingUnits<-function(emlObject){
+get_producing_units<-function(emlObject){
   punit<-arcticdatautils::eml_get_simple(emlObject, "metadataProvider")
   return(punit)
 }
