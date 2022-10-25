@@ -65,7 +65,7 @@ get_end_date<-function(emlObject){
 get_abstract<-function(emlObject){
   doc<-arcticdatautils::eml_get_simple(emlObject, "abstract")
   if(is.null(doc)){
-    warning("Your EML lacks an abstract. Use set.abstract() to add one.")
+    warning("Your EML lacks an abstract. Use set_abstract() to add one.")
     txt<-NA #to do: test whether NA needs quotes for write.README.
   }
   else{
@@ -124,7 +124,7 @@ get_title<-function(emlObject){
 get_ds_id<-function(emlObject){
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
-    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
+    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
     RefID<-NA # to do: check write.readMe whether NA needs to be in quotes.
   }
   else{
@@ -135,7 +135,7 @@ get_ds_id<-function(emlObject){
     }
     RefID<-stringr::str_sub(doi, start=-7)
     if(suppressWarnings(is.na(as.numeric(RefID)))){
-      warning("Your DOI is not consistent with an NPS DOI. Use set.DOI to update your DOI.")
+      warning("Your DOI is not consistent with an NPS DOI. Use set_doi to update your DOI.")
       RefID<-NA
     }
   }
@@ -179,7 +179,7 @@ get_citation<-function(emlObject){
 
   #piece it together:
   if(is.null(doi)){
-    warning("No doi specified. Please use set.DOI to add a DOI.")
+    warning("No doi specified. Please use set_doi to add a DOI.")
   }
   if(is.null(authorList)){
     warning("No authors listed. Please add authors as \"creator\" in EMLassemlbyline.")
@@ -294,7 +294,7 @@ get_doi<-function(emlObject){
   #where EMLassemblyline stores DOIs.
   pid<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier")
   if(is.null(pid)){
-    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set.DOI() function to add your DOI")
+    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
     doi<-NA #to do: does NA need to be in quotes for write.ReadMe?
   }
   else{
@@ -316,7 +316,7 @@ get_doi<-function(emlObject){
 #'
 #' @description returns a string with the park unit codes where the data were collected
 #'
-#' @details get_park_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set.parkUnits() function.
+#' @details get_park_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @return a text string
@@ -328,7 +328,7 @@ get_doi<-function(emlObject){
 get_park_units<-function(emlObject){
   units<-arcticdatautils::eml_get_simple(emlObject, "geographicDescription")
   if(is.null(units)){
-    warning("No Park Unit Connections specified. Use the set.parkUnits() function to add Park Unit Connections.")
+    warning("No Park Unit Connections specified. Use the set_park_units() function to add Park Unit Connections.")
     punits<-NA #to do: test whether NA needs quotes for write.README.
   }
   else{
@@ -376,7 +376,7 @@ get_park_units<-function(emlObject){
 get_cui<-function(emlObject){
   cui<-arcticdatautils::eml_get_simple(emlObject, "CUI")
   if(is.null(cui)){
-    warning("No CUI specified. Use the set.CUI() function to add a properly formatted CUI code.")
+    warning("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
     cui<-"No CUI specified."
   }
   else if(cui=="FED ONLY"){
@@ -398,7 +398,7 @@ get_cui<-function(emlObject){
     cui<-"Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
   }
   else{
-    warning("CUI not properly specified. User set.CUI to update the CUI code.")
+    warning("CUI not properly specified. User set_cui to update the CUI code.")
     cui<-NA
   }
   return(cui)
@@ -453,7 +453,7 @@ get_file_info<-function(emlObject){
 #'
 #' @description get_drr_doi returns a text string with the associated Data Release Report (DRR)'s DOI.
 #'
-#' @details get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set.DRRdoi() function to add the DOI of an associated DRR.
+#' @details get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set_drr_doi() function to add the DOI of an associated DRR.
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
 #' @return a text string
@@ -465,7 +465,7 @@ get_file_info<-function(emlObject){
 get_drr_doi<-function(emlObject){
   doi<-arcticdatautils::eml_get_simple(emlObject, "usageCitation")
   if(is.null(doi)){
-    warning("You have not specified a DRR associated with this data package. If you have an associated DRR, specify its DOI using set.DRRdoi.")
+    warning("You have not specified a DRR associated with this data package. If you have an associated DRR, specify its DOI using set_drr_doi.")
     DRRdoi<-NA #to do: test whether NA needs quotes for write.README.
   }
   else{

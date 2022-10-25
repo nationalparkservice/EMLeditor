@@ -360,7 +360,7 @@ set_drr_doi<-function(emlObject, DRRrefID, DRRtitle, NPS=TRUE){
 #'
 #' @description set_abstract adds (or replaces) a simple abstract.
 #'
-#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set.abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set_abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
@@ -469,7 +469,7 @@ set_lit<-function(emlObject, bibtex_file, NPS=TRUE){
 #'
 #' set_producing_units(emlObject, "ABCD")
 #' }
-set.producing_units<-function(emlObject, prodUnits, NPS=TRUE){
+set_producing_units<-function(emlObject, prodUnits, NPS=TRUE){
   #get existing metadataProvider info, if any:
   doc<-EML::eml_get(emlObject, "metadataProvider")
 

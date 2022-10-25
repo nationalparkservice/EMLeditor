@@ -7,7 +7,6 @@
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
 #' @return emlObject
-#' @export
 #'
 #' @examples
 #'  \dontrun{
@@ -49,7 +48,6 @@
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
 #' @return emlObject
-#' @export
 #'
 #' @examples
 #'  \dontrun{
@@ -115,7 +113,6 @@
 #' @param Unit_Code a string (typically 4 characters) that is the park unit code.
 #'
 #' @return a park polygon
-#' @export
 #'
 #' @examples
 #'  \dontrun{
@@ -139,8 +136,6 @@
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
 #' @return emlObject
-#'
-#' @export
 #'
 #' @examples
 #'  \dontrun{
