@@ -46,7 +46,7 @@ set_title<-function(emlObject, DataPackageTitle, NPS=TRUE){
 
 #' Check & set a DOI
 #'
-#' @details set_DOI checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
+#' @details set_doi checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 #'
 #' @param emlObject is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #' @param DSref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
@@ -55,9 +55,9 @@ set_title<-function(emlObject, DataPackageTitle, NPS=TRUE){
 #' @export
 #' @examples
 #'  \dontrun{
-#'  emlObject<-set_DOI(emlObject, DSref)
+#'  emlObject<-set_doi(emlObject, DSref)
 #'  }
-set_DOI<-function(emlObject, DSref, NPS=TRUE){
+set_doi<-function(emlObject, DSref, NPS=TRUE){
   #Look for an existing data package DOI:
   doc<-arcticdatautils::eml_get_simple(emlObject, "alternateIdentifier") #where EMLassemblyline stores DOIs.
 
