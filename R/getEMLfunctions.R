@@ -9,17 +9,18 @@
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_begin_date(eml_object)
 #' }
-get_begin_date<-function(eml_object){
-  begin<-arcticdatautils::eml_get_simple(eml_object, "beginDate")
-  if(is.null(begin)){
+get_begin_date <- function(eml_object) {
+  begin <- arcticdatautils::eml_get_simple(eml_object, "beginDate")
+  if (is.null(begin)) {
     warning("Your metadata lacks a begining date.")
-    begin<-NA #to do: test whether NA needs quotes for write.README.
-  }
-  else{
-  begin %>% as.Date %>% format("%d %B %Y")
+    begin <- NA # to do: test whether NA needs quotes for write.README.
+  } else {
+    begin %>%
+      as.Date() %>%
+      format("%d %B %Y")
   }
 }
 
@@ -33,17 +34,18 @@ get_begin_date<-function(eml_object){
 #' @return a text sting
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_end_date(eml_object)
 #' }
-get_end_date<-function(eml_object){
-  end<-arcticdatautils::eml_get_simple(eml_object, "endDate")
-  if(is.null(end)){
+get_end_date <- function(eml_object) {
+  end <- arcticdatautils::eml_get_simple(eml_object, "endDate")
+  if (is.null(end)) {
     warning("Your metadata lacks an ending date.")
-    end<-NA #to do: test whether NA needs quotes for write.README.
-  }
-  else{
-  end %>% as.Date %>% format("%d %B %Y")
+    end <- NA # to do: test whether NA needs quotes for write.README.
+  } else {
+    end %>%
+      as.Date() %>%
+      format("%d %B %Y")
   }
 }
 
@@ -58,29 +60,28 @@ get_end_date<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
-#' abstract<-get_abstract(eml_object)
+#' \dontrun{
+#' abstract <- get_abstract(eml_object)
 #' writeLines(abstract)
 #' }
-get_abstract<-function(eml_object){
-  doc<-arcticdatautils::eml_get_simple(eml_object, "abstract")
-  if(is.null(doc)){
+get_abstract <- function(eml_object) {
+  doc <- arcticdatautils::eml_get_simple(eml_object, "abstract")
+  if (is.null(doc)) {
     warning("Your EML lacks an abstract. Use set_abstract() to add one.")
-    txt<-NA #to do: test whether NA needs quotes for write.README.
-  }
-  else{
-    Encoding(doc)<-"UTF-8" #helps with weird characters
-    txt<-NULL
-    for(i in seq_along(doc)){
-      if(nchar(doc[i])>0){
-        mypara <- gsub("[\r?\n|\r]", "", doc[i]) #get rid of line breaks and carriage returns
-        mypara <- gsub("&#13;", " ", mypara) #get rid of carriage symbols
+    txt <- NA # to do: test whether NA needs quotes for write.README.
+  } else {
+    Encoding(doc) <- "UTF-8" # helps with weird characters
+    txt <- NULL
+    for (i in seq_along(doc)) {
+      if (nchar(doc[i]) > 0) {
+        mypara <- gsub("[\r?\n|\r]", "", doc[i]) # get rid of line breaks and carriage returns
+        mypara <- gsub("&#13;", " ", mypara) # get rid of carriage symbols
         mypara <- gsub("&amp;#13;", ". ", mypara)
-        mypara <- gsub("<literalLayout>", "", mypara) #get rid of literalLayout tag
-        mypara <- gsub("<para>", "", mypara) #get rid of para tag
-        mypara <- gsub("</para>", "", mypara) #get rid of close para tag
-        mypara <- gsub("</literalLayout>", "", mypara) #get rid of close par tag
-        txt<-paste(txt, mypara, sep="\n\n\t")
+        mypara <- gsub("<literalLayout>", "", mypara) # get rid of literalLayout tag
+        mypara <- gsub("<para>", "", mypara) # get rid of para tag
+        mypara <- gsub("</para>", "", mypara) # get rid of close para tag
+        mypara <- gsub("</literalLayout>", "", mypara) # get rid of close par tag
+        txt <- paste(txt, mypara, sep = "\n\n\t")
       }
     }
   }
@@ -97,13 +98,13 @@ get_abstract<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_title(eml_object)
 #' }
-get_title<-function(eml_object){
-  doc<-arcticdatautils::eml_get_simple(eml_object, "title")[1]
-  if(is.null(doc)){
-    doc<-NA
+get_title <- function(eml_object) {
+  doc <- arcticdatautils::eml_get_simple(eml_object, "title")[1]
+  if (is.null(doc)) {
+    doc <- NA
   }
   return(doc)
 }
@@ -118,25 +119,24 @@ get_title<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_ds_id(eml_object)
-#'  }
-get_ds_id<-function(eml_object){
-  pid<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-  if(is.null(pid)){
+#' }
+get_ds_id <- function(eml_object) {
+  pid <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
+  if (is.null(pid)) {
     warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
-    ref_id<-NA # to do: check write.readMe whether NA needs to be in quotes.
-  }
-  else{
-    for(i in seq_along(pid)){
-      if(stringr::str_detect(pid[i], "doi: ")){
-        doi<-pid[i]
+    ref_id <- NA # to do: check write.readMe whether NA needs to be in quotes.
+  } else {
+    for (i in seq_along(pid)) {
+      if (stringr::str_detect(pid[i], "doi: ")) {
+        doi <- pid[i]
       }
     }
-    ref_id<-stringr::str_sub(doi, start=-7)
-    if(suppressWarnings(is.na(as.numeric(ref_id)))){
+    ref_id <- stringr::str_sub(doi, start = -7)
+    if (suppressWarnings(is.na(as.numeric(ref_id)))) {
       warning("Your DOI is not consistent with an NPS DOI. Use set_doi to update your DOI.")
-      ref_id<-NA
+      ref_id <- NA
     }
   }
   return(ref_id)
@@ -152,46 +152,46 @@ get_ds_id<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_citation(eml_object)
 #' }
-get_citation<-function(eml_object){
-  #assemble the pieces:
+get_citation <- function(eml_object) {
+  # assemble the pieces:
 
-  doi<-get_doi(eml_object)
+  doi <- get_doi(eml_object)
 
-  author_list<-get_author_list(eml_object)
+  author_list <- get_author_list(eml_object)
 
-  title<-get_title(eml_object)
+  title <- get_title(eml_object)
 
-  pub_date<-arcticdatautils::eml_get_simple(eml_object, "pubDate")
-  pub_date<-lubridate::parse_date_time(pub_date, orders="Y-m-d")
-  pub_year<-lubridate::year(pub_date)
+  pub_date <- arcticdatautils::eml_get_simple(eml_object, "pubDate")
+  pub_date <- lubridate::parse_date_time(pub_date, orders = "Y-m-d")
+  pub_year <- lubridate::year(pub_date)
 
-  publisher<-"The U.S National Park Service. "
+  publisher <- "The U.S National Park Service. "
 
-  location<-"Fort Collins, CO. "
-  #print(location)
+  location <- "Fort Collins, CO. "
+  # print(location)
 
   #### what to do if no doi ("set" eml?)?
 
-  #print(doi)
+  # print(doi)
 
-  #piece it together:
-  if(is.null(doi)){
+  # piece it together:
+  if (is.null(doi)) {
     warning("No doi specified. Please use set_doi to add a DOI.")
   }
-  if(is.null(author_list)){
+  if (is.null(author_list)) {
     warning("No authors listed. Please add authors as \"creator\" in EMLassemlbyline.")
   }
-  if(is.null(title)){
+  if (is.null(title)) {
     warning("No title specified.")
   }
-  if(is.null(pub_date)){
+  if (is.null(pub_date)) {
     warning("No publication date specified.")
   }
 
-  data_citation<-paste0(author_list, " ", pub_year, ". ", title, ". ", publisher, location, doi)
+  data_citation <- paste0(author_list, " ", pub_year, ". ", title, ". ", publisher, location, doi)
 
   return(data_citation)
 }
@@ -207,72 +207,69 @@ get_citation<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_author_list(eml_object)
 #' }
-get_author_list<-function(eml_object){
-  #get author names & affiliations
-  authors<-arcticdatautils::eml_get_simple(eml_object, "creator")
+get_author_list <- function(eml_object) {
+  # get author names & affiliations
+  authors <- arcticdatautils::eml_get_simple(eml_object, "creator")
 
-  #if no authors are specified (not really possible with EMLassemblyline)
-  if(is.null(authors)){
+  # if no authors are specified (not really possible with EMLassemblyline)
+  if (is.null(authors)) {
     warning("No authors specified in the <creator> tag.")
-    last_first<-NA
-  }
+    last_first <- NA
+  } else {
+    authors <- unlist(authors)
 
-  else{
-    authors<-unlist(authors)
-
-    #extract givenName; should handle middle names too!
-    first_name<-NULL
-    for(i in seq_along(authors)){
-      if(stringr::str_detect(names(authors)[i], "givenName\\b")){
-        first_name<-append(first_name, authors[i][[1]])
-      }
-      else if(stringr::str_detect(names(authors)[i], "givenName1\\b")){
-        first_middle<-paste0(authors[i], " ", authors[i+1])
-        first_name<-append(first_name, first_middle)
+    # extract givenName; should handle middle names too!
+    first_name <- NULL
+    for (i in seq_along(authors)) {
+      if (stringr::str_detect(names(authors)[i], "givenName\\b")) {
+        first_name <- append(first_name, authors[i][[1]])
+      } else if (stringr::str_detect(names(authors)[i], "givenName1\\b")) {
+        first_middle <- paste0(authors[i], " ", authors[i + 1])
+        first_name <- append(first_name, first_middle)
       }
     }
 
-    #extract surName
-    last_name<-NULL
-    for(i in seq_along(authors)){
-      if(stringr::str_detect(names(authors)[i], "surName")){
-        last_name<-append(last_name, authors[i][[1]])
+    # extract surName
+    last_name <- NULL
+    for (i in seq_along(authors)) {
+      if (stringr::str_detect(names(authors)[i], "surName")) {
+        last_name <- append(last_name, authors[i][[1]])
       }
     }
 
-    #create a single object that is a string consisting of the ith author, formatted according to the Chicago manual of style, Journal article:
-    author<-NULL
-    last_first<-NULL
+    # create a single object that is a string consisting of the ith author, formatted according to the Chicago manual of style, Journal article:
+    author <- NULL
+    last_first <- NULL
 
-    #single author:
-    if(length(last_name)>0){
-      #single author:
-      if(length(last_name)==1){
-        author<-paste0(last_name, ", ", first_name, ".")
-        last_first<-author
+    # single author:
+    if (length(last_name) > 0) {
+      # single author:
+      if (length(last_name) == 1) {
+        author <- paste0(last_name, ", ", first_name, ".")
+        last_first <- author
       }
 
-    #multi-author:
-      else{
-        for(i in seq_along(last_name)){
-          if(i==1){
-          author<-paste0(last_name[i], ", ", first_name[i])
+      # multi-author:
+      else {
+        for (i in seq_along(last_name)) {
+          if (i == 1) {
+            author <- paste0(last_name[i], ", ", first_name[i])
           }
-          if(i>1 && i<length(last_name)){
-            author<-paste0(first_name[i], " ", last_name[i])
+          if (i > 1 && i < length(last_name)) {
+            author <- paste0(first_name[i], " ", last_name[i])
           }
-          if(i>1 && i==length(last_name)){
-            author<-paste0("and ", first_name[i], " ", last_name[i], ".")
+          if (i > 1 && i == length(last_name)) {
+            author <- paste0("and ", first_name[i], " ", last_name[i], ".")
           }
-          last_first<-append(last_first, author)
+          last_first <- append(last_first, author)
         }
-        #make it a string, not a list:
-        last_first<-toString(last_first)
+        # make it a string, not a list:
+        last_first <- toString(last_first)
       }
-   }
+    }
   }
 }
 
@@ -287,27 +284,26 @@ get_author_list<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_doi(eml_object)
-#'  }
-get_doi<-function(eml_object){
-  #where EMLassemblyline stores DOIs.
-  pid<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-  if(is.null(pid)){
+#' }
+get_doi <- function(eml_object) {
+  # where EMLassemblyline stores DOIs.
+  pid <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
+  if (is.null(pid)) {
     warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
-    doi<-NA #to do: does NA need to be in quotes for write.ReadMe?
-  }
-  else{
-    my_list<-NULL
-    if(length(pid)>=1){
-      for(i in seq_along(pid)){
-        if(stringr::str_detect(pid[i], "doi:" )){
-          my_list<-append(my_list, pid[i])
+    doi <- NA # to do: does NA need to be in quotes for write.ReadMe?
+  } else {
+    my_list <- NULL
+    if (length(pid) >= 1) {
+      for (i in seq_along(pid)) {
+        if (stringr::str_detect(pid[i], "doi:")) {
+          my_list <- append(my_list, pid[i])
         }
       }
     }
-    doi<-my_list[[1]]
-    doi<-gsub('doi:', '', doi)
+    doi <- my_list[[1]]
+    doi <- gsub("doi:", "", doi)
   }
   return(doi)
 }
@@ -322,40 +318,38 @@ get_doi<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_park_units(eml_object)
 #' }
-get_park_units<-function(eml_object){
-  units<-arcticdatautils::eml_get_simple(eml_object, "geographicDescription")
-  if(is.null(units)){
+get_park_units <- function(eml_object) {
+  units <- arcticdatautils::eml_get_simple(eml_object, "geographicDescription")
+  if (is.null(units)) {
     warning("No Park Unit Connections specified. Use the set_park_units() function to add Park Unit Connections.")
-    punits<-NA #to do: test whether NA needs quotes for write.README.
-  }
-  else{
-    #pull out just geographic description for unit connections:
-    unit_cons<-NULL
-    for(i in seq_along(units)){
-      if(stringr::str_detect(units[i], "NPS Unit Connections:")){
-        unit_cons<-append(unit_cons, units[i])
+    punits <- NA # to do: test whether NA needs quotes for write.README.
+  } else {
+    # pull out just geographic description for unit connections:
+    unit_cons <- NULL
+    for (i in seq_along(units)) {
+      if (stringr::str_detect(units[i], "NPS Unit Connections:")) {
+        unit_cons <- append(unit_cons, units[i])
       }
     }
 
-    #make a string that is just comma separated unit connection codes:
-    punits<-NULL
-    for(i in seq_along(unit_cons)){
-      if(unit_cons[i]== utils::tail(unit_cons, 1)){
-          rem_text<-sub('NPS Unit Connections: ', '', unit_cons[i])
-          punits<-append(punits, rem_text)
-      }
-      else{
-          rem_text<-sub('NPS Unit Connections: ', '', unit_cons[i])
-          punits<-append(punits, paste0(rem_text, ", "))
+    # make a string that is just comma separated unit connection codes:
+    punits <- NULL
+    for (i in seq_along(unit_cons)) {
+      if (unit_cons[i] == utils::tail(unit_cons, 1)) {
+        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
+        punits <- append(punits, rem_text)
+      } else {
+        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
+        punits <- append(punits, paste0(rem_text, ", "))
       }
     }
-    list_units<-paste(unlist(punits), collapse="", sep=",")
+    list_units <- paste(unlist(punits), collapse = "", sep = ",")
 
-    #add "NPS Unit Connections: " prefix back in to the sting:
-    list_units<-paste0("NPS Unit Connections: ", list_units)
+    # add "NPS Unit Connections: " prefix back in to the sting:
+    list_units <- paste0("NPS Unit Connections: ", list_units)
   }
   return(list_units)
 }
@@ -370,36 +364,29 @@ get_park_units<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_cui(eml_object)
 #' }
-get_cui<-function(eml_object){
-  cui<-arcticdatautils::eml_get_simple(eml_object, "CUI")
-  if(is.null(cui)){
+get_cui <- function(eml_object) {
+  cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
+  if (is.null(cui)) {
     warning("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
-    cui<-"No CUI specified."
-  }
-  else if(cui=="FED ONLY"){
-    cui<-"Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)."
-  }
-  else if(cui=="FEDCON"){
-    cui<-"Contains CUI. Only federal employees and federal contractors should have access (also very much like current \"internal only\" setting in DataStore)."
-  }
-  else if(cui=="DL ONLY"){
-    cui<-"Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)."
-  }
-  else if(cui=="NOCON"){
-    cui<-"Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot."
-  }
-  else if(cui=="PUBVER"){
-    cui<-"Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
-  }
-  else if(cui=="PUBFUL"){
-    cui<-"Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
-  }
-  else{
+    cui <- "No CUI specified."
+  } else if (cui == "FED ONLY") {
+    cui <- "Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)."
+  } else if (cui == "FEDCON") {
+    cui <- "Contains CUI. Only federal employees and federal contractors should have access (also very much like current \"internal only\" setting in DataStore)."
+  } else if (cui == "DL ONLY") {
+    cui <- "Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)."
+  } else if (cui == "NOCON") {
+    cui <- "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot."
+  } else if (cui == "PUBVER") {
+    cui <- "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
+  } else if (cui == "PUBFUL") {
+    cui <- "Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
+  } else {
     warning("CUI not properly specified. User set_cui to update the CUI code.")
-    cui<-NA
+    cui <- NA
   }
   return(cui)
 }
@@ -418,31 +405,30 @@ get_cui<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_file_info(eml_object)
 #' }
-get_file_info<-function(eml_object){
-  #get file names
-  file_name<-arcticdatautils::eml_get_simple(eml_object, "objectName")
+get_file_info <- function(eml_object) {
+  # get file names
+  file_name <- arcticdatautils::eml_get_simple(eml_object, "objectName")
 
-  if(is.null(file_name)){
+  if (is.null(file_name)) {
     warning("You have not specified data file names, sizes, or descripions. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undifined units will often cause this problem.")
     print("NA")
-  }
-  else{
-    #get file sizes (assumes in bytes)
-    file_size<-arcticdatautils::eml_get_simple(eml_object, "size")
-    file_size<-suppressWarnings(as.numeric(file_size))
-    file_byte<-unique(file_size)
-    file_byte<-file_byte[!is.na(file_byte)]
-    readable<-gdata::humanReadable(file_byte, standard="Unix") %>% paste0("B")
+  } else {
+    # get file sizes (assumes in bytes)
+    file_size <- arcticdatautils::eml_get_simple(eml_object, "size")
+    file_size <- suppressWarnings(as.numeric(file_size))
+    file_byte <- unique(file_size)
+    file_byte <- file_byte[!is.na(file_byte)]
+    readable <- gdata::humanReadable(file_byte, standard = "Unix") %>% paste0("B")
 
-    #get file descriptions
-    file_descript<-arcticdatautils::eml_get_simple(eml_object, "entityDescription")
+    # get file descriptions
+    file_descript <- arcticdatautils::eml_get_simple(eml_object, "entityDescription")
 
-    #generate dataframe for display:
-    dat<-data.frame(file_name, readable, file_descript)
-    colnames(dat)<-c("FileName", "Size", "Description")
+    # generate dataframe for display:
+    dat <- data.frame(file_name, readable, file_descript)
+    colnames(dat) <- c("FileName", "Size", "Description")
 
     print("Current filenames and file descriptions:")
     print(dat)
@@ -459,20 +445,19 @@ get_file_info<-function(eml_object){
 #' @return a text string
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' get_drr_doi(eml_object)
 #' }
-get_drr_doi<-function(eml_object){
-  doi<-arcticdatautils::eml_get_simple(eml_object, "usageCitation")
-  if(is.null(doi)){
+get_drr_doi <- function(eml_object) {
+  doi <- arcticdatautils::eml_get_simple(eml_object, "usageCitation")
+  if (is.null(doi)) {
     warning("You have not specified a DRR associated with this data package. If you have an associated DRR, specify its DOI using set_drr_doi.")
-    drr_doi<-NA #to do: test whether NA needs quotes for write.README.
-  }
-  else{
-    drr_doi<-NULL
-    for(i in seq_along(doi)){
-      if(stringr::str_detect(doi[i], "DRR: https://doi.org/")){
-        drr_doi<-doi[i]
+    drr_doi <- NA # to do: test whether NA needs quotes for write.README.
+  } else {
+    drr_doi <- NULL
+    for (i in seq_along(doi)) {
+      if (stringr::str_detect(doi[i], "DRR: https://doi.org/")) {
+        drr_doi <- doi[i]
       }
     }
   }
@@ -495,8 +480,8 @@ get_drr_doi<-function(eml_object){
 #' \dontrun{
 #' get_lit(eml_object)
 #' }
-get_lit<-function(eml_object){
-  lit<-arcticdatautils::eml_get_simple(eml_object, "literatureCited")
+get_lit <- function(eml_object) {
+  lit <- arcticdatautils::eml_get_simple(eml_object, "literatureCited")
   return(lit)
 }
 
@@ -513,7 +498,7 @@ get_lit<-function(eml_object){
 #' \dontrun{
 #' get_producing_units(eml_object)
 #' }
-get_producing_units<-function(eml_object){
-  punit<-arcticdatautils::eml_get_simple(eml_object, "metadataProvider")
+get_producing_units <- function(eml_object) {
+  punit <- arcticdatautils::eml_get_simple(eml_object, "metadataProvider")
   return(punit)
 }
