@@ -55,38 +55,38 @@
 #' }
 .set_version<-function(eml_object){
   #get current EMLeditor package version:
-  currentvers<-as.character(utils::packageVersion("EMLeditor"))
+  current_vers<-as.character(utils::packageVersion("EMLeditor"))
 
   #set up additionalMetadata elements for EMLeditor:
-  EMLed<-list(metadata=list(emlEditor=
+  eml_ed<-list(metadata=list(emlEditor=
                               list(app="EMLeditor",
-                                   release=currentvers)),
+                                   release=current_vers)),
                                    id="emlEditor")
 
   #access additionalMetadata elements:
-  addMeta<-EML::eml_get(eml_object, "additionalMetadata")
+  add_meta<-EML::eml_get(eml_object, "additionalMetadata")
 
   #if no additionalMetadata, add in EMLeditor and current version:
-  if(sum(names(addMeta)!="@context")==0){
-    eml_object$additionalMetadata<-EMLed
+  if(sum(names(add_meta)!="@context")==0){
+    eml_object$additionalMetadata<-eml_ed
   }
 
   #if there are existing additionalMetadata elements:
-  if(sum(names(addMeta)!="@context")>0){
+  if(sum(names(add_meta)!="@context")>0){
 
-    mylist<-NULL
+    my_list<-NULL
     #ditch the '@context' list from the goeCoverage:
-    for(i in seq_along(names(addMeta))){
-      if(!names(addMeta)[i]=='@context' && !names(addMeta)[i]=="id"){
-        mylist<-append(mylist, addMeta[i])
+    for(i in seq_along(names(add_meta))){
+      if(!names(add_meta)[i]=='@context' && !names(add_meta)[i]=="id"){
+        my_list<-append(my_list, add_meta[i])
       }
     }
-    x<-length(mylist)
+    x<-length(my_list)
 
     #does it include EMLeditor?
     app<-NULL
-    for(i in seq_along(addMeta)){
-      if(suppressWarnings(stringr::str_detect(addMeta[i], "EMLeditor"))){
+    for(i in seq_along(add_meta)){
+      if(suppressWarnings(stringr::str_detect(add_meta[i], "EMLeditor"))){
         app<-"EMLeditor"
       }
     }
@@ -94,10 +94,10 @@
     #if no info on EMLeditor, add EMLeditor to additionalMetadata
     if(is.null(app)){
       if(x==1){
-        eml_object$additionalMetadata<-list(EMLed, eml_object$additionalMetadata)
+        eml_object$additionalMetadata<-list(eml_ed, eml_object$additionalMetadata)
       }
       if(x>1){
-        eml_object$additionalMetadata[[x+1]]<-EMLed
+        eml_object$additionalMetadata[[x+1]]<-eml_ed
       }
     }
   }
@@ -120,13 +120,13 @@
 #' }
 .get_unit_polygon <- function(unit_code) {
   # get geography from NPS Rest Services
-  UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", unit_code, "/geography")
-  xml <- httr::content(httr::GET(UnitsURL))
+  units_url <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", unit_code, "/geography")
+  xml <- httr::content(httr::GET(units_url))
 
   # Create spatial feature from polygon info returned from NPS
-  parkpolygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
+  park_polygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
 
-  return(parkpolygon)
+  return(park_polygon)
 }
 
 #' Set "For or By" NPS
@@ -144,28 +144,28 @@
 .set_for_by_nps<-function(eml_object){
 
   #set up additionalMetadata elements for EMLeditor:
-  forby<-list(metadata=list(agencyOriginated=list(
+  for_by<-list(metadata=list(agencyOriginated=list(
                             agency="NPS",
                             byOrForNPS="TRUE"),
                             id="agencyOriginated"))
 
   #access additionalMetadata elements:
-  addMeta<-EML::eml_get(eml_object, "additionalMetadata")
-  addMeta<-within(addMeta, rm('@context'))
+  add_meta<-EML::eml_get(eml_object, "additionalMetadata")
+  add_meta<-within(add_meta, rm('@context'))
 
   #if no additionalMetadata, add in EMLeditor and current version:
-  if(length(names(addMeta))==0){
-    eml_object$additionalMetadata<-forby
+  if(length(names(add_meta))==0){
+    eml_object$additionalMetadata<-for_by
   }
 
   #if there are existing additionalMetadata elements:
-  if(length(names(addMeta))>0){
-    x<-length(addMeta)
+  if(length(names(add_meta))>0){
+    x<-length(add_meta)
 
     #does it include byOrForNPS?
-    For_or_by_NPS<-NULL
-    for(i in seq_along(addMeta)){
-      if(suppressWarnings(stringr::str_detect(addMeta[i], "byOrForNPS"))){
+    For_or_by_nps<-NULL
+    for(i in seq_along(add_meta)){
+      if(suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))){
         For_or_by_NPS<-"TRUE"
       }
     }
@@ -173,10 +173,10 @@
     #if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
     if(is.null(For_or_by_NPS)){
       if(x==1){
-        eml_object$additionalMetadata<-list(forby, eml_object$additionalMetadata)
+        eml_object$additionalMetadata<-list(for_by, eml_object$additionalMetadata)
       }
       if(x>1){
-        eml_object$additionalMetadata[[x+1]]<-forby
+        eml_object$additionalMetadata[[x+1]]<-for_by
       }
     }
   }
