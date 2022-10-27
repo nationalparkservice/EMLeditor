@@ -65,7 +65,7 @@ my_eml <- EML::read_eml("EML_metadata.xml", from = "xml")
 # the 7-digit number is your DataStore Reference number.
 # It is automatically generated when you initiate a draft Reference.
 # Your DOI is reserved but will not be registered/activated until publication.
-my_eml2 <- set.DOI(my_eml, "1234567")
+my_eml2 <- set_doi(my_eml, "1234567")
 
 # make sure your EML is valid.
 EML::eml_validate(my_eml2)
@@ -87,14 +87,14 @@ my_eml <- EML::read_eml("my_EML_metadata.xml", from = "xml")
 # bibtex_file is a file with your literature cited in bibtex format, typically with a .bib extension.
 # Set NPS=FALSE if you do NOT want NPS listed as the publisher.
 # If NPS is the publisher, this defaults to TRUE and need not be specified.
-my_eml2 <- set.lit(my_eml, bibtex_file, NPS = FALSE)
+my_eml2 <- set_lit(my_eml, bibtex_file, NPS = FALSE)
 
 # make sure your EML is valid:
 EML::eml_validate(my_eml2)
 
 # writes a .txt file to your working directory.
 # (FYI Lit cited doesn't show up in the mock readme)
-write.readMe(my_eml2, "MockReadMe.txt")
+write_readme(my_eml2, "MockReadMe.txt")
 
 # Assuming you're happy with the readme file generated, write the object to XML:
 EML::write_eml(my_eml2, "my_EML2_metadata.xml")
