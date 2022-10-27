@@ -177,12 +177,12 @@
     For_or_by_nps <- NULL
     for (i in seq_along(add_meta)) {
       if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
-        For_or_by_NPS <- "TRUE"
+        For_or_by_nps <- "TRUE"
       }
     }
 
     # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
-    if (is.null(For_or_by_NPS)) {
+    if (is.null(For_or_by_nps)) {
       if (x == 1) {
         eml_object$additionalMetadata <- list(for_by, eml_object$additionalMetadata)
       }
