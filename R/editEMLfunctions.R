@@ -463,10 +463,8 @@ set_lit<-function(eml_object, bibtex_file, NPS=TRUE){
 #' @examples
 #' \dontrun{
 #' prod_units<-c("ABCD", "EFGH")
-#' set_producing_units(eml_object, prod_units
-#'
+#' set_producing_units(eml_object, prod_units)
 #' set_producing_units(eml_object, c("ABCD", "EFGH"))
-#'
 #' set_producing_units(eml_object, "ABCD")
 #' }
 set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
