@@ -19,7 +19,7 @@ get_drr_doi returns a text string with the associated Data Release Report (DRR)'
 get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set_drr_doi() function to add the DOI of an associated DRR.
 }
 \examples{
- \dontrun{
+\dontrun{
 get_drr_doi(eml_object)
 }
 }

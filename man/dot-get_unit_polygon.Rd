@@ -19,7 +19,7 @@ a park polygon
 retrieves a geoJSON string for a polygon of a park unit from NPS Rest services. Note: This is not the official boundary (erm... ok then what is it?!?).
 }
 \examples{
- \dontrun{
-poly<-.get_unit_polygon("BICY")
+\dontrun{
+poly <- .get_unit_polygon("BICY")
 }
 }

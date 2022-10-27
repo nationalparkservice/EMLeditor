@@ -19,7 +19,7 @@ eml_object
 checks to see if the publisher element exists, and if not injects NPS-specific info into EML such as publisher, publication location, and ROR id - the types of things that will be the same for all NPS data or non-data publications and do not require user input. This function will be embedded in all set. and write. class functions (and get. functions?).
 }
 \examples{
- \dontrun{
+\dontrun{
 .set_npspublisher(eml_object)
 }
 }
