@@ -19,7 +19,7 @@ eml_object
 .set_version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 }
 \examples{
- \dontrun{
+\dontrun{
 .set_version(eml_object)
 }
 }

@@ -4,12 +4,12 @@
 \alias{set_protocol}
 \title{Adds a connection to the protocol under which the data were collected}
 \usage{
-set_protocol(eml_object, protocol_ID, NPS = TRUE)
+set_protocol(eml_object, protocol_id, NPS = TRUE)
 }
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
 
-\item{protocol_ID}{a string. The 7-digit number identifying the protocol in DataStore under which the data were collected.}
+\item{protocol_id}{a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.}
 
 \item{NPS}{Logical. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.}
 }

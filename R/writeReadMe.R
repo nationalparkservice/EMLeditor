@@ -11,59 +11,73 @@
 #' @export
 #'
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' write_readme(eml_object, "TestReadMe.txt")
 #' }
-write_readme<-function(eml_object, outfile){
+write_readme <- function(eml_object, outfile) {
+  # get components:
+  ref <- get_ds_id(eml_object) # Data Store Ref. ID
+  doi <- get_doi(eml_object) # DOI
+  title <- get_title(eml_object) # title
+  abstract <- get_abstract(eml_object) # abstract
+  file_info <- get_file_info(eml_object) # names, sizes, descriptions
+  start <- get_begin_date(eml_object) # content start date
+  end <- get_end_date(eml_object) # content end date
+  units <- get_park_units(eml_object) # park units where data were collected
+  cui <- get_cui(eml_object) # controlled unclassified information status
+  drr_doi <- get_drr_doi(eml_object) # DOI of accompanying DRR
+  citation <- get_citation(eml_object) # citation
 
-  #get components:
-  Ref<-get_ds_id(eml_object) #Data Store Ref. ID
-  doi<-get_doi(eml_object) #DOI
-  title<-get_title(eml_object) #title
-  abstract<-get_abstract(eml_object) #abstract
-  fileInfo<-get_file_info(eml_object) #names, sizes, descriptions
-  start<-get_begin_date(eml_object) #content start date
-  end<-get_end_date(eml_object) #content end date
-  units<-get_park_units(eml_object) #park units where data were collected
-  CUI<-get_cui(eml_object) #controlled unclassified information status
-  DRRdoi<-get_drr_doi(eml_object) #DOI of accompanying DRR
-  citation<-get_citation(eml_object) #citation
+  # Write to the components to the text file specified in "outfile".
+  cat(paste0("ReadMe file for DataStore reference# ", ref),
+    file = outfile, sep = "\n"
+  )
 
-  #Write to the components to the text file specified in "outfile".
-  cat(paste0("ReadMe file for DataStore reference# ", Ref), file=outfile, sep="\n")
+  cat(paste0("Digital Object Identifier (DOI): ", doi, "\n"),
+    file = outfile, sep = "\n", append = TRUE
+  )
 
-  cat(paste0("Digital Object Identifier (DOI): ", doi, "\n"), file=outfile, sep="\n", append=TRUE)
+  cat("Title:", file = outfile, sep = "\n", append = TRUE)
 
-  cat("Title:", file=outfile, sep="\n", append=TRUE)
+  cat(paste0(title, "\n"), file = outfile, sep = "\n", append = TRUE)
 
-  cat(paste0(title, "\n"), file=outfile, sep="\n", append=TRUE)
+  cat("Abstract:", file = outfile, sep = "\n", append = TRUE)
 
-  cat("Abstract:", file=outfile, sep="\n", append=TRUE)
+  cat(abstract, file = outfile, sep = "\n", append = TRUE)
 
-  cat(abstract, file=outfile, sep="\n", append=TRUE)
+  cat(paste0("\n", "Files:"), file = outfile, sep = "\n", append = TRUE)
 
-  cat(paste0("\n", "Files:"), file=outfile, sep="\n", append=TRUE)
+  cat(
+    stargazer::stargazer(file_info,
+      summary = FALSE,
+      type = "text"
+    ),
+    file = outfile,
+    sep = "\n",
+    append = TRUE
+  )
 
-  cat(stargazer::stargazer(fileInfo, summary=FALSE, type="text"), file=outfile, sep="\n", append=TRUE)
+  cat("\nContent:", file = outfile, sep = "\n", append = TRUE)
 
-  cat("\nContent:", file=outfile, sep="\n", append=TRUE)
+  cat(paste0("Begin date: ", start), file = outfile, sep = "\n", append = TRUE)
 
-  cat(paste0("Begin date: ", start), file=outfile, sep="\n", append=TRUE)
+  cat(paste0("End date: ", end), file = outfile, sep = "\n", append = TRUE)
 
-  cat(paste0("End date: ", end), file=outfile, sep="\n", append=TRUE)
-
-  if(!is.na(units)){
-  cat(units, file=outfile, sep="\n", append=TRUE)}
-  if(is.na(units)){
-    cat(paste0("Park Unit Connections: ", units), file=outfile, sep="\n", append=TRUE)
+  if (!is.na(units)) {
+    cat(units, file = outfile, sep = "\n", append = TRUE)
+  }
+  if (is.na(units)) {
+    cat(paste0("Park Unit Connections: ", units),
+      file = outfile,
+      sep = "\n", append = TRUE
+    )
   }
 
-  cat(paste0("Sensitivity: ", CUI), file=outfile, sep="\n", append=TRUE)
+  cat(paste0("Sensitivity: ", cui), file = outfile, sep = "\n", append = TRUE)
 
-  cat(paste0("Data Quality: Information about production and quality of this product can be found in the Data Release Report (DRR) at: ", DRRdoi, "\n"), file=outfile, sep="\n", append=TRUE)
+  cat(paste0("Data Quality: Information about production and quality of this product can be found in the Data Release Report (DRR) at: ", drr_doi, "\n"), file = outfile, sep = "\n", append = TRUE)
 
-  cat("\nCitation:\n", file=outfile, sep="\n", append=TRUE)
+  cat("\nCitation:\n", file = outfile, sep = "\n", append = TRUE)
 
-  cat(citation, file=outfile, sep="\n", append=TRUE)
+  cat(citation, file = outfile, sep = "\n", append = TRUE)
 }
-

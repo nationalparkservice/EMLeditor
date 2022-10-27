@@ -18,3 +18,8 @@ returns a text string that is the DOI for the data package
 \details{
 get_doi accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
 }
+\examples{
+\dontrun{
+get_doi(eml_object)
+}
+}

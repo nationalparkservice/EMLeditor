@@ -19,7 +19,7 @@ get_end_date returns the date of the last data point in the data package
 returns the date from the <endDate> tag. Although dates should be formatted according to ISO-8601 (YYYY-MM-DD) it will also check a few other common formats and return the date as a text string: "DD Month YYYY"
 }
 \examples{
- \dontrun{
+\dontrun{
 get_end_date(eml_object)
 }
 }

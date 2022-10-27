@@ -9,32 +9,36 @@
 #' @return eml_object
 #'
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' .set_npspublisher(eml_object)
 #' }
-.set_npspublisher<-function(eml_object){
-  #get existing publisher info for the data package:
-  publish<-eml_object$dataset$publisher
+.set_npspublisher <- function(eml_object) {
+  # get existing publisher info for the data package:
+  publish <- eml_object$dataset$publisher
 
-  #create desired publisher info:
-  pubset<- list(organizationName =
-            "National Park Service",
-          address = list(deliveryPoint = "1201 Oakridge Drive, Suite 150",
-                         city = "Fort Collins",
-                         administrativeArea="CO",
-                         postalCode="80525",
-                         country="USA"),
-          onlineUrl = "http://www.nps.gov",
-          electronicMailAddress = "irma@nps.gov",
-          userId = list(directory="https://ror.org/", userId="https://ror.org/044zqqy65"))
+  # create desired publisher info:
+  pubset <- list(
+    organizationName =
+      "National Park Service",
+    address = list(
+      deliveryPoint = "1201 Oakridge Drive, Suite 150",
+      city = "Fort Collins",
+      administrativeArea = "CO",
+      postalCode = "80525",
+      country = "USA"
+    ),
+    onlineUrl = "http://www.nps.gov",
+    electronicMailAddress = "irma@nps.gov",
+    userId = list(directory = "https://ror.org/", userId = "https://ror.org/044zqqy65")
+  )
 
-  #if existing and desired publisher don't match, replace existing with desired.
-  if(!identical(publish, pubset)){
-    eml_object$dataset$publisher<-pubset
+  # if existing and desired publisher don't match, replace existing with desired.
+  if (!identical(publish, pubset)) {
+    eml_object$dataset$publisher <- pubset
   }
 
-  #since the publisher is NPS, sets an additionalMetadata field for For or By NPS to TRUE.
-  eml_object<-.set_for_by_nps(eml_object)
+  # since the publisher is NPS, sets an additionalMetadata field for For or By NPS to TRUE.
+  eml_object <- .set_for_by_nps(eml_object)
 
   return(eml_object)
 }
@@ -50,54 +54,59 @@
 #' @return eml_object
 #'
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' .set_version(eml_object)
 #' }
-.set_version<-function(eml_object){
-  #get current EMLeditor package version:
-  currentvers<-as.character(utils::packageVersion("EMLeditor"))
+.set_version <- function(eml_object) {
+  # get current EMLeditor package version:
+  current_vers <- as.character(utils::packageVersion("EMLeditor"))
 
-  #set up additionalMetadata elements for EMLeditor:
-  EMLed<-list(metadata=list(emlEditor=
-                              list(app="EMLeditor",
-                                   release=currentvers)),
-                                   id="emlEditor")
+  # set up additionalMetadata elements for EMLeditor:
+  eml_ed <- list(
+    metadata = list(
+      emlEditor =
+        list(
+          app = "EMLeditor",
+          release = current_vers
+        )
+    ),
+    id = "emlEditor"
+  )
 
-  #access additionalMetadata elements:
-  addMeta<-EML::eml_get(eml_object, "additionalMetadata")
+  # access additionalMetadata elements:
+  add_meta <- EML::eml_get(eml_object, "additionalMetadata")
 
-  #if no additionalMetadata, add in EMLeditor and current version:
-  if(sum(names(addMeta)!="@context")==0){
-    eml_object$additionalMetadata<-EMLed
+  # if no additionalMetadata, add in EMLeditor and current version:
+  if (sum(names(add_meta) != "@context") == 0) {
+    eml_object$additionalMetadata <- eml_ed
   }
 
-  #if there are existing additionalMetadata elements:
-  if(sum(names(addMeta)!="@context")>0){
-
-    mylist<-NULL
-    #ditch the '@context' list from the goeCoverage:
-    for(i in seq_along(names(addMeta))){
-      if(!names(addMeta)[i]=='@context' && !names(addMeta)[i]=="id"){
-        mylist<-append(mylist, addMeta[i])
+  # if there are existing additionalMetadata elements:
+  if (sum(names(add_meta) != "@context") > 0) {
+    my_list <- NULL
+    # ditch the '@context' list from the goeCoverage:
+    for (i in seq_along(names(add_meta))) {
+      if (!names(add_meta)[i] == "@context" && !names(add_meta)[i] == "id") {
+        my_list <- append(my_list, add_meta[i])
       }
     }
-    x<-length(mylist)
+    x <- length(my_list)
 
-    #does it include EMLeditor?
-    app<-NULL
-    for(i in seq_along(addMeta)){
-      if(suppressWarnings(stringr::str_detect(addMeta[i], "EMLeditor"))){
-        app<-"EMLeditor"
+    # does it include EMLeditor?
+    app <- NULL
+    for (i in seq_along(add_meta)) {
+      if (suppressWarnings(stringr::str_detect(add_meta[i], "EMLeditor"))) {
+        app <- "EMLeditor"
       }
     }
 
-    #if no info on EMLeditor, add EMLeditor to additionalMetadata
-    if(is.null(app)){
-      if(x==1){
-        eml_object$additionalMetadata<-list(EMLed, eml_object$additionalMetadata)
+    # if no info on EMLeditor, add EMLeditor to additionalMetadata
+    if (is.null(app)) {
+      if (x == 1) {
+        eml_object$additionalMetadata <- list(eml_ed, eml_object$additionalMetadata)
       }
-      if(x>1){
-        eml_object$additionalMetadata[[x+1]]<-EMLed
+      if (x > 1) {
+        eml_object$additionalMetadata[[x + 1]] <- eml_ed
       }
     }
   }
@@ -115,18 +124,18 @@
 #' @return a park polygon
 #'
 #' @examples
-#'  \dontrun{
-#' poly<-.get_unit_polygon("BICY")
+#' \dontrun{
+#' poly <- .get_unit_polygon("BICY")
 #' }
 .get_unit_polygon <- function(unit_code) {
   # get geography from NPS Rest Services
-  UnitsURL <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", unit_code, "/geography")
-  xml <- httr::content(httr::GET(UnitsURL))
+  units_url <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", unit_code, "/geography")
+  xml <- httr::content(httr::GET(units_url))
 
   # Create spatial feature from polygon info returned from NPS
-  parkpolygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
+  park_polygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
 
-  return(parkpolygon)
+  return(park_polygon)
 }
 
 #' Set "For or By" NPS
@@ -138,45 +147,47 @@
 #' @return eml_object
 #'
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' .set_for_by_nps(eml_object)
 #' }
-.set_for_by_nps<-function(eml_object){
+.set_for_by_nps <- function(eml_object) {
+  # set up additionalMetadata elements for EMLeditor:
+  for_by <- list(metadata = list(
+    agencyOriginated = list(
+      agency = "NPS",
+      byOrForNPS = "TRUE"
+    ),
+    id = "agencyOriginated"
+  ))
 
-  #set up additionalMetadata elements for EMLeditor:
-  forby<-list(metadata=list(agencyOriginated=list(
-                            agency="NPS",
-                            byOrForNPS="TRUE"),
-                            id="agencyOriginated"))
+  # access additionalMetadata elements:
+  add_meta <- EML::eml_get(eml_object, "additionalMetadata")
+  add_meta <- within(add_meta, rm("@context"))
 
-  #access additionalMetadata elements:
-  addMeta<-EML::eml_get(eml_object, "additionalMetadata")
-  addMeta<-within(addMeta, rm('@context'))
-
-  #if no additionalMetadata, add in EMLeditor and current version:
-  if(length(names(addMeta))==0){
-    eml_object$additionalMetadata<-forby
+  # if no additionalMetadata, add in EMLeditor and current version:
+  if (length(names(add_meta)) == 0) {
+    eml_object$additionalMetadata <- for_by
   }
 
-  #if there are existing additionalMetadata elements:
-  if(length(names(addMeta))>0){
-    x<-length(addMeta)
+  # if there are existing additionalMetadata elements:
+  if (length(names(add_meta)) > 0) {
+    x <- length(add_meta)
 
-    #does it include byOrForNPS?
-    For_or_by_NPS<-NULL
-    for(i in seq_along(addMeta)){
-      if(suppressWarnings(stringr::str_detect(addMeta[i], "byOrForNPS"))){
-        For_or_by_NPS<-"TRUE"
+    # does it include byOrForNPS?
+    For_or_by_nps <- NULL
+    for (i in seq_along(add_meta)) {
+      if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
+        For_or_by_nps <- "TRUE"
       }
     }
 
-    #if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
-    if(is.null(For_or_by_NPS)){
-      if(x==1){
-        eml_object$additionalMetadata<-list(forby, eml_object$additionalMetadata)
+    # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
+    if (is.null(For_or_by_nps)) {
+      if (x == 1) {
+        eml_object$additionalMetadata <- list(for_by, eml_object$additionalMetadata)
       }
-      if(x>1){
-        eml_object$additionalMetadata[[x+1]]<-forby
+      if (x > 1) {
+        eml_object$additionalMetadata[[x + 1]] <- for_by
       }
     }
   }
