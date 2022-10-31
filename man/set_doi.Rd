@@ -24,6 +24,6 @@ set_doi checks to see if there is a DOI in the <alternateIdentifier> tag. The EM
 }
 \examples{
  \dontrun{
- eml_object<-set_doi(eml_object, ds_ref)
+ eml_object<-set_doi(eml_object, 1234567)
  }
 }
