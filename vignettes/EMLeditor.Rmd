@@ -36,7 +36,7 @@ Set class functions will also inject information about which version of EMLedito
 
 # A Minimal Workflow
 
-This workflow assumes your EML was generated using [EMLassemblyline](https://github.com/EDIorg/emlAssemblyLine), but will also work with any number of other EML generators (e.g. [ezEML]("https://ezeml.edirepository.org/eml/")).
+This workflow assumes your EML was generated using [EMLassemblyline](https://github.com/EDIorg/emlAssemblyLine), but will also work with any number of other EML generators (e.g. [ezEML](https://ezeml.edirepository.org/eml/)).
 
 Currently, many of the steps in EMLeditor are interactive and will give you feedback on the current fields in your metadata, ask if you want to update them, and report on the results of your edits. 
 
@@ -109,7 +109,7 @@ This is the unit responsible for generating the data package. It may be a single
 my_meta2 <- set_producing_units(my_meta2, "ROMN")
 ```
 
-Great! You're done adding the essentail NPS-specific metadata to your EML. There's only two quick steps left:
+Great! You're done adding the essential NPS-specific metadata to your EML. There's only two quick steps left:
 
 ### Validate your EML 
 
