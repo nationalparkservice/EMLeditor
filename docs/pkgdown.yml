@@ -1,6 +1,10 @@
 pandoc: 2.17.1.1
-pkgdown: 2.0.6
-pkgdown_sha: ~
-articles: {}
-last_built: 2022-10-26T21:33Z
+pkgdown: 2.0.6.9000
+pkgdown_sha: 5bb671b1a8bac8e926479868681936f7c9ee41b3
+articles:
+  EMLeditor: EMLeditor.html
+last_built: 2022-10-31T14:49Z
+urls:
+  reference: https://roblbaker.github.io/EMLeditor/reference
+  article: https://roblbaker.github.io/EMLeditor/articles
 
