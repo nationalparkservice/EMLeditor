@@ -55,7 +55,7 @@ set_title<-function(eml_object, data_package_title, NPS=TRUE){
 #' @export
 #' @examples
 #'  \dontrun{
-#'  eml_object<-set_doi(eml_object, ds_ref)
+#'  eml_object<-set_doi(eml_object, 1234567)
 #'  }
 set_doi<-function(eml_object, ds_ref, NPS=TRUE){
   #Look for an existing data package DOI:
