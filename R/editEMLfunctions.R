@@ -235,6 +235,11 @@ set_park_units<-function(eml_object, park_units, NPS=TRUE){
                           westBoundingCoordinate =
                             doc$boundingCoordinates$westBoundingCoordinate))
 
+     #to test:
+     #geocov2 <- EML::eml$geographicCoverage(geographicDescription =
+     #                    doc$geographicDescription,
+     #                    boundingCoordinates = doc$boundingCoordinates)
+
       #add park unit connections and existing geo coverage (park units always on top!)
       eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
     }
