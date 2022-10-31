@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 # Dependencies
-In addition to EMLeditor, you will also need the package to complete these steps. You can download and install everything you need from the [NPSdataverse](https://github.com/nationalparkservice/NPSdataverse) using:
+In addition to EMLeditor, you will also need the EML package to complete these steps. You can download and install everything you need from the [NPSdataverse](https://github.com/nationalparkservice/NPSdataverse) using:
 
 ```{r depends, eval=FALSE}
 install.packages("devtools")
