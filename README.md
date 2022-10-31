@@ -57,6 +57,14 @@ You can install the development version of EMLeditor from
 devtools::install_github("nationalparkservice/EMLeditor")
 ```
 
+To install all the packages in the
+[NPSdataverse](https://github.com/nationalparkservice/NPSdataverse)
+(including EMLeditor):
+
+``` r
+devtools::install_github("nationalparkservice/NPSdataverse")
+```
+
 # Details
 
 For a detailed description of how to use EML editor functions and a
