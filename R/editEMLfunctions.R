@@ -211,7 +211,7 @@ set_park_units<-function(eml_object, park_units, NPS=TRUE){
     names(my_list)<-NULL
 
     #if there is more than 1 geo coverage:
-    if(length(my_list>2)){
+    if(length(my_list)>2){
 
       #combine new and old geo coverages (new always at the top!)
       my_list<-append(unit_list, my_list)
@@ -221,24 +221,11 @@ set_park_units<-function(eml_object, park_units, NPS=TRUE){
     }
 
     #if there is only one geo coverage:
-    if(length(my_list==2)){
+    if(length(my_list)==2){
 
-      geocov2 <- EML::eml$geographicCoverage(geographicDescription =
-                        doc$geographicDescription,
-                        boundingCoordinates = EML::eml$boundingCoordinates(
-                          northBoundingCoordinate =
-                            doc$boundingCoordinates$northBoundingCoordinate,
-                          eastBoundingCoordinate =
-                            doc$boundingCoordinates$eastBoundingCoordinate,
-                          southBoundingCoordinate =
-                            doc$boundingCoordinates$southBoundingCoordinate,
-                          westBoundingCoordinate =
-                            doc$boundingCoordinates$westBoundingCoordinate))
-
-     #to test:
-     #geocov2 <- EML::eml$geographicCoverage(geographicDescription =
-     #                    doc$geographicDescription,
-     #                    boundingCoordinates = doc$boundingCoordinates)
+     geocov2 <- EML::eml$geographicCoverage(geographicDescription =
+                         doc$geographicDescription,
+                         boundingCoordinates = doc$boundingCoordinates)
 
       #add park unit connections and existing geo coverage (park units always on top!)
       eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
