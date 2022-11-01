@@ -7,7 +7,7 @@
 set_park_units(eml_object, park_units, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{park_units}{a list of comma-separated strings where each string is a park unit code.}
 
