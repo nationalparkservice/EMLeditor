@@ -4,7 +4,7 @@
 \alias{write_readme}
 \title{Writes a README file}
 \usage{
-write_readme(eml_object, outfile)
+write_readme(eml_object, outfile = "")
 }
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}

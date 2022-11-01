@@ -11,7 +11,7 @@ set_title(eml_object, data_package_title, NPS = TRUE)
 
 \item{data_package_title}{is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.}
 
-\item{NPS}{is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE}
+\item{NPS}{is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, it will be replaced by NPS (with publisher location set to the Fort Collins Office). If you are not publishing with NPS, set to FALSE.}
 }
 \value{
 an EML-formatted R object
