@@ -4,7 +4,7 @@
 #'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param data_package_title is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.
-#' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, it will be replaced by NPS (with publisher location set to the Fort Collins Office). If you are not publishing with NPS, set to FALSE.
 #'
 #' @return an EML-formatted R object
 #' @export
@@ -48,7 +48,8 @@ set_title<-function(eml_object, data_package_title, NPS=TRUE){
 #'
 #' @details set_doi checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
+#'
 #' @param ds_ref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
 #' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
@@ -125,7 +126,7 @@ set_doi<-function(eml_object, ds_ref, NPS=TRUE){
 #' @details
 #' If a DOI already exists in the <alternateidentifier> tag (get_doi() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #'
 #' @param ds_ref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://www.doi.org and the data package prefix - those will all automatically be added in by the function.
 #'
@@ -161,7 +162,8 @@ new_doi<-function(eml_object, ds_ref, NPS=TRUE){
 #'
 #' @details Adds the Park Unit Connection(s) to a <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit connection is given a separate <geographicCoverage> element. For each park unit connection, the unit name will be listed under <geographicDescription> and prefaced with "NPS Unit Connections:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set_park_units will add to them, not overwrite them. If not other <geographicCoverage> elements exist, set_park_units will create a new set of <geographicCoverage> elements.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
+#'
 #' @param park_units a list of comma-separated strings where each string is a park unit code.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
@@ -249,7 +251,7 @@ set_park_units<-function(eml_object, park_units, NPS=TRUE){
 #'
 #' @details set_cui adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #' @param cui_code a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 #' FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
@@ -334,7 +336,7 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 #'
 #' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the default NPS=TRUE sets the DRR creator organization to NPS. If you do NOT want the organization name for the DRR to be NPS, set NPS="Your Favorite Organization". sets the id flag for this usageCitation to "associatedDRR".
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #' @param drr_ref_id a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
 #' @param drr_title the title of the DRR as it appears in the DataStore Reference.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".
@@ -374,7 +376,7 @@ set_drr_doi<-function(eml_object, drr_ref_id, drr_title, NPS=TRUE){
 #'
 #' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set_abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @returns an EML-formatted R object
@@ -416,7 +418,8 @@ set_abstract<-function(eml_object, abstract, NPS=TRUE){
 #' @description set_lit is an interactive method for editing the literature cited sections.
 #'
 #' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
-#' @param eml_object  is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#'
+#' @inheritParams set_title
 #' @param bibtex_file is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @return an EML object
@@ -465,7 +468,7 @@ set_lit<-function(eml_object, bibtex_file, NPS=TRUE){
 #'
 #' @details inserts the unit code into the metadataProvider element. Currently cannot add to existing metadataProvider fields; it will just over-write them. It also currently only handles a single producing unit. See @param NPS for details on sub-functions. Additionally, information about the version of EML editor used will be injected into the metadata.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #' @param prod_units A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")
 #' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
@@ -534,7 +537,7 @@ set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
 #'
 #' @details The English words for the language the data and metadata were constructed in (e.g. "English") is automatically converted to the the 3-letter codes for languages listed in ISO 639-2 (available at https://www.loc.gov/standards/iso639-2/php/code_list.php) and inserted into the metadata.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #'
 #' @param lang is a string consisting of the language the data and metadata were constructed in, for example, "English", "Spanish", "Navajo". Capitalization does not matter, but spelling does! The input provided here will be converted to 3-digit ISO 639-2 codes.
 #'
@@ -625,7 +628,7 @@ set_language<-function(eml_object, lang, NPS=TRUE){
 #'
 #' @details set_protocol requires that you have your protocols and projects organized in a specific fashion in DataStore. Errors generated by this function my stem from either a protocol that has not been published (or is not publicly available) or an obsolete protocol/project organization within DataStore.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @inheritParams set_title
 #' @param protocol_id a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.
 #' @param NPS Logical. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
@@ -700,5 +703,122 @@ set_protocol<-function(eml_object, protocol_id, NPS=TRUE){
   #add/update EMLeditor and version to metadata:
   eml_object<-.set_version(eml_object)
 
+  return(eml_object)
+}
+
+
+
+
+#' Set Publisher
+#'
+#' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function.
+#'
+#' @inheritParams set_title
+#' @param org_name String. The organization name that is publishing the digital product. Defaults to "NPS".
+#' @param street_address String. The street address where the digital product is published
+#' @param city String. The city where the digital product is published
+#' @param state String. A two-letter code for the state where the digital product is being published.
+#' @param zip_code String. The postal code for the publishers location.
+#' @param country String. The country where the digital product is being published.
+#' @param URL String. a URL for the publisher.
+#' @param email String. an email for the publisher.
+#' @param ror_id String. The ROR id for the publisher (see https://ror.org/ for more information).
+#' @param for_or_by_NPS Logical. Defaults to TRUE. If your digital product is NOT for or by the NPS, set to FALSE.
+#' @param NPS Logical. Defaults to TRUE. Set this to FALSE only if the party responsible for data collection and generation is *not* the NPS *or* the publisher is *not* the NPS central office in Fort Collins.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' set_publisher(eml_object,
+#'               "BroadLeaf",
+#'               "123 First Street",
+#'               "Second City",
+#'               "CO",
+#'               "12345",
+#'               "USA",
+#'               "https://www.organizationswebsite.com",
+#'               "contact@myorganization.com",
+#'               "https://ror.org/xxxxxxxxx",
+#'               for_or_by_NPS=FALSE,
+#'               NPS=FALSE)
+#' }
+set_publisher<-function(eml_object,
+                        org_name = "NPS",
+                        street_address,
+                        city,
+                        state,
+                        zip_code,
+                        country,
+                        URL,
+                        email,
+                        ror_id,
+                        for_or_by_NPS = TRUE,
+                        NPS = TRUE) {
+
+#just in case someone at NPS wants to run this function, it will run .set_npspublisher instead unless they explicitly tell it not to by setting NPS = FALSE. This is an extra safeguard.
+  if(NPS == TRUE){
+    .set_npspublisher(eml_object)
+  }
+  else{
+    # get existing publisher info for the data package:
+    publish <- eml_object$dataset$publisher
+
+    # create desired publisher info:
+    pubset <- list(organizationName = org_name,
+                   address = list(deliveryPoint = street_address,
+                                  city = city,
+                                  administrativeArea = state,
+                                  postalCode = zip_code,
+                                  country = country),
+                   onlineUrl = URL,
+                   electronicMailAddress = email,
+                   userId = list(directory = "https://ror.org/",
+                                 userId = ror_id))
+
+    # if existing and new publisher don't match, replace with new publisher
+    if (!identical(publish, pubset)) {
+      eml_object$dataset$publisher <- pubset
+    }
+
+    # set up byOrForNPS:
+    for_by <- list(metadata = list(
+                      agencyOriginated = list(
+                        agency = org_name,
+                        byOrForNPS = for_or_by_NPS),
+                      id = "agencyOriginated"))
+    # access additionalMetadata elements:
+    add_meta <- EML::eml_get(eml_object, "additionalMetadata")
+    add_meta <- within(add_meta, rm("@context"))
+
+      # if no additionalMetadata, add in EMLeditor and current version:
+    if (length(names(add_meta)) == 0) {
+      eml_object$additionalMetadata <- for_by
+    }
+
+    # if there are existing additionalMetadata elements:
+    if (length(names(add_meta)) > 0) {
+      x <- length(add_meta)
+
+      # does it include byOrForNPS?
+      For_or_by_nps <- NULL
+      for (i in seq_along(add_meta)) {
+        if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
+          For_or_by_nps <- "TRUE"
+        }
+      }
+      # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
+      if (is.null(For_or_by_nps)) {
+        if (x == 1) {
+          eml_object$additionalMetadata <- list(for_by,
+                                                eml_object$additionalMetadata)
+        }
+        if (x > 1) {
+          eml_object$additionalMetadata[[x + 1]] <- for_by
+        }
+      }
+    }
+  }
   return(eml_object)
 }

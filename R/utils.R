@@ -49,7 +49,7 @@
 #'
 #' @details .set_version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @inheritParams .set_npspublisher
 #'
 #' @return eml_object
 #'
@@ -142,7 +142,7 @@
 #'
 #' @description .set_for_by_nps adds an element to additionalMetadata with For or By NPS set to TRUE and a second element agencyOriginated set to "NPS" with the understanding that all data products created for or by the NPS have NPS as the originating agency.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @inheritParams .set_npspublisher
 #'
 #' @return eml_object
 #'

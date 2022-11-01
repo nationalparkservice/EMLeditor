@@ -7,7 +7,7 @@
 set_drr_doi(eml_object, drr_ref_id, drr_title, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{drr_ref_id}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.}
 

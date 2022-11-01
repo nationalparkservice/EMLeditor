@@ -7,7 +7,7 @@
 set_doi(eml_object, ds_ref, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{ds_ref}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.}
 

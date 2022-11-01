@@ -7,7 +7,7 @@
 set_protocol(eml_object, protocol_id, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{protocol_id}{a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.}
 
