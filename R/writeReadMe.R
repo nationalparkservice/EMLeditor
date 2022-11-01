@@ -14,7 +14,7 @@
 #' \dontrun{
 #' write_readme(eml_object, "TestReadMe.txt")
 #' }
-write_readme <- function(eml_object, outfile) {
+write_readme <- function(eml_object, outfile="") {
   # get components:
   ref <- get_ds_id(eml_object) # Data Store Ref. ID
   doi <- get_doi(eml_object) # DOI
