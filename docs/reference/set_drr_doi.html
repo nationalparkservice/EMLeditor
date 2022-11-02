@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_drr_doi</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">drr_ref_id</span>, <span class="va">drr_title</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_drr_doi</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">drr_ref_id</span>, <span class="va">drr_title</span>, org_name <span class="op">=</span> <span class="st">"NPS"</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,8 +65,12 @@
 <dd><p>the title of the DRR as it appears in the DataStore Reference.</p></dd>
 
 
+<dt>org_name</dt>
+<dd><p>String. Defaults to NPS. If the organization publishing the DRR is <em>not</em> NPS, set org_name to your publishing organization's name.</p></dd>
+
+
 <dt>NPS</dt>
-<dd><p>defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".</p></dd>
+<dd><p>Logical. Defaults to TRUE. <strong>Most users should leave this as the default</strong>. Only under specific circumstances should it be set to FALSE: if you are <strong>not</strong> publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.</p></dd>
 
 </dl></div>
     <div class="section level2">
