@@ -4,7 +4,7 @@
 \alias{set_drr_doi}
 \title{adds DRR connection}
 \usage{
-set_drr_doi(eml_object, drr_ref_id, drr_title, NPS = TRUE)
+set_drr_doi(eml_object, drr_ref_id, drr_title, org_name = "NPS", NPS = TRUE)
 }
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
@@ -13,7 +13,9 @@ set_drr_doi(eml_object, drr_ref_id, drr_title, NPS = TRUE)
 
 \item{drr_title}{the title of the DRR as it appears in the DataStore Reference.}
 
-\item{NPS}{defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".}
+\item{org_name}{String. Defaults to NPS. If the organization publishing the DRR is \emph{not} NPS, set org_name to your publishing organization's name.}
+
+\item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
 \value{
 an EML-formatted R object

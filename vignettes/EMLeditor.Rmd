@@ -18,18 +18,20 @@ In addition to [EMLeditor](https://github.com/nationalparkservice/EMLeditor), yo
 
 You can download and install them individually, or get everything you need at once from the [NPSdataverse](https://github.com/nationalparkservice/NPSdataverse) using:
 
-```{r depends, eval=FALSE}
+```{r verse_depends, eval=FALSE}
+#install the NPSdataverse:
+install.packages("devtools")
+devtools::install_github("nationalparkservice/NPSdataverse")
+library(NPSdataverse)
+```
+
+```{r ind_depends, eval=FALSE}
 #individual install:
 install.packages("devtools")
 devtools::install_github("nationalparkservice/EMLeditor")
 install.packages("EML")
 library(EML)
 library(EMLeditor)
-
-#install the NPSdataverse:
-install.packages("devtools")
-devtools::install_github("nationalparkservice/NPSdataverse")
-library(NPSdataverse)
 ```
 
 # Workflow outline
@@ -103,13 +105,13 @@ This is the human language (as opposed to computer language) that the data packa
 my_meta2 <- set_language(my_meta2, "English")
 ```
 
-### Add the Park Units
+### Add Content Unit Links
 
-These are the units where data were collected from, for instance ROMO, not ROMN. If the data package includes data from more than one park, they can all be listed. For instance, if data were collected from all park units within a network, each unit should be listed individually rather than the network. This is because the geographic coordinates corresponding to bounding boxes for each park unit listed will automatically be generated and inserted into the metadata. Individual park units will be more informative than the bounding box for the entire network.
+These are the park units where data were collected from, for instance ROMO, not ROMN. If the data package includes data from more than one park, they can all be listed. For instance, if data were collected from all park units within a network, each unit should be listed separately rather than the network. This is because the geographic coordinates corresponding to bounding boxes for each park unit listed will automatically be generated and inserted into the metadata. Individual park units will be more informative than the bounding box for the entire network.
 
 ``` {r park_units, eval=FALSE}
 park_units <- ("ROMO", "GRSD", "YELL")
-my_meta2 <- set_park_units(my_meta2, park_units)
+my_meta2 <- set_content_units(my_meta2, park_units)
 ```
 
 ### Add the Producing Unit
