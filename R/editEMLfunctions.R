@@ -4,7 +4,8 @@
 #'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param data_package_title is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.
-#' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, it will be replaced by NPS (with publisher location set to the Fort Collins Office). If you are not publishing with NPS, set to FALSE.
+#' @param force logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.
+#' @param NPS Logical. Defaults to TRUE. **Most users should leave this as the default**. Only under specific circumstances should it be set to FALSE: if you are **not** publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.
 #'
 #' @return an EML-formatted R object
 #' @export
@@ -14,23 +15,30 @@
 #' data_package_title<-"New Title. Must match DataStore Reference title."
 #' eml_object<-set_title(eml_object, data_package_title)
 #' }
-set_title<-function(eml_object, data_package_title, NPS=TRUE){
-  doc<-arcticdatautils::eml_get_simple(eml_object, "title")
-  if(is.null(doc)){
-    eml_object$eml$dataset$title<-paste0(data_package_title)
-    print("No previous title was detected. Your new title has been added. View the current title using get.title.")
+set_title<-function(eml_object, data_package_title, force=FALSE, NPS=TRUE){
+  #scripting route:
+  if(force == TRUE){
+    eml_object$dataset$title<-data_package_title
   }
-  else{
-    var1<-readline(prompt="Your EML already has an title. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-  #if User opts to retain DOI, retain it
-    if(var1==1){
-      #print the existing DOI to the screen:
-      eml_object$eml$dataset$title<-paste0(data_package_title)
-      print("You have replaced your title. View the current title using get.title.")
+  #interactive route:
+  if(force == FALSE){
+    doc<-arcticdatautils::eml_get_simple(eml_object, "title")
+    if(is.null(doc)){
+      eml_object$dataset$title<-data_package_title
+      print("No previous title was detected. Your new title has been added. View the current title using get.title.")
     }
-    #if User opts to change DOI, change it:
-    if(var1==2){
-      print("Your original title was retained. View the current abstract using get.title.")
+    else{
+      var1<-readline(prompt="Your EML already has an title. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+  #if User opts to retain DOI, retain it
+      if(var1==1){
+        #print the existing DOI to the screen:
+        eml_object$dataset$title<-data_package_title
+        print("You have replaced your title. View the current title using get_title.")
+      }
+      #if User opts to change DOI, change it:
+      if(var1==2){
+        print("Your original title was retained. View the current abstract using get_title.")
+      }
     }
   }
   #Set NPS publisher, if it doesn't already exist
@@ -51,7 +59,7 @@ set_title<-function(eml_object, data_package_title, NPS=TRUE){
 #' @inheritParams set_title
 #'
 #' @param ds_ref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
-#' @param NPS is a logical that defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#'
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
@@ -130,7 +138,6 @@ set_doi<-function(eml_object, ds_ref, NPS=TRUE){
 #'
 #' @param ds_ref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://www.doi.org and the data package prefix - those will all automatically be added in by the function.
 #'
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE.
 #'
 #' @returns an EML-formatted R object
 #'
@@ -158,24 +165,24 @@ new_doi<-function(eml_object, ds_ref, NPS=TRUE){
 
 #' Add Park Unit Connections to metadata
 #'
-#' @description set_park_units adds all specified park unit connections and their N, E, S, W bounding boxes to <geographicCoverage>.
+#' @description set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore.
 #'
-#' @details Adds the Park Unit Connection(s) to a <coverage>. Park Unit Connection(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit connection is given a separate <geographicCoverage> element. For each park unit connection, the unit name will be listed under <geographicDescription> and prefaced with "NPS Unit Connections:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set_park_units will add to them, not overwrite them. If not other <geographicCoverage> elements exist, set_park_units will create a new set of <geographicCoverage> elements.
+#' @details Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set_content_units will add to them, not overwrite them. If no other <geographicCoverage> elements exist, set_content_units will create a new set of <geographicCoverage> elements.
 #'
 #' @inheritParams set_title
 #'
 #' @param park_units a list of comma-separated strings where each string is a park unit code.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#'
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
 #'  \dontrun{
 #' park_units<-("ROMO, GRSD, TRYME")
-#' set_park_units(eml_object, park_units)
+#' set_content_units(eml_object, park_units)
 #' }
-set_park_units<-function(eml_object, park_units, NPS=TRUE){
+set_content_units<-function(eml_object, park_units, NPS=TRUE){
   #add text to indicate that these are park unit connections.
-  units<-paste0("NPS Unit Connections: ", park_units)
+  units<-paste0("NPS Content Unit Links: ", park_units)
 
   unit_list<-NULL
   for(i in seq_along(park_units)){
@@ -186,7 +193,7 @@ set_park_units<-function(eml_object, park_units, NPS=TRUE){
     W<-max(poly[,1])
     E<-min(poly[,1])
     geocov<- EML::eml$geographicCoverage(geographicDescription =
-                    paste0("NPS Unit Connections: ", park_units[i]),
+                    paste0("NPS Content Unit Links: ", park_units[i]),
                     boundingCoordinates = EML::eml$boundingCoordinates(
                       northBoundingCoordinate = N,
                       eastBoundingCoordinate = E,
@@ -260,7 +267,7 @@ set_park_units<-function(eml_object, park_units, NPS=TRUE){
 #' PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
 #' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
 #' NPSONLY - Contains CUI. For NPS access only.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
@@ -339,7 +346,8 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 #' @inheritParams set_title
 #' @param drr_ref_id a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
 #' @param drr_title the title of the DRR as it appears in the DataStore Reference.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. Also fills in organizationName for the DRR creator. If you are NOT publishing with NPS/for, set NPS="your organization name".
+#' @param org_name String. Defaults to NPS. If the organization publishing the DRR is *not* NPS, set org_name to your publishing organization's name.
+#'
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
@@ -347,16 +355,14 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 #' drr_title<-"Data Release Report for Data Package 1234"
 #' set_drr_doi(eml_object, "2293234", drr_title)
 #' }
-set_drr_doi<-function(eml_object, drr_ref_id, drr_title, NPS=TRUE){
-  if(NPS==TRUE){org<-"NPS"}
-  else{org<-NPS}
+set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRUE){
 
   doi<-paste0("DRR: https://doi.org/10.36967/", drr_ref_id)
 
   cite<-EML::eml$usageCitation(alternateIdentifier = doi,
                   title = drr_title,
                   creator = EML::eml$creator(
-                    organizationName = org),
+                    organizationName = org_name),
                   report = EML::eml$report(reportNumber = drr_ref_id),
                   id = "associatedDRR")
 
@@ -378,7 +384,7 @@ set_drr_doi<-function(eml_object, drr_ref_id, drr_title, NPS=TRUE){
 #'
 #' @inheritParams set_title
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
+#'
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
@@ -470,7 +476,6 @@ set_lit<-function(eml_object, bibtex_file, NPS=TRUE){
 #'
 #' @inheritParams set_title
 #' @param prod_units A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
 #' @return an EML object
 #' @export
@@ -540,8 +545,6 @@ set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
 #' @inheritParams set_title
 #'
 #' @param lang is a string consisting of the language the data and metadata were constructed in, for example, "English", "Spanish", "Navajo". Capitalization does not matter, but spelling does! The input provided here will be converted to 3-digit ISO 639-2 codes.
-#'
-#' @param NPS Logical. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
 #' @return eml_object
 #' @export
@@ -630,7 +633,6 @@ set_language<-function(eml_object, lang, NPS=TRUE){
 #'
 #' @inheritParams set_title
 #' @param protocol_id a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.
-#' @param NPS Logical. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE. If NPS=TRUE, the originatingAgency will be set to NPS and the field that maps to DataStore's "by or for NPS" will be set to TRUE.
 #'
 #' @return
 #' @export
