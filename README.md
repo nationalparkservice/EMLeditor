@@ -38,10 +38,10 @@ not to generate them from scratch. A suggested workflow is:
 
 If you use EMLeditor functions to alter your metadata (e.g. “set” class
 functions) they will also silently add the National Park Service as a
-publisher (including location, ROR, etc) to your metadata unless you set
-NPS=FALSE. If you leave the default setting as NPS=TRUE, EMLeditor will
-also assume the data package is being created “by or for the NPS” and
-add that information to the metadata.
+publisher (including location, [ROR id](https://ror.org/), etc) to your
+metadata unless you set NPS=FALSE. If you leave the default setting as
+NPS=TRUE, EMLeditor will also assume the data package is being created
+“by or for the NPS” and add that information to the metadata.
 
 EMLeditor will also add information about the version of EMLeditor you
 used to edit your metadata (for instance if you used “set” class

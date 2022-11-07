@@ -25,19 +25,23 @@ set_title<-function(eml_object, data_package_title, force=FALSE, NPS=TRUE){
     doc<-arcticdatautils::eml_get_simple(eml_object, "title")
     if(is.null(doc)){
       eml_object$dataset$title<-data_package_title
-      print("No previous title was detected. Your new title has been added. View the current title using get.title.")
+      cat("No previous title was detected. Your new title, ",
+          crayon::blue$bold(data_package_title),
+          " has been added.", sep="")
     }
     else{
-      var1<-readline(prompt="Your EML already has an title. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".", sep="")
+      var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
   #if User opts to retain DOI, retain it
       if(var1==1){
         #print the existing DOI to the screen:
         eml_object$dataset$title<-data_package_title
-        print("You have replaced your title. View the current title using get_title.")
+        print("You have replaced your title. The new title is: ",
+              crayon::blue$bold(data_package_title), ".", sep="")
       }
       #if User opts to change DOI, change it:
       if(var1==2){
-        print("Your original title was retained. View the current abstract using get_title.")
+        print("Your original title was retained.")
       }
     }
   }
