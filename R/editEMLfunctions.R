@@ -584,7 +584,7 @@ set_producing_units<-function(eml_object,
 #' set_language(eml_object, "Spanish")
 #' set_language(eml_object, "nAvAjO")
 #' }
-set_language<-function(eml_object, lang, NPS=TRUE){
+set_language<-function(eml_object, lang, force=FALSE, NPS=TRUE){
   #enforces ISO capitalization formatting:
   lang<-stringr::str_to_title(lang)
 
@@ -604,41 +604,55 @@ set_language<-function(eml_object, lang, NPS=TRUE){
   nlang<-dplyr::filter(langcodes, Name==lang)[[1]]
 
   #if the language supplied is not part of ISO 639-2 (spelling?):
-  if(!nchar(nlang==3)){
+  if(nchar(nlang)!=3){
     stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
   }
 
-  #get current language from the metadata provided:
-  lng<-eml_object$dataset$language
-
-  #if there is no language specified in the metadata:
-  if(is.null(lng)){
+  #scripting route:
+  if(force==TRUE){
     eml_object$dataset$language<-nlang
-    cat("The language has been set to ", nlang, "the ISO 639-2 code for ",lang,".")
   }
 
-  #if the language is already specified in the metadata:
-  else{
-    if(nchar(lng)==3){
-      full_lang<-dplyr::filter(langcodes, Alpha_3_B==lng)[[4]]
-      cat("The current language is set to ", crayon::blue$bold(lng),", the ISO 639-2 code for ", full_lang, ".", sep="")
+  #ineractive route:
+  if(force==FALSE){
+    #get current language from the metadata provided:
+    lng<-eml_object$dataset$language
+
+    #if there is no language specified in the metadata:
+    if(is.null(lng)){
+      eml_object$dataset$language<-nlang
+      cat("The language has been set to ", nlang,
+          "the ISO 639-2 code for ", lang,".")
     }
+
+    #if the language is already specified in the metadata:
     else{
-      cat("The current language is set to ", crayon::blue$bold(lng),".", sep="")
-    }
+      if(nchar(lng)==3){
+        full_lang<-dplyr::filter(langcodes, Alpha_3_B==lng)[[4]]
+        cat("The current language is set to ", crayon::blue$bold(lng),
+            ", the ISO 639-2 code for ", full_lang, ".", sep="")
+      }
+      else{
+        cat("The current language is set to ",
+            crayon::blue$bold(lng),".", sep="")
+      }
 
     #does the user want to change the language?
-    var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
 
-    #if yes, change the language and report the change:
-    if(var1==1){
-      eml_object$dataset$language<-nlang
-      cat("You have replaced the language with ", crayon::blue$bold(nlang), ", the 3-letter ISO-639-2 code for ", crayon::blue$bold(lang), ".", sep="")
-    }
+      #if yes, change the language and report the change:
+      if(var1==1){
+        eml_object$dataset$language<-nlang
+        cat("You have replaced the language with ",
+            crayon::blue$bold(nlang),
+            ", the 3-letter ISO-639-2 code for ",
+            crayon::blue$bold(lang), ".", sep="")
+      }
 
-    #if User opts to retain metadataProvider, retain it:
-    if(var1==2){
-      cat("Your original language was retained.")
+      #if User opts to retain metadataProvider, retain it:
+      if(var1==2){
+        cat("Your original language was retained.")
+      }
     }
   }
 
@@ -671,7 +685,7 @@ set_language<-function(eml_object, lang, NPS=TRUE){
 #' set_protocol(eml_object, 2222140)
 #' }
 #'
-set_protocol<-function(eml_object, protocol_id, NPS=TRUE){
+set_protocol<-function(eml_object, protocol_id, force=FALSE, NPS=TRUE){
 
   #get data to construct project:
 
@@ -697,40 +711,47 @@ set_protocol<-function(eml_object, protocol_id, NPS=TRUE){
              personnel=list(organizationName=org_name,
                             onlineUrl=url,
                             role="originator"))
-
-  #get existing project (if any)
-  doc<-eml_object$dataset$project
-
-  #if no previous project listed, add project
-  if(is.null(doc)){
+  #scripting route:
+  if(force==TRUE){
     eml_object$dataset$project<-proj
-    cat("The current project is now ", crayon::bold$blue(proj$title), ".", sep="")
   }
+  #interactive route:
+  if(force==FALSE){
+    #get existing project (if any)
+    doc<-eml_object$dataset$project
 
-  #if an there is an existing project, ask whether to replace:
-  else{
-    cat("you already have a project(s) with the Title:\n", crayon::bold$blue(doc$title),".", sep="")
-
-    var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-
-    #if yes, change the project:
-    if(var1==1){
+    #if no previous project listed, add project
+    if(is.null(doc)){
       eml_object$dataset$project<-proj
-      cat("The current project is now ", crayon::bold$blue(proj$title), ".",sep="")
+      cat("The current project is now ", crayon::bold$blue(proj$title),
+          ".", sep="")
     }
 
-    #if no, retain the existing project:
-    if(var1==2){
-      cat("Your original project was retained.")
-    }
+    #if an there is an existing project, ask whether to replace:
+    else{
+      cat("you already have a project(s) with the Title:\n",
+          crayon::bold$blue(doc$title),".", sep="")
 
+      var1<-readline(prompt="Are you sure you want to replace it? \n\n
+                     1: Yes\n 2: No\n")
+
+      #if yes, change the project:
+      if(var1==1){
+        eml_object$dataset$project<-proj
+        cat("The current project is now ",
+            crayon::bold$blue(proj$title), ".",sep="")
+      }
+
+      #if no, retain the existing project:
+      if(var1==2){
+        cat("Your original project was retained.")
+      }
+    }
   }
-
   #Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
   if(NPS==TRUE){
     eml_object<-.set_npspublisher(eml_object)
   }
-
   #add/update EMLeditor and version to metadata:
   eml_object<-.set_version(eml_object)
 
