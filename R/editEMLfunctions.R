@@ -147,42 +147,6 @@ set_doi<-function(eml_object, ds_ref, force=FALSE, NPS=TRUE){
   return(eml_object)
 }
 
-#' Force-edits an existing DOI
-#'
-#' @description new_doi forces changes to an existing DOI
-#'
-#' @details
-#' If a DOI already exists in the <alternateidentifier> tag (get_doi() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
-#'
-#' @inheritParams set_title
-#'
-#' @param ds_ref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://www.doi.org and the data package prefix - those will all automatically be added in by the function.
-#'
-#'
-#' @returns an EML-formatted R object
-#'
-#' @export
-#'
-#' @examples
-#'  \dontrun{
-#'  eml_object<-new_doi(eml_object, "1111111")
-#' }
-new_doi<-function(eml_object, ds_ref, NPS=TRUE){
-  eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
-
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
-  }
-
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
-
-  return(eml_object)
-  }
-
-
-
 #' Add Park Unit Connections to metadata
 #'
 #' @description set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore.
