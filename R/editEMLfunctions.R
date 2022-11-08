@@ -390,20 +390,25 @@ set_abstract<-function(eml_object,
     doc<-arcticdatautils::eml_get_simple(eml_object, "abstract")
 
     if(is.null(doc)){
-    eml_object$dataset$abstract<-abstract
-    cat("No previous abstract was detected.\nYour new abstract has been added.\nView the current abstract using get_abstract.")
-  }
+      eml_object$dataset$abstract<-abstract
+      cat("No previous abstract was detected.\n")
+      cat("Your new abstract has been added.\n")
+      cat("View the current abstract using get_abstract.")
+    }
     else{
-      var1<-readline(prompt="Your EML already has an abstract.\nAre you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Your EML already has an abstract.\n")
+      var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
     #if User opts to replace abstract:
       if(var1==1){
         #print the existing DOI to the screen:
         eml_object$dataset$abstract<-abstract
-        cat("You have replaced your abstract.\nView the current abstract using get_abstract.", sep="")
+        cat("You have replaced your abstract.\n")
+        cat("View the current abstract using get_abstract.")
       }
       #if User opts not to replace abstract:
       if(var1==2){
-        cat("Your original abstract was retained.\nView the current abstract using get_abstract.")
+        cat("Your original abstract was retained.\n")
+        cat("View the current abstract using get_abstract.")
       }
     }
   }
@@ -446,21 +451,21 @@ set_lit<-function(eml_object, bibtex_file, force=FALSE, NPS=TRUE){
       eml_object$dataset$literatureCited$bibtex<-bibtex_citation
     }
     else{
-      cat("You have already specified literature cited.")
-      cat("To view yourcurrent literature, use get_lit")
+      cat("You have already specified literature cited.\n")
+      cat("To view yourcurrent literature, use get_lit\n")
       var1<-readline(prompt="Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
       if(var1==1){
         print("No changes were made to literature cited.")
       }
       if(var1==2){
         eml_object$dataset$literatureCited$bibtex<-bibtex_citation
-        cat("Your literature cited section has been replaced.")
+        cat("Your literature cited section has been replaced.\n")
         cat("To view your new literature cited use get_lit.")
       }
       if(var1==3){
         bib2<-paste0(lit, "\n", bibtex_citation, sep="")
         eml_object$dataset$literatureCited$bibtex<-bib2
-        cat("You have added to your literature cited section.")
+        cat("You have added to your literature cited section.\n")
         cat("To view your new literature cited use get.lit")
       }
     }
