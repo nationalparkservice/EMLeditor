@@ -424,7 +424,6 @@ set_abstract<-function(eml_object,
 #'
 #' @inheritParams set_title
 #' @param bibtex_file is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @return an EML object
 #' @export
 #'
@@ -432,26 +431,38 @@ set_abstract<-function(eml_object,
 #'  \dontrun{
 #' eml_object<-litcited2<-set_lit(eml_object, "bibfile.bib")
 #' }
-set_lit<-function(eml_object, bibtex_file, NPS=TRUE){
+set_lit<-function(eml_object, bibtex_file, force=FALSE, NPS=TRUE){
   bibtex_citation<-readr::read_file(bibtex_file)
-  lit<-arcticdatautils::eml_get_simple(eml_object, "literatureCited")
-  if(is.null(lit)){
+
+  #scripting route:
+  if(force=TRUE){
     eml_object$dataset$literatureCited$bibtex<-bibtex_citation
   }
-  else{
-    var1<-readline(prompt="You have already specified literature cited. To view your current literature cited, use get.litCited. Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
-    if(var1==1){
-      print("No changes were made to literature cited.")
-    }
-    if(var1==2){
-      print("Your literature cited section has been replaced. To view your new literature cited use get.lit")
+  #interactive route:
+  if(force=FALSE){
+    lit<-arcticdatautils::eml_get_simple(eml_object,
+                                         "literatureCited")
+    if(is.null(lit)){
       eml_object$dataset$literatureCited$bibtex<-bibtex_citation
     }
-    if(var1==3){
-      bib2<-paste0(lit, "\n", bibtex_citation, sep="")
-      eml_object$dataset$literatureCited$bibtex<-bib2
-      print("You have added to your literature cited section. To view your new literature cited use get.lit")
-
+    else{
+      cat("You have already specified literature cited.")
+      cat("To view yourcurrent literature, use get_lit")
+      var1<-readline(prompt="Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
+      if(var1==1){
+        print("No changes were made to literature cited.")
+      }
+      if(var1==2){
+        eml_object$dataset$literatureCited$bibtex<-bibtex_citation
+        cat("Your literature cited section has been replaced.")
+        cat("To view your new literature cited use get_lit.")
+      }
+      if(var1==3){
+        bib2<-paste0(lit, "\n", bibtex_citation, sep="")
+        eml_object$dataset$literatureCited$bibtex<-bib2
+        cat("You have added to your literature cited section.")
+        cat("To view your new literature cited use get.lit")
+      }
     }
   }
   #Set NPS publisher, if it doesn't already exist
