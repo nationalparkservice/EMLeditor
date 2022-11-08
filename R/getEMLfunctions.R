@@ -81,7 +81,13 @@ get_abstract <- function(eml_object) {
         mypara <- gsub("<para>", "", mypara) # get rid of para tag
         mypara <- gsub("</para>", "", mypara) # get rid of close para tag
         mypara <- gsub("</literalLayout>", "", mypara) # get rid of close par tag
-        txt <- paste(txt, mypara, sep = "\n\n\t")
+        mypara <- gsub("   ", " ", mypara) #get rid of 3x spaces
+        mypara <- gsub("  ", " ", mypara) #get rid of 2x spaces
+        mypara <- gsub("  ", " ", mypara) #rerun for 4x spaces
+        txt <- paste(txt, mypara, sep="")
+        if(i< seq_along(doc)){
+          txt <- paste(txt, "\n\n\t", sep="") #add paragraph sep
+        }
       }
     }
   }
