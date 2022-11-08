@@ -70,44 +70,59 @@ set_title<-function(eml_object, data_package_title, force=FALSE, NPS=TRUE){
 #'  \dontrun{
 #'  eml_object<-set_doi(eml_object, 1234567)
 #'  }
-set_doi<-function(eml_object, ds_ref, NPS=TRUE){
-  #Look for an existing data package DOI:
-  doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier") #where EMLassemblyline stores DOIs.
-
-  #If there is no existing DOI, add a DOI to the metadata
-  if(is.null(doc)){
+set_doi<-function(eml_object, ds_ref, force=FALSE, NPS=TRUE){
+  #scripting route:
+  if(force==TRUE){
     eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
-    doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-    doc<-sub(".*? ", "", doc)
-    #print the new DOI to the screen:
-    cat("Your newly specified DOI is: ", doc)
   }
+  #interactive route:
+  if(force==FALSE){
+    #Look for an existing data package DOI:
+    doc<-arcticdatautils::eml_get_simple(eml_object,
+                                         "alternateIdentifier")
 
-  #If there is a DOI, find the correct doi by searching for the text "doi: ".
-  else{
-    my_list<-NULL
+    #If there is no existing DOI, add a DOI to the metadata
+    if(is.null(doc)){
+      eml_object$dataset$alternateIdentifier<-paste0(
+        "doi: https://doi.org/10.57830/",
+        ds_ref)
+      doc<-arcticdatautils::eml_get_simple(eml_object,
+                                           "alternateIdentifier")
+      doc<-sub(".*? ", "", doc)
+      #print the new DOI to the screen:
+      cat("No DOI detected.")
+      cat("Your newly specified DOI is: ",
+          crayon::blue$bold(doc), sep="")
+    }
 
-    #hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
-    if(length(doc)>1){
-      for(i in seq_along(doc)){
-        if(stringr::str_detect(doc[i], "doi:" )){
-          my_list<-append(my_list, doc[i])
+    #If there is a DOI, find the correct doi by searching for the text "doi: ".
+    else{
+      my_list<-NULL
+
+      #hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
+      if(length(doc)>1){
+        for(i in seq_along(doc)){
+          if(stringr::str_detect(doc[i], "doi:" )){
+            my_list<-append(my_list, doc[i])
+          }
         }
       }
-    }
-    #if there is only one alternateIdentifier:
-    else{
+      #if there is only one alternateIdentifier:
+      else{
       my_list<-doc
-    }
-    doi<-my_list[[1]]
+      }
+      doi<-my_list[[1]]
 
-    #If a DOI exists, ask the user what to do about it:
-    var1<-readline(prompt=cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n\n",  doi, "\n\nEnter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
+      #If a DOI exists, ask the user what to do about it:
+      cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n")
+      cat(crayon::blue$bold(doc),
+          "\n\n", sep="")
+      var1<-readline(prompt=cat("Enter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
     #if User opts to retain DOI, retain it
     if(var1==1){
       #print the existing DOI to the screen:
       doi<-sub(".*? ", "", doi)
-      cat("Your DOI remains: ", doi)
+      cat("Your DOI remains: ", crayon::blue$bold(doi), sep="")
     }
     #if User opts to change DOI, change it:
     if(var1==2){
@@ -116,10 +131,11 @@ set_doi<-function(eml_object, ds_ref, NPS=TRUE){
       doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
       doc<-sub(".*? ", "", doc)
       #print the new DOI to the screen:
-      cat("Your newly specified DOI is: ", doc)
+      cat("Your newly specified DOI is: ",
+          crayon::blue$bold(doc), sep="")
     }
   }
-
+}
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     eml_object<-.set_npspublisher(eml_object)
