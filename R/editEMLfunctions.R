@@ -109,7 +109,7 @@ set_doi<-function(eml_object, ds_ref, force=FALSE, NPS=TRUE){
       }
       #if there is only one alternateIdentifier:
       else{
-      my_list<-doc
+        my_list<-doc
       }
       doi<-my_list[[1]]
 
@@ -119,23 +119,23 @@ set_doi<-function(eml_object, ds_ref, force=FALSE, NPS=TRUE){
           "\n\n", sep="")
       var1<-readline(prompt=cat("Enter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
     #if User opts to retain DOI, retain it
-    if(var1==1){
-      #print the existing DOI to the screen:
-      doi<-sub(".*? ", "", doi)
-      cat("Your DOI remains: ", crayon::blue$bold(doi), sep="")
-    }
+      if(var1==1){
+        #print the existing DOI to the screen:
+        doi<-sub(".*? ", "", doi)
+        cat("Your DOI remains: ", crayon::blue$bold(doi), sep="")
+      }
     #if User opts to change DOI, change it:
-    if(var1==2){
-      eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
-      #get the new DOI:
-      doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-      doc<-sub(".*? ", "", doc)
-      #print the new DOI to the screen:
-      cat("Your newly specified DOI is: ",
+      if(var1==2){
+        eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
+        #get the new DOI:
+        doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
+        doc<-sub(".*? ", "", doc)
+        #print the new DOI to the screen:
+        cat("Your newly specified DOI is: ",
           crayon::blue$bold(doc), sep="")
+      }
     }
   }
-}
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     eml_object<-.set_npspublisher(eml_object)
@@ -375,23 +375,36 @@ set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRU
 #'  \dontrun{
 #' eml_object<-set_abstract(eml_object, "This is a very short abstract")
 #' }
-set_abstract<-function(eml_object, abstract, NPS=TRUE){
-  doc<-arcticdatautils::eml_get_simple(eml_object, "abstract")
-  if(is.null(doc)){
-    eml_object$eml$dataset$abstract<-paste0(abstract)
-    print("No previous abstract was detected. Your new abstract has been added. View the current abstract using get.abstract.")
+set_abstract<-function(eml_object,
+                       abstract,
+                       force=FALSE,
+                       NPS=TRUE){
+  #scripting route:
+  if(force==TRUE){
+    eml_object$dataset$abstract<-abstract
   }
-  else{
-    var1<-readline(prompt="Your EML already has an abstract. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-    #if User opts to retain DOI, retain it
-    if(var1==1){
-      #print the existing DOI to the screen:
-      eml_object$eml$dataset$abstract<-paste0(abstract)
-      print("You have replaced your abstract. View the current abstract using get.abstract.")
-    }
-    #if User opts to change DOI, change it:
-    if(var1==2){
-      print("Your original abstract was retained. View the current abstract using get.abstract.")
+
+  #interactive route:
+  if(force==FALSE){
+    #get existing abstract, if any:
+    doc<-arcticdatautils::eml_get_simple(eml_object, "abstract")
+
+    if(is.null(doc)){
+    eml_object$dataset$abstract<-abstract
+    cat("No previous abstract was detected.\nYour new abstract has been added.\nView the current abstract using get_abstract.")
+  }
+    else{
+      var1<-readline(prompt="Your EML already has an abstract.\nAre you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+    #if User opts to replace abstract:
+      if(var1==1){
+        #print the existing DOI to the screen:
+        eml_object$dataset$abstract<-abstract
+        cat("You have replaced your abstract.\nView the current abstract using get_abstract.", sep="")
+      }
+      #if User opts not to replace abstract:
+      if(var1==2){
+        cat("Your original abstract was retained.\nView the current abstract using get_abstract.")
+      }
     }
   }
   #Set NPS publisher, if it doesn't already exist
