@@ -435,11 +435,11 @@ set_lit<-function(eml_object, bibtex_file, force=FALSE, NPS=TRUE){
   bibtex_citation<-readr::read_file(bibtex_file)
 
   #scripting route:
-  if(force=TRUE){
+  if(force==TRUE){
     eml_object$dataset$literatureCited$bibtex<-bibtex_citation
   }
   #interactive route:
-  if(force=FALSE){
+  if(force==FALSE){
     lit<-arcticdatautils::eml_get_simple(eml_object,
                                          "literatureCited")
     if(is.null(lit)){
@@ -493,9 +493,13 @@ set_lit<-function(eml_object, bibtex_file, force=FALSE, NPS=TRUE){
 #' prod_units<-c("ABCD", "EFGH")
 #' set_producing_units(eml_object, prod_units)
 #' set_producing_units(eml_object, c("ABCD", "EFGH"))
-#' set_producing_units(eml_object, "ABCD")
+#' set_producing_units(eml_object, "ABCD", force=TRUE)
 #' }
-set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
+set_producing_units<-function(eml_object,
+                              prod_units,
+                              force=FALSE,
+                              NPS=TRUE){
+
   #get existing metadataProvider info, if any:
   doc<-EML::eml_get(eml_object, "metadataProvider")
 
@@ -511,26 +515,38 @@ set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
     }
   }
 
-  #if no existing metadataprovider info:
-  if(is.null(doc)){
+  #scripting route:
+  if(force==TRUE){
     eml_object$dataset$metadataProvider<-plist
-    cat("No previous producing Units were detected. \nYour new producing units have been added. \nView the current title using get.producingUnits")
   }
-  #if there *is* existing metadataProvider info, choose whether to overwrite or not:
-  else{
-    cat("Your metadata already contain Producing Units (use get.producingUnits to view them). Are you sure you want to replace the existing Producing Units?")
-    var1<-readline(prompt="Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
-    #if User opts to replace metadataProvider, replace it:
-    if(var1==1){
-      eml_object$dataset$metadataProvider<-plist
-      cat("You have replaced your producing Units.\nView the current producing units using get.producingUnits.")
-    }
-    #if User opts to retain metadataProvider, retain it:
-    if(var1==2){
-      cat("Your original producing Units were retained.\nView the current producing units using get.producingUnits.")
-    }
-  }
+  #interactive route:
+  if(force==FALSE){
 
+    #if no existing metadataprovider info:
+    if(is.null(doc)){
+      eml_object$dataset$metadataProvider<-plist
+      cat("No previous producing Units were detected.\n")
+      cat("Your new producing units have been added.\n")
+      cat("View the current title using get_producing_units")
+    }
+  #if there *is* existing metadataProvider info, choose whether to overwrite or not:
+    else{
+        cat("Your metadata already contain Producing Units.\n")
+        cat("Use get_producing_units to view them.")
+      var1<-readline(prompt="Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
+      #if User opts to replace metadataProvider, replace it:
+      if(var1==1){
+        eml_object$dataset$metadataProvider<-plist
+        cat("You have replaced your producing Units.\n")
+        cat("View the current producing units using get_producing_units.")
+      }
+      #if User opts to retain metadataProvider, retain it:
+      if(var1==2){
+        cat("Your original producing Units were retained.\n")
+        cat("View the current producing units using get_producing_units.")
+      }
+    }
+  }
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     eml_object<-.set_npspublisher(eml_object)
