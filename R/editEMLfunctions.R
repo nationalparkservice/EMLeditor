@@ -1010,8 +1010,8 @@ set_publisher<-function(eml_object,
                         byOrForNPS = for_or_by_NPS),
                       id = "agencyOriginated"))
       # access additionalMetadata elements:
-      add_meta <- EML::eml_get(eml_object, "additionalMetadata")
-      add_meta <- within(add_meta, rm("@context"))
+      add_meta <- eml_object$additionalMetadata
+      x<-length(add_meta)
 
       # if no additionalMetadata, add in EMLeditor and current version:
       if (length(names(add_meta)) == 0) {
