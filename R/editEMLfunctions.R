@@ -603,8 +603,8 @@ set_language<-function(eml_object, lang, force=FALSE, NPS=TRUE){
   #get language code in the ISO language codes?
   nlang<-dplyr::filter(langcodes, Name==lang)[[1]]
 
-  #if the language supplied is not part of ISO 639-2 (spelling?):
-  if(nchar(nlang)!=3){
+  #if the language supplied is not part of ISO 639-2 (e.g. spelling error):
+  if(nchar(nlang)!=3 || identical(nlang, character(0))==TRUE){
     stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
   }
 
