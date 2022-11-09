@@ -518,7 +518,7 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 #' drr_title<-"Data Release Report for Data Package 1234"
 #' set_drr(eml_object, "2293234", drr_title)
 #' }
-set_drr<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRUE){
+set_drr<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", force=FALSE, NPS=TRUE){
 
   doi<-paste0("DRR: https://doi.org/10.36967/", drr_ref_id)
 
