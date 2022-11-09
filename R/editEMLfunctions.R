@@ -164,7 +164,7 @@ set_doi<-function(eml_object, ds_ref, force=FALSE, NPS=TRUE){
 #' park_units<-("ROMO, GRSD, TRYME")
 #' set_content_units(eml_object, park_units)
 #' }
-set_content_units<-function(eml_object, park_units, NPS=TRUE){
+set_content_units<-function(eml_object, park_units, force=FALSE, NPS=TRUE){
   #add text to indicate that these are park unit connections.
   units<-paste0("NPS Content Unit Links: ", park_units)
 
@@ -189,7 +189,7 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
   #get geographic coverage from eml_object
   doc<-eml_object$dataset$coverage$geographicCoverage
 
-  #Is CUI already specified?
+  #Are there content unit links already specified?
   exist_units<-NULL
   for(i in seq_along(doc)){
     if(suppressWarnings(stringr::str_detect(doc[i], "NPS Content Unit Link"))==TRUE){
@@ -197,9 +197,10 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
       exist_units<-append(exist_units, doc[[i]]$geographicDescription)
     }
   }
-
-  #if there is no content unit links add it directly to eml_object
-  if(is.null(exist_units)){
+  #ineractive route:
+  if(force==FALSE){
+    #if there is no content unit links add it directly to eml_object
+    if(is.null(exist_units)){
     if(is.null(doc)){
     eml_object$dataset$coverage$geographicCoverage<-unit_list
     }
@@ -225,80 +226,38 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
         crayon::blue$bold(park_units), ".", sep="")
   }
 
-  # if there already content unit links:
-  if(!is.null(exist_units)){
-    cat("Your metadata already has the following Content Unit Links Specified:\n")
-    for(i in seq_along(exist_units)){
-      cat(crayon::blue$bold(exist_units[i]), "\n")
-    }
-    var1<-readline(prompt="Do you want to\n\n 1: Retain the existing Unit Connections\n 2: Add to the exsiting Unit Connections\n 3: Replace the existing Unit Connections")
-    # Do nothing:
-    if(var1==1){
-      cat("Your existing Unit Connections were retained.")
-    }
-    # Add to existing content unit links:
-    if(var1==2){
-      if(length(doc)>1){
-
-        #combine new and old geo coverages (new always at the top!)
-        doc<-append(unit_list, doc)
-
-        #write over the existing geographic coverage
-        eml_object$dataset$coverage$geographicCoverage<-doc
+    # if there already content unit links:
+    if(!is.null(exist_units)){
+      cat("Your metadata already has the following Content Unit Links Specified:\n")
+      for(i in seq_along(exist_units)){
+        cat(crayon::blue$bold(exist_units[i]), "\n")
       }
+      var1<-readline(prompt="Do you want to\n\n 1: Retain the existing Unit Connections\n 2: Add to the exsiting Unit Connections\n 3: Replace the existing Unit Connections")
+      # Do nothing:
+      if(var1==1){
+        cat("Your existing Unit Connections were retained.")
+      }
+      # Add to existing content unit links:
+      if(var1==2){
+        if(length(doc)>1){
 
-      #if there is only one geo coverage:
-      if(length(doc)==1){
+          #combine new and old geo coverages (new always at the top!)
+          doc<-append(unit_list, doc)
 
-        geocov2 <- EML::eml$geographicCoverage(geographicDescription =
+          #write over the existing geographic coverage
+          eml_object$dataset$coverage$geographicCoverage<-doc
+        }
+
+        #if there is only one geo coverage:
+        if(length(doc)==1){
+
+          geocov2 <- EML::eml$geographicCoverage(geographicDescription =
                                                  doc$geographicDescription,
                                                boundingCoordinates =
                                                  doc$boundingCoordinates)
 
-        #add park unit connections and existing geo coverage (park units always on top!)
-        eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
-      }
-
-      #get new geo units:
-      newgeo<-eml_object$dataset$coverage$geographicCoverage
-      exist_units<-NULL
-      for(i in seq_along(newgeo)){
-        if(suppressWarnings(stringr::str_detect(newgeo[i],
-                                                "NPS Content Unit Link"))==TRUE){
-          exist_units<-append(exist_units, newgeo[[i]]$geographicDescription)
-        }
-      }
-      #return current/new units:
-      cat("Your metadata now has the following Content Unit Links Specified:\n")
-      for(i in seq_along(exist_units)){
-        cat(crayon::blue$bold(exist_units[i]), "\n")
-      }
-    }
-
-    # replace existing content unit links:
-    if(var1==3){
-      no_units<-NULL
-      for(i in seq_along(doc)){
-        if(suppressWarnings(stringr::str_detect(doc[i],
-                                        "NPS Content Unit Link"))==FALSE){
-          no_units<-append(no_units, doc[i])
-        }
-      }
-      # if the only geo unit was a previous connection, replace it:
-      if(is.null(no_units)){
-        eml_object$dataset$coverage$geographicCoverage<-unit_list
-      }
-      if(!is.null(no_units)){
-        if(length(no_units)==1){
-          geocov <- EML::eml$geographicCoverage(geographicDescription =
-                                  doc1[[1]]$geographicDescription,
-                                  boundingCoordinates =
-                                    doc[[1]]$boundingCoordinates)
-          eml_Object$dataset$coverage$geographicCoverage<-list(unit_list, no_units)
-        }
-        if(length(no_units)>1){
-          my_list<-append(unit_list, no_units)
-          eml_object$dataset$coverage$geographicCoverage<-my_list
+          #add park unit connections and existing geo coverage (park units always on top!)
+          eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
         }
 
         #get new geo units:
@@ -306,9 +265,8 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
         exist_units<-NULL
         for(i in seq_along(newgeo)){
           if(suppressWarnings(stringr::str_detect(newgeo[i],
-                                            "NPS Content Unit Link"))==TRUE){
-            exist_units<-append(exist_units,
-                                newgeo[[i]]$geographicDescription)
+                                                "NPS Content Unit Link"))==TRUE){
+            exist_units<-append(exist_units, newgeo[[i]]$geographicDescription)
           }
         }
         #return current/new units:
@@ -317,8 +275,81 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
           cat(crayon::blue$bold(exist_units[i]), "\n")
         }
       }
+
+      # replace existing content unit links:
+      if(var1==3){
+        no_units<-NULL
+        for(i in seq_along(doc)){
+          if(suppressWarnings(stringr::str_detect(doc[i],
+                                        "NPS Content Unit Link"))==FALSE){
+            no_units<-append(no_units, doc[i])
+          }
+        }
+        # if the only geo unit was a previous connection, replace it:
+        if(is.null(no_units)){
+          eml_object$dataset$coverage$geographicCoverage<-unit_list
+        }
+        if(!is.null(no_units)){
+          if(length(no_units)==1){
+            geocov <- EML::eml$geographicCoverage(geographicDescription =
+                                  doc1[[1]]$geographicDescription,
+                                  boundingCoordinates =
+                                    doc[[1]]$boundingCoordinates)
+            eml_Object$dataset$coverage$geographicCoverage<-list(unit_list, no_units)
+          }
+          if(length(no_units)>1){
+            my_list<-append(unit_list, no_units)
+            eml_object$dataset$coverage$geographicCoverage<-my_list
+          }
+
+          #get new geo units:
+          newgeo<-eml_object$dataset$coverage$geographicCoverage
+          exist_units<-NULL
+          for(i in seq_along(newgeo)){
+            if(suppressWarnings(stringr::str_detect(newgeo[i],
+                                            "NPS Content Unit Link"))==TRUE){
+              exist_units<-append(exist_units,
+                                newgeo[[i]]$geographicDescription)
+            }
+          }
+          #return current/new units:
+          cat("Your metadata now has the following Content Unit Links Specified:\n")
+          for(i in seq_along(exist_units)){
+            cat(crayon::blue$bold(exist_units[i]), "\n")
+          }
+        }
+      }
     }
   }
+
+  #scripting route
+  if(force==TRUE){
+    no_units<-NULL
+    for(i in seq_along(doc)){
+      if(suppressWarnings(stringr::str_detect(doc[i],
+                                              "NPS Content Unit Link"))==FALSE){
+        no_units<-append(no_units, doc[i])
+      }
+    }
+    # if the only geo unit was a previous connection, replace it:
+    if(is.null(no_units)){
+      eml_object$dataset$coverage$geographicCoverage<-unit_list
+    }
+    if(!is.null(no_units)){
+      if(length(no_units)==1){
+        geocov <- EML::eml$geographicCoverage(geographicDescription =
+                                                doc1[[1]]$geographicDescription,
+                                              boundingCoordinates =
+                                                doc[[1]]$boundingCoordinates)
+        eml_Object$dataset$coverage$geographicCoverage<-list(unit_list, no_units)
+      }
+      if(length(no_units)>1){
+        my_list<-append(unit_list, no_units)
+        eml_object$dataset$coverage$geographicCoverage<-my_list
+      }
+    }
+  }
+
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     eml_object<-.set_npspublisher(eml_object)
