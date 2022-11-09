@@ -155,10 +155,9 @@
   for_by <- list(metadata = list(
     agencyOriginated = list(
       agency = "NPS",
-      byOrForNPS = "TRUE"
-    ),
+      byOrForNPS = "TRUE")),
     id = "agencyOriginated"
-  ))
+    )
 
   # access additionalMetadata elements:
   add_meta <- EML::eml_get(eml_object, "additionalMetadata")
