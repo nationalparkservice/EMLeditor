@@ -7,6 +7,7 @@
 set_cui(
   eml_object,
   cui_code = c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"),
+  force = FALSE,
   NPS = TRUE
 )
 }
@@ -21,6 +22,8 @@ NOCON - Contains  CUI. Federal, state, local, or tribal employees may have acces
 PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
 PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
 NPSONLY - Contains CUI. For NPS access only.}
+
+\item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
 \item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }

@@ -16,7 +16,7 @@ a text string
 get_drr_doi returns a text string with the associated Data Release Report (DRR)'s DOI.
 }
 \details{
-get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set_drr_doi() function to add the DOI of an associated DRR.
+get_drr_doi accesses the <usageCitation> tag(s) and searches an alternateIdentifier tag. If that element is found, the contents of that element are returned. If the title element is empty or not present, the user is warned and pointed to the set_drr function to add the DOI of an associated DRR.
 }
 \examples{
 \dontrun{

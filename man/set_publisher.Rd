@@ -16,7 +16,8 @@ set_publisher(
   email,
   ror_id,
   for_or_by_NPS = TRUE,
-  NPS = TRUE
+  force = FALSE,
+  NPS = FALSE
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ set_publisher(
 \item{ror_id}{String. The ROR id for the publisher (see https://ror.org/ for more information).}
 
 \item{for_or_by_NPS}{Logical. Defaults to TRUE. If your digital product is NOT for or by the NPS, set to FALSE.}
+
+\item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
 \item{NPS}{Logical. Defaults to TRUE. Set this to FALSE only if the party responsible for data collection and generation is \emph{not} the NPS \emph{or} the publisher is \emph{not} the NPS central office in Fort Collins.}
 }
