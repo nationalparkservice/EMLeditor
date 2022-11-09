@@ -350,7 +350,35 @@ set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRU
                   report = EML::eml$report(reportNumber = drr_ref_id),
                   id = "associatedDRR")
 
-  eml_object$dataset$usageCitation<-cite
+  if(force==TRUE){
+    eml_object$dataset$usageCitation<-cite
+  }
+
+  if(force==FALSE){
+    doc<-eml_object$dataset$usageCitation
+
+    if(is.null(doc)==TRUE){
+      cat("No previous DRR was detected")
+      eml_object$dataset$usageCitation<-cite
+      cat("Your DRR, ", crayon::blue$bold(drr_title), " has been added.", sep="")
+    }
+    else{
+      cat("Your current DRR is: ", crayon::blue$bold(doc$title), ".\n", sep="")
+      cat("The current DOI is: ", crayon::blue$bold(doc$alternateIdentifier),
+          ".\n", sep="")
+      var1<-readLine(prompt("Are you sure you want to change it? \n\n 1: Yes\n 2: No\n"))
+      if(var1==1){
+        eml_object$dataset$usageCitation<-cite
+        cat("Your new DRR is: ", crayon::blue$bold(doc$title), ".\n", sep="")
+        cat("Your new DOI is: ", crayon::blue$bold(doc$alternateIdentifier),
+            ".\n", sep="")
+      }
+      if(var1==2){
+        cat("Your original DRR was retained")
+      }
+    }
+  }
+
   #Set NPS publisher, if it doesn't already exist
   if(NPS==TRUE){
     eml_object<-.set_npspublisher(eml_object)
