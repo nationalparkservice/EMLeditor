@@ -258,7 +258,7 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
 #'  \dontrun{
 #' set_cui(eml_object, "PUBFUL")
 #' }
-set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), NPS=TRUE){
+set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), force=FALSE, NPS=TRUE){
 
   #verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code<-match.arg(cui_code)
@@ -267,36 +267,27 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
   my_cui<-list(metadata=list(CUI=cui_code), id="CUI")
 
   #get existing additionalMetadata elements:
-  doc<-EML::eml_get(eml_object, "additionalMetadata")
+  doc<-eml_object$additionalMetadata
 
-  #if no prior additionalMetadata elements, add CUI to additionalMetadata:
-  if(sum(names(doc)!="@context")==0){
-    eml_object$additionalMetadata<-my_cui
+  x<-length(doc)
+
+  #Is CUI already specified?
+  exist_cui<-NULL
+  for(i in seq_along(doc)){
+    if(suppressWarnings(stringr::str_detect(doc[i], "CUI"))==TRUE){
+      seq<-i
+      exist_cui<-doc[[i]]$metadata$CUI
+    }
   }
 
-  #if additionalMetadata already exists:
-  if(sum(names(doc)!="@context")>0){
-    my_list<-NULL
-    #ditch the '@context' list from doc:
-    for(i in seq_along(names(doc))){
-      if(!names(doc)[i]=='@context' && !names(doc)[i]=="id"){
-        my_list<-append(my_list, doc[i])
-      }
-    x<-length(my_list)
-    }
+  #scripting route:
+  if(force==TRUE){
+    eml_object$additionalMetadata[[seq]]<-my_cui
+  }
 
-    #Is CUI already specified?
-    exist_cui<-NULL
-    for(i in seq_along(doc)){
-      if(suppressWarnings(stringr::str_detect(doc[i], "CUI"))){
-        exist_cui<-"CUI"
-      }
-    }
+  #interactive route:
+  if(force==FALSE){
 
-    #If existing CUI, stop.
-    if(!is.null(exist_cui)){
-      stop("CUI has already been specified")
-    }
     #If no existing CUI, add it in:
     if(is.null(exist_cui)){
       if(x==1){
@@ -304,6 +295,23 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
       }
       if(x>1){
         eml_object$additionalMetadata[[x+1]]<-my_cui
+      }
+      cat("No prvious CUI was detected. Your CUI has been set to ",
+        crayon::bold$blue(cui_code), ".", sep="")
+    }
+
+    #If existing CUI, stop.
+    if(!is.null(exist_cui)){
+      cat("CUI has previously been specified as ", crayon::bold$blue(exist_cui),
+          ".\n", sep="")
+      var1<-readLine(prompt="Are you sure you want to reset it?\n\n 1: Yes\n 2: No\n")
+      if(var1==1){
+        eml_object$additionalMetadata[[seq]]<-my_cui
+        cat("Your CUI code has been rest to ", crayon::blue$bold(cui_code), ".",
+            sep="")
+      }
+      if(var1==2){
+        cat("Your original CUI code was retained")
       }
     }
   }
@@ -323,9 +331,9 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 
 #' adds DRR connection
 #'
-#' @description set_drr_doi adds the DOI of an associated DRR
+#' @description set_drr adds the DOI of an associated DRR
 #'
-#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the default NPS=TRUE sets the DRR creator organization to NPS. If you do NOT want the organization name for the DRR to be NPS, set NPS="Your Favorite Organization". sets the id flag for this usageCitation to "associatedDRR".
+#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the organization name (org_name) defaults to NPS.  If you do NOT want the organization name for the DRR to be NPS, set org_name="Your Favorite Organization" *and* set NPS=FALSE. Also sets the id flag for this usageCitation to "associatedDRR".
 #'
 #' @inheritParams set_title
 #' @param drr_ref_id a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
@@ -337,9 +345,9 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 #' @examples
 #'  \dontrun{
 #' drr_title<-"Data Release Report for Data Package 1234"
-#' set_drr_doi(eml_object, "2293234", drr_title)
+#' set_drr(eml_object, "2293234", drr_title)
 #' }
-set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRUE){
+set_drr<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRUE){
 
   doi<-paste0("DRR: https://doi.org/10.36967/", drr_ref_id)
 
@@ -366,7 +374,7 @@ set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRU
       cat("Your current DRR is: ", crayon::blue$bold(doc$title), ".\n", sep="")
       cat("The current DOI is: ", crayon::blue$bold(doc$alternateIdentifier),
           ".\n", sep="")
-      var1<-readLine(prompt("Are you sure you want to change it? \n\n 1: Yes\n 2: No\n"))
+      var1<-readLine(prompt="Are you sure you want to change it? \n\n 1: Yes\n 2: No\n")
       if(var1==1){
         eml_object$dataset$usageCitation<-cite
         cat("Your new DRR is: ", crayon::blue$bold(doc$title), ".\n", sep="")
