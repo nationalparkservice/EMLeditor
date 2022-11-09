@@ -338,7 +338,7 @@ set_content_units<-function(eml_object, park_units, force=FALSE, NPS=TRUE){
     if(!is.null(no_units)){
       if(length(no_units)==1){
         geocov <- EML::eml$geographicCoverage(geographicDescription =
-                                                doc1[[1]]$geographicDescription,
+                                                doc[[1]]$geographicDescription,
                                               boundingCoordinates =
                                                 doc[[1]]$boundingCoordinates)
         eml_Object$dataset$coverage$geographicCoverage<-list(unit_list, no_units)
