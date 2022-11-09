@@ -1014,12 +1014,17 @@ set_publisher<-function(eml_object,
                         email,
                         ror_id,
                         for_or_by_NPS = TRUE,
-                        NPS = TRUE) {
+                        NPS = FALSE) {
 
 #just in case someone at NPS wants to run this function, it will run .set_npspublisher instead unless they explicitly tell it not to by setting NPS = FALSE. This is an extra safeguard.
   if(NPS == TRUE){
     .set_npspublisher(eml_object)
+    if(force == FALSE){
+      cat("The publisher has been set to the Fort Collins office of the National Park Service\n")
+      cat("To specifiy an alternative publisher, set NPS=FALSE")
+    }
   }
+
   else{
     # get existing publisher info for the data package:
     publish <- eml_object$dataset$publisher
@@ -1037,47 +1042,102 @@ set_publisher<-function(eml_object,
                                  userId = ror_id))
 
     # if existing and new publisher don't match, replace with new publisher
-    if (!identical(publish, pubset)) {
-      eml_object$dataset$publisher <- pubset
-    }
 
-    # set up byOrForNPS:
-    for_by <- list(metadata = list(
+    if(force==TRUE){
+      if (!identical(publish, pubset)) {
+      eml_object$dataset$publisher <- pubset
+      }
+
+      # set up byOrForNPS:
+      for_by <- list(metadata = list(
                       agencyOriginated = list(
                         agency = org_name,
                         byOrForNPS = for_or_by_NPS),
                       id = "agencyOriginated"))
-    # access additionalMetadata elements:
-    add_meta <- EML::eml_get(eml_object, "additionalMetadata")
-    add_meta <- within(add_meta, rm("@context"))
+      # access additionalMetadata elements:
+      add_meta <- EML::eml_get(eml_object, "additionalMetadata")
+      add_meta <- within(add_meta, rm("@context"))
 
       # if no additionalMetadata, add in EMLeditor and current version:
-    if (length(names(add_meta)) == 0) {
-      eml_object$additionalMetadata <- for_by
-    }
-
-    # if there are existing additionalMetadata elements:
-    if (length(names(add_meta)) > 0) {
-      x <- length(add_meta)
-
-      # does it include byOrForNPS?
-      For_or_by_nps <- NULL
-      for (i in seq_along(add_meta)) {
-        if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
-          For_or_by_nps <- "TRUE"
-        }
+      if (length(names(add_meta)) == 0) {
+        eml_object$additionalMetadata <- for_by
       }
-      # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
-      if (is.null(For_or_by_nps)) {
-        if (x == 1) {
-          eml_object$additionalMetadata <- list(for_by,
+
+      # if there are existing additionalMetadata elements:
+      if (length(names(add_meta)) > 0) {
+
+        # does it include byOrForNPS?
+        For_or_by_nps <- NULL
+        for (i in seq_along(add_meta)) {
+          if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
+            For_or_by_nps <- "TRUE"
+          }
+        }
+        # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
+        if (is.null(For_or_by_nps)) {
+          if (length(add_meta) == 1) {
+            eml_object$additionalMetadata <- list(for_by,
                                                 eml_object$additionalMetadata)
-        }
-        if (x > 1) {
-          eml_object$additionalMetadata[[x + 1]] <- for_by
+          }
+          if (length(add_meta) > 1) {
+            eml_object$additionalMetadata[[x + 1]] <- for_by
+          }
         }
       }
+    }
+    if(force == FALSE){
+      if(is.null(publish)){
+        eml_object$dataset$publisher <- pubset
+        cat("No publisher information was detected\n\n")
+        cat("Your publisher has been set to:\n")
+        cat("Organization Name: ", crayon::blue$bold(pubset$organizationName), "\n")
+        cat("Street address: ", crayon::blue$bold(pubset$address$deliveryPoint), "\n")
+        cat("City: ", crayon::blue$bold(pubset$address$city), "\n")
+        cat("State: ", crayon::blue$bold(pubset$address$administrativeArea), "\n")
+        cat("Zip Code: ", crayon::blue$bold(pubset$address$postalCode), "\n")
+        cat("Country: ", crayon::blue$bold(pubset$address$country), "\n")
+        cat("URL: ", crayon::blue$bold(pubset$onlineUrl), "\n")
+        cat("email: ", crayon::blue$bold(pubset$email), "\n")
+        cat("ROR ID: ", crayon::blue$bold(pubset$userID), "\n")
+      }
+      if(!is.null(publish)){
+        if(identical(publish, pubset)){
+          cat("Your current publisher is identical to the information you entered.\n")
+          cat("No changes were made to the publisher.\n")
+        }
+        if(!identical(publish, pubset)){
+          cat("Your current publisher is set to:\n\n")
+          cat("Organization Name: ", crayon::blue$bold(publish$organizationName), "\n")
+          cat("Street address: ", crayon::blue$bold(publish$address$deliveryPoint), "\n")
+          cat("City: ", crayon::blue$bold(publish$address$city), "\n")
+          cat("State: ", crayon::blue$bold(publish$address$administrativeArea), "\n")
+          cat("Zip Code: ", crayon::blue$bold(publish$address$postalCode), "\n")
+          cat("Country: ", crayon::blue$bold(publish$address$country), "\n")
+          cat("URL: ", crayon::blue$bold(publish$onlineUrl), "\n")
+          cat("email: ", crayon::blue$bold(publish$email), "\n")
+          cat("ROR ID: ", crayon::blue$bold(publish$userID), "\n\n")
+          var1<-readline(prompt="Would you like to replace your existing publisher? \n\n 1: Yes\n 2: No\n")
+            if(var1 == 1){
+
+            }
+      }
+
     }
   }
+  #add/update EMLeditor and version to metadata:
+  eml_object<-.set_version(eml_object)
+
   return(eml_object)
 }
+
+
+
+
+
+
+
+
+
+
+
+
