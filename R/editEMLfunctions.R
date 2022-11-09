@@ -361,52 +361,6 @@ set_content_units<-function(eml_object, park_units, force=FALSE, NPS=TRUE){
   return(eml_object)
 }
 
-################################################################
-### extras to help?
-########################
-#----
-if(is.null(doc)){
-  eml_object$dataset$coverage$geographicCoverage<-unit_list
-  cat("No previous Content Unit Links Detected\n")
-  cat("Your Content Unit Links have been set to: ",
-      crayon::blue$bold(park_units), ".", sep="")
-}
-
-#if there are already geographicCoverage(s)
-else{
-
-  #remove @context from list
-  my_list<-within(doc, rm("@context"))
-
-  #are there previous content unit links?
-
-
-  #remove names from list (critical for writing back to xml)
-  names(my_list)<-NULL
-
-  #if there is more than 1 geo coverage:
-  if(length(my_list)>2){
-
-    #combine new and old geo coverages (new always at the top!)
-    my_list<-append(unit_list, my_list)
-
-    #write over the existing geographic coverage
-    eml_object$dataset$coverage$geographicCoverage<-my_list
-  }
-
-  #if there is only one geo coverage:
-  if(length(my_list)==2){
-
-    geocov2 <- EML::eml$geographicCoverage(geographicDescription =
-                                             doc$geographicDescription,
-                                           boundingCoordinates = doc$boundingCoordinates)
-
-    #add park unit connections and existing geo coverage (park units always on top!)
-    eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
-  }
-}
-#----
-
 #' Adds CUI to metadata
 #'
 #' @description set_cui adds CUI codes to EML metadata
@@ -1014,6 +968,7 @@ set_publisher<-function(eml_object,
                         email,
                         ror_id,
                         for_or_by_NPS = TRUE,
+                        force = FALSE,
                         NPS = FALSE){
 
 #just in case someone at NPS wants to run this function, it will run .set_npspublisher instead unless they explicitly tell it not to by setting NPS = FALSE. This is an extra safeguard.
