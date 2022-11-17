@@ -143,3 +143,30 @@ Assuming everything went smoothly and eml_validate returns 'TRUE', write your EM
 EML::write_eml(my_meta2, "mymetadatafilename_metadata.xml")
 ```
 
+# Scripting with EMLeditor
+
+The interactive feedback and prompts provided by EMLeditor functions can be turned off to enable efficient scripting. All "set_" class functions have a parameter, _force_ that defaults to _force = FALSE_. To turn off the feedback and prompts, set _r force = TRUE_ when calling each function. Be careful using the functions in this way as they may - or may not - make changes to your metadata and you will not be advised of any change or lack of change. Inspect your final product carefully.
+
+# non-NPS users
+
+EMLeditor functions are designed primarily for use by staff at the National Park Service for publication of data packages to DataStore. Consequently, all "set_" class functions silently perform two operations by default:
+
+1) They set the publisher to the National Park Service (and the location to the Fort Collins office) 
+2) They specify the agency that created the data package as NPS and set a field "by or for NPS" to TRUE. 
+
+You can prevent set_class functions from performing these operations by changing the default status of the parameter _NPS = TRUE_ to _NPS = FALSE_. This will leave your publisher information untouched and will not create an additionalMetadata item for the agency that created the data package.
+
+If you would like to set the publisher to something other than the Fort Collins Office of the National Park Service or your would like to set the agency that created the data package to something other than NPS, use the _set_publisher_  function. Be sure to specify _NPS = FALSE_ or the function will perform the default operations (set publisher to NPS at the Fort Collins Office and set the agency to NPS).
+
+**Warning:** set_publisher should only be used in a few, likely rare, circumstances:
+
+1) If the publisher Is **NOT** the National Park Service 
+2) If the contact address for the publisher is **NOT** the central office in Fort Collins (all data packages uploaded to DataStore will be published by the Fort Collins Office of NPS)
+3) If the originating agency is **NOT** the NPS (i.e. a contractor or partner organization)
+4) If the data package is **NOT** created for or by the NPS
+
+It's probably a good idea to run
+```{r args, eval=FALSE}
+args(set_publisher)
+```
+to make sure you have all the arguments, especially those with defaults, properly specified.
