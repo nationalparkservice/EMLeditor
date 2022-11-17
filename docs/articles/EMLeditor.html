@@ -82,12 +82,12 @@ using:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#install the NPSdataverse:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobLBaker/NPSdataverse" class="external-link">NPSdataverse</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#individual install:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"EML"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/EML/" class="external-link">EML</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://roblbaker.github.io/EMLeditor/">EMLeditor</a></span><span class="op">)</span></span></code></pre></div>
@@ -131,7 +131,7 @@ want to update them, and report on the results of your edits.</p>
 <h4 id="import-your-metadata-into-r">Import your metadata into R<a class="anchor" aria-label="anchor" href="#import-your-metadata-into-r"></a>
 </h4>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"mymetadata_metdata.xml"</span>, from<span class="op">=</span><span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"mymetadata_metdata.xml"</span>, from<span class="op">=</span><span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-information-about-cui">Add information about CUI<a class="anchor" aria-label="anchor" href="#add-information-about-cui"></a>
@@ -191,7 +191,7 @@ activate the DRR reference and, while a DOI has been reserved for your
 DRR, it will not be activated until after publication so that you have
 plenty of time to construct the DRR.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_drr_doi.html">set_drr_doi</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">7654321</span>, <span class="st">"DRR Title"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">set_drr_doi</span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">7654321</span>, <span class="st">"DRR Title"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="set-the-language">Set the language<a class="anchor" aria-label="anchor" href="#set-the-language"></a>
@@ -237,7 +237,7 @@ EML. There are only two quick steps left:</p>
 </h4>
 <p>OK, this first one might take a tick to run:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 <p>If eml_validate returns errors, inspect them and fix them. Feel free
 to contribute an <a href="https://github.com/nationalparkservice/EMLeditor/issues" class="external-link">issue</a>,
 or email <a href="mailto:robert_baker@nps.gov?subject=EMLeditor%20issues">Rob
@@ -253,8 +253,64 @@ _metadata.xml. Also, when uploading your data package (data files and
 metadata) to DataStore, make sure to upload it to the correct draft
 reference!</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="scripting-with-emleditor">Scripting with EMLeditor<a class="anchor" aria-label="anchor" href="#scripting-with-emleditor"></a>
+</h2>
+<p>The interactive feedback and prompts provided by EMLeditor functions
+can be turned off to enable efficient scripting. All “set_” class
+functions have a parameter, <em>force</em> that defaults to <em>force =
+FALSE</em>. To turn off the feedback and prompts, set <em>r force =
+TRUE</em> when calling each function. Be careful using the functions in
+this way as they may - or may not - make changes to your metadata and
+you will not be advised of any change or lack of change. Inspect your
+final product carefully.</p>
+</div>
+<div class="section level2">
+<h2 id="non-nps-users">non-NPS users<a class="anchor" aria-label="anchor" href="#non-nps-users"></a>
+</h2>
+<p>EMLeditor functions are designed primarily for use by staff at the
+National Park Service for publication of data packages to DataStore.
+Consequently, all “set_” class functions silently perform two operations
+by default:</p>
+<ol style="list-style-type: decimal">
+<li>They set the publisher to the National Park Service (and the
+location to the Fort Collins office)</li>
+<li>They specify the agency that created the data package as NPS and set
+a field “by or for NPS” to TRUE.</li>
+</ol>
+<p>You can prevent set_class functions from performing these operations
+by changing the default status of the parameter <em>NPS = TRUE</em> to
+<em>NPS = FALSE</em>. This will leave your publisher information
+untouched and will not create an additionalMetadata item for the agency
+that created the data package.</p>
+<p>If you would like to set the publisher to something other than the
+Fort Collins Office of the National Park Service or your would like to
+set the agency that created the data package to something other than
+NPS, use the <em>set_publisher</em> function. Be sure to specify <em>NPS
+= FALSE</em> or the function will perform the default operations (set
+publisher to NPS at the Fort Collins Office and set the agency to
+NPS).</p>
+<p><strong>Warning:</strong> set_publisher should only be used in a few,
+likely rare, circumstances:</p>
+<ol style="list-style-type: decimal">
+<li>If the publisher Is <strong>NOT</strong> the National Park
+Service</li>
+<li>If the contact address for the publisher is <strong>NOT</strong> the
+central office in Fort Collins (all data packages uploaded to DataStore
+will be published by the Fort Collins Office of NPS)</li>
+<li>If the originating agency is <strong>NOT</strong> the NPS (i.e. a
+contractor or partner organization)</li>
+<li>If the data package is <strong>NOT</strong> created for or by the
+NPS</li>
+</ol>
+<p>It’s probably a good idea to run</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/args.html" class="external-link">args</a></span><span class="op">(</span><span class="va">set_publisher</span><span class="op">)</span></span></code></pre></div>
+<p>to make sure you have all the arguments, especially those with
+defaults, properly specified.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

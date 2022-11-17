@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_language</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">lang</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_language</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">lang</span>, force <span class="op">=</span> <span class="cn">FALSE</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,10 @@
 
 <dt>lang</dt>
 <dd><p>is a string consisting of the language the data and metadata were constructed in, for example, "English", "Spanish", "Navajo". Capitalization does not matter, but spelling does! The input provided here will be converted to 3-digit ISO 639-2 codes.</p></dd>
+
+
+<dt>force</dt>
+<dd><p>logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.</p></dd>
 
 
 <dt>NPS</dt>

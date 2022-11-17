@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_producing_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">prod_units</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_producing_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">prod_units</span>, force <span class="op">=</span> <span class="cn">FALSE</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,10 @@
 
 <dt>prod_units</dt>
 <dd><p>A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")</p></dd>
+
+
+<dt>force</dt>
+<dd><p>logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.</p></dd>
 
 
 <dt>NPS</dt>
@@ -82,7 +86,7 @@
 <span class="r-in"><span><span class="va">prod_units</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABCD"</span>, <span class="st">"EFGH"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">set_producing_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">prod_units</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">set_producing_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ABCD"</span>, <span class="st">"EFGH"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">set_producing_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="st">"ABCD"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">set_producing_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="st">"ABCD"</span>, force<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

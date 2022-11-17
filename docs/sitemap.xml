@@ -58,6 +58,9 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_drr_doi.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/get_drr_title.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_ds_id.html</loc>
   </url>
   <url>
@@ -82,9 +85,6 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://roblbaker.github.io/EMLeditor/reference/new_doi.html</loc>
-  </url>
-  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_abstract.html</loc>
   </url>
   <url>
@@ -97,7 +97,7 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_doi.html</loc>
   </url>
   <url>
-    <loc>https://roblbaker.github.io/EMLeditor/reference/set_drr_doi.html</loc>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/set_drr.html</loc>
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_language.html</loc>
