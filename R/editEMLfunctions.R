@@ -924,7 +924,7 @@ set_protocol<-function(eml_object, protocol_id, force=FALSE, NPS=TRUE){
 
 #' Set Publisher
 #'
-#' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function.
+#' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function. It's probably a good idea to run args(set_publisher) to make sure you have all the arguments, especially those with defaults, properly specified.
 #'
 #' @inheritParams set_title
 #' @param org_name String. The organization name that is publishing the digital product. Defaults to "NPS".
@@ -973,69 +973,90 @@ set_publisher<-function(eml_object,
 
 #just in case someone at NPS wants to run this function, it will run .set_npspublisher instead unless they explicitly tell it not to by setting NPS = FALSE. This is an extra safeguard.
   if(NPS == TRUE){
-    .set_npspublisher(eml_object)
+    eml_object<-.set_npspublisher(eml_object)
     if(force == FALSE){
-      cat("The publisher has been set to the Fort Collins office of the National Park Service\n")
-      cat("To specifiy an alternative publisher, set NPS=FALSE")
+      cat("The publisher has been set to the ",
+          crayon::blue$bold("Fort Collins office of the National Park Service"),
+          ".\n", sep="")
+      cat("The data package has been designated as ",
+          crayon::bold("Created For and by the NPS = "),
+          crayon::blue$bold("TRUE"), "\n\n", sep="")
+      cat("To specifiy an alternative, set NPS=FALSE")
     }
   }
+  # get existing publisher info for the data package:
+  publish <- eml_object$dataset$publisher
 
-  else{
-    # get existing publisher info for the data package:
-    publish <- eml_object$dataset$publisher
+  # create desired publisher info:
+  pubset <- list(organizationName = org_name,
+                 address = list(deliveryPoint = street_address,
+                                city = city,
+                                administrativeArea = state,
+                                postalCode = zip_code,
+                                country = country),
+                 onlineUrl = URL,
+                 electronicMailAddress = email,
+                 userId = list(directory = "https://ror.org/",
+                               userId = ror_id))
+  # set up byOrForNPS:
+  for_by <- list(metadata = list(
+    agencyOriginated = list(
+      agency = org_name,
+      byOrForNPS = for_or_by_NPS),
+    id = "agencyOriginated"))
+  # access additionalMetadata elements:
+  add_meta <- eml_object$additionalMetadata
 
-    # create desired publisher info:
-    pubset <- list(organizationName = org_name,
-                   address = list(deliveryPoint = street_address,
-                                  city = city,
-                                  administrativeArea = state,
-                                  postalCode = zip_code,
-                                  country = country),
-                   onlineUrl = URL,
-                   electronicMailAddress = email,
-                   userId = list(directory = "https://ror.org/",
-                                 userId = ror_id))
-
-    # if existing and new publisher don't match, replace with new publisher
-
-    if(force==TRUE){
+  #which table in add_meta has agencyOriginated?
+  if(!is.null(add_meta)){
+    agency <- NULL
+    add_meta_location <- NULL
+    for(i in seq_along(add_meta)){
+      if(suppressWarnings(stringr::str_detect(add_meta[i],
+                                              "agencyOriginated"))){
+        agency<-add_meta[i]
+        add_meta_location <- i
+      }
+    }
+  }
+  if(NPS == FALSE){
+    if(force == TRUE){
+      #change the publisher
       if (!identical(publish, pubset)) {
-      eml_object$dataset$publisher <- pubset
+        eml_object$dataset$publisher <- pubset
       }
 
-      # set up byOrForNPS:
-      for_by <- list(metadata = list(
-                      agencyOriginated = list(
-                        agency = org_name,
-                        byOrForNPS = for_or_by_NPS),
-                      id = "agencyOriginated"))
-      # access additionalMetadata elements:
-      add_meta <- eml_object$additionalMetadata
-      x<-length(add_meta)
+
 
       # if no additionalMetadata, add in EMLeditor and current version:
-      if (length(names(add_meta)) == 0) {
+      if (length(add_meta) == 0) {
         eml_object$additionalMetadata <- for_by
       }
 
       # if there are existing additionalMetadata elements:
-      if (length(names(add_meta)) > 0) {
+      if (length(add_meta) > 0) {
 
-        # does it include byOrForNPS?
-        For_or_by_nps <- NULL
-        for (i in seq_along(add_meta)) {
-          if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
-            For_or_by_nps <- "TRUE"
-          }
-        }
         # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
-        if (is.null(For_or_by_nps)) {
+        if (is.null(agency)) {
           if (length(add_meta) == 1) {
             eml_object$additionalMetadata <- list(for_by,
                                                 eml_object$additionalMetadata)
           }
           if (length(add_meta) > 1) {
-            eml_object$additionalMetadata[[x + 1]] <- for_by
+            eml_object$additionalMetadata[[length(add_meta) + 1]] <- for_by
+          }
+        }
+        # if there *IS* already ForOrByNPS, update it:
+        if(!is.null(agency)){
+          #if that's all there is, replace all additionalMetadata:
+          if(length(add_meta) == 1){
+            eml_object$additionalMetadata <- for_by
+          #if there are multiple additionalMetadata items, replace just the agencyOriginated:
+          }
+          if(length(add_meta) > 1){
+            #replace just agencyOriginated
+
+            eml_object$additionalMetadata[add_meta_location] <- list(for_by)
           }
         }
       }
@@ -1058,85 +1079,110 @@ set_publisher<-function(eml_object,
       if(!is.null(publish)){
         if(identical(publish, pubset)){
           cat("Your current publisher is identical to the information you entered.\n")
-          cat("No changes were made to the publisher.\n")
+          cat("No changes were made to the publisher.\n\n")
         }
         if(!identical(publish, pubset)){
           cat("Your current publisher is set to:\n\n")
-          cat("Organization Name: ", crayon::blue$bold(publish$organizationName), "\n", sep="")
-          cat("Street address: ", crayon::blue$bold(publish$address$deliveryPoint), "\n", sep="")
+          cat("Organization Name: ",
+              crayon::blue$bold(publish$organizationName), "\n", sep="")
+          cat("Street address: ",
+              crayon::blue$bold(publish$address$deliveryPoint), "\n", sep="")
           cat("City: ", crayon::blue$bold(publish$address$city), "\n", sep="")
-          cat("State: ", crayon::blue$bold(publish$address$administrativeArea), "\n", sep="")
-          cat("Zip Code: ", crayon::blue$bold(publish$address$postalCode), "\n", sep="")
-          cat("Country: ", crayon::blue$bold(publish$address$country), "\n", sep="")
+          cat("State: ", crayon::blue$bold(publish$address$administrativeArea),
+              "\n", sep="")
+          cat("Zip Code: ",crayon::blue$bold(publish$address$postalCode), "\n",
+              sep="")
+          cat("Country: ", crayon::blue$bold(publish$address$country), "\n",
+              sep="")
           cat("URL: ", crayon::blue$bold(publish$onlineUrl), "\n", sep="")
-          cat("email: ", crayon::blue$bold(publish$email), "\n", sep="")
-          cat("ROR ID: ", crayon::blue$bold(publish$userID), "\n\n", sep="")
+          cat("email: ", crayon::blue$bold(publish$electronicMailAddress),
+              "\n", sep="")
+          cat("ROR ID: ", crayon::blue$bold(publish$userId$userId),
+              "\n\n", sep="")
           var1<-readline(prompt="Would you like to replace your existing publisher? \n\n 1: Yes\n 2: No\n")
             if(var1 == 1){
               eml_object$dataset$publisher <- pubset
               cat("Your new publisher is:\n\n")
-              cat("Organization Name: ", crayon::blue$bold(pubset$organizationName), "\n", sep="")
-              cat("Street address: ", crayon::blue$bold(pubset$address$deliveryPoint), "\n", sep="")
-              cat("City: ", crayon::blue$bold(pubset$address$city), "\n", sep="")
-              cat("State: ", crayon::blue$bold(pubset$address$administrativeArea), "\n", sep="")
-              cat("Zip Code: ", crayon::blue$bold(pubset$address$postalCode), "\n", sep="")
-              cat("Country: ", crayon::blue$bold(pubset$address$country), "\n", sep="")
+              cat("Organization Name: ",
+                  crayon::blue$bold(pubset$organizationName), "\n", sep="")
+              cat("Street address: ",
+                  crayon::blue$bold(pubset$address$deliveryPoint), "\n", sep="")
+              cat("City: ",
+                  crayon::blue$bold(pubset$address$city), "\n", sep="")
+              cat("State: ",
+                  crayon::blue$bold(pubset$address$administrativeArea), "\n",
+                  sep="")
+              cat("Zip Code: ",
+                  crayon::blue$bold(pubset$address$postalCode), "\n", sep="")
+              cat("Country: ",
+                  crayon::blue$bold(pubset$address$country), "\n", sep="")
               cat("URL: ", crayon::blue$bold(pubset$onlineUrl), "\n", sep="")
-              cat("email: ", crayon::blue$bold(pubset$email), "\n", sep="")
-              cat("ROR ID: ", crayon::blue$bold(pubset$userID), "\n", sep="")
+              cat("email: ", crayon::blue$bold(pubset$electronicMailAddress),
+                  "\n", sep="")
+              cat("ROR ID: ", crayon::blue$bold(pubset$userId$userId), "\n\n",
+                  sep="")
             }
-          if(var1 == 2){
-            cat("Your existing publisher information was retained.\\n")
+            if(var1 == 2){
+              cat("Your existing publisher information was retained.\n\n")
+            }
           }
         }
-      }
-      add_meta<-eml_object$additionalMetadata
+
       #if there is no additionalMetadata at all:
       if(is.null(add_meta)){
+        #add agencyOriginated to Metadata:
         eml_object$additionalMetadata<- for_by
+        #report results to user:
         cat("No agency was detected. Your agency has been updated to:\n")
-        cat("Agency: ", crayon::bold$blue(org_name), ".\n", sep="")
-        cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS), ".\n", sep="")
+        cat("Agency: ", crayon::bold$blue(org_name), "\n", sep="")
+        cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS),
+            "\n", sep="")
       }
 
-      #if there is metadata:
+      #if there is additionalMetadata
       if(!is.null(add_meta)){
-        agency<-NULL
-        for(i in seq_along(add_meta)){
-          if(suppressWarnings(stringr::str_detect(add_meta[i],
-                                                  "agencyOriginated"))){
-            agency<-add_meta[i]
-          }
-        }
-        cat("Your metadata already contains information about whether it was Created By or For the NPS.\n")
-        cat("Agency: ",
-            crayon::bold$blue(agency[[1]]$metadata$agencyOriginated$agency),
-            ".\n", sep="")
-        cat("Created By or For NPS: ",
-            crayon::blue$bold(agency[[1]]$metadata$agencyOriginated$byOrForNPS),
-            ".\n\n", sep="")
-        var2<-readline(prompt="Would you like to replace your agency? \n\n 1: Yes\n 2: No\n")
-        if(var2==1){
-          # Since there are existing additionalMetadata elements:
-          if (length(add_meta) == 1) {
+        #but no agencyOriginated:
+        if(is.null(add_meta_location)){
+          if(length(add_meta) == 1) {
             eml_object$additionalMetadata <- list(for_by,
-                                                    eml_object$additionalMetadata)
-            }
-          if (length(add_meta) > 1) {
-            eml_object$additionalMetadata[[x + 1]] <- for_by
+                                                  eml_object$additionalMetadata)
           }
+          if(length(add_meta) > 1){
+            eml_object$additionalMetadata[[length(add_meta) + 1]] <- for_by
+          }
+          cat("No agency was detected. Your agency has been updated to:\n")
+          cat("Agency: ", crayon::bold$blue(org_name), "\n", sep="")
+          cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS),
+              "\n", sep="")
         }
-        cat("Your new agency information has been set to:\n")
-        cat("Agency: ", crayon::bold$blue(org_name), ".\n", sep="")
-        cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS), ".\n", sep="")
 
-
-
-
-            #replace agencyOriginated - tricky because potential for many additionalMetadata elements
-
-        if(var2==2){
-          cat("Your original agency was retained.\n")
+        #if there is metadata, including agencyOrginated:
+        if(!is.null(add_meta_location)){
+          cat("Your metadata already contains information about whether it was Created By or For the NPS.\n")
+          cat("Agency: ", crayon::bold$blue(agency[[1]]$metadata$agencyOriginated$agency),"\n", sep="")
+          cat("Created By or For NPS: ",
+          crayon::blue$bold(agency[[1]]$metadata$agencyOriginated$byOrForNPS),
+        "\n\n", sep="")
+          var2<-readline(prompt="Would you like to replace your agency? \n\n 1: Yes\n 2: No\n")
+          if(var2 == 1){
+            # Since there are existing additionalMetadata elements:
+            if(length(add_meta) == 1){
+              eml_object$additionalMetadata <- for_by
+              #if there are multiple additionalMetadata items, replace just the agencyOriginated:
+            }
+            if(length(add_meta) > 1){
+              #replace just agencyOriginated
+              eml_object$additionalMetadata[add_meta_location] <- list(for_by)
+            }
+            cat("Your new agency information has been set to:\n\n")
+            cat("Agency: ", crayon::bold$blue(org_name), "\n", sep="")
+            cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS),
+              "\n", sep="")
+          }
+          #if user does not want to make changes:
+          if(var2 == 2){
+            cat("Your original agency was retained.\n")
+          }
         }
       }
     }
