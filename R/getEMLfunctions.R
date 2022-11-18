@@ -81,12 +81,12 @@ get_abstract <- function(eml_object) {
         mypara <- gsub("<para>", "", mypara) # get rid of para tag
         mypara <- gsub("</para>", "", mypara) # get rid of close para tag
         mypara <- gsub("</literalLayout>", "", mypara) # get rid of close par tag
-        mypara <- gsub("   ", " ", mypara) #get rid of 3x spaces
-        mypara <- gsub("  ", " ", mypara) #get rid of 2x spaces
-        mypara <- gsub("  ", " ", mypara) #rerun for 4x spaces
-        txt <- paste(txt, mypara, sep="")
-        if(i< seq_along(doc)){
-          txt <- paste(txt, "\n\n\t", sep="") #add paragraph sep
+        mypara <- gsub("   ", " ", mypara) # get rid of 3x spaces
+        mypara <- gsub("  ", " ", mypara) # get rid of 2x spaces
+        mypara <- gsub("  ", " ", mypara) # rerun for 4x spaces
+        txt <- paste(txt, mypara, sep = "")
+        if (i < seq_along(doc)) {
+          txt <- paste(txt, "\n\n\t", sep = "") # add paragraph sep
         }
       }
     }
@@ -346,7 +346,7 @@ get_content_units <- function(eml_object) {
         unit_cons <- append(unit_cons, units[i])
       }
     }
-    if(is.null(unit_cons)){
+    if (is.null(unit_cons)) {
       warning("No Park Unit Connections specified. Use the set_content_units() function to add Park Unit Connections.")
     }
     # make a string that is just comma separated unit connection codes:
@@ -489,16 +489,15 @@ get_drr_doi <- function(eml_object) {
 #'
 #' @examples
 #' \dontrun{
-#'  get_drr_title(eml_object)
-#'  }
+#' get_drr_title(eml_object)
+#' }
 get_drr_title <- function(eml_object) {
   doi <- eml_object$dataset$usageCitation$title
-  if (is.null(doi)){
+  if (is.null(doi)) {
     cat(crayon::red$bold("Warning: "), "You have not specified a DRR associated with this data package.
             If you have an associated DRR, specify its DOI using set_drr.")
     drr_doi <- NA # to do: test whether NA needs quotes for write.README.
-  }
-  else {
+  } else {
     return(doi)
   }
 }
@@ -528,7 +527,7 @@ get_lit <- function(eml_object) {
 #'
 #' @description get_producing_units returns whatever is in the metadataProvider eml element. Set this to the producing units using the set_producing_units function.
 #'
-#'@inheritParams get_begin_date
+#' @inheritParams get_begin_date
 #'
 #' @return a character sting
 #' @export
@@ -542,10 +541,6 @@ get_producing_units <- function(eml_object) {
   return(punit)
 }
 
-get_publisher <- function(eml_object){
-  pub<-emlobject$dataset$publisher
-
-
-
-
+get_publisher <- function(eml_object) {
+  pub <- emlobject$dataset$publisher
 }

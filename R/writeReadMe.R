@@ -14,7 +14,7 @@
 #' \dontrun{
 #' write_readme(eml_object, "TestReadMe.txt")
 #' }
-write_readme <- function(eml_object, outfile="") {
+write_readme <- function(eml_object, outfile = "") {
   # get components:
   ref <- get_ds_id(eml_object) # Data Store Ref. ID
   doi <- get_doi(eml_object) # DOI
@@ -26,7 +26,7 @@ write_readme <- function(eml_object, outfile="") {
   units <- get_content_units(eml_object) # park units where data were collected
   cui <- get_cui(eml_object) # controlled unclassified information status
   drr_doi <- get_drr_doi(eml_object) # DOI of accompanying DRR
-  drr_doi <- gsub('DRR: ', "", drr_doi) #get rid of DRR: prefix
+  drr_doi <- gsub("DRR: ", "", drr_doi) # get rid of DRR: prefix
   citation <- get_citation(eml_object) # citation
 
   # Write to the components to the text file specified in "outfile".

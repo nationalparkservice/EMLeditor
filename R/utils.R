@@ -152,12 +152,15 @@
 #' }
 .set_for_by_nps <- function(eml_object) {
   # set up additionalMetadata elements for EMLeditor:
-  for_by <- list(metadata = list(
-    agencyOriginated = list(
-      agency = "NPS",
-      byOrForNPS = "TRUE")),
+  for_by <- list(
+    metadata = list(
+      agencyOriginated = list(
+        agency = "NPS",
+        byOrForNPS = "TRUE"
+      )
+    ),
     id = "agencyOriginated"
-    )
+  )
 
   # access additionalMetadata elements:
   add_meta <- EML::eml_get(eml_object, "additionalMetadata")
