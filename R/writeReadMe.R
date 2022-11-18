@@ -23,9 +23,10 @@ write_readme <- function(eml_object, outfile="") {
   file_info <- get_file_info(eml_object) # names, sizes, descriptions
   start <- get_begin_date(eml_object) # content start date
   end <- get_end_date(eml_object) # content end date
-  units <- get_park_units(eml_object) # park units where data were collected
+  units <- get_content_units(eml_object) # park units where data were collected
   cui <- get_cui(eml_object) # controlled unclassified information status
   drr_doi <- get_drr_doi(eml_object) # DOI of accompanying DRR
+  drr_doi <- gsub('DRR: ', "", drr_doi) #get rid of DRR: prefix
   citation <- get_citation(eml_object) # citation
 
   # Write to the components to the text file specified in "outfile".
