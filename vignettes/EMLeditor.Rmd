@@ -111,7 +111,7 @@ my_meta2 <- set_language(my_meta2, "English")
 These are the park units where data were collected from, for instance ROMO, not ROMN. If the data package includes data from more than one park, they can all be listed. For instance, if data were collected from all park units within a network, each unit should be listed separately rather than the network. This is because the geographic coordinates corresponding to bounding boxes for each park unit listed will automatically be generated and inserted into the metadata. Individual park units will be more informative than the bounding box for the entire network.
 
 ``` {r park_units, eval=FALSE}
-park_units <- ("ROMO", "GRSD", "YELL")
+park_units <- c("ROMO", "GRSD", "YELL")
 my_meta2 <- set_content_units(my_meta2, park_units)
 ```
 
