@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_content_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">park_units</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_content_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">park_units</span>, force <span class="op">=</span> <span class="cn">FALSE</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -59,6 +59,10 @@
 
 <dt>park_units</dt>
 <dd><p>a list of comma-separated strings where each string is a park unit code.</p></dd>
+
+
+<dt>force</dt>
+<dd><p>logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.</p></dd>
 
 
 <dt>NPS</dt>
@@ -73,13 +77,13 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Adds the Content Unit Link(s) to a &lt;geographicCoverage&gt;. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate &lt;geographicCoverage&gt; element. For each content unit link, the unit name will be listed under &lt;geographicDescription&gt; and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If other &lt;geographicCoverage&gt; elements exist, set_content_units will add to them, not overwrite them. If no other &lt;geographicCoverage&gt; elements exist, set_content_units will create a new set of &lt;geographicCoverage&gt; elements.</p>
+    <p>Adds the Content Unit Link(s) to a &lt;geographicCoverage&gt;. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate &lt;geographicCoverage&gt; element. For each content unit link, the unit name will be listed under &lt;geographicDescription&gt; and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="va">park_units</span><span class="op">&lt;-</span><span class="op">(</span><span class="st">"ROMO, GRSD, TRYME"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">park_units</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="st">"ROMO, GRSD, TRYME"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">set_content_units</span><span class="op">(</span><span class="va">eml_object</span>, <span class="va">park_units</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>

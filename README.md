@@ -3,9 +3,9 @@
 
 # EMLeditor
 
-##### v0.0.1.1
+##### v0.1.0.0
 
-##### “Lilly Lake Loop”
+##### “Electric Peak”
 
 <!-- badges: start -->
 <!-- badges: end -->

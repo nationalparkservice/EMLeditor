@@ -14,8 +14,8 @@ knitr::opts_chunk$set(
 ```
 
 # EMLeditor 
-##### v0.0.1.1
-##### "Lilly Lake Loop"
+##### v0.1.0.0
+##### "Electric Peak"
 
 
 <!-- badges: start -->

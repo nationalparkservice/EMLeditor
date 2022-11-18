@@ -4,12 +4,14 @@
 \alias{set_producing_units}
 \title{Sets Producing Units for use in DataStore}
 \usage{
-set_producing_units(eml_object, prod_units, NPS = TRUE)
+set_producing_units(eml_object, prod_units, force = FALSE, NPS = TRUE)
 }
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{prod_units}{A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")}
+
+\item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
 \item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
@@ -24,9 +26,9 @@ inserts the unit code into the metadataProvider element. Currently cannot add to
 }
 \examples{
 \dontrun{
-prod_units<-c("ABCD", "EFGH")
+prod_units <- c("ABCD", "EFGH")
 set_producing_units(eml_object, prod_units)
 set_producing_units(eml_object, c("ABCD", "EFGH"))
-set_producing_units(eml_object, "ABCD")
+set_producing_units(eml_object, "ABCD", force = TRUE)
 }
 }

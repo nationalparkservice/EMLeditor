@@ -11,48 +11,51 @@
 #' @export
 #'
 #' @examples
-#'  \dontrun{
-#' data_package_title<-"New Title. Must match DataStore Reference title."
-#' eml_object<-set_title(eml_object, data_package_title)
+#' \dontrun{
+#' data_package_title <- "New Title. Must match DataStore Reference title."
+#' eml_object <- set_title(eml_object, data_package_title)
 #' }
-set_title<-function(eml_object, data_package_title, force=FALSE, NPS=TRUE){
-  #scripting route:
-  if(force == TRUE){
-    eml_object$dataset$title<-data_package_title
+set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE) {
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$title <- data_package_title
   }
-  #interactive route:
-  if(force == FALSE){
-    doc<-arcticdatautils::eml_get_simple(eml_object, "title")
-    if(is.null(doc)){
-      eml_object$dataset$title<-data_package_title
+  # interactive route:
+  if (force == FALSE) {
+    doc <- arcticdatautils::eml_get_simple(eml_object, "title")
+    if (is.null(doc)) {
+      eml_object$dataset$title <- data_package_title
       cat("No previous title was detected. Your new title, ",
-          crayon::blue$bold(data_package_title),
-          " has been added.", sep="")
-    }
-    else{
-      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".", sep="")
-      var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-  #if User opts to retain DOI, retain it
-      if(var1==1){
-        #print the existing DOI to the screen:
-        eml_object$dataset$title<-data_package_title
+        crayon::blue$bold(data_package_title),
+        " has been added.",
+        sep = ""
+      )
+    } else {
+      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".", sep = "")
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      # if User opts to retain DOI, retain it
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        eml_object$dataset$title <- data_package_title
         print("You have replaced your title. The new title is: ",
-              crayon::blue$bold(data_package_title), ".", sep="")
+          crayon::blue$bold(data_package_title), ".",
+          sep = ""
+        )
       }
-      #if User opts to change DOI, change it:
-      if(var1==2){
+      # if User opts to change DOI, change it:
+      if (var1 == 2) {
         print("Your original title was retained.")
       }
     }
   }
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
   return(eml_object)
-  }
+}
 
 
 
@@ -67,111 +70,102 @@ set_title<-function(eml_object, data_package_title, force=FALSE, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#'  \dontrun{
-#'  eml_object<-set_doi(eml_object, 1234567)
-#'  }
-set_doi<-function(eml_object, ds_ref, NPS=TRUE){
-  #Look for an existing data package DOI:
-  doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier") #where EMLassemblyline stores DOIs.
-
-  #If there is no existing DOI, add a DOI to the metadata
-  if(is.null(doc)){
-    eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
-    doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-    doc<-sub(".*? ", "", doc)
-    #print the new DOI to the screen:
-    cat("Your newly specified DOI is: ", doc)
+#' \dontrun{
+#' eml_object <- set_doi(eml_object, 1234567)
+#' }
+set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
   }
+  # interactive route:
+  if (force == FALSE) {
+    # Look for an existing data package DOI:
+    doc <- arcticdatautils::eml_get_simple(
+      eml_object,
+      "alternateIdentifier"
+    )
 
-  #If there is a DOI, find the correct doi by searching for the text "doi: ".
-  else{
-    my_list<-NULL
+    # If there is no existing DOI, add a DOI to the metadata
+    if (is.null(doc)) {
+      eml_object$dataset$alternateIdentifier <- paste0(
+        "doi: https://doi.org/10.57830/",
+        ds_ref
+      )
+      doc <- arcticdatautils::eml_get_simple(
+        eml_object,
+        "alternateIdentifier"
+      )
+      doc <- sub(".*? ", "", doc)
+      # print the new DOI to the screen:
+      cat("No DOI detected.")
+      cat("Your newly specified DOI is: ",
+        crayon::blue$bold(doc),
+        sep = ""
+      )
+    }
 
-    #hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
-    if(length(doc)>1){
-      for(i in seq_along(doc)){
-        if(stringr::str_detect(doc[i], "doi:" )){
-          my_list<-append(my_list, doc[i])
+    # If there is a DOI, find the correct doi by searching for the text "doi: ".
+    else {
+      my_list <- NULL
+
+      # hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
+      if (length(doc) > 1) {
+        for (i in seq_along(doc)) {
+          if (stringr::str_detect(doc[i], "doi:")) {
+            my_list <- append(my_list, doc[i])
+          }
         }
       }
-    }
-    #if there is only one alternateIdentifier:
-    else{
-      my_list<-doc
-    }
-    doi<-my_list[[1]]
+      # if there is only one alternateIdentifier:
+      else {
+        my_list <- doc
+      }
+      doi <- my_list[[1]]
 
-    #If a DOI exists, ask the user what to do about it:
-    var1<-readline(prompt=cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n\n",  doi, "\n\nEnter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
-    #if User opts to retain DOI, retain it
-    if(var1==1){
-      #print the existing DOI to the screen:
-      doi<-sub(".*? ", "", doi)
-      cat("Your DOI remains: ", doi)
-    }
-    #if User opts to change DOI, change it:
-    if(var1==2){
-      eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
-      #get the new DOI:
-      doc<-arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-      doc<-sub(".*? ", "", doc)
-      #print the new DOI to the screen:
-      cat("Your newly specified DOI is: ", doc)
+      # If a DOI exists, ask the user what to do about it:
+      cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n")
+      cat(crayon::blue$bold(doc),
+        "\n\n",
+        sep = ""
+      )
+      var1 <- readline(prompt = cat("Enter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
+      # if User opts to retain DOI, retain it
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        doi <- sub(".*? ", "", doi)
+        cat("Your DOI remains: ", crayon::blue$bold(doi), sep = "")
+      }
+      # if User opts to change DOI, change it:
+      if (var1 == 2) {
+        eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
+        # get the new DOI:
+        doc <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
+        doc <- sub(".*? ", "", doc)
+        # print the new DOI to the screen:
+        cat("Your newly specified DOI is: ",
+          crayon::blue$bold(doc),
+          sep = ""
+        )
+      }
     }
   }
-
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
 
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
 
   return(eml_object)
 }
-
-#' Force-edits an existing DOI
-#'
-#' @description new_doi forces changes to an existing DOI
-#'
-#' @details
-#' If a DOI already exists in the <alternateidentifier> tag (get_doi() to check), this allows the user to over-write the existing DOI.  WARNING: will cause loss of the system="https://doi.org" setting. So only use this if you really don't already have a DOI.
-#'
-#' @inheritParams set_title
-#'
-#' @param ds_ref is the same as the 7-digit reference code generated on DataStore when the draft reference is initiated. Don't worry about the https://www.doi.org and the data package prefix - those will all automatically be added in by the function.
-#'
-#'
-#' @returns an EML-formatted R object
-#'
-#' @export
-#'
-#' @examples
-#'  \dontrun{
-#'  eml_object<-new_doi(eml_object, "1111111")
-#' }
-new_doi<-function(eml_object, ds_ref, NPS=TRUE){
-  eml_object$dataset$alternateIdentifier<-paste0("doi: https://doi.org/10.57830/", ds_ref)
-
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
-  }
-
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
-
-  return(eml_object)
-  }
-
-
 
 #' Add Park Unit Connections to metadata
 #'
 #' @description set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore.
 #'
-#' @details Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If other <geographicCoverage> elements exist, set_content_units will add to them, not overwrite them. If no other <geographicCoverage> elements exist, set_content_units will create a new set of <geographicCoverage> elements.
+#' @details Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
 #'
 #' @inheritParams set_title
 #'
@@ -180,78 +174,223 @@ new_doi<-function(eml_object, ds_ref, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#'  \dontrun{
-#' park_units<-("ROMO, GRSD, TRYME")
+#' \dontrun{
+#' park_units <- ("ROMO, GRSD, TRYME")
 #' set_content_units(eml_object, park_units)
 #' }
-set_content_units<-function(eml_object, park_units, NPS=TRUE){
-  #add text to indicate that these are park unit connections.
-  units<-paste0("NPS Content Unit Links: ", park_units)
+set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE) {
+  # add text to indicate that these are park unit connections.
+  units <- paste0("NPS Content Unit Links: ", park_units)
 
-  unit_list<-NULL
-  for(i in seq_along(park_units)){
-    poly<-.get_unit_polygon(park_units[i])
-    poly<-as.data.frame(poly[[1]][1])
-    N<-max(poly[,2])
-    S<-min(poly[,2])
-    W<-max(poly[,1])
-    E<-min(poly[,1])
-    geocov<- EML::eml$geographicCoverage(geographicDescription =
-                    paste0("NPS Content Unit Links: ", park_units[i]),
-                    boundingCoordinates = EML::eml$boundingCoordinates(
-                      northBoundingCoordinate = N,
-                      eastBoundingCoordinate = E,
-                      southBoundingCoordinate = S,
-                      westBoundingCoordinate = W))
-    unit_list<-append(unit_list, list(geocov))
+  unit_list <- NULL
+  for (i in seq_along(park_units)) {
+    poly <- .get_unit_polygon(park_units[i])
+    poly <- as.data.frame(poly[[1]][1])
+    N <- max(poly[, 2])
+    S <- min(poly[, 2])
+    W <- max(poly[, 1])
+    E <- min(poly[, 1])
+    geocov <- EML::eml$geographicCoverage(
+      geographicDescription =
+        paste0("NPS Content Unit Link: ", park_units[i]),
+      boundingCoordinates = EML::eml$boundingCoordinates(
+        northBoundingCoordinate = N,
+        eastBoundingCoordinate = E,
+        southBoundingCoordinate = S,
+        westBoundingCoordinate = W
+      )
+    )
+    unit_list <- append(unit_list, list(geocov))
   }
 
-  #get geographic coverage from eml_object
-  doc<-EML::eml_get(eml_object, "geographicCoverage")
+  # get geographic coverage from eml_object
+  doc <- eml_object$dataset$coverage$geographicCoverage
 
-  #if there is no geo coverage, add it directly to eml_object
-  if(is.null(doc)){
-    eml_object$dataset$coverage$geographicCoverage<-unit_list
-  }
-
-  #if there are already geographicCoverage(s)
-  else{
-
-    #remove @context from list
-    my_list<-within(doc, rm("@context"))
-
-    #remove names from list (critical for writing back to xml)
-    names(my_list)<-NULL
-
-    #if there is more than 1 geo coverage:
-    if(length(my_list)>2){
-
-      #combine new and old geo coverages (new always at the top!)
-      my_list<-append(unit_list, my_list)
-
-      #write over the existing geographic coverage
-      eml_object$dataset$coverage$geographicCoverage<-my_list
-    }
-
-    #if there is only one geo coverage:
-    if(length(my_list)==2){
-
-     geocov2 <- EML::eml$geographicCoverage(geographicDescription =
-                         doc$geographicDescription,
-                         boundingCoordinates = doc$boundingCoordinates)
-
-      #add park unit connections and existing geo coverage (park units always on top!)
-      eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
+  # Are there content unit links already specified?
+  exist_units <- NULL
+  for (i in seq_along(doc)) {
+    if (suppressWarnings(stringr::str_detect(doc[i], "NPS Content Unit Link")) == TRUE) {
+      # seq<-append(seq, i)
+      exist_units <- append(exist_units, doc[[i]]$geographicDescription)
     }
   }
+  # ineractive route:
+  if (force == FALSE) {
+    # if there is no content unit links add it directly to eml_object
+    if (is.null(exist_units)) {
+      if (is.null(doc)) {
+        eml_object$dataset$coverage$geographicCoverage <- unit_list
+      } else {
+        if (length(doc) > 1) {
+          # combine new and old geo coverages (new always at the top!)
+          doc <- append(unit_list, doc)
+          # write over the existing geographic coverage
+          eml_object$dataset$coverage$geographicCoverage <- doc
+        }
+        # if there is only one geo coverage:
+        if (length(doc) == 1) {
+          geocov2 <- EML::eml$geographicCoverage(
+            geographicDescription =
+              doc$geographicDescription,
+            boundingCoordinates =
+              doc$boundingCoordinates
+          )
+          # add park unit connections and existing geo coverage (park units always on top!)
+          eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
+        }
+      }
+      cat("No previous Content Unit Links Detected\n")
+      cat("Your Content Unit Links have been set to: ",
+        crayon::blue$bold(park_units), ".",
+        sep = ""
+      )
+    }
 
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+    # if there already content unit links:
+    if (!is.null(exist_units)) {
+      cat("Your metadata already has the following Content Unit Links Specified:\n")
+      for (i in seq_along(exist_units)) {
+        cat(crayon::blue$bold(exist_units[i]), "\n")
+      }
+      var1 <- readline(prompt = "Do you want to\n\n 1: Retain the existing Unit Connections\n 2: Add to the exsiting Unit Connections\n 3: Replace the existing Unit Connections")
+      # Do nothing:
+      if (var1 == 1) {
+        cat("Your existing Unit Connections were retained.")
+      }
+      # Add to existing content unit links:
+      if (var1 == 2) {
+        if (length(doc) > 1) {
+          # combine new and old geo coverages (new always at the top!)
+          doc <- append(unit_list, doc)
+
+          # write over the existing geographic coverage
+          eml_object$dataset$coverage$geographicCoverage <- doc
+        }
+
+        # if there is only one geo coverage:
+        if (length(doc) == 1) {
+          geocov2 <- EML::eml$geographicCoverage(
+            geographicDescription =
+              doc$geographicDescription,
+            boundingCoordinates =
+              doc$boundingCoordinates
+          )
+
+          # add park unit connections and existing geo coverage (park units always on top!)
+          eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
+        }
+
+        # get new geo units:
+        newgeo <- eml_object$dataset$coverage$geographicCoverage
+        exist_units <- NULL
+        for (i in seq_along(newgeo)) {
+          if (suppressWarnings(stringr::str_detect(
+            newgeo[i],
+            "NPS Content Unit Link"
+          )) == TRUE) {
+            exist_units <- append(exist_units, newgeo[[i]]$geographicDescription)
+          }
+        }
+        # return current/new units:
+        cat("Your metadata now has the following Content Unit Links Specified:\n")
+        for (i in seq_along(exist_units)) {
+          cat(crayon::blue$bold(exist_units[i]), "\n")
+        }
+      }
+
+      # replace existing content unit links:
+      if (var1 == 3) {
+        no_units <- NULL
+        for (i in seq_along(doc)) {
+          if (suppressWarnings(stringr::str_detect(
+            doc[i],
+            "NPS Content Unit Link"
+          )) == FALSE) {
+            no_units <- append(no_units, doc[i])
+          }
+        }
+        # if the only geo unit was a previous connection, replace it:
+        if (is.null(no_units)) {
+          eml_object$dataset$coverage$geographicCoverage <- unit_list
+        }
+        if (!is.null(no_units)) {
+          if (length(no_units) == 1) {
+            geocov <- EML::eml$geographicCoverage(
+              geographicDescription =
+                doc[[1]]$geographicDescription,
+              boundingCoordinates =
+                doc[[1]]$boundingCoordinates
+            )
+            eml_Object$dataset$coverage$geographicCoverage <- list(unit_list, no_units)
+          }
+          if (length(no_units) > 1) {
+            my_list <- append(unit_list, no_units)
+            eml_object$dataset$coverage$geographicCoverage <- my_list
+          }
+
+          # get new geo units:
+          newgeo <- eml_object$dataset$coverage$geographicCoverage
+          exist_units <- NULL
+          for (i in seq_along(newgeo)) {
+            if (suppressWarnings(stringr::str_detect(
+              newgeo[i],
+              "NPS Content Unit Link"
+            )) == TRUE) {
+              exist_units <- append(
+                exist_units,
+                newgeo[[i]]$geographicDescription
+              )
+            }
+          }
+          # return current/new units:
+          cat("Your metadata now has the following Content Unit Links Specified:\n")
+          for (i in seq_along(exist_units)) {
+            cat(crayon::blue$bold(exist_units[i]), "\n")
+          }
+        }
+      }
+    }
   }
 
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # scripting route
+  if (force == TRUE) {
+    no_units <- NULL
+    for (i in seq_along(doc)) {
+      if (suppressWarnings(stringr::str_detect(
+        doc[i],
+        "NPS Content Unit Link"
+      )) == FALSE) {
+        no_units <- append(no_units, doc[i])
+      }
+    }
+    # if the only geo unit was a previous connection, replace it:
+    if (is.null(no_units)) {
+      eml_object$dataset$coverage$geographicCoverage <- unit_list
+    }
+    if (!is.null(no_units)) {
+      if (length(no_units) == 1) {
+        geocov <- EML::eml$geographicCoverage(
+          geographicDescription =
+            doc[[1]]$geographicDescription,
+          boundingCoordinates =
+            doc[[1]]$boundingCoordinates
+        )
+        eml_Object$dataset$coverage$geographicCoverage <- list(unit_list, no_units)
+      }
+      if (length(no_units) > 1) {
+        my_list <- append(unit_list, no_units)
+        eml_object$dataset$coverage$geographicCoverage <- my_list
+      }
+    }
+  }
+
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
 
   return(eml_object)
 }
@@ -275,66 +414,77 @@ set_content_units<-function(eml_object, park_units, NPS=TRUE){
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#'  \dontrun{
+#' \dontrun{
 #' set_cui(eml_object, "PUBFUL")
 #' }
-set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), NPS=TRUE){
+set_cui <- function(eml_object, cui_code = c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), force = FALSE, NPS = TRUE) {
+  # verify CUI code entry; stop if does not equal one of six valid codes listed above:
+  cui_code <- match.arg(cui_code)
 
-  #verify CUI code entry; stop if does not equal one of six valid codes listed above:
-  cui_code<-match.arg(cui_code)
+  # Generate new CUI element for additionalMetadata
+  my_cui <- list(metadata = list(CUI = cui_code), id = "CUI")
 
-  #Generate new CUI element for additionalMetadata
-  my_cui<-list(metadata=list(CUI=cui_code), id="CUI")
+  # get existing additionalMetadata elements:
+  doc <- eml_object$additionalMetadata
 
-  #get existing additionalMetadata elements:
-  doc<-EML::eml_get(eml_object, "additionalMetadata")
+  x <- length(doc)
 
-  #if no prior additionalMetadata elements, add CUI to additionalMetadata:
-  if(sum(names(doc)!="@context")==0){
-    eml_object$additionalMetadata<-my_cui
-  }
-
-  #if additionalMetadata already exists:
-  if(sum(names(doc)!="@context")>0){
-    my_list<-NULL
-    #ditch the '@context' list from doc:
-    for(i in seq_along(names(doc))){
-      if(!names(doc)[i]=='@context' && !names(doc)[i]=="id"){
-        my_list<-append(my_list, doc[i])
-      }
-    x<-length(my_list)
-    }
-
-    #Is CUI already specified?
-    exist_cui<-NULL
-    for(i in seq_along(doc)){
-      if(suppressWarnings(stringr::str_detect(doc[i], "CUI"))){
-        exist_cui<-"CUI"
-      }
-    }
-
-    #If existing CUI, stop.
-    if(!is.null(exist_cui)){
-      stop("CUI has already been specified")
-    }
-    #If no existing CUI, add it in:
-    if(is.null(exist_cui)){
-      if(x==1){
-        eml_object$additionalMetadata<-list(my_cui, eml_object$additionalMetadata)
-      }
-      if(x>1){
-        eml_object$additionalMetadata[[x+1]]<-my_cui
-      }
+  # Is CUI already specified?
+  exist_cui <- NULL
+  for (i in seq_along(doc)) {
+    if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
+      seq <- i
+      exist_cui <- doc[[i]]$metadata$CUI
     }
   }
 
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$additionalMetadata[[seq]] <- my_cui
   }
 
-  #add/updated EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # interactive route:
+  if (force == FALSE) {
+    # If no existing CUI, add it in:
+    if (is.null(exist_cui)) {
+      if (x == 1) {
+        eml_object$additionalMetadata <- list(my_cui, eml_object$additionalMetadata)
+      }
+      if (x > 1) {
+        eml_object$additionalMetadata[[x + 1]] <- my_cui
+      }
+      cat("No prvious CUI was detected. Your CUI has been set to ",
+        crayon::bold$blue(cui_code), ".",
+        sep = ""
+      )
+    }
+
+    # If existing CUI, stop.
+    if (!is.null(exist_cui)) {
+      cat("CUI has previously been specified as ", crayon::bold$blue(exist_cui),
+        ".\n",
+        sep = ""
+      )
+      var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+      if (var1 == 1) {
+        eml_object$additionalMetadata[[seq]] <- my_cui
+        cat("Your CUI code has been rest to ", crayon::blue$bold(cui_code), ".",
+          sep = ""
+        )
+      }
+      if (var1 == 2) {
+        cat("Your original CUI code was retained")
+      }
+    }
+  }
+
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/updated EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
 
   return(eml_object)
 }
@@ -343,9 +493,9 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 
 #' adds DRR connection
 #'
-#' @description set_drr_doi adds the DOI of an associated DRR
+#' @description set_drr adds the DOI of an associated DRR
 #'
-#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the default NPS=TRUE sets the DRR creator organization to NPS. If you do NOT want the organization name for the DRR to be NPS, set NPS="Your Favorite Organization". sets the id flag for this usageCitation to "associatedDRR".
+#' @details adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the organization name (org_name) defaults to NPS.  If you do NOT want the organization name for the DRR to be NPS, set org_name="Your Favorite Organization" *and* set NPS=FALSE. Also sets the id flag for this usageCitation to "associatedDRR".
 #'
 #' @inheritParams set_title
 #' @param drr_ref_id a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.
@@ -355,28 +505,61 @@ set_cui<-function(eml_object, cui_code=c("PUBFUL", "PUBVER", "NOCON", "DL ONLY",
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#'  \dontrun{
-#' drr_title<-"Data Release Report for Data Package 1234"
-#' set_drr_doi(eml_object, "2293234", drr_title)
+#' \dontrun{
+#' drr_title <- "Data Release Report for Data Package 1234"
+#' set_drr(eml_object, "2293234", drr_title)
 #' }
-set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRUE){
+set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force = FALSE, NPS = TRUE) {
+  doi <- paste0("DRR: https://doi.org/10.36967/", drr_ref_id)
 
-  doi<-paste0("DRR: https://doi.org/10.36967/", drr_ref_id)
+  cite <- EML::eml$usageCitation(
+    alternateIdentifier = doi,
+    title = drr_title,
+    creator = EML::eml$creator(
+      organizationName = org_name
+    ),
+    report = EML::eml$report(reportNumber = drr_ref_id),
+    id = "associatedDRR"
+  )
 
-  cite<-EML::eml$usageCitation(alternateIdentifier = doi,
-                  title = drr_title,
-                  creator = EML::eml$creator(
-                    organizationName = org_name),
-                  report = EML::eml$report(reportNumber = drr_ref_id),
-                  id = "associatedDRR")
+  if (force == TRUE) {
+    eml_object$dataset$usageCitation <- cite
+  }
 
-  eml_object$dataset$usageCitation<-cite
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  if (force == FALSE) {
+    doc <- eml_object$dataset$usageCitation
+
+    if (is.null(doc) == TRUE) {
+      cat("No previous DRR was detected")
+      eml_object$dataset$usageCitation <- cite
+      cat("Your DRR, ", crayon::blue$bold(drr_title), " has been added.", sep = "")
+    } else {
+      cat("Your current DRR is: ", crayon::blue$bold(doc$title), ".\n", sep = "")
+      cat("The current DOI is: ", crayon::blue$bold(doc$alternateIdentifier),
+        ".\n",
+        sep = ""
+      )
+      var1 <- readline(prompt = "Are you sure you want to change it? \n\n 1: Yes\n 2: No\n")
+      if (var1 == 1) {
+        eml_object$dataset$usageCitation <- cite
+        cat("Your new DRR is: ", crayon::blue$bold(doc$title), ".\n", sep = "")
+        cat("Your new DOI is: ", crayon::blue$bold(doc$alternateIdentifier),
+          ".\n",
+          sep = ""
+        )
+      }
+      if (var1 == 2) {
+        cat("Your original DRR was retained")
+      }
     }
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  }
+
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
   return(eml_object)
 }
 
@@ -392,34 +575,51 @@ set_drr_doi<-function(eml_object, drr_ref_id, drr_title, org_name="NPS", NPS=TRU
 #' @returns an EML-formatted R object
 #' @export
 #' @examples
-#'  \dontrun{
-#' eml_object<-set_abstract(eml_object, "This is a very short abstract")
+#' \dontrun{
+#' eml_object <- set_abstract(eml_object, "This is a very short abstract")
 #' }
-set_abstract<-function(eml_object, abstract, NPS=TRUE){
-  doc<-arcticdatautils::eml_get_simple(eml_object, "abstract")
-  if(is.null(doc)){
-    eml_object$eml$dataset$abstract<-paste0(abstract)
-    print("No previous abstract was detected. Your new abstract has been added. View the current abstract using get.abstract.")
+set_abstract <- function(eml_object,
+                         abstract,
+                         force = FALSE,
+                         NPS = TRUE) {
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$abstract <- abstract
   }
-  else{
-    var1<-readline(prompt="Your EML already has an abstract. Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-    #if User opts to retain DOI, retain it
-    if(var1==1){
-      #print the existing DOI to the screen:
-      eml_object$eml$dataset$abstract<-paste0(abstract)
-      print("You have replaced your abstract. View the current abstract using get.abstract.")
+
+  # interactive route:
+  if (force == FALSE) {
+    # get existing abstract, if any:
+    doc <- arcticdatautils::eml_get_simple(eml_object, "abstract")
+
+    if (is.null(doc)) {
+      eml_object$dataset$abstract <- abstract
+      cat("No previous abstract was detected.\n")
+      cat("Your new abstract has been added.\n")
+      cat("View the current abstract using get_abstract.")
+    } else {
+      cat("Your EML already has an abstract.\n")
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      # if User opts to replace abstract:
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        eml_object$dataset$abstract <- abstract
+        cat("You have replaced your abstract.\n")
+        cat("View the current abstract using get_abstract.")
+      }
+      # if User opts not to replace abstract:
+      if (var1 == 2) {
+        cat("Your original abstract was retained.\n")
+        cat("View the current abstract using get_abstract.")
+      }
     }
-    #if User opts to change DOI, change it:
-    if(var1==2){
-      print("Your original abstract was retained. View the current abstract using get.abstract.")
-    }
   }
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
   return(eml_object)
 }
 
@@ -431,42 +631,54 @@ set_abstract<-function(eml_object, abstract, NPS=TRUE){
 #'
 #' @inheritParams set_title
 #' @param bibtex_file is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
-#' @param NPS defaults to TRUE. Checks EML for NPS publisher info and injects it if publisher is empty. If publisher already exists, does nothing. If you are not publishing with NPS, set to FALSE
 #' @return an EML object
 #' @export
 #'
 #' @examples
-#'  \dontrun{
-#' eml_object<-litcited2<-set_lit(eml_object, "bibfile.bib")
+#' \dontrun{
+#' eml_object <- litcited2 <- set_lit(eml_object, "bibfile.bib")
 #' }
-set_lit<-function(eml_object, bibtex_file, NPS=TRUE){
-  bibtex_citation<-readr::read_file(bibtex_file)
-  lit<-arcticdatautils::eml_get_simple(eml_object, "literatureCited")
-  if(is.null(lit)){
-    eml_object$dataset$literatureCited$bibtex<-bibtex_citation
-  }
-  else{
-    var1<-readline(prompt="You have already specified literature cited. To view your current literature cited, use get.litCited. Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
-    if(var1==1){
-      print("No changes were made to literature cited.")
-    }
-    if(var1==2){
-      print("Your literature cited section has been replaced. To view your new literature cited use get.lit")
-      eml_object$dataset$literatureCited$bibtex<-bibtex_citation
-    }
-    if(var1==3){
-      bib2<-paste0(lit, "\n", bibtex_citation, sep="")
-      eml_object$dataset$literatureCited$bibtex<-bib2
-      print("You have added to your literature cited section. To view your new literature cited use get.lit")
+set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
+  bibtex_citation <- readr::read_file(bibtex_file)
 
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$literatureCited$bibtex <- bibtex_citation
+  }
+  # interactive route:
+  if (force == FALSE) {
+    lit <- arcticdatautils::eml_get_simple(
+      eml_object,
+      "literatureCited"
+    )
+    if (is.null(lit)) {
+      eml_object$dataset$literatureCited$bibtex <- bibtex_citation
+    } else {
+      cat("You have already specified literature cited.\n")
+      cat("To view yourcurrent literature, use get_lit\n")
+      var1 <- readline(prompt = "Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
+      if (var1 == 1) {
+        print("No changes were made to literature cited.")
+      }
+      if (var1 == 2) {
+        eml_object$dataset$literatureCited$bibtex <- bibtex_citation
+        cat("Your literature cited section has been replaced.\n")
+        cat("To view your new literature cited use get_lit.")
+      }
+      if (var1 == 3) {
+        bib2 <- paste0(lit, "\n", bibtex_citation, sep = "")
+        eml_object$dataset$literatureCited$bibtex <- bib2
+        cat("You have added to your literature cited section.\n")
+        cat("To view your new literature cited use get.lit")
+      }
     }
   }
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
   return(eml_object)
 }
 
@@ -486,54 +698,69 @@ set_lit<-function(eml_object, bibtex_file, NPS=TRUE){
 #'
 #' @examples
 #' \dontrun{
-#' prod_units<-c("ABCD", "EFGH")
+#' prod_units <- c("ABCD", "EFGH")
 #' set_producing_units(eml_object, prod_units)
 #' set_producing_units(eml_object, c("ABCD", "EFGH"))
-#' set_producing_units(eml_object, "ABCD")
+#' set_producing_units(eml_object, "ABCD", force = TRUE)
 #' }
-set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
-  #get existing metadataProvider info, if any:
-  doc<-EML::eml_get(eml_object, "metadataProvider")
+set_producing_units <- function(eml_object,
+                                prod_units,
+                                force = FALSE,
+                                NPS = TRUE) {
+  # get existing metadataProvider info, if any:
+  doc <- eml_object$dataset$metadataProvider
 
-  #make metadataProvider fields with producing units filled in:
-  if(length(prod_units==1)){
-  plist<-EML::eml$metadataProvider(organizationName=prod_units)
+  # make metadataProvider fields with producing units filled in:
+  if (length(prod_units == 1)) {
+    plist <- EML::eml$metadataProvider(organizationName = prod_units)
   }
-  if(length(prod_units>1)){
-  plist<-NULL
-    for(i in seq_along(prod_units)){
-      punit<-EML::eml$metadataProvider(organizationName = prod_units[i])
-      plist<-append(plist,list(punit))
+  if (length(prod_units > 1)) {
+    plist <- NULL
+    for (i in seq_along(prod_units)) {
+      punit <- EML::eml$metadataProvider(organizationName = prod_units[i])
+      plist <- append(plist, list(punit))
     }
   }
 
-  #if no existing metadataprovider info:
-  if(is.null(doc)){
-    eml_object$dataset$metadataProvider<-plist
-    cat("No previous producing Units were detected. \nYour new producing units have been added. \nView the current title using get.producingUnits")
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$metadataProvider <- plist
   }
-  #if there *is* existing metadataProvider info, choose whether to overwrite or not:
-  else{
-    cat("Your metadata already contain Producing Units (use get.producingUnits to view them). Are you sure you want to replace the existing Producing Units?")
-    var1<-readline(prompt="Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
-    #if User opts to replace metadataProvider, replace it:
-    if(var1==1){
-      eml_object$dataset$metadataProvider<-plist
-      cat("You have replaced your producing Units.\nView the current producing units using get.producingUnits.")
+  # interactive route:
+  if (force == FALSE) {
+    # if no existing metadataprovider info:
+    if (is.null(doc)) {
+      eml_object$dataset$metadataProvider <- plist
+      cat("No previous Producing Units were detected.\n")
+      cat("Your new Producing Unit(s) have been added:\n")
+      cat(crayon::bold$blue(prod_units), "\n")
     }
-    #if User opts to retain metadataProvider, retain it:
-    if(var1==2){
-      cat("Your original producing Units were retained.\nView the current producing units using get.producingUnits.")
+    # if there *is* existing metadataProvider info, choose whether to overwrite or not:
+    if (!is.null(doc)) {
+      cat("Your metadata already contains the following Producing Unit(s):\n")
+      cat(crayon::blue$bold(get_producing_units(eml_object)), "\n")
+      var1 <- readline(prompt = "Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
+      # if User opts to replace metadataProvider, replace it:
+      if (var1 == 1) {
+        eml_object$dataset$metadataProvider <- plist
+        cat("You have replaced your Producing Unit(s).\n")
+        cat("Your new producing Unit(s) are:\n")
+        cat(crayon::bold$blue(prod_units), "\n")
+      }
+      # if User opts to retain metadataProvider, retain it:
+      if (var1 == 2) {
+        cat("Your original Producing Units were retained.\n")
+        cat("View the current Producing Unit(s) using get_producing_units.")
+      }
     }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
 
-  #Set NPS publisher, if it doesn't already exist
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
-  }
-
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
 
   return(eml_object)
 }
@@ -559,71 +786,92 @@ set_producing_units<-function(eml_object, prod_units, NPS=TRUE){
 #' set_language(eml_object, "Spanish")
 #' set_language(eml_object, "nAvAjO")
 #' }
-set_language<-function(eml_object, lang, NPS=TRUE){
-  #enforces ISO capitalization formatting:
-  lang<-stringr::str_to_title(lang)
+set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
+  # enforces ISO capitalization formatting:
+  lang <- stringr::str_to_title(lang)
 
-  #a few common one-off name translations. Probably could improve the dplyr filter to filter for anything containing, but then you run into issues. There are 5 different languages whose English language name includes the word "English" ("English", "English, Old", "Creole and pigeons, English based", etc)).
+  # a few common one-off name translations. Probably could improve the dplyr filter to filter for anything containing, but then you run into issues. There are 5 different languages whose English language name includes the word "English" ("English", "English, Old", "Creole and pigeons, English based", etc)).
 
-  if(lang=="Spanish"){
-    lang<-"Spanish; Castilian"
+  if (lang == "Spanish") {
+    lang <- "Spanish; Castilian"
   }
-  if(lang=="Iroquois"){
-    lang<="Iroquoian languages"
+  if (lang == "Iroquois") {
+    lang <= "Iroquoian languages"
   }
 
-  #get ISO language codes
-  langcodes<-ISOcodes::ISO_639_2
+  # get ISO language codes
+  langcodes <- ISOcodes::ISO_639_2
 
-  #get language code in the ISO language codes?
-  nlang<-dplyr::filter(langcodes, Name==lang)[[1]]
+  # get language code in the ISO language codes?
+  nlang <- dplyr::filter(langcodes, Name == lang)[[1]]
 
-  #if the language supplied is not part of ISO 639-2 (spelling?):
-  if(!nchar(nlang==3)){
+  # if the language supplied is not part of ISO 639-2 (e.g. spelling error):
+  if (nchar(nlang) != 3 || identical(nlang, character(0)) == TRUE) {
     stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
   }
 
-  #get current language from the metadata provided:
-  lng<-eml_object$dataset$language
-
-  #if there is no language specified in the metadata:
-  if(is.null(lng)){
-    eml_object$dataset$language<-nlang
-    cat("The language has been set to ", nlang, "the ISO 639-2 code for ",lang,".")
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$language <- nlang
   }
 
-  #if the language is already specified in the metadata:
-  else{
-    if(nchar(lng)==3){
-      full_lang<-dplyr::filter(langcodes, Alpha_3_B==lng)[[4]]
-      cat("The current language is set to ", crayon::blue$bold(lng),", the ISO 639-2 code for ", full_lang, ".", sep="")
-    }
-    else{
-      cat("The current language is set to ", crayon::blue$bold(lng),".", sep="")
-    }
+  # ineractive route:
+  if (force == FALSE) {
+    # get current language from the metadata provided:
+    lng <- eml_object$dataset$language
 
-    #does the user want to change the language?
-    var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-
-    #if yes, change the language and report the change:
-    if(var1==1){
-      eml_object$dataset$language<-nlang
-      cat("You have replaced the language with ", crayon::blue$bold(nlang), ", the 3-letter ISO-639-2 code for ", crayon::blue$bold(lang), ".", sep="")
+    # if there is no language specified in the metadata:
+    if (is.null(lng)) {
+      eml_object$dataset$language <- nlang
+      cat(
+        "The language has been set to ", nlang,
+        "the ISO 639-2 code for ", lang, "."
+      )
     }
 
-    #if User opts to retain metadataProvider, retain it:
-    if(var1==2){
-      cat("Your original language was retained.")
+    # if the language is already specified in the metadata:
+    else {
+      if (nchar(lng) == 3) {
+        full_lang <- dplyr::filter(langcodes, Alpha_3_B == lng)[[4]]
+        cat("The current language is set to ", crayon::blue$bold(lng),
+          ", the ISO 639-2 code for ", full_lang, ".",
+          sep = ""
+        )
+      } else {
+        cat("The current language is set to ",
+          crayon::blue$bold(lng), ".",
+          sep = ""
+        )
+      }
+
+      # does the user want to change the language?
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+
+      # if yes, change the language and report the change:
+      if (var1 == 1) {
+        eml_object$dataset$language <- nlang
+        cat("You have replaced the language with ",
+          crayon::blue$bold(nlang),
+          ", the 3-letter ISO-639-2 code for ",
+          crayon::blue$bold(lang), ".",
+          sep = ""
+        )
+      }
+
+      # if User opts to retain metadataProvider, retain it:
+      if (var1 == 2) {
+        cat("Your original language was retained.")
+      }
     }
   }
 
-  #Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
 
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
 
   return(eml_object)
 }
@@ -646,68 +894,84 @@ set_language<-function(eml_object, lang, NPS=TRUE){
 #' set_protocol(eml_object, 2222140)
 #' }
 #'
-set_protocol<-function(eml_object, protocol_id, NPS=TRUE){
+set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
+  # get data to construct project:
 
-  #get data to construct project:
+  # get protocol profile via rest services:
+  ds_reference <- httr::content(httr::GET(paste0("https://irmaservices.nps.gov/datastore/v4/rest/Profile/", protocol_id)))
 
-  #get protocol profile via rest services:
-  ds_reference <- httr::content(httr::GET(paste0("https://irmaservices.nps.gov/datastore/v4/rest/Profile/",protocol_id)))
+  # extract project title
+  proj_title <- ds_reference$bibliography$title
 
-  #extract project title
-  proj_title<-ds_reference$bibliography$title
+  # generate URL for the DataStore landing page:
+  url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/", protocol_id)
 
-  #generate URL for the DataStore landing page:
-  url<-paste0("https://irma.nps.gov/DataStore/Reference/Profile/", protocol_id)
+  # get DataStore ref number for the organization Name:
+  ref <- ds_reference$series$referenceId
 
-  #get DataStore ref number for the organization Name:
-  ref<-ds_reference$series$referenceId
+  # rest services call to get organization name info:
+  org_name <- httr::content(httr::GET(paste0("https://irmaservices.nps.gov/datastore/v4/rest/Profile/", ref)))$bibliography$title
 
-  #rest services call to get organization name info:
-  org_name<-httr::content(httr::GET(paste0("https://irmaservices.nps.gov/datastore/v4/rest/Profile/", ref)))$bibliography$title
+  # Construct a project to inject into EML. Note 'role' is required but not sure what to put there.
+  # Also i find it confusing that onlineURL references projTitle not orgName but hopefully we will hash that out soon.
 
-  #Construct a project to inject into EML. Note 'role' is required but not sure what to put there.
-  #Also i find it confusing that onlineURL references projTitle not orgName but hopefully we will hash that out soon.
-
-  proj<-list(title=proj_title,
-             personnel=list(organizationName=org_name,
-                            onlineUrl=url,
-                            role="originator"))
-
-  #get existing project (if any)
-  doc<-eml_object$dataset$project
-
-  #if no previous project listed, add project
-  if(is.null(doc)){
-    eml_object$dataset$project<-proj
-    cat("The current project is now ", crayon::bold$blue(proj$title), ".", sep="")
+  proj <- list(
+    title = proj_title,
+    personnel = list(
+      organizationName = org_name,
+      onlineUrl = url,
+      role = "originator"
+    )
+  )
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$project <- proj
   }
+  # interactive route:
+  if (force == FALSE) {
+    # get existing project (if any)
+    doc <- eml_object$dataset$project
 
-  #if an there is an existing project, ask whether to replace:
-  else{
-    cat("you already have a project(s) with the Title:\n", crayon::bold$blue(doc$title),".", sep="")
-
-    var1<-readline(prompt="Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
-
-    #if yes, change the project:
-    if(var1==1){
-      eml_object$dataset$project<-proj
-      cat("The current project is now ", crayon::bold$blue(proj$title), ".",sep="")
+    # if no previous project listed, add project
+    if (is.null(doc)) {
+      eml_object$dataset$project <- proj
+      cat("The current project is now ", crayon::bold$blue(proj$title),
+        ".",
+        sep = ""
+      )
     }
 
-    #if no, retain the existing project:
-    if(var1==2){
-      cat("Your original project was retained.")
+    # if an there is an existing project, ask whether to replace:
+    else {
+      cat("you already have a project(s) with the Title:\n",
+        crayon::bold$blue(doc$title), ".",
+        sep = ""
+      )
+
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n
+                     1: Yes\n 2: No\n")
+
+      # if yes, change the project:
+      if (var1 == 1) {
+        eml_object$dataset$project <- proj
+        cat("The current project is now ",
+          crayon::bold$blue(proj$title), ".",
+          sep = ""
+        )
+      }
+
+      # if no, retain the existing project:
+      if (var1 == 2) {
+        cat("Your original project was retained.")
+      }
     }
-
   }
-
-  #Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
-  if(NPS==TRUE){
-    eml_object<-.set_npspublisher(eml_object)
+  # Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
   }
-
-  #add/update EMLeditor and version to metadata:
-  eml_object<-.set_version(eml_object)
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
 
   return(eml_object)
 }
@@ -717,7 +981,7 @@ set_protocol<-function(eml_object, protocol_id, NPS=TRUE){
 
 #' Set Publisher
 #'
-#' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function.
+#' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function. It's probably a good idea to run args(set_publisher) to make sure you have all the arguments, especially those with defaults, properly specified.
 #'
 #' @inheritParams set_title
 #' @param org_name String. The organization name that is publishing the digital product. Defaults to "NPS".
@@ -738,93 +1002,301 @@ set_protocol<-function(eml_object, protocol_id, NPS=TRUE){
 #' @examples
 #' \dontrun{
 #' set_publisher(eml_object,
-#'               "BroadLeaf",
-#'               "123 First Street",
-#'               "Second City",
-#'               "CO",
-#'               "12345",
-#'               "USA",
-#'               "https://www.organizationswebsite.com",
-#'               "contact@myorganization.com",
-#'               "https://ror.org/xxxxxxxxx",
-#'               for_or_by_NPS=FALSE,
-#'               NPS=FALSE)
+#'   "BroadLeaf",
+#'   "123 First Street",
+#'   "Second City",
+#'   "CO",
+#'   "12345",
+#'   "USA",
+#'   "https://www.organizationswebsite.com",
+#'   "contact@myorganization.com",
+#'   "https://ror.org/xxxxxxxxx",
+#'   for_or_by_NPS = FALSE,
+#'   NPS = FALSE
+#' )
 #' }
-set_publisher<-function(eml_object,
-                        org_name = "NPS",
-                        street_address,
-                        city,
-                        state,
-                        zip_code,
-                        country,
-                        URL,
-                        email,
-                        ror_id,
-                        for_or_by_NPS = TRUE,
-                        NPS = TRUE) {
-
-#just in case someone at NPS wants to run this function, it will run .set_npspublisher instead unless they explicitly tell it not to by setting NPS = FALSE. This is an extra safeguard.
-  if(NPS == TRUE){
-    .set_npspublisher(eml_object)
-  }
-  else{
-    # get existing publisher info for the data package:
-    publish <- eml_object$dataset$publisher
-
-    # create desired publisher info:
-    pubset <- list(organizationName = org_name,
-                   address = list(deliveryPoint = street_address,
-                                  city = city,
-                                  administrativeArea = state,
-                                  postalCode = zip_code,
-                                  country = country),
-                   onlineUrl = URL,
-                   electronicMailAddress = email,
-                   userId = list(directory = "https://ror.org/",
-                                 userId = ror_id))
-
-    # if existing and new publisher don't match, replace with new publisher
-    if (!identical(publish, pubset)) {
-      eml_object$dataset$publisher <- pubset
+set_publisher <- function(eml_object,
+                          org_name = "NPS",
+                          street_address,
+                          city,
+                          state,
+                          zip_code,
+                          country,
+                          URL,
+                          email,
+                          ror_id,
+                          for_or_by_NPS = TRUE,
+                          force = FALSE,
+                          NPS = FALSE) {
+  # just in case someone at NPS wants to run this function, it will run .set_npspublisher instead unless they explicitly tell it not to by setting NPS = FALSE. This is an extra safeguard.
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+    if (force == FALSE) {
+      cat("The publisher has been set to the ",
+        crayon::blue$bold("Fort Collins office of the National Park Service"),
+        ".\n",
+        sep = ""
+      )
+      cat("The data package has been designated as ",
+        crayon::bold("Created For and by the NPS = "),
+        crayon::blue$bold("TRUE"), "\n\n",
+        sep = ""
+      )
+      cat("To specifiy an alternative, set NPS=FALSE")
     }
+  }
+  # get existing publisher info for the data package:
+  publish <- eml_object$dataset$publisher
 
-    # set up byOrForNPS:
-    for_by <- list(metadata = list(
-                      agencyOriginated = list(
-                        agency = org_name,
-                        byOrForNPS = for_or_by_NPS),
-                      id = "agencyOriginated"))
-    # access additionalMetadata elements:
-    add_meta <- EML::eml_get(eml_object, "additionalMetadata")
-    add_meta <- within(add_meta, rm("@context"))
+  # create desired publisher info:
+  pubset <- list(
+    organizationName = org_name,
+    address = list(
+      deliveryPoint = street_address,
+      city = city,
+      administrativeArea = state,
+      postalCode = zip_code,
+      country = country
+    ),
+    onlineUrl = URL,
+    electronicMailAddress = email,
+    userId = list(
+      directory = "https://ror.org/",
+      userId = ror_id
+    )
+  )
+  # set up byOrForNPS:
+  for_by <- list(metadata = list(
+    agencyOriginated = list(
+      agency = org_name,
+      byOrForNPS = for_or_by_NPS
+    ),
+    id = "agencyOriginated"
+  ))
+  # access additionalMetadata elements:
+  add_meta <- eml_object$additionalMetadata
+
+  # which table in add_meta has agencyOriginated?
+  if (!is.null(add_meta)) {
+    agency <- NULL
+    add_meta_location <- NULL
+    for (i in seq_along(add_meta)) {
+      if (suppressWarnings(stringr::str_detect(
+        add_meta[i],
+        "agencyOriginated"
+      ))) {
+        agency <- add_meta[i]
+        add_meta_location <- i
+      }
+    }
+  }
+  if (NPS == FALSE) {
+    if (force == TRUE) {
+      # change the publisher
+      if (!identical(publish, pubset)) {
+        eml_object$dataset$publisher <- pubset
+      }
+
+
 
       # if no additionalMetadata, add in EMLeditor and current version:
-    if (length(names(add_meta)) == 0) {
-      eml_object$additionalMetadata <- for_by
-    }
+      if (length(add_meta) == 0) {
+        eml_object$additionalMetadata <- for_by
+      }
 
-    # if there are existing additionalMetadata elements:
-    if (length(names(add_meta)) > 0) {
-      x <- length(add_meta)
+      # if there are existing additionalMetadata elements:
+      if (length(add_meta) > 0) {
+        # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
+        if (is.null(agency)) {
+          if (length(add_meta) == 1) {
+            eml_object$additionalMetadata <- list(
+              for_by,
+              eml_object$additionalMetadata
+            )
+          }
+          if (length(add_meta) > 1) {
+            eml_object$additionalMetadata[[length(add_meta) + 1]] <- for_by
+          }
+        }
+        # if there *IS* already ForOrByNPS, update it:
+        if (!is.null(agency)) {
+          # if that's all there is, replace all additionalMetadata:
+          if (length(add_meta) == 1) {
+            eml_object$additionalMetadata <- for_by
+            # if there are multiple additionalMetadata items, replace just the agencyOriginated:
+          }
+          if (length(add_meta) > 1) {
+            # replace just agencyOriginated
 
-      # does it include byOrForNPS?
-      For_or_by_nps <- NULL
-      for (i in seq_along(add_meta)) {
-        if (suppressWarnings(stringr::str_detect(add_meta[i], "byOrForNPS"))) {
-          For_or_by_nps <- "TRUE"
+            eml_object$additionalMetadata[add_meta_location] <- list(for_by)
+          }
         }
       }
-      # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
-      if (is.null(For_or_by_nps)) {
-        if (x == 1) {
-          eml_object$additionalMetadata <- list(for_by,
-                                                eml_object$additionalMetadata)
+    }
+    if (force == FALSE) {
+      if (is.null(publish)) {
+        eml_object$dataset$publisher <- pubset
+        cat("No publisher information was detected\n\n")
+        cat("Your publisher has been set to:\n")
+        cat("Organization Name: ", crayon::blue$bold(pubset$organizationName), "\n", sep = "")
+        cat("Street address: ", crayon::blue$bold(pubset$address$deliveryPoint), "\n", sep = "")
+        cat("City: ", crayon::blue$bold(pubset$address$city), "\n", sep = "")
+        cat("State: ", crayon::blue$bold(pubset$address$administrativeArea), "\n", sep = "")
+        cat("Zip Code: ", crayon::blue$bold(pubset$address$postalCode), "\n", sep = "")
+        cat("Country: ", crayon::blue$bold(pubset$address$country), "\n", sep = "")
+        cat("URL: ", crayon::blue$bold(pubset$onlineUrl), "\n", sep = "")
+        cat("email: ", crayon::blue$bold(pubset$email), "\n", sep = "")
+        cat("ROR ID: ", crayon::blue$bold(pubset$userID), "\n", sep = "")
+      }
+      if (!is.null(publish)) {
+        if (identical(publish, pubset)) {
+          cat("Your current publisher is identical to the information you entered.\n")
+          cat("No changes were made to the publisher.\n\n")
         }
-        if (x > 1) {
-          eml_object$additionalMetadata[[x + 1]] <- for_by
+        if (!identical(publish, pubset)) {
+          cat("Your current publisher is set to:\n\n")
+          cat("Organization Name: ",
+            crayon::blue$bold(publish$organizationName), "\n",
+            sep = ""
+          )
+          cat("Street address: ",
+            crayon::blue$bold(publish$address$deliveryPoint), "\n",
+            sep = ""
+          )
+          cat("City: ", crayon::blue$bold(publish$address$city), "\n", sep = "")
+          cat("State: ", crayon::blue$bold(publish$address$administrativeArea),
+            "\n",
+            sep = ""
+          )
+          cat("Zip Code: ", crayon::blue$bold(publish$address$postalCode), "\n",
+            sep = ""
+          )
+          cat("Country: ", crayon::blue$bold(publish$address$country), "\n",
+            sep = ""
+          )
+          cat("URL: ", crayon::blue$bold(publish$onlineUrl), "\n", sep = "")
+          cat("email: ", crayon::blue$bold(publish$electronicMailAddress),
+            "\n",
+            sep = ""
+          )
+          cat("ROR ID: ", crayon::blue$bold(publish$userId$userId),
+            "\n\n",
+            sep = ""
+          )
+          var1 <- readline(prompt = "Would you like to replace your existing publisher? \n\n 1: Yes\n 2: No\n")
+          if (var1 == 1) {
+            eml_object$dataset$publisher <- pubset
+            cat("Your new publisher is:\n\n")
+            cat("Organization Name: ",
+              crayon::blue$bold(pubset$organizationName), "\n",
+              sep = ""
+            )
+            cat("Street address: ",
+              crayon::blue$bold(pubset$address$deliveryPoint), "\n",
+              sep = ""
+            )
+            cat("City: ",
+              crayon::blue$bold(pubset$address$city), "\n",
+              sep = ""
+            )
+            cat("State: ",
+              crayon::blue$bold(pubset$address$administrativeArea), "\n",
+              sep = ""
+            )
+            cat("Zip Code: ",
+              crayon::blue$bold(pubset$address$postalCode), "\n",
+              sep = ""
+            )
+            cat("Country: ",
+              crayon::blue$bold(pubset$address$country), "\n",
+              sep = ""
+            )
+            cat("URL: ", crayon::blue$bold(pubset$onlineUrl), "\n", sep = "")
+            cat("email: ", crayon::blue$bold(pubset$electronicMailAddress),
+              "\n",
+              sep = ""
+            )
+            cat("ROR ID: ", crayon::blue$bold(pubset$userId$userId), "\n\n",
+              sep = ""
+            )
+          }
+          if (var1 == 2) {
+            cat("Your existing publisher information was retained.\n\n")
+          }
+        }
+      }
+
+      # if there is no additionalMetadata at all:
+      if (is.null(add_meta)) {
+        # add agencyOriginated to Metadata:
+        eml_object$additionalMetadata <- for_by
+        # report results to user:
+        cat("No agency was detected. Your agency has been updated to:\n")
+        cat("Agency: ", crayon::bold$blue(org_name), "\n", sep = "")
+        cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS),
+          "\n",
+          sep = ""
+        )
+      }
+
+      # if there is additionalMetadata
+      if (!is.null(add_meta)) {
+        # but no agencyOriginated:
+        if (is.null(add_meta_location)) {
+          if (length(add_meta) == 1) {
+            eml_object$additionalMetadata <- list(
+              for_by,
+              eml_object$additionalMetadata
+            )
+          }
+          if (length(add_meta) > 1) {
+            eml_object$additionalMetadata[[length(add_meta) + 1]] <- for_by
+          }
+          cat("No agency was detected. Your agency has been updated to:\n")
+          cat("Agency: ", crayon::bold$blue(org_name), "\n", sep = "")
+          cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS),
+            "\n",
+            sep = ""
+          )
+        }
+
+        # if there is metadata, including agencyOrginated:
+        if (!is.null(add_meta_location)) {
+          cat("Your metadata already contains information about whether it was Created By or For the NPS.\n")
+          cat("Agency: ", crayon::bold$blue(agency[[1]]$metadata$agencyOriginated$agency), "\n", sep = "")
+          cat("Created By or For NPS: ",
+            crayon::blue$bold(agency[[1]]$metadata$agencyOriginated$byOrForNPS),
+            "\n\n",
+            sep = ""
+          )
+          var2 <- readline(prompt = "Would you like to replace your agency? \n\n 1: Yes\n 2: No\n")
+          if (var2 == 1) {
+            # Since there are existing additionalMetadata elements:
+            if (length(add_meta) == 1) {
+              eml_object$additionalMetadata <- for_by
+              # if there are multiple additionalMetadata items, replace just the agencyOriginated:
+            }
+            if (length(add_meta) > 1) {
+              # replace just agencyOriginated
+              eml_object$additionalMetadata[add_meta_location] <- list(for_by)
+            }
+            cat("Your new agency information has been set to:\n\n")
+            cat("Agency: ", crayon::bold$blue(org_name), "\n", sep = "")
+            cat("Created By or For NPS: ", crayon::bold$blue(for_or_by_NPS),
+              "\n",
+              sep = ""
+            )
+          }
+          # if user does not want to make changes:
+          if (var2 == 2) {
+            cat("Your original agency was retained.\n")
+          }
         }
       }
     }
   }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
   return(eml_object)
 }

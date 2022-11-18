@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>get_drr_doi accesses the &lt;usageCitation&gt; tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the &lt;usageCitation&gt; tag is empty or not present, the user is informed and pointed to the set_drr_doi() function to add the DOI of an associated DRR.</p>
+    <p>get_drr_doi accesses the &lt;usageCitation&gt; tag(s) and searches an alternateIdentifier tag. If that element is found, the contents of that element are returned. If the title element is empty or not present, the user is warned and pointed to the set_drr function to add the DOI of an associated DRR.</p>
     </div>
 
     <div class="section level2">

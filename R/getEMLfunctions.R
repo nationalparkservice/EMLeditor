@@ -81,7 +81,13 @@ get_abstract <- function(eml_object) {
         mypara <- gsub("<para>", "", mypara) # get rid of para tag
         mypara <- gsub("</para>", "", mypara) # get rid of close para tag
         mypara <- gsub("</literalLayout>", "", mypara) # get rid of close par tag
-        txt <- paste(txt, mypara, sep = "\n\n\t")
+        mypara <- gsub("   ", " ", mypara) # get rid of 3x spaces
+        mypara <- gsub("  ", " ", mypara) # get rid of 2x spaces
+        mypara <- gsub("  ", " ", mypara) # rerun for 4x spaces
+        txt <- paste(txt, mypara, sep = "")
+        if (i < seq_along(doc)) {
+          txt <- paste(txt, "\n\n\t", sep = "") # add paragraph sep
+        }
       }
     }
   }
@@ -168,9 +174,14 @@ get_citation <- function(eml_object) {
   pub_date <- lubridate::parse_date_time(pub_date, orders = "Y-m-d")
   pub_year <- lubridate::year(pub_date)
 
-  publisher <- "The U.S National Park Service. "
+  publisher <- eml_object$dataset$publisher$organizationName
 
-  location <- "Fort Collins, CO. "
+
+  city <- eml_object$dataset$publisher$address$city
+
+  state <- eml_object$dataset$publisher$address$administrativeArea
+
+  location <- paste0(city, ", ", state)
   # print(location)
 
   #### what to do if no doi ("set" eml?)?
@@ -191,7 +202,7 @@ get_citation <- function(eml_object) {
     warning("No publication date specified.")
   }
 
-  data_citation <- paste0(author_list, " ", pub_year, ". ", title, ". ", publisher, location, doi)
+  data_citation <- paste0(author_list, " ", pub_year, ". ", title, ". ", publisher, ". ", location, ".", doi)
 
   return(data_citation)
 }
@@ -312,7 +323,7 @@ get_doi <- function(eml_object) {
 #'
 #' @description returns a string with the park unit codes where the data were collected
 #'
-#' @details get_park_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
+#' @details get_content_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -320,37 +331,39 @@ get_doi <- function(eml_object) {
 #' @export
 #' @examples
 #' \dontrun{
-#' get_park_units(eml_object)
+#' get_content_units(eml_object)
 #' }
-get_park_units <- function(eml_object) {
+get_content_units <- function(eml_object) {
   units <- arcticdatautils::eml_get_simple(eml_object, "geographicDescription")
   if (is.null(units)) {
-    warning("No Park Unit Connections specified. Use the set_park_units() function to add Park Unit Connections.")
+    warning("No Park Unit Connections specified. Use the set_content_units() function to add Park Unit Connections.")
     punits <- NA # to do: test whether NA needs quotes for write.README.
   } else {
     # pull out just geographic description for unit connections:
     unit_cons <- NULL
     for (i in seq_along(units)) {
-      if (stringr::str_detect(units[i], "NPS Unit Connections:")) {
+      if (stringr::str_detect(units[i], "NPS Content Unit Links:")) {
         unit_cons <- append(unit_cons, units[i])
       }
     }
-
+    if (is.null(unit_cons)) {
+      warning("No Park Unit Connections specified. Use the set_content_units() function to add Park Unit Connections.")
+    }
     # make a string that is just comma separated unit connection codes:
     punits <- NULL
     for (i in seq_along(unit_cons)) {
       if (unit_cons[i] == utils::tail(unit_cons, 1)) {
-        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
+        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
         punits <- append(punits, rem_text)
       } else {
-        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
+        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
         punits <- append(punits, paste0(rem_text, ", "))
       }
     }
     list_units <- paste(unlist(punits), collapse = "", sep = ",")
 
-    # add "NPS Unit Connections: " prefix back in to the sting:
-    list_units <- paste0("NPS Unit Connections: ", list_units)
+    # add "NPS Content Unit Links: " prefix back in to the sting:
+    list_units <- paste0("NPS Content Unit Links: ", list_units)
   }
   return(list_units)
 }
@@ -441,7 +454,7 @@ get_file_info <- function(eml_object) {
 #'
 #' @description get_drr_doi returns a text string with the associated Data Release Report (DRR)'s DOI.
 #'
-#' @details get_drr_doi accesses the <usageCitation> tag(s) and searches for the string "DRR: https://doi.org/". If that string is found, the contents of that tag are returned. If the <usageCitation> tag is empty or not present, the user is informed and pointed to the set_drr_doi() function to add the DOI of an associated DRR.
+#' @details get_drr_doi accesses the <usageCitation> tag(s) and searches an alternateIdentifier tag. If that element is found, the contents of that element are returned. If the title element is empty or not present, the user is warned and pointed to the set_drr function to add the DOI of an associated DRR.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -452,19 +465,41 @@ get_file_info <- function(eml_object) {
 #' get_drr_doi(eml_object)
 #' }
 get_drr_doi <- function(eml_object) {
-  doi <- arcticdatautils::eml_get_simple(eml_object, "usageCitation")
+  doi <- eml_object$dataset$usageCitation$alternateIdentifier
   if (is.null(doi)) {
-    warning("You have not specified a DRR associated with this data package. If you have an associated DRR, specify its DOI using set_drr_doi.")
+    cat(crayon::red$bold("Warning: "), "You have not specified a DRR associated with this data package.
+            If you have an associated DRR, specify its DOI using set_drr.")
     drr_doi <- NA # to do: test whether NA needs quotes for write.README.
   } else {
-    drr_doi <- NULL
-    for (i in seq_along(doi)) {
-      if (stringr::str_detect(doi[i], "DRR: https://doi.org/")) {
-        drr_doi <- doi[i]
-      }
-    }
+    return(doi)
   }
-  return(drr_doi)
+}
+
+
+#' returns the title of the associated DRR
+#'
+#' @description get_drr_title returns a text string with the associated Data Release Report (DRR)'s Title.
+#'
+#' @details get_drr_title accesses useageCitation under dataset and returns the title element, if it is found. If it is not found, the user is warned and pointed ot the set_drr function to add the title of the associated DRR.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return a text string
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_drr_title(eml_object)
+#' }
+get_drr_title <- function(eml_object) {
+  doi <- eml_object$dataset$usageCitation$title
+  if (is.null(doi)) {
+    cat(crayon::red$bold("Warning: "), "You have not specified a DRR associated with this data package.
+            If you have an associated DRR, specify its DOI using set_drr.")
+    drr_doi <- NA # to do: test whether NA needs quotes for write.README.
+  } else {
+    return(doi)
+  }
 }
 
 
@@ -492,7 +527,7 @@ get_lit <- function(eml_object) {
 #'
 #' @description get_producing_units returns whatever is in the metadataProvider eml element. Set this to the producing units using the set_producing_units function.
 #'
-#'@inheritParams get_begin_date
+#' @inheritParams get_begin_date
 #'
 #' @return a character sting
 #' @export
@@ -504,4 +539,8 @@ get_lit <- function(eml_object) {
 get_producing_units <- function(eml_object) {
   punit <- arcticdatautils::eml_get_simple(eml_object, "metadataProvider")
   return(punit)
+}
+
+get_publisher <- function(eml_object) {
+  pub <- emlobject$dataset$publisher
 }

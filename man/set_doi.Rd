@@ -4,12 +4,14 @@
 \alias{set_doi}
 \title{Check & set a DOI}
 \usage{
-set_doi(eml_object, ds_ref, NPS = TRUE)
+set_doi(eml_object, ds_ref, force = FALSE, NPS = TRUE)
 }
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
 
 \item{ds_ref}{is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.}
+
+\item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
 \item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
@@ -23,7 +25,7 @@ Check & set a DOI
 set_doi checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 }
 \examples{
- \dontrun{
- eml_object<-set_doi(eml_object, 1234567)
- }
+\dontrun{
+eml_object <- set_doi(eml_object, 1234567)
+}
 }
