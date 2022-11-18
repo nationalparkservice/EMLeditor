@@ -708,7 +708,7 @@ set_producing_units <- function(eml_object,
                                 force = FALSE,
                                 NPS = TRUE) {
   # get existing metadataProvider info, if any:
-  doc <- EML::eml_get(eml_object, "metadataProvider")
+  doc <- eml_object$dataset$metadataProvider
 
   # make metadataProvider fields with producing units filled in:
   if (length(prod_units == 1)) {
@@ -731,25 +731,26 @@ set_producing_units <- function(eml_object,
     # if no existing metadataprovider info:
     if (is.null(doc)) {
       eml_object$dataset$metadataProvider <- plist
-      cat("No previous producing Units were detected.\n")
-      cat("Your new producing units have been added.\n")
-      cat("View the current title using get_producing_units")
+      cat("No previous Producing Units were detected.\n")
+      cat("Your new Producing Unit(s) have been added:\n")
+      cat(crayon::bold$blue(prod_units), "\n")
     }
     # if there *is* existing metadataProvider info, choose whether to overwrite or not:
-    else {
-      cat("Your metadata already contain Producing Units.\n")
-      cat("Use get_producing_units to view them.")
+    if (!is.null(doc)) {
+      cat("Your metadata already contains the following Producing Unit(s):\n")
+      cat(crayon::blue$bold(get_producing_units(eml_object)), "\n")
       var1 <- readline(prompt = "Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
       # if User opts to replace metadataProvider, replace it:
       if (var1 == 1) {
         eml_object$dataset$metadataProvider <- plist
-        cat("You have replaced your producing Units.\n")
-        cat("View the current producing units using get_producing_units.")
+        cat("You have replaced your Producing Unit(s).\n")
+        cat("Your new producing Unit(s) are:\n")
+        cat(crayon::bold$blue(prod_units), "\n")
       }
       # if User opts to retain metadataProvider, retain it:
       if (var1 == 2) {
-        cat("Your original producing Units were retained.\n")
-        cat("View the current producing units using get_producing_units.")
+        cat("Your original Producing Units were retained.\n")
+        cat("View the current Producing Unit(s) using get_producing_units.")
       }
     }
   }
