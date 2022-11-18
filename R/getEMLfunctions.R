@@ -174,9 +174,14 @@ get_citation <- function(eml_object) {
   pub_date <- lubridate::parse_date_time(pub_date, orders = "Y-m-d")
   pub_year <- lubridate::year(pub_date)
 
-  publisher <- "The U.S National Park Service. "
+  publisher <- eml_object$dataset$publisher$organizationName
 
-  location <- "Fort Collins, CO. "
+
+  city <- eml_object$dataset$publisher$address$city
+
+  state <- eml_object$dataset$publisher$address$administrativeArea
+
+  location <- paste0(city, ", ", state)
   # print(location)
 
   #### what to do if no doi ("set" eml?)?
@@ -197,7 +202,7 @@ get_citation <- function(eml_object) {
     warning("No publication date specified.")
   }
 
-  data_citation <- paste0(author_list, " ", pub_year, ". ", title, ". ", publisher, location, doi)
+  data_citation <- paste0(author_list, " ", pub_year, ". ", title, ". ", publisher, ". ", location, ".", doi)
 
   return(data_citation)
 }
@@ -318,7 +323,7 @@ get_doi <- function(eml_object) {
 #'
 #' @description returns a string with the park unit codes where the data were collected
 #'
-#' @details get_park_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
+#' @details get_content_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -326,37 +331,39 @@ get_doi <- function(eml_object) {
 #' @export
 #' @examples
 #' \dontrun{
-#' get_park_units(eml_object)
+#' get_content_units(eml_object)
 #' }
-get_park_units <- function(eml_object) {
+get_content_units <- function(eml_object) {
   units <- arcticdatautils::eml_get_simple(eml_object, "geographicDescription")
   if (is.null(units)) {
-    warning("No Park Unit Connections specified. Use the set_park_units() function to add Park Unit Connections.")
+    warning("No Park Unit Connections specified. Use the set_content_units() function to add Park Unit Connections.")
     punits <- NA # to do: test whether NA needs quotes for write.README.
   } else {
     # pull out just geographic description for unit connections:
     unit_cons <- NULL
     for (i in seq_along(units)) {
-      if (stringr::str_detect(units[i], "NPS Unit Connections:")) {
+      if (stringr::str_detect(units[i], "NPS Content Unit Links:")) {
         unit_cons <- append(unit_cons, units[i])
       }
     }
-
+    if(is.null(unit_cons)){
+      warning("No Park Unit Connections specified. Use the set_content_units() function to add Park Unit Connections.")
+    }
     # make a string that is just comma separated unit connection codes:
     punits <- NULL
     for (i in seq_along(unit_cons)) {
       if (unit_cons[i] == utils::tail(unit_cons, 1)) {
-        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
+        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
         punits <- append(punits, rem_text)
       } else {
-        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
+        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
         punits <- append(punits, paste0(rem_text, ", "))
       }
     }
     list_units <- paste(unlist(punits), collapse = "", sep = ",")
 
-    # add "NPS Unit Connections: " prefix back in to the sting:
-    list_units <- paste0("NPS Unit Connections: ", list_units)
+    # add "NPS Content Unit Links: " prefix back in to the sting:
+    list_units <- paste0("NPS Content Unit Links: ", list_units)
   }
   return(list_units)
 }
@@ -533,4 +540,12 @@ get_lit <- function(eml_object) {
 get_producing_units <- function(eml_object) {
   punit <- arcticdatautils::eml_get_simple(eml_object, "metadataProvider")
   return(punit)
+}
+
+get_publisher <- function(eml_object){
+  pub<-emlobject$dataset$publisher
+
+
+
+
 }
