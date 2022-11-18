@@ -25,7 +25,7 @@ Check & set a DOI
 set_doi checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
 }
 \examples{
- \dontrun{
- eml_object<-set_doi(eml_object, 1234567)
- }
+\dontrun{
+eml_object <- set_doi(eml_object, 1234567)
+}
 }

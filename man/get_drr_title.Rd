@@ -20,6 +20,6 @@ get_drr_title accesses useageCitation under dataset and returns the title elemen
 }
 \examples{
 \dontrun{
- get_drr_title(eml_object)
- }
+get_drr_title(eml_object)
+}
 }

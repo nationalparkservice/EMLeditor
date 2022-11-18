@@ -49,6 +49,9 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_citation.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/get_content_units.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_cui.html</loc>
   </url>
   <url>
@@ -71,9 +74,6 @@
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_lit.html</loc>
-  </url>
-  <url>
-    <loc>https://roblbaker.github.io/EMLeditor/reference/get_park_units.html</loc>
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_producing_units.html</loc>

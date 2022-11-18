@@ -25,7 +25,7 @@ set_lit is an interactive method for editing the literature cited sections.
 looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
 }
 \examples{
- \dontrun{
-eml_object<-litcited2<-set_lit(eml_object, "bibfile.bib")
+\dontrun{
+eml_object <- litcited2 <- set_lit(eml_object, "bibfile.bib")
 }
 }

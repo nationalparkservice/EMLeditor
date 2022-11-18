@@ -53,16 +53,17 @@ set_publisher should only be used if the publisher Is \strong{NOT the National P
 \examples{
 \dontrun{
 set_publisher(eml_object,
-              "BroadLeaf",
-              "123 First Street",
-              "Second City",
-              "CO",
-              "12345",
-              "USA",
-              "https://www.organizationswebsite.com",
-              "contact@myorganization.com",
-              "https://ror.org/xxxxxxxxx",
-              for_or_by_NPS=FALSE,
-              NPS=FALSE)
+  "BroadLeaf",
+  "123 First Street",
+  "Second City",
+  "CO",
+  "12345",
+  "USA",
+  "https://www.organizationswebsite.com",
+  "contact@myorganization.com",
+  "https://ror.org/xxxxxxxxx",
+  for_or_by_NPS = FALSE,
+  NPS = FALSE
+)
 }
 }

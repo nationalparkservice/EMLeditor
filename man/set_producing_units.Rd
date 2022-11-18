@@ -26,9 +26,9 @@ inserts the unit code into the metadataProvider element. Currently cannot add to
 }
 \examples{
 \dontrun{
-prod_units<-c("ABCD", "EFGH")
+prod_units <- c("ABCD", "EFGH")
 set_producing_units(eml_object, prod_units)
 set_producing_units(eml_object, c("ABCD", "EFGH"))
-set_producing_units(eml_object, "ABCD", force=TRUE)
+set_producing_units(eml_object, "ABCD", force = TRUE)
 }
 }
