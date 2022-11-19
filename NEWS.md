@@ -1,18 +1,18 @@
-# EMLeditor 
+# EMLeditor v0.1.0.0, "Electric Peak"
 
-##### v0.1.0.0
-##### "Electric Peak"
 November, 2022
 
-Updating to vO.1.0.0 "Electric Peak" is recommended to all users because to take full advantage of metadata/DataStore integration.
+## Summary
 
-Major changes include:
+Updating to v0.1.0.0 "Electric Peak" is recommended for all users in order to take full advantage of metadata/DataStore integration included the most up-to-date locations and specifications for DataStore metadata elements.
+
+## Major Changes
 
 1) The ability to switch "set_" class functions from a verbose (asks user for input, provides feedback) to silent (no feedback, no prompts) to enable scripting.
 
 2) Inclusion of set_publisher function to customize the publisher and agencyOriginated options for non-NPS users, for NPS partners and contractors.
 
-Minor changes:
+## Enhancements
 
 1) CUI can now be overwritten as well as written
 
@@ -28,8 +28,9 @@ Minor changes:
 
 7) Update documentation to reflect changes
 
-8) Bug fixes throughout 
+## Bug Fixes
 
+Let's just leave this at "a lot".
 
 
 # EMLeditor 0.0.1.1
