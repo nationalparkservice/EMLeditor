@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 In addition to [EMLeditor](https://github.com/nationalparkservice/EMLeditor), you will also need the [EML](https://cran.r-project.org/web/packages/EML/index.html) package to complete these steps. 
 
-You can download and install them individually, or get everything you need at once from the [NPSdataverse](https://github.com/nationalparkservice/NPSdataverse) using:
+You can download and install them individually, or get everything you need at once from the [NPSdataverse](https://nationalparkservice.github.io/NPSdataverse/) using:
 
 ```{r verse_depends, eval=FALSE}
 #install the NPSdataverse:
@@ -35,7 +35,7 @@ library(EML)
 library(EMLeditor)
 ```
 
-# Workflow outline
+# Workflow Outline
 
 EMLeditor’s primary objective is to edit and view EML formatted files, not to generate them from scratch. A suggested workflow is:
 
@@ -44,15 +44,15 @@ EMLeditor’s primary objective is to edit and view EML formatted files, not to 
 3) Use EMLeditor functions to edit the metadata in R and evaluate whether your metadata is acceptable (don't forget to use EML::eml_validate() to make sure you are generating valid EML).
 4) Use the EML::write_eml() function to write the R object back to XML (remember the NPS naming convention for metadata files is *_metadata.xml).
 
-If you use EMLeditor functions to alter your metadata (e.g. any function with the prefix "set_" in the name) they will also silently add the National Park Service as a publisher (including location, [ROR id](https://ror.org/), etc) to your metadata unless you set NPS=FALSE. If you leave the default setting as NPS=TRUE, EMLeditor will also assume the data package is being created "by or for the NPS" and add that information to the metadata. 
+If you use EMLeditor functions to alter your metadata (e.g. any function with the prefix "set_" in the name) they will also silently add the National Park Service as a publisher (including location, [ROR id](https://ror.org/), etc) to your metadata unless you set `NPS=FALSE`. If you leave the default setting as `NPS=TRUE`, EMLeditor will also assume the data package is being created "by or for the NPS" and add that information to the metadata. For more details on customizing the publisher and originating agency content, see the [section for non-NPS users](https://nationalparkservice.github.io/EMLeditor/articles/EMLeditor.html#non-nps-users). 
 
 "set_" functions will also inject information about which version of EMLeditor you used into the metadata.
 
 # A Minimal Workflow
 
-This workflow assumes your EML was generated using [EMLassemblyline](https://github.com/EDIorg/emlAssemblyLine), but will also work with any number of other EML generators (e.g. [ezEML](https://ezeml.edirepository.org/eml/)).
+This workflow assumes your EML was generated using [EMLassemblyline](https://ediorg.github.io/EMLassemblyline/), but will also work with any number of other EML generators (e.g. [ezEML](https://ezeml.edirepository.org/eml/)).
 
-Currently, many of the steps in EMLeditor are interactive and will give you feedback on the current fields in your metadata, ask if you want to update them, and report on the results of your edits. 
+Currently, many of the steps in EMLeditor are by default interactive and will give you feedback on the current fields in your metadata, ask if you want to update them, and report on the results of your edits. If you would like to turn this option off, set `force = TRUE` and see the section on [automated scripting with EMLeditor](https://nationalparkservice.github.io/EMLeditor/articles/EMLeditor.html#scripting-with-emleditor). 
 
 ### Import your metadata into R
 
@@ -100,13 +100,13 @@ my_meta2 <- set_drr_doi(my_meta2, 7654321, "DRR Title")
 
 ### Set the language
 
-This is the human language (as opposed to computer language) that the data package and metadata are constructed in. Examples include English, Spanish, Navajo, etc. A [full list of available languages] is available from the Library of Congress. Please use the "English Name of Language" as an input. The function will then convert your input to the appropriate 3-character ISO 639-2 code. 
+This is the human language (as opposed to computer language) that the data package and metadata are constructed in. Examples include English, Spanish, Navajo, etc. A [full list of available languages](https://www.loc.gov/standards/iso639-2/php/code_list.php) is available from the Library of Congress. Please use the "English Name of Language" as an input. The function will then convert your input to the appropriate 3-character ISO 639-2 code. 
 
 ``` {r language, eval=FALSE}
 my_meta2 <- set_language(my_meta2, "English")
 ```
 
-### Add Content Unit Links
+### Add content unit links
 
 These are the park units where data were collected from, for instance ROMO, not ROMN. If the data package includes data from more than one park, they can all be listed. For instance, if data were collected from all park units within a network, each unit should be listed separately rather than the network. This is because the geographic coordinates corresponding to bounding boxes for each park unit listed will automatically be generated and inserted into the metadata. Individual park units will be more informative than the bounding box for the entire network.
 
@@ -115,7 +115,7 @@ park_units <- c("ROMO", "GRSD", "YELL")
 my_meta2 <- set_content_units(my_meta2, park_units)
 ```
 
-### Add the Producing Unit
+### Add the producing unit(s)
 
 This is the unit responsible for generating the data package. It may be a single park (ROMO) or a network (ROMN). It may be identical to the units listed in the previous step, overlapping, or entirely different.
 
@@ -146,18 +146,18 @@ EML::write_eml(my_meta2, "mymetadatafilename_metadata.xml")
 
 # Scripting with EMLeditor
 
-The interactive feedback and prompts provided by EMLeditor functions can be turned off to enable efficient scripting. All "set_" class functions have a parameter, _force_ that defaults to _force = FALSE_. To turn off the feedback and prompts, set _r force = TRUE_ when calling each function. Be careful using the functions in this way as they may - or may not - make changes to your metadata and you will not be advised of any change or lack of change. Inspect your final product carefully.
+The interactive feedback and prompts provided by EMLeditor functions can be turned off to enable efficient scripting. All "set_" class functions have a parameter, `force` that defaults to `force = FALSE`. To turn off the feedback and prompts, set `force = TRUE` when calling each function. Be careful using the functions in this way as they may - or may not - make changes to your metadata and you will not be advised of any change or lack of change. Inspect your final product carefully.
 
-# non-NPS users
+# non-NPS Users
 
 EMLeditor functions are designed primarily for use by staff at the National Park Service for publication of data packages to DataStore. Consequently, all "set_" class functions silently perform two operations by default:
 
 1) They set the publisher to the National Park Service (and the location to the Fort Collins office) 
-2) They specify the agency that created the data package as NPS and set a field "by or for NPS" to TRUE. 
+2) They specify the agency that created the data package as NPS and set a field "by or for NPS" to TRUE 
 
-You can prevent set_class functions from performing these operations by changing the default status of the parameter _NPS = TRUE_ to _NPS = FALSE_. This will leave your publisher information untouched and will not create an additionalMetadata item for the agency that created the data package.
+You can prevent set_class functions from performing these operations by changing the default status of the parameter `NPS = TRUE` to `NPS = FALSE`. This will leave your publisher information untouched and will not create an additionalMetadata item for the agency that created the data package.
 
-If you would like to set the publisher to something other than the Fort Collins Office of the National Park Service or your would like to set the agency that created the data package to something other than NPS, use the _set_publisher_  function. Be sure to specify _NPS = FALSE_ or the function will perform the default operations (set publisher to NPS at the Fort Collins Office and set the agency to NPS).
+If you would like to set the publisher to something other than the Fort Collins Office of the National Park Service or your would like to set the agency that created the data package to something other than NPS, use the `set_publisher()`  function. Be sure to specify `NPS = FALSE` or the function will perform the default operations (set publisher to NPS at the Fort Collins Office and set the agency to NPS).
 
 **Warning:** set_publisher should only be used in a few, likely rare, circumstances:
 
