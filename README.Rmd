@@ -13,6 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
+`r lifecycle::badge('experimental')`
+
+<!-- badges: start -->
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
+
 # EMLeditor 
 ##### v0.1.0.0
 ##### "Electric Peak"
