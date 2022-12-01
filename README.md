@@ -4,6 +4,7 @@
 
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![CodeFactor](https://www.codefactor.io/repository/github/roblbaker/emleditor/badge)](https://www.codefactor.io/repository/github/roblbaker/emleditor)
 <!-- badges: end -->
 
 # EMLeditor
