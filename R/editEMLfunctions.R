@@ -1300,3 +1300,149 @@ set_publisher <- function(eml_object,
 
   return(eml_object)
 }
+
+
+
+#' Set Intllectual Rights
+#'
+#' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
+#'
+#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. set_int_rights checks to make sure the CUI code specified (see `set_cui()`) is appropriate for the license type chosen.
+
+#' @inheritParams set_title
+#'
+#' @param license String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBFUL or PUBVER. Restricted can only be used if CUI is set to any code that is NOT PUBFUL or PUBVER (see `set_cui()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
+#'
+#' @return emlObject
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' set_int_rights(eml_object, "CC0", force=TRUE, NPS=FALSE)
+#' set_int_rights(eml_object, "restricted")}
+#'
+set_int_rights <- function(eml_object,
+                          license=c("CC0", "public", "restricted"),
+                          force=FALSE,
+                          NPS=TRUE){
+  # verify license type selection; stop if does not equal one of 3 valid codes:
+  license <- match.arg(license)
+
+  #set up license text:
+  CCzero <- "This product is released to the “public domain” under Creative Commons CC0 1.0 “No Rights Reserved (see: https://creativecommons.org/publicdomain/zero/1.0/)."
+  pub_domain <- 'This product is released to the “public domain” under U.S. Government Works “No Rights Reserved (see: http://www.usa.gov/publicdomain/label/1.0/).'
+  restrict <- "This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."
+
+  # get CUI info from additionalMetadata:
+  cui <- eml_object$additionalMetadata
+
+  # turn cui nested list into a flattened data frame:
+  cui2 <- dplyr::bind_rows(lapply(cui,
+                                  function(x) data.frame(as.list(x),
+                                                         stringsAsFacotrs=F)))
+  # Verbose option with feedback:
+  if(force == FALSE){
+    # enforce CUI info prior to setting license:
+    # if there is no CUI specified, stop.
+    if(is.null(cui2$CUI)){
+      #cat("No CUI information found.\n")
+      #cat("Use", crayon::bold$green("set_cui()"), "to specify CUI.")
+      return(paste0(cat("No CUI information found.\n"),
+                    cat("You must set CUI prior to setting the license.\nUse",
+                        crayon::bold$green("set_cui()"),
+                        "to specify CUI.")))
+    }
+
+    # if CUI was specified:
+    if(!is.null(cui2$CUI)){
+
+      # retrieve just the cell containing the CUI code:
+      cui3<-cui2[complete.cases(cui2$CUI),]
+      cui3<-cui3$CUI
+
+      # make sure CUI and license agree:
+      if(license == "CC0" || license == "public"){
+        #set appropriate license:
+        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+          if(license == "CC0"){
+            eml_object$dataset$intellectualRights <- CCzero
+            cat("Your license has been set to:", crayon::blue$bold("CC0"))
+          }
+          if(license == "public"){
+            eml_object$dataset$intellectualRights <- pub_domain
+            cat("Your license has been set to:", crayon::blue$bold("public domain"))
+          }
+
+        }
+        # warn user license not set, CUI and license don't agree:
+        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+          cat("Your CUI is set to ", crayon::blue$bold(cui3), ".")
+          writeLines(paste0("To use a CC0 or public domain license",
+                       " your CUI must be either PUBFUL or PUBVER."))
+          cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
+        }
+      }
+      if(license == "restricted"){
+        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+          cat("Your CUI is set to ", crayon::blue$bold(cui3), ".\n", sep="")
+          writeLines(paste0("To use a restricted license, your CUI must NOT be set",
+                       " to PUBFUL or PUBVER."))
+          cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
+        }
+        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+          eml_object$dataset$intellectualRights <- restrict
+          cat("Your license has been set to ", crayon::bold$blue("restricted"), ".", sep="")
+        }
+      }
+    }
+  }
+
+  #silent option for scripting:
+  if(force == TRUE){
+    #if no CUI specified, stop.
+    if(is.null(cui2$CUI)){
+      return()
+    }
+
+    #if CUI has been specified:
+    if(!is.null(cui2$CUI)){
+      # retrieve just the cell containing the CUI code:
+      cui3<-cui2[complete.cases(cui2$CUI),]
+      cui3<-cui3$CUI
+
+      if(license == "CC0" || license == "public"){
+        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+          if(license == "CC0"){
+            eml_object$dataset$intellectualRights <- CCzero
+          }
+          if(license == "public"){
+            eml_object$dataset$intellectualRights <- pub_domain
+          }
+        }
+        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+         return()
+        }
+      }
+      if(license == "restricted"){
+        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+          return()
+        }
+        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+          eml_object$dataset$intellectualRights <- restrict
+        }
+      }
+    }
+  }
+
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+
+
