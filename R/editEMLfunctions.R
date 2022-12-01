@@ -1313,6 +1313,8 @@ set_publisher <- function(eml_object,
 #'
 #' @param license String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBFUL or PUBVER. Restricted can only be used if CUI is set to any code that is NOT PUBFUL or PUBVER (see `set_cui()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
 #'
+#' @importFrom stats complete.cases
+#'
 #' @return emlObject
 #' @export
 #'
@@ -1329,8 +1331,8 @@ set_int_rights <- function(eml_object,
   license <- match.arg(license)
 
   #set up license text:
-  CCzero <- "This product is released to the “public domain” under Creative Commons CC0 1.0 “No Rights Reserved (see: https://creativecommons.org/publicdomain/zero/1.0/)."
-  pub_domain <- 'This product is released to the “public domain” under U.S. Government Works “No Rights Reserved (see: http://www.usa.gov/publicdomain/label/1.0/).'
+  CCzero <- 'This product is released to the "public domain" under Creative Commons CC0 1.0 No Rights Reserved (see: https://creativecommons.org/publicdomain/zero/1.0/).'
+  pub_domain <- 'This product is released to the "public domain" under U.S. Government Works No Rights Reserved (see: http://www.usa.gov/publicdomain/label/1.0/).'
   restrict <- "This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."
 
   # get CUI info from additionalMetadata:
@@ -1357,7 +1359,7 @@ set_int_rights <- function(eml_object,
     if(!is.null(cui2$CUI)){
 
       # retrieve just the cell containing the CUI code:
-      cui3<-cui2[complete.cases(cui2$CUI),]
+      cui3<-cui2[stats::complete.cases(cui2$CUI),]
       cui3<-cui3$CUI
 
       # make sure CUI and license agree:
