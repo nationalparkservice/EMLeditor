@@ -1,18 +1,30 @@
 # EMLeditor v0.1.0.0, "Electric Peak"
 
-November, 2022
+## December 1, 2022
 
-## Summary
+### Summary
+
+Added `set_int_rights()` function.
+
+### Major Changes
+
+`set_int_rights()` allows users to update the intellectual rights text supplied by 3rd party EML generators with one of 3 NPS-specific options. Enforces congruence between CUI and license.
+
+***
+
+## November, 2022
+
+### Summary
 
 Updating to v0.1.0.0 "Electric Peak" is recommended for all users in order to take full advantage of metadata/DataStore integration included the most up-to-date locations and specifications for DataStore metadata elements.
 
-## Major Changes
+### Major Changes
 
 1) The ability to switch "set_" class functions from a verbose (asks user for input, provides feedback) to silent (no feedback, no prompts) to enable scripting.
 
 2) Inclusion of set_publisher function to customize the publisher and agencyOriginated options for non-NPS users, for NPS partners and contractors.
 
-## Enhancements
+### Enhancements
 
 1) CUI can now be overwritten as well as written
 
@@ -28,10 +40,11 @@ Updating to v0.1.0.0 "Electric Peak" is recommended for all users in order to ta
 
 7) Update documentation to reflect changes
 
-## Bug Fixes
+### Bug Fixes
 
 Let's just leave this at "a lot".
 
+***
 
 # EMLeditor 0.0.1.1
 
