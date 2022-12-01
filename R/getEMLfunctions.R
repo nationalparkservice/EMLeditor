@@ -385,7 +385,7 @@ get_content_units <- function(eml_object) {
 get_cui <- function(eml_object) {
   cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
   if (is.null(cui)) {
-    warning("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
+    cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
     cui <- "No CUI specified."
   } else if (cui == "FED ONLY") {
     cui <- "Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)."
@@ -436,10 +436,12 @@ get_file_info <- function(eml_object) {
     file_size <- suppressWarnings(as.numeric(file_size))
     file_byte <- unique(file_size)
     file_byte <- file_byte[!is.na(file_byte)]
-    readable <- gdata::humanReadable(file_byte, standard = "Unix") %>% paste0("B")
+    readable <- gdata::humanReadable(file_byte,
+                                     standard = "Unix") %>% paste0("B")
 
     # get file descriptions
-    file_descript <- arcticdatautils::eml_get_simple(eml_object, "entityDescription")
+    file_descript <- arcticdatautils::eml_get_simple(eml_object,
+                                                     "entityDescription")
 
     # generate dataframe for display:
     dat <- data.frame(file_name, readable, file_descript)
@@ -467,8 +469,10 @@ get_file_info <- function(eml_object) {
 get_drr_doi <- function(eml_object) {
   doi <- eml_object$dataset$usageCitation$alternateIdentifier
   if (is.null(doi)) {
-    cat(crayon::red$bold("Warning: "), "You have not specified a DRR associated with this data package.
-            If you have an associated DRR, specify its DOI using set_drr.")
+    cat(crayon::red$bold("Warning: "),
+    "You have not specified a DRR associated with this data package.
+    If you have an associated DRR, specify its DOI using ",
+    crayon::green$bold("set_drr()"), ".", sep="")
     drr_doi <- NA # to do: test whether NA needs quotes for write.README.
   } else {
     return(doi)
@@ -494,8 +498,10 @@ get_drr_doi <- function(eml_object) {
 get_drr_title <- function(eml_object) {
   doi <- eml_object$dataset$usageCitation$title
   if (is.null(doi)) {
-    cat(crayon::red$bold("Warning: "), "You have not specified a DRR associated with this data package.
-            If you have an associated DRR, specify its DOI using set_drr.")
+    cat(crayon::red$bold("Warning: "),
+    "You have not specified a DRR associated with this data package.
+    If you have an associated DRR, specify its DOI using ",
+    crayon::green$bold("set_drr()"), ".", sep="")
     drr_doi <- NA # to do: test whether NA needs quotes for write.README.
   } else {
     return(doi)
@@ -542,5 +548,5 @@ get_producing_units <- function(eml_object) {
 }
 
 get_publisher <- function(eml_object) {
-  pub <- emlobject$dataset$publisher
+  pub <- eml_object$dataset$publisher
 }
