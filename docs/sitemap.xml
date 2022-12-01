@@ -37,6 +37,9 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/dot-set_version.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/EMLeditor-package.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_abstract.html</loc>
   </url>
   <url>
@@ -98,6 +101,9 @@
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_drr.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/set_int_rights.html</loc>
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_language.html</loc>

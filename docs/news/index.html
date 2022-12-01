@@ -30,7 +30,13 @@
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/nationalparkservice/EMLeditor/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -38,23 +44,35 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Changelog</h1>
-      
+      <small>Source: <a href="https://github.com/nationalparkservice/EMLeditor/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0.0" id="emleditor-v0100-electric-peak">EMLeditor v0.1.0.0, “Electric Peak”<a class="anchor" aria-label="anchor" href="#emleditor-v0100-electric-peak"></a></h2>
-<p>November, 2022</p>
 <div class="section level3">
-<h3 id="summary-0-1-0-0">Summary<a class="anchor" aria-label="anchor" href="#summary-0-1-0-0"></a></h3>
-<p>Updating to v0.1.0.0 “Electric Peak” is recommended for all users in order to take full advantage of metadata/DataStore integration included the most up-to-date locations and specifications for DataStore metadata elements.</p>
+<h3 id="december-0-1-0-0">December 1, 2022<a class="anchor" aria-label="anchor" href="#december-0-1-0-0"></a></h3>
+<div class="section level4">
+<h4 id="summary-0-1-0-0">Summary<a class="anchor" aria-label="anchor" href="#summary-0-1-0-0"></a></h4>
+<p>Added <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> function.</p>
+</div>
+<div class="section level4">
+<h4 id="major-changes-0-1-0-0">Major Changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-0"></a></h4>
+<p><code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> allows users to update the intellectual rights text supplied by 3rd party EML generators with one of 3 NPS-specific options. Enforces congruence between CUI and license.</p>
+<hr></div>
 </div>
 <div class="section level3">
-<h3 id="major-changes-0-1-0-0">Major Changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-0"></a></h3>
+<h3 id="november-0-1-0-0">November, 2022<a class="anchor" aria-label="anchor" href="#november-0-1-0-0"></a></h3>
+<div class="section level4">
+<h4 id="summary-0-1-0-0-1">Summary<a class="anchor" aria-label="anchor" href="#summary-0-1-0-0-1"></a></h4>
+<p>Updating to v0.1.0.0 “Electric Peak” is recommended for all users in order to take full advantage of metadata/DataStore integration included the most up-to-date locations and specifications for DataStore metadata elements.</p>
+</div>
+<div class="section level4">
+<h4 id="major-changes-0-1-0-0-1">Major Changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-0-1"></a></h4>
 <ol style="list-style-type: decimal"><li><p>The ability to switch “set_” class functions from a verbose (asks user for input, provides feedback) to silent (no feedback, no prompts) to enable scripting.</p></li>
 <li><p>Inclusion of set_publisher function to customize the publisher and agencyOriginated options for non-NPS users, for NPS partners and contractors.</p></li>
 </ol></div>
-<div class="section level3">
-<h3 id="enhancements-0-1-0-0">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-1-0-0"></a></h3>
+<div class="section level4">
+<h4 id="enhancements-0-1-0-0">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-1-0-0"></a></h4>
 <ol style="list-style-type: decimal"><li><p>CUI can now be overwritten as well as written</p></li>
 <li><p>write_readme dynamically populates publisher information</p></li>
 <li><p>Renamed functions and parameters to conform to tidyverse style guides</p></li>
@@ -63,9 +81,10 @@
 <li><p>write_readme now defaults to printing to the screen (but can still save to a .txt file)</p></li>
 <li><p>Update documentation to reflect changes</p></li>
 </ol></div>
-<div class="section level3">
-<h3 id="bug-fixes-0-1-0-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-0"></a></h3>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-0-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-0-0"></a></h4>
 <p>Let’s just leave this at “a lot”.</p>
+<hr></div>
 </div>
 </div>
     <div class="section level2">
