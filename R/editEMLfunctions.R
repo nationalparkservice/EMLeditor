@@ -37,9 +37,8 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
       if (var1 == 1) {
         # print the existing DOI to the screen:
         eml_object$dataset$title <- data_package_title
-        print("You have replaced your title. The new title is: ",
-          crayon::blue$bold(data_package_title), ".",
-          sep = ""
+        cat("You have replaced your title. The new title is: ",
+            crayon::blue$bold(data_package_title), ".", sep = ""
         )
       }
       # if User opts to change DOI, change it:
@@ -56,8 +55,6 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
   eml_object <- .set_version(eml_object)
   return(eml_object)
 }
-
-
 
 #' Check & set a DOI
 #'
@@ -175,7 +172,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' park_units <- ("ROMO, GRSD, TRYME")
+#' park_units <- ("ROMO, GRSD")
 #' set_content_units(eml_object, park_units)
 #' }
 set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE) {
@@ -489,8 +486,6 @@ set_cui <- function(eml_object, cui_code = c("PUBFUL", "PUBVER", "NOCON", "DL ON
   return(eml_object)
 }
 
-
-
 #' adds DRR connection
 #'
 #' @description set_drr adds the DOI of an associated DRR
@@ -682,8 +677,6 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
   return(eml_object)
 }
 
-
-
 #' Sets Producing Units for use in DataStore
 #'
 #' @description set_producing_units inserts the unit code for the producing unit for the data/metadata into the EML metdata file.
@@ -764,8 +757,6 @@ set_producing_units <- function(eml_object,
 
   return(eml_object)
 }
-
-
 
 #' Set the human language used for metadata
 #'
@@ -876,7 +867,6 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
   return(eml_object)
 }
 
-
 #' Adds a connection to the protocol under which the data were collected
 #'
 #' @description set_protocol adds a metadata link to the protocol under which the data being described were collected. It automatically inserts a link to the DataStore landing page for the protocol as well as ?????
@@ -975,9 +965,6 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
 
   return(eml_object)
 }
-
-
-
 
 #' Set Publisher
 #'
@@ -1301,9 +1288,7 @@ set_publisher <- function(eml_object,
   return(eml_object)
 }
 
-
-
-#' Set Intllectual Rights
+#' Set Intellectual Rights
 #'
 #' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
 #'
@@ -1445,6 +1430,3 @@ set_int_rights <- function(eml_object,
 
   return(eml_object)
 }
-
-
-
