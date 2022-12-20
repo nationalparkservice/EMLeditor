@@ -620,9 +620,10 @@ set_abstract <- function(eml_object,
 
 #' Edit literature cited
 #'
-#' @description set_lit is an interactive method for editing the literature cited sections.
+#' @description `r lifecycle::badge("experimental")`
+#' set_lit takes a bibtex file (*.bib) as input and adds it as a bibtex list to EML under citations
 #'
-#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
+#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts citations for each entry in the *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file, or append additional references from the supplied .bib file. if force=TRUE, the existing literature cited will be replaced with the contents of the .bib file.
 #'
 #' @inheritParams set_title
 #' @param bibtex_file is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
@@ -634,6 +635,7 @@ set_abstract <- function(eml_object,
 #' eml_object <- litcited2 <- set_lit(eml_object, "bibfile.bib")
 #' }
 set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
+
   bibtex_citation <- readr::read_file(bibtex_file)
 
   # scripting route:
@@ -642,10 +644,7 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
   }
   # interactive route:
   if (force == FALSE) {
-    lit <- arcticdatautils::eml_get_simple(
-      eml_object,
-      "literatureCited"
-    )
+    lit <- arcticdatautils::eml_get_simple(eml_object, "literatureCited")
     if (is.null(lit)) {
       eml_object$dataset$literatureCited$bibtex <- bibtex_citation
     } else {
