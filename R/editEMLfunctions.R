@@ -798,7 +798,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 
   # if the language supplied is not part of ISO 639-2 (e.g. spelling error):
   if (nchar(nlang) != 3 || identical(nlang, character(0)) == TRUE) {
-    stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
+    stop(message("Please check that your language is included in the ISO 639-2B language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
   }
 
   # scripting route:
@@ -806,7 +806,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
     eml_object$dataset$language <- nlang
   }
 
-  # ineractive route:
+  # interactive route:
   if (force == FALSE) {
     # get current language from the metadata provided:
     lng <- eml_object$dataset$language
@@ -815,9 +815,8 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
     if (is.null(lng)) {
       eml_object$dataset$language <- nlang
       cat(
-        "The language has been set to ", nlang,
-        "the ISO 639-2 code for ", lang, "."
-      )
+        "The language has been set to ", crayon::bold$blue(nlang),
+        ", the ISO 639-2B code for ", crayon::bold$blue(lang), ".", sep="")
     }
 
     # if the language is already specified in the metadata:
@@ -825,7 +824,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
       if (nchar(lng) == 3) {
         full_lang <- dplyr::filter(langcodes, Alpha_3_B == lng)[[4]]
         cat("The current language is set to ", crayon::blue$bold(lng),
-          ", the ISO 639-2 code for ", full_lang, ".",
+          ", the ISO 639-2B code for ", full_lang, ".",
           sep = ""
         )
       } else {
@@ -843,7 +842,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
         eml_object$dataset$language <- nlang
         cat("You have replaced the language with ",
           crayon::blue$bold(nlang),
-          ", the 3-letter ISO-639-2 code for ",
+          ", the 3-letter ISO-639-2B code for ",
           crayon::blue$bold(lang), ".",
           sep = ""
         )
