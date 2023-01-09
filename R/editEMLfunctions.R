@@ -874,7 +874,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 #' @inheritParams set_title
 #' @param protocol_id a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.
 #'
-#' @return
+#' @return emlObject
 #' @export
 #'
 #' @examples
@@ -981,7 +981,7 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
 #' @param for_or_by_NPS Logical. Defaults to TRUE. If your digital product is NOT for or by the NPS, set to FALSE.
 #' @param NPS Logical. Defaults to TRUE. Set this to FALSE only if the party responsible for data collection and generation is *not* the NPS *or* the publisher is *not* the NPS central office in Fort Collins.
 #'
-#' @return
+#' @return emlObject
 #' @export
 #'
 #' @examples
