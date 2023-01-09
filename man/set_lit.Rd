@@ -19,10 +19,11 @@ set_lit(eml_object, bibtex_file, force = FALSE, NPS = TRUE)
 an EML object
 }
 \description{
-set_lit is an interactive method for editing the literature cited sections.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+set_lit takes a bibtex file (*.bib) as input and adds it as a bibtex list to EML under citations
 }
 \details{
-looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
+looks for literature cited in the <literatureCited> tag and if it finds none, inserts citations for each entry in the *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file, or append additional references from the supplied .bib file. if force=TRUE, the existing literature cited will be replaced with the contents of the .bib file.
 }
 \examples{
 \dontrun{

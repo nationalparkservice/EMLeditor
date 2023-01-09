@@ -47,6 +47,9 @@ set_publisher(
 
 \item{NPS}{Logical. Defaults to TRUE. Set this to FALSE only if the party responsible for data collection and generation is \emph{not} the NPS \emph{or} the publisher is \emph{not} the NPS central office in Fort Collins.}
 }
+\value{
+emlObject
+}
 \description{
 set_publisher should only be used if the publisher Is \strong{NOT the National Park Service} or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, \emph{Do not use this function} unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, \emph{or} your product is \emph{not} for or by the NPS, use this function. It's probably a good idea to run args(set_publisher) to make sure you have all the arguments, especially those with defaults, properly specified.
 }
