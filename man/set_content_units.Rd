@@ -26,7 +26,7 @@ Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) a
 }
 \examples{
 \dontrun{
-park_units <- ("ROMO, GRSD, TRYME")
+park_units <- ("ROMO, GRSD")
 set_content_units(eml_object, park_units)
 }
 }

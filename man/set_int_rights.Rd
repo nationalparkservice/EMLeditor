@@ -2,7 +2,7 @@
 % Please edit documentation in R/editEMLfunctions.R
 \name{set_int_rights}
 \alias{set_int_rights}
-\title{Set Intllectual Rights}
+\title{Set Intellectual Rights}
 \usage{
 set_int_rights(
   eml_object,

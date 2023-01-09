@@ -37,9 +37,8 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
       if (var1 == 1) {
         # print the existing DOI to the screen:
         eml_object$dataset$title <- data_package_title
-        print("You have replaced your title. The new title is: ",
-          crayon::blue$bold(data_package_title), ".",
-          sep = ""
+        cat("You have replaced your title. The new title is: ",
+            crayon::blue$bold(data_package_title), ".", sep = ""
         )
       }
       # if User opts to change DOI, change it:
@@ -56,8 +55,6 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
   eml_object <- .set_version(eml_object)
   return(eml_object)
 }
-
-
 
 #' Check & set a DOI
 #'
@@ -175,7 +172,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' park_units <- ("ROMO, GRSD, TRYME")
+#' park_units <- ("ROMO, GRSD")
 #' set_content_units(eml_object, park_units)
 #' }
 set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE) {
@@ -489,8 +486,6 @@ set_cui <- function(eml_object, cui_code = c("PUBFUL", "PUBVER", "NOCON", "DL ON
   return(eml_object)
 }
 
-
-
 #' adds DRR connection
 #'
 #' @description set_drr adds the DOI of an associated DRR
@@ -625,9 +620,10 @@ set_abstract <- function(eml_object,
 
 #' Edit literature cited
 #'
-#' @description set_lit is an interactive method for editing the literature cited sections.
+#' @description `r lifecycle::badge("experimental")`
+#' set_lit takes a bibtex file (*.bib) as input and adds it as a bibtex list to EML under citations
 #'
-#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts bibtex-formatted literature cited from a the supplied *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file or append additional references from the supplied .bib file.
+#' @details looks for literature cited in the <literatureCited> tag and if it finds none, inserts citations for each entry in the *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file, or append additional references from the supplied .bib file. if force=TRUE, the existing literature cited will be replaced with the contents of the .bib file.
 #'
 #' @inheritParams set_title
 #' @param bibtex_file is a text file with one or more bib-formatted references with the extension .bib. Make sure the .bib file is in your working directory, or supply the path to the file.
@@ -639,6 +635,7 @@ set_abstract <- function(eml_object,
 #' eml_object <- litcited2 <- set_lit(eml_object, "bibfile.bib")
 #' }
 set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
+
   bibtex_citation <- readr::read_file(bibtex_file)
 
   # scripting route:
@@ -647,10 +644,7 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
   }
   # interactive route:
   if (force == FALSE) {
-    lit <- arcticdatautils::eml_get_simple(
-      eml_object,
-      "literatureCited"
-    )
+    lit <- arcticdatautils::eml_get_simple(eml_object, "literatureCited")
     if (is.null(lit)) {
       eml_object$dataset$literatureCited$bibtex <- bibtex_citation
     } else {
@@ -681,8 +675,6 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
   eml_object <- .set_version(eml_object)
   return(eml_object)
 }
-
-
 
 #' Sets Producing Units for use in DataStore
 #'
@@ -765,8 +757,6 @@ set_producing_units <- function(eml_object,
   return(eml_object)
 }
 
-
-
 #' Set the human language used for metadata
 #'
 #' @description set_language allows the user to specify the language that the metadata (and data) were constructed in. This field is intended to hold the human language, i.e. English, Spanish, Cherokee.
@@ -807,7 +797,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 
   # if the language supplied is not part of ISO 639-2 (e.g. spelling error):
   if (nchar(nlang) != 3 || identical(nlang, character(0)) == TRUE) {
-    stop(message("Please check that your language is included in the ISO 639-2 language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
+    stop(message("Please check that your language is included in the ISO 639-2B language code. The codes are available at https://www.loc.gov/standards/iso639-2/php/code_list.php"))
   }
 
   # scripting route:
@@ -815,7 +805,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
     eml_object$dataset$language <- nlang
   }
 
-  # ineractive route:
+  # interactive route:
   if (force == FALSE) {
     # get current language from the metadata provided:
     lng <- eml_object$dataset$language
@@ -824,9 +814,8 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
     if (is.null(lng)) {
       eml_object$dataset$language <- nlang
       cat(
-        "The language has been set to ", nlang,
-        "the ISO 639-2 code for ", lang, "."
-      )
+        "The language has been set to ", crayon::bold$blue(nlang),
+        ", the ISO 639-2B code for ", crayon::bold$blue(lang), ".", sep="")
     }
 
     # if the language is already specified in the metadata:
@@ -834,7 +823,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
       if (nchar(lng) == 3) {
         full_lang <- dplyr::filter(langcodes, Alpha_3_B == lng)[[4]]
         cat("The current language is set to ", crayon::blue$bold(lng),
-          ", the ISO 639-2 code for ", full_lang, ".",
+          ", the ISO 639-2B code for ", full_lang, ".",
           sep = ""
         )
       } else {
@@ -852,7 +841,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
         eml_object$dataset$language <- nlang
         cat("You have replaced the language with ",
           crayon::blue$bold(nlang),
-          ", the 3-letter ISO-639-2 code for ",
+          ", the 3-letter ISO-639-2B code for ",
           crayon::blue$bold(lang), ".",
           sep = ""
         )
@@ -876,7 +865,6 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
   return(eml_object)
 }
 
-
 #' Adds a connection to the protocol under which the data were collected
 #'
 #' @description set_protocol adds a metadata link to the protocol under which the data being described were collected. It automatically inserts a link to the DataStore landing page for the protocol as well as ?????
@@ -886,7 +874,7 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 #' @inheritParams set_title
 #' @param protocol_id a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.
 #'
-#' @return
+#' @return emlObject
 #' @export
 #'
 #' @examples
@@ -976,9 +964,6 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
   return(eml_object)
 }
 
-
-
-
 #' Set Publisher
 #'
 #' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function. It's probably a good idea to run args(set_publisher) to make sure you have all the arguments, especially those with defaults, properly specified.
@@ -996,7 +981,7 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
 #' @param for_or_by_NPS Logical. Defaults to TRUE. If your digital product is NOT for or by the NPS, set to FALSE.
 #' @param NPS Logical. Defaults to TRUE. Set this to FALSE only if the party responsible for data collection and generation is *not* the NPS *or* the publisher is *not* the NPS central office in Fort Collins.
 #'
-#' @return
+#' @return emlObject
 #' @export
 #'
 #' @examples
@@ -1301,9 +1286,7 @@ set_publisher <- function(eml_object,
   return(eml_object)
 }
 
-
-
-#' Set Intllectual Rights
+#' Set Intellectual Rights
 #'
 #' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
 #'
@@ -1445,6 +1428,3 @@ set_int_rights <- function(eml_object,
 
   return(eml_object)
 }
-
-
-
