@@ -1,3 +1,7 @@
+
+  * specify ISO 639-2B in `set_language()`
+
+
 # EMLeditor v0.1.0.0, "Electric Peak"
 
 ## December 1, 2022
