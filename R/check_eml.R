@@ -1,20 +1,20 @@
 #' Run checks on EML
 #'
-#' @description Runs a series of checks on EML metadata based on functions in `r DPchecker::run_congruence_checks()`.
+#' @description Runs a series of checks on EML metadata based on functions in DPchecker's run_congruence_checks()`.
 #'
-#' @param directory path to the metadata file. Defaults to the current working directory. Make sure there is only one .xml file in the directory.
+#' @param path to the metadata file. Defaults to the current working directory. Make sure there is only one .xml file in the directory.
 #'
-#' @return
+#' @return message
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' check_eml()
 #' }
-check_eml <- function(directory = here::here()) {
+check_eml <- function(path = here::here()) {
   DPchecker::run_congruence_checks(
-    directory= directory,
-    metadata = DPchecker::load_metadata(directory),
+    directory= path,
+    metadata = DPchecker::load_metadata(path),
     check_metadata_only = TRUE)
 }
 
@@ -28,7 +28,7 @@ check_eml <- function(directory = here::here()) {
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param outfile is the name of the file you want to write, typically *.txt.
 #'
-#' @return a character sting in readable format (saved to the given outfile)
+#' @return a character string in readable format (saved to the given outfile)
 #' @export
 #'
 #' @examples
