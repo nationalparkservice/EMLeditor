@@ -1,6 +1,25 @@
 
-  * specify ISO 639-2B in `set_language()`
+# EMLeditor v0.1.0.1 "Whitebark Pine"
 
+## January 24, 2023
+
+### Summary
+
+Added `check_eml()` function.
+
+### Major changes
+
+`check_eml()` function is a wrapper that calls `DPchecker::run_congruence_checks()` with `check_metadata-only = TRUE`. To run all the metadata-specific tests that will be run during a congruence test.
+
+### Minor changes
+
+  * specify ISO 639-2B in `set_language()`
+  * added documentation for `check_eml()`
+  * Changed Non-NPS user section to more apt, "Custom Publisher/Producer"
+  * added a "Additional Functions" section in addition to the Minimal Workflow that outlines functions like `set_title()`, `set_abstract()` and `set_int_rights()`.
+  * moved `write_readme()` and the new `check_eml()` to the file check_eml.R.
+
+***
 
 # EMLeditor v0.1.0.0, "Electric Peak"
 

@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -242,8 +242,11 @@ network.</p>
 be a single park (ROMO) or a network (ROMN). It may be identical to the
 units listed in the previous step, overlapping, or entirely
 different.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_producing_units.html">set_producing_units</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"ROMN"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#a single proucing unit:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="st">"ROMN"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#for collaborative projects with multiple producing units:</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="fu">c</span>(<span class="st">"ROMN"</span>, <span class="st">"GRYN"</span>)</span></code></pre></div>
 <p>Great! You’re done adding the essential NPS-specific metadata to your
 EML. There are only two quick steps left:</p>
 </div>
@@ -272,6 +275,102 @@ reference!</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="additional-functions">Additional Functions<a class="anchor" aria-label="anchor" href="#additional-functions"></a>
+</h2>
+<p>The Minimal Workflow section assumes that you have correctly used <a href="https://ediorg.github.io/EMLassemblyline/" class="external-link">EMLassemblyline</a> to
+generate a high-quality EML document. In the event that you find issues
+with your EML or wish to correct portions of it, EMLeditor includes some
+functions that allow you to edit common EML errors without having to
+re-run EMLassemblyline.</p>
+<div class="section level4">
+<h4 id="set-the-intellectual-rights">Set the intellectual rights<a class="anchor" aria-label="anchor" href="#set-the-intellectual-rights"></a>
+</h4>
+<p>EMLassemblyine provides some attractive looking boilerplate for
+setting the intellectual rights. It looks reasonable and so is easy to
+just keep. However, NPS has some very specific regulations about what
+can and cannot be in the intellectualRights tag. Use
+<code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> to replace the text with NPS-approved
+text:</p>
+<ol style="list-style-type: decimal">
+<li>If the data contains Controlled Unclassified Information (CUI), the
+intellectual rights must read:</li>
+</ol>
+<blockquote>
+<p><em>“This product has been determined to contain Controlled
+Unclassified Information (CUI) by the National Park Service, and is
+intended for internal use only. It is not published under an open
+license. Unauthorized access, use, and distribution are
+prohibited.”</em></p>
+</blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>If the data do not contain CUI, the default is the public domain.
+The intellectual rights must read:</li>
+</ol>
+<blockquote>
+<p><em>“This work is in the public domain. There is no copy right or
+license.”</em></p>
+</blockquote>
+<ol start="3" style="list-style-type: decimal">
+<li>If you need a license, for instance if you are working with a
+partner organization that requires a license, use <a href="https://creativecommons.org/publicdomain/zero/1.0/" class="external-link">CC0</a>:</li>
+</ol>
+<blockquote>
+<p><em>“The person who associated a work with this deed has dedicated
+the work to the public domain by waiving all of his or her rights to the
+work worldwide under copyright law, including all related and
+neighboring rights, to the extent allowed by law. You can copy, modify,
+distribute and perform the work, even for commercial purposes, all
+without asking permission.”</em></p>
+</blockquote>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">mymetadata</span>,</span>
+<span>                            <span class="st">"This work is in the public domain. There is no copy right or license."</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="edit-the-title">Edit the title<a class="anchor" aria-label="anchor" href="#edit-the-title"></a>
+</h4>
+<p>If your title has changed (for instance, perhaps reviewers have
+suggested a title that you realize you prefer) or you find a typo in
+your title, you can update your title directly in EMLeditor using
+<code><a href="../reference/set_title.html">set_title()</a></code>:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#give my data package a new title:</span></span>
+<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_title.html">set_title</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"This is my new Title"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#check the new title:</span></span>
+<span><span class="fu"><a href="../reference/get_title.html">get_title</a></span><span class="op">(</span><span class="va">mymetadata2</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="edit-the-abstract">Edit the abstract<a class="anchor" aria-label="anchor" href="#edit-the-abstract"></a>
+</h4>
+<p>Because your abstract will be prominently displayed on the DataStore
+landing page and will be forwarded to DataCite for DOI assignment and
+data.gov (among other places) to enhance data discoverability and reuse,
+it is important that your abstract not contain errors. Typographical
+errors, particularly non-ascii characters are common problems in the
+abstract of EML documents. The <code><a href="../reference/set_abstract.html">set_abstract()</a></code> function
+includes a number of routines to minimize errors introduced by word
+processors or non-UTF8 encoding (we are pretty sure you don’t want that
+“&amp;amp13;” in your abstract) but it cannot anticipate all potential
+eventualities. You are therefore encouraged to construct your abstract
+in Notepad or other text editor (<strong>NOT</strong> a word processor
+such as Microsoft Word). This is a relatively simple function and does
+not readily support multiple paragraphs, bullet points, or the like.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#replace your abstract:</span></span>
+<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_abstract.html">set_abstract</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to."</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#check the new abstract:</span></span>
+<span><span class="fu"><a href="../reference/get_abstract.html">get_abstract</a></span><span class="op">(</span><span class="va">mymetadata2</span><span class="op">)</span></span></code></pre></div>
+<p>Check back here for more handy functions in the future. If there’s
+something you’d like to see added, please let us know by posting an <a href="https://github.com/nationalparkservice/EMLeditor/issues" class="external-link">Issue</a>
+on github.</p>
+<p>Don’t forget to validate your updated EML file and to write it back
+to .xml after using EMLeditor to make edits.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="scripting-with-emleditor">Scripting with EMLeditor<a class="anchor" aria-label="anchor" href="#scripting-with-emleditor"></a>
 </h2>
 <p>The interactive feedback and prompts provided by EMLeditor functions
@@ -284,7 +383,7 @@ your metadata and you will not be advised of any change or lack of
 change. Inspect your final product carefully.</p>
 </div>
 <div class="section level2">
-<h2 id="non-nps-users">non-NPS Users<a class="anchor" aria-label="anchor" href="#non-nps-users"></a>
+<h2 id="custom-publisherproducer">Custom Publisher/Producer<a class="anchor" aria-label="anchor" href="#custom-publisherproducer"></a>
 </h2>
 <p>EMLeditor functions are designed primarily for use by staff at the
 National Park Service for publication of data packages to DataStore.
@@ -322,7 +421,7 @@ contractor or partner organization)</li>
 NPS</li>
 </ol>
 <p>It’s probably a good idea to run</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/args.html" class="external-link">args</a></span><span class="op">(</span><span class="va">set_publisher</span><span class="op">)</span></span></code></pre></div>
 <p>to make sure you have all the arguments, especially those with
 defaults, properly specified.</p>
@@ -331,25 +430,17 @@ defaults, properly specified.</p>
 <h2 id="check-your-eml">Check your EML<a class="anchor" aria-label="anchor" href="#check-your-eml"></a>
 </h2>
 <p>It’s always a good idea to check your EML. Other than visually
-inspecting the .xml, file two good approaches are:</p>
+inspecting the .xml, file three good approaches are:</p>
 <ol style="list-style-type: decimal">
 <li>Check whether your EML is schema-valid:</li>
 </ol>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use the eml_validate function from the EML package:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Alternatively, use the eml validating tool in the DPchecker package.</span></span>
-<span><span class="co"># This performs the same checks with more intuitive feedback:</span></span>
-<span><span class="co"># First, write your EML to an xml file, following the file naming convention (ends with _metadata.xml)</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"mymetadata_metadata.xml"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#Next, use DPchecker package to test whether your EML is schema-valid:</span></span>
-<span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DPchecker/man/test_validate_schema.html" class="external-link">test_validate_schema</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Build a <em>mock-up</em> of a readme file:</li>
 </ol>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Outputs readme to the screen</span></span>
 <span><span class="fu"><a href="../reference/write_readme.html">write_readme</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span> </span>
 <span></span>
@@ -366,6 +457,29 @@ off in the <em>mock</em> readme, that’s a good indication that you may
 want to go back and fix the relevant portions of your EML.</p>
 <p><strong>do not upload your <em>mock</em> readme file to
 DataStore!</strong></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Run a series of NPS-specific checks on your metadata. These are the
+same checks that reviewers will likely run prior to publication. They
+are metadata-specific subset of the functions included in the <a href="https://nationalparkservice.github.io/DPchecker/" class="external-link">DPchecker</a>
+package.</li>
+</ol>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#If you have not already written your metadata back to .xml:</span></span>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#run checks on your metadata. You must tell the check_eml() function where your file is. It will default to the current working directory. There must be only one xml file in the directory.</span></span>
+<span></span>
+<span><span class="co">#If your metadata is in the current working directory:</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#to change to a new sub-directory:</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"my_new_directory"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#to change to a directory higher up in the hierarchy:</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#to move higher up in the hierarchy, then select a different subdirectory:</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">"a_different_sub_directory"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

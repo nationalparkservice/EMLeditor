@@ -1428,3 +1428,6 @@ set_int_rights <- function(eml_object,
 
   return(eml_object)
 }
+
+
+

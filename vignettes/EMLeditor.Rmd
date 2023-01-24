@@ -120,7 +120,11 @@ my_meta2 <- set_content_units(my_meta2, park_units)
 This is the unit responsible for generating the data package. It may be a single park (ROMO) or a network (ROMN). It may be identical to the units listed in the previous step, overlapping, or entirely different.
 
 ```{r prod_units, eval=FALSE}
+#a single proucing unit:
 my_meta2 <- set_producing_units(my_meta2, "ROMN")
+
+#for collaborative projects with multiple producing units:
+my_meta2 <- set_producing_units(my_meta2, c("ROMN", "GRYN")
 ```
 
 Great! You're done adding the essential NPS-specific metadata to your EML. There are only two quick steps left:
@@ -144,11 +148,64 @@ Assuming everything went smoothly and eml_validate returns 'TRUE', write your EM
 EML::write_eml(my_meta2, "mymetadatafilename_metadata.xml")
 ```
 
+# Additional Functions
+
+The Minimal Workflow section assumes that you have correctly used [EMLassemblyline](https://ediorg.github.io/EMLassemblyline/) to generate a high-quality EML document. In the event that you find issues with your EML or wish to correct portions of it, EMLeditor includes some functions that allow you to edit common EML errors without having to re-run EMLassemblyline.
+
+### Set the intellectual rights
+
+EMLassemblyine provides some attractive looking boilerplate for setting the intellectual rights. It looks reasonable and so is easy to just keep. However, NPS has some very specific regulations about what can and cannot be in the intellectualRights tag.  Use `set_int_rights()` to replace the text with NPS-approved text:
+
+1) If the data contains Controlled Unclassified Information (CUI), the intellectual rights must read:
+
+> *"This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited.”*
+
+2) If the data do not contain CUI, the default is the public domain. The intellectual rights must read:
+
+> *"This work is in the public domain. There is no copy right or license.”*
+
+3) If you need a license, for instance if you are working with a partner organization that requires a license, use [CC0](https://creativecommons.org/publicdomain/zero/1.0/):
+
+> *"The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."*
+
+```{r set_int_rights, eval=FALSE}
+
+mymetadata2<-set_int_rights(mymetadata,
+                            "This work is in the public domain. There is no copy right or license.")
+```
+
+### Edit the title
+
+If your title has changed (for instance, perhaps reviewers have suggested a title that you realize you prefer) or you find a typo in your title, you can update your title directly in EMLeditor using `set_title()`:
+
+```{r set_title, eval=FALSE}
+#give my data package a new title:
+mymetadata2<-set_title(mymetadata, "This is my new Title")
+
+#check the new title:
+get_title(mymetadata2)
+```
+
+### Edit the abstract
+Because your abstract will be prominently displayed on the DataStore landing page and will be forwarded to DataCite for DOI assignment and data.gov (among other places) to enhance data discoverability and reuse, it is important that your abstract not contain errors. Typographical errors, particularly non-ascii characters are common problems in the abstract of EML documents. The `set_abstract()` function includes a number of routines to minimize errors introduced by word processors or non-UTF8 encoding (we are pretty sure you don't want that "&amp13;" in your abstract) but it cannot anticipate all potential eventualities. You are therefore encouraged to construct your abstract in Notepad or other text editor (**NOT** a word processor such as Microsoft Word). This is a relatively simple function and does not readily support multiple paragraphs, bullet points, or the like.
+
+```{r set_abstract, eval=FALSE}
+#replace your abstract:
+mymetadata2<-set_abstract(mymetadata, "This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to.")
+
+#check the new abstract:
+get_abstract(mymetadata2)
+```
+
+Check back here for more handy functions in the future. If there's something you'd like to see added, please let us know by posting an [Issue](https://github.com/nationalparkservice/EMLeditor/issues) on github.
+
+Don't forget to validate your updated EML file and to write it back to .xml after using EMLeditor to make edits.
+
 # Scripting with EMLeditor
 
 The interactive feedback and prompts provided by EMLeditor functions can be turned off to enable efficient scripting. All "set_" class functions have a parameter, `force` that defaults to `force = FALSE`. To turn off the feedback and prompts, set `force = TRUE` when calling each function. Be careful using the functions in this way as they may - or may not - make changes to your metadata and you will not be advised of any change or lack of change. Inspect your final product carefully.
 
-# non-NPS Users
+# Custom Publisher/Producer
 
 EMLeditor functions are designed primarily for use by staff at the National Park Service for publication of data packages to DataStore. Consequently, all "set_" class functions silently perform two operations by default:
 
@@ -174,7 +231,7 @@ to make sure you have all the arguments, especially those with defaults, properl
 
 # Check your EML
 
-It's always a good idea to check your EML. Other than visually inspecting the .xml, file two good approaches are:
+It's always a good idea to check your EML. Other than visually inspecting the .xml, file three good approaches are:
 
 1) Check whether your EML is schema-valid:
 
@@ -182,13 +239,6 @@ It's always a good idea to check your EML. Other than visually inspecting the .x
 # Use the eml_validate function from the EML package:
 EML::eml_validate(mymetadata)
 
-# Alternatively, use the eml validating tool in the DPchecker package.
-# This performs the same checks with more intuitive feedback:
-# First, write your EML to an xml file, following the file naming convention (ends with _metadata.xml)
-EML::write_eml(mymetadata, "mymetadata_metadata.xml")
-
-#Next, use DPchecker package to test whether your EML is schema-valid:
-DPchecker::test_validate_schema()
 ```
 
 2) Build a _mock-up_ of a readme file:
@@ -204,3 +254,26 @@ write_readme(mymetadata, "readme.txt")
 The _mock_ readme file is an approximation of the readme file that will automatically be generated by DataStore upon upload and included in your data package. It's a good, human readable, way to check whether many critical elements of your EML are properly formatted. Although the actual readme on DataStore may differ slightly, if the _mock_ readme looks good, that's a good indication that the readme on DataStore will too. On the other hand, if there is something off in the _mock_ readme, that's a good indication that you may want to go back and fix the relevant portions of your EML.
 
 **do not upload your _mock_ readme file to DataStore!**
+
+3) Run a series of NPS-specific checks on your metadata. These are the same checks that reviewers will likely run prior to publication. They are metadata-specific subset of the functions included in the [DPchecker](https://nationalparkservice.github.io/DPchecker/) package.
+
+```{r eml_check, eval=FALSE}
+#If you have not already written your metadata back to .xml:
+EML::write_eml(mymeta, "my_metadata.xml")
+
+#run checks on your metadata. You must tell the check_eml() function where your file is. It will default to the current working directory. There must be only one xml file in the directory.
+
+#If your metadata is in the current working directory:
+check_eml()
+
+#to change to a new sub-directory:
+check_eml(directory=here::here("my_new_directory"))
+
+#to change to a directory higher up in the hierarchy:
+check_eml(directory=here::here(".."))
+
+#to move higher up in the hierarchy, then select a different subdirectory:
+check_eml(directory=here::here("..", "a_different_sub_directory"))
+```
+
+
