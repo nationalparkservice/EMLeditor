@@ -12,7 +12,7 @@ write_readme(eml_object, outfile = "")
 \item{outfile}{is the name of the file you want to write, typically *.txt.}
 }
 \value{
-a character sting in readable format (saved to the given outfile)
+a character string in readable format (saved to the given outfile)
 }
 \description{
 write_readme writes a readme file based on the current metadata

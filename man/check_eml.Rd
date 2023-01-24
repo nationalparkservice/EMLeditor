@@ -4,13 +4,16 @@
 \alias{check_eml}
 \title{Run checks on EML}
 \usage{
-check_eml(directory = here::here())
+check_eml(path = here::here())
 }
 \arguments{
-\item{directory}{path to the metadata file. Defaults to the current working directory. Make sure there is only one .xml file in the directory.}
+\item{path}{to the metadata file. Defaults to the current working directory. Make sure there is only one .xml file in the directory.}
+}
+\value{
+message
 }
 \description{
-Runs a series of checks on EML metadata based on functions in \verb{r DPchecker::run_congruence_checks()}.
+Runs a series of checks on EML metadata based on functions in DPchecker's run_congruence_checks()`.
 }
 \examples{
 \dontrun{

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,30 @@
       <small>Source: <a href="https://github.com/nationalparkservice/EMLeditor/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0.1" id="emleditor-v0101-whitebark-pine">EMLeditor v0.1.0.1 “Whitebark Pine”<a class="anchor" aria-label="anchor" href="#emleditor-v0101-whitebark-pine"></a></h2>
+<div class="section level3">
+<h3 id="january-0-1-0-1">January 24, 2023<a class="anchor" aria-label="anchor" href="#january-0-1-0-1"></a></h3>
+<div class="section level4">
+<h4 id="summary-0-1-0-1">Summary<a class="anchor" aria-label="anchor" href="#summary-0-1-0-1"></a></h4>
+<p>Added <code><a href="../reference/check_eml.html">check_eml()</a></code> function.</p>
+</div>
+<div class="section level4">
+<h4 id="major-changes-0-1-0-1">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-1"></a></h4>
+<p><code><a href="../reference/check_eml.html">check_eml()</a></code> function is a wrapper that calls <code><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code> with <code>check_metadata-only = TRUE</code>. To run all the metadata-specific tests that will be run during a congruence test.</p>
+</div>
+<div class="section level4">
+<h4 id="minor-changes-0-1-0-1">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-1-0-1"></a></h4>
+<ul><li>specify ISO 639-2B in <code><a href="../reference/set_language.html">set_language()</a></code>
+</li>
+<li>added documentation for <code><a href="../reference/check_eml.html">check_eml()</a></code>
+</li>
+<li>Changed Non-NPS user section to more apt, “Custom Publisher/Producer”</li>
+<li>added a “Additional Functions” section in addition to the Minimal Workflow that outlines functions like <code><a href="../reference/set_title.html">set_title()</a></code>, <code><a href="../reference/set_abstract.html">set_abstract()</a></code> and <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code>.</li>
+<li>moved <code><a href="../reference/write_readme.html">write_readme()</a></code> and the new <code><a href="../reference/check_eml.html">check_eml()</a></code> to the file check_eml.R.</li>
+</ul><hr></div>
+</div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0.0" id="emleditor-v0100-electric-peak">EMLeditor v0.1.0.0, “Electric Peak”<a class="anchor" aria-label="anchor" href="#emleditor-v0100-electric-peak"></a></h2>
 <div class="section level3">
