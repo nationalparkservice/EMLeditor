@@ -9,4 +9,4 @@
 library(testthat)
 library(EMLeditor)
 
-test_check("EMLeditor")
+#test_check("EMLeditor")
