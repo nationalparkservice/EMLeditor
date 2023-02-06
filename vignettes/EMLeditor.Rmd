@@ -95,7 +95,7 @@ If you are producing (or plan to produce) a DRR, add links to the DRR describing
 Similar to when you added the data package DOI, you will need the DOI for the DRR you are drafting as well as the DRR's Title. Again, go to [DataStore](https://irma.nps.gov/DataStore) and initiate a draft DRR, including a title. For the purposes of the data package, there is no need to populate any other fields. At this point, you do not need to activate the DRR reference and, while a DOI has been reserved for your DRR, it will not be activated until after publication so that you have plenty of time to construct the DRR.
 
 ```{r drr_doi, eval=FALSE}
-my_meta2 <- set_drr_doi(my_meta2, 7654321, "DRR Title")
+my_meta2 <- set_drr(my_meta2, 7654321, "DRR Title")
 ```
 
 ### Set the language
