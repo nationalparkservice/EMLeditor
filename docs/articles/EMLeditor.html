@@ -8,8 +8,8 @@
 <meta name="description" content="EMLeditor">
 <title>EMLeditor • EMLeditor</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="EMLeditor">
 <meta property="og:description" content="EMLeditor">
@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,12 +89,12 @@ using:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#install the NPSdataverse:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RobLBaker/NPSdataverse" class="external-link">NPSdataverse</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#individual install:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"EML"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/EML/" class="external-link">EML</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nationalparkservice/EMLeditor" class="external-link">EMLeditor</a></span><span class="op">)</span></span></code></pre></div>
@@ -144,7 +144,7 @@ scripting with EMLeditor</a>.</p>
 <h4 id="import-your-metadata-into-r">Import your metadata into R<a class="anchor" aria-label="anchor" href="#import-your-metadata-into-r"></a>
 </h4>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"mymetadata_metdata.xml"</span>, from<span class="op">=</span><span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"mymetadata_metdata.xml"</span>, from<span class="op">=</span><span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-information-about-cui">Add information about CUI<a class="anchor" aria-label="anchor" href="#add-information-about-cui"></a>
@@ -152,15 +152,10 @@ scripting with EMLeditor</a>.</p>
 <p>Add information about your Controlled Unclassified Information (CUI).
 Because it is important to indicate not only what type of CUI there is,
 but when (and why) there is not CUI, <strong>you must do this even if
-your data package does not contain CUI</strong>. Choose from one of
-seven CUI codes. These are:</p>
+your data package does not contain CUI</strong>. Choose from one of five
+CUI codes. These are:</p>
 <ul>
-<li>PUBFUL - Does NOT contain CUI. The original data contained no CUI.
-No data were obscured or altered to generate the data package.</li>
-<li>PUBVER - Does NOT contain CUI. The original data contained CUI, but
-in this data package CUI have been obscured so that it no longer
-contains CUI.</li>
-<li>NPSONLY - Contains CUI. For NPS access only.</li>
+<li>PUBLIC - Does NOT contain CUI.</li>
 <li>FED ONLY - Contains CUI. Only federal employees should have access
 (similar to “internal only” in DataStore).</li>
 <li>FEDCON - Contains CUI. Only federal employees and federal
@@ -171,11 +166,62 @@ individuals (where and how to list those individuals TBD)</li>
 <li>NOCON - Contains CUI. Federal, state, local, or tribal employees may
 have access, but contractors cannot.</li>
 </ul>
-<p>The first three codes are NPS specific. More information about the
-remaining four codes can be found on the <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link">National
+<p>The first code is NPS specific. More information about the remaining
+four codes can be found on the <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link">National
 Archives website</a>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_cui.html">set_cui</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"PUBFUL"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_cui.html">set_cui</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"PUBLIC"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="set-the-intellectual-rights">Set the intellectual rights<a class="anchor" aria-label="anchor" href="#set-the-intellectual-rights"></a>
+</h4>
+<p>EMLassemblyine and ezEML provide some attractive looking boilerplate
+for setting the intellectual rights. It looks reasonable and so is easy
+to just keep. However, NPS has some specific regulations about what can
+and cannot be in the intellectualRights tag. Use
+<code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> to replace the text with NPS-approved
+text. Note: You must first add the CUI dissemination code using
+<code><a href="../reference/set_cui.html">set_cui()</a></code> as the dissemination code and license must agree.
+That is, you cannot give a data package with a PUBLIC dissemination code
+a “restricted” license (and vise versa: a restricted data package that
+contains CUI cannot have a public domain or CC0 license).</p>
+<ol style="list-style-type: decimal">
+<li>“restricted”: If the data contains Controlled Unclassified
+Information (CUI), the intellectual rights must read:</li>
+</ol>
+<blockquote>
+<p><em>“This product has been determined to contain Controlled
+Unclassified Information (CUI) by the National Park Service, and is
+intended for internal use only. It is not published under an open
+license. Unauthorized access, use, and distribution are
+prohibited.”</em></p>
+</blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>“public”: If the data do not contain CUI, the default is the public
+domain. The intellectual rights must read:</li>
+</ol>
+<blockquote>
+<p><em>“This work is in the public domain. There is no copyright or
+license.”</em></p>
+</blockquote>
+<ol start="3" style="list-style-type: decimal">
+<li>“CC0”: If you need a license, for instance if you are working with a
+partner organization that requires a license, use <a href="https://creativecommons.org/publicdomain/zero/1.0/" class="external-link">CC0</a>:</li>
+</ol>
+<blockquote>
+<p><em>“The person who associated a work with this deed has dedicated
+the work to the public domain by waiving all of his or her rights to the
+work worldwide under copyright law, including all related and
+neighboring rights, to the extent allowed by law. You can copy, modify,
+distribute and perform the work, even for commercial purposes, all
+without asking permission.”</em></p>
+</blockquote>
+<p>The <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> function will also put the name of
+your license in a <licensename> field in EML for DataStore
+harvesting.</licensename></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># choose from "restricted", "public" and "CC0", see above:</span></span>
+<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"public"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-a-data-package-doi">Add a data package DOI<a class="anchor" aria-label="anchor" href="#add-a-data-package-doi"></a>
@@ -188,7 +234,7 @@ but it is not activated until after your data package is published.</p>
 <p>There is no need to fill in any additional fields in DataStore at
 this point - many of them will automatically be populated based on your
 metadata at upload.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_doi.html">set_doi</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">1234567</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -203,8 +249,8 @@ no need to populate any other fields. At this point, you do not need to
 activate the DRR reference and, while a DOI has been reserved for your
 DRR, it will not be activated until after publication so that you have
 plenty of time to construct the DRR.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">set_drr_doi</span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">7654321</span>, <span class="st">"DRR Title"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_drr.html">set_drr</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">7654321</span>, <span class="st">"DRR Title"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="set-the-language">Set the language<a class="anchor" aria-label="anchor" href="#set-the-language"></a>
@@ -216,7 +262,7 @@ list of available languages</a> is available from the Library of
 Congress. Please use the “English Name of Language” as an input. The
 function will then convert your input to the appropriate 3-character ISO
 639-2 code.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_language.html">set_language</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"English"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -231,7 +277,7 @@ corresponding to bounding boxes for each park unit listed will
 automatically be generated and inserted into the metadata. Individual
 park units will be more informative than the bounding box for the entire
 network.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">park_units</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ROMO"</span>, <span class="st">"GRSD"</span>, <span class="st">"YELL"</span><span class="op">)</span></span>
 <span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_content_units.html">set_content_units</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="va">park_units</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -242,11 +288,11 @@ network.</p>
 be a single park (ROMO) or a network (ROMN). It may be identical to the
 units listed in the previous step, overlapping, or entirely
 different.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#a single proucing unit:</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="st">"ROMN"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#for collaborative projects with multiple producing units:</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="fu">c</span>(<span class="st">"ROMN"</span>, <span class="st">"GRYN"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#a single proucing unit:</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="st">"ROMN"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#for collaborative projects with multiple producing units:</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="fu">c</span>(<span class="st">"ROMN"</span>, <span class="st">"GRYN"</span>)</span></code></pre></div>
 <p>Great! You’re done adding the essential NPS-specific metadata to your
 EML. There are only two quick steps left:</p>
 </div>
@@ -254,8 +300,8 @@ EML. There are only two quick steps left:</p>
 <h4 id="validate-your-eml">Validate your EML<a class="anchor" aria-label="anchor" href="#validate-your-eml"></a>
 </h4>
 <p>OK, this first one might take a tick to run:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 <p>If eml_validate returns errors, inspect them and fix them. Feel free
 to contribute an <a href="https://github.com/nationalparkservice/EMLeditor/issues" class="external-link">issue</a>,
 or email <a href="mailto:robert_baker@nps.gov?subject=EMLeditor%20issues">Rob
@@ -270,8 +316,8 @@ files to DataStore. Keep in mind that the file name should end in
 _metadata.xml. Also, when uploading your data package (data files and
 metadata) to DataStore, make sure to upload it to the correct draft
 reference!</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -282,51 +328,6 @@ generate a high-quality EML document. In the event that you find issues
 with your EML or wish to correct portions of it, EMLeditor includes some
 functions that allow you to edit common EML errors without having to
 re-run EMLassemblyline.</p>
-<div class="section level4">
-<h4 id="set-the-intellectual-rights">Set the intellectual rights<a class="anchor" aria-label="anchor" href="#set-the-intellectual-rights"></a>
-</h4>
-<p>EMLassemblyine provides some attractive looking boilerplate for
-setting the intellectual rights. It looks reasonable and so is easy to
-just keep. However, NPS has some very specific regulations about what
-can and cannot be in the intellectualRights tag. Use
-<code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> to replace the text with NPS-approved
-text:</p>
-<ol style="list-style-type: decimal">
-<li>If the data contains Controlled Unclassified Information (CUI), the
-intellectual rights must read:</li>
-</ol>
-<blockquote>
-<p><em>“This product has been determined to contain Controlled
-Unclassified Information (CUI) by the National Park Service, and is
-intended for internal use only. It is not published under an open
-license. Unauthorized access, use, and distribution are
-prohibited.”</em></p>
-</blockquote>
-<ol start="2" style="list-style-type: decimal">
-<li>If the data do not contain CUI, the default is the public domain.
-The intellectual rights must read:</li>
-</ol>
-<blockquote>
-<p><em>“This work is in the public domain. There is no copy right or
-license.”</em></p>
-</blockquote>
-<ol start="3" style="list-style-type: decimal">
-<li>If you need a license, for instance if you are working with a
-partner organization that requires a license, use <a href="https://creativecommons.org/publicdomain/zero/1.0/" class="external-link">CC0</a>:</li>
-</ol>
-<blockquote>
-<p><em>“The person who associated a work with this deed has dedicated
-the work to the public domain by waiving all of his or her rights to the
-work worldwide under copyright law, including all related and
-neighboring rights, to the extent allowed by law. You can copy, modify,
-distribute and perform the work, even for commercial purposes, all
-without asking permission.”</em></p>
-</blockquote>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">mymetadata</span>,</span>
-<span>                            <span class="st">"This work is in the public domain. There is no copy right or license."</span><span class="op">)</span></span></code></pre></div>
-</div>
 <div class="section level4">
 <h4 id="edit-the-title">Edit the title<a class="anchor" aria-label="anchor" href="#edit-the-title"></a>
 </h4>
@@ -436,7 +437,7 @@ inspecting the .xml, file three good approaches are:</p>
 </ol>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use the eml_validate function from the EML package:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Build a <em>mock-up</em> of a readme file:</li>
 </ol>
@@ -465,7 +466,7 @@ package.</li>
 </ol>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#If you have not already written your metadata back to .xml:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#run checks on your metadata. You must tell the check_eml() function where your file is. It will default to the current working directory. There must be only one xml file in the directory.</span></span>
 <span></span>
@@ -473,13 +474,13 @@ package.</li>
 <span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#to change to a new sub-directory:</span></span>
-<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"my_new_directory"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"my_new_directory"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#to change to a directory higher up in the hierarchy:</span></span>
-<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#to move higher up in the hierarchy, then select a different subdirectory:</span></span>
-<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">"a_different_sub_directory"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">"a_different_sub_directory"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

@@ -22,11 +22,11 @@ an EML-formatted R object
 set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore.
 }
 \details{
-Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
+Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Link:". Required child elements (bounding coordinates) are auto populated to produce a rectangle that encompasses the park unit in question. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
 }
 \examples{
 \dontrun{
-park_units <- ("ROMO, GRSD")
+park_units <- c("ROMO", "YELL")
 set_content_units(eml_object, park_units)
 }
 }
