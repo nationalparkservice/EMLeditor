@@ -430,9 +430,7 @@ set_content_units <- function(eml_object, park_units,
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 #' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
-#' PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
-#' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
-#' NPSONLY - Contains CUI. For NPS access only.
+#' PUBLIC - Does NOT contain CUI.
 
 #' @returns an EML-formatted R object
 #' @export
@@ -440,7 +438,7 @@ set_content_units <- function(eml_object, park_units,
 #' \dontrun{
 #' set_cui(eml_object, "PUBFUL")
 #' }
-set_cui <- function(eml_object, cui_code = c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), force = FALSE, NPS = TRUE) {
+set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), force = FALSE, NPS = TRUE) {
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code <- match.arg(cui_code)
 
