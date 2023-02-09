@@ -1375,11 +1375,13 @@ set_int_rights <- function(eml_object,
         if(cui3 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
+            eml_object$dataset$licensed$licenseName <- "CC0 1.0 Universal"
             cat("Your license has been set to:", crayon::blue$bold("CC0"))
           }
           if(license == "public"){
             eml_object$dataset$intellectualRights <- pub_domain
-            cat("Your license has been set to:", crayon::blue$bold("public domain"))
+            eml_object$dataset$licensed$licenseName <- "Public Domain"
+            cat("Your license has been set to:", crayon::blue$bold("Public Domain"))
           }
         }
         # warn user license not set, CUI and license don't agree:
@@ -1399,8 +1401,9 @@ set_int_rights <- function(eml_object,
         }
         if(cui3 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
+          eml_object$dataset$licensed$licenseName <- "No License/Controlled Unclassified Information"
           cat("Your license has been set to ",
-              crayon::bold$blue("restricted"), ".", sep="")
+              crayon::bold$blue("Restricted"), ".", sep="")
         }
       }
     }
