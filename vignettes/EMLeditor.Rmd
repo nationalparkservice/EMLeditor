@@ -162,7 +162,7 @@ EMLassemblyine provides some attractive looking boilerplate for setting the inte
 
 2) "public": If the data do not contain CUI, the default is the public domain. The intellectual rights must read:
 
-> *"This work is in the public domain. There is no copy right or license.”*
+> *"This work is in the public domain. There is no copyright or license.”*
 
 3) "CC0": If you need a license, for instance if you are working with a partner organization that requires a license, use [CC0](https://creativecommons.org/publicdomain/zero/1.0/):
 
