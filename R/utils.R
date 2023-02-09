@@ -129,7 +129,7 @@
 #' }
 .get_unit_polygon <- function(unit_code) {
   # get geography from NPS Rest Services
-  units_url <- paste0("https://irmaservices.nps.gov/v5/rest/unit/", unit_code, "/geography")
+  units_url <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", unit_code, "/geography")
   xml <- httr::content(httr::GET(units_url))
 
   # Create spatial feature from polygon info returned from NPS
