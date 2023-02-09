@@ -1372,7 +1372,7 @@ set_int_rights <- function(eml_object,
       # make sure CUI and license agree:
       if(license == "CC0" || license == "public"){
         #set appropriate license:
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
             cat("Your license has been set to:", crayon::blue$bold("CC0"))
@@ -1381,26 +1381,26 @@ set_int_rights <- function(eml_object,
             eml_object$dataset$intellectualRights <- pub_domain
             cat("Your license has been set to:", crayon::blue$bold("public domain"))
           }
-
         }
         # warn user license not set, CUI and license don't agree:
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
           cat("Your CUI is set to ", crayon::blue$bold(cui3), ".")
           writeLines(paste0("To use a CC0 or public domain license",
-                       " your CUI must be either PUBFUL or PUBVER."))
+                       " your CUI must be PUBLIC."))
           cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
         }
       }
       if(license == "restricted"){
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           cat("Your CUI is set to ", crayon::blue$bold(cui3), ".\n", sep="")
-          writeLines(paste0("To use a restricted license, your CUI must NOT be set",
-                       " to PUBFUL or PUBVER."))
+          writeLines(paste0("To use a restricted license, ",
+                            "your CUI must NOT be set to PUBLIC."))
           cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
         }
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
-          cat("Your license has been set to ", crayon::bold$blue("restricted"), ".", sep="")
+          cat("Your license has been set to ",
+              crayon::bold$blue("restricted"), ".", sep="")
         }
       }
     }
@@ -1420,7 +1420,7 @@ set_int_rights <- function(eml_object,
       cui3<-cui3$CUI
 
       if(license == "CC0" || license == "public"){
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
           }
@@ -1428,15 +1428,15 @@ set_int_rights <- function(eml_object,
             eml_object$dataset$intellectualRights <- pub_domain
           }
         }
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
          return()
         }
       }
       if(license == "restricted"){
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           return()
         }
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
         }
       }
