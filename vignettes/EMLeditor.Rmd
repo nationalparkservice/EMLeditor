@@ -62,20 +62,41 @@ my_metadata <- EML::read_eml("mymetadata_metdata.xml", from="xml")
 
 ### Add information about CUI
 
-Add information about your Controlled Unclassified Information (CUI). Because it is important to indicate not only what type of CUI there is, but when (and why) there is not CUI, **you must do this even if your data package does not contain CUI**. Choose from one of seven CUI codes. These are:
+Add information about your Controlled Unclassified Information (CUI). Because it is important to indicate not only what type of CUI there is, but when (and why) there is not CUI, **you must do this even if your data package does not contain CUI**. Choose from one of five CUI codes. These are:
 
-  * PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
-  * PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
-  * NPSONLY - Contains CUI. For NPS access only.
+  * PUBLIC - Does NOT contain CUI.
   * FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore).
   * FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
   * DL ONLY - Contains CUI. Should only be available to a named list of individuals (where and how to list those individuals TBD)
   * NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
   
-The first three codes are NPS specific. More information about the remaining four codes can be found on the [National Archives website](https://www.archives.gov/cui/registry/limited-dissemination).
+The first code is NPS specific. More information about the remaining four codes can be found on the [National Archives website](https://www.archives.gov/cui/registry/limited-dissemination).
 
 ```{r cui, eval=FALSE}
-my_meta2 <- set_cui(my_metadata, "PUBFUL")
+my_meta2 <- set_cui(my_metadata, "PUBLIC")
+```
+
+### Set the intellectual rights
+
+EMLassemblyine and ezEML provide some attractive looking boilerplate for setting the intellectual rights. It looks reasonable and so is easy to just keep. However, NPS has some specific regulations about what can and cannot be in the intellectualRights tag.  Use `set_int_rights()` to replace the text with NPS-approved text. Note: You must first add the CUI dissemination code using `set_cui()` as the dissemination code and license must agree. That is, you cannot give a data package with a PUBLIC dissemination code a "restricted" license (and vise versa: a restricted data package that contains CUI cannot have a public domain or CC0 license).
+
+1) "restricted": If the data contains Controlled Unclassified Information (CUI), the intellectual rights must read:
+
+> *"This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited.”*
+
+2) "public": If the data do not contain CUI, the default is the public domain. The intellectual rights must read:
+
+> *"This work is in the public domain. There is no copyright or license.”*
+
+3) "CC0": If you need a license, for instance if you are working with a partner organization that requires a license, use [CC0](https://creativecommons.org/publicdomain/zero/1.0/):
+
+> *"The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."*
+
+The `set_int_rights()` function will also put the name of your license in a <licenseName> field in EML for DataStore harvesting.
+
+```{r set_int_rights, eval=FALSE}
+# choose from "restricted", "public" and "CC0", see above:
+mymetadata2<-set_int_rights(mymetadata, "public")
 ```
 
 ### Add a data package DOI
@@ -88,6 +109,7 @@ There is no need to fill in any additional fields in DataStore at this point - m
 my_meta2 <- set_doi(my_meta2, 1234567)
 ```
 
+
 ### Add information about the DRR (optional)
 
 If you are producing (or plan to produce) a DRR, add links to the DRR describing the data package. 
@@ -95,7 +117,7 @@ If you are producing (or plan to produce) a DRR, add links to the DRR describing
 Similar to when you added the data package DOI, you will need the DOI for the DRR you are drafting as well as the DRR's Title. Again, go to [DataStore](https://irma.nps.gov/DataStore) and initiate a draft DRR, including a title. For the purposes of the data package, there is no need to populate any other fields. At this point, you do not need to activate the DRR reference and, while a DOI has been reserved for your DRR, it will not be activated until after publication so that you have plenty of time to construct the DRR.
 
 ```{r drr_doi, eval=FALSE}
-my_meta2 <- set_drr_doi(my_meta2, 7654321, "DRR Title")
+my_meta2 <- set_drr(my_meta2, 7654321, "DRR Title")
 ```
 
 ### Set the language
@@ -151,28 +173,6 @@ EML::write_eml(my_meta2, "mymetadatafilename_metadata.xml")
 # Additional Functions
 
 The Minimal Workflow section assumes that you have correctly used [EMLassemblyline](https://ediorg.github.io/EMLassemblyline/) to generate a high-quality EML document. In the event that you find issues with your EML or wish to correct portions of it, EMLeditor includes some functions that allow you to edit common EML errors without having to re-run EMLassemblyline.
-
-### Set the intellectual rights
-
-EMLassemblyine provides some attractive looking boilerplate for setting the intellectual rights. It looks reasonable and so is easy to just keep. However, NPS has some very specific regulations about what can and cannot be in the intellectualRights tag.  Use `set_int_rights()` to replace the text with NPS-approved text:
-
-1) If the data contains Controlled Unclassified Information (CUI), the intellectual rights must read:
-
-> *"This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited.”*
-
-2) If the data do not contain CUI, the default is the public domain. The intellectual rights must read:
-
-> *"This work is in the public domain. There is no copy right or license.”*
-
-3) If you need a license, for instance if you are working with a partner organization that requires a license, use [CC0](https://creativecommons.org/publicdomain/zero/1.0/):
-
-> *"The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."*
-
-```{r set_int_rights, eval=FALSE}
-
-mymetadata2<-set_int_rights(mymetadata,
-                            "This work is in the public domain. There is no copy right or license.")
-```
 
 ### Edit the title
 

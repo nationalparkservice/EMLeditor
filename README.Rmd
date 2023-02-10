@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
 
 
 # EMLeditor 
-##### v0.1.0.0
-##### "Electric Peak"
+##### v0.1.0.2
+##### "Devils Tower"
 
 
 <!-- badges: start -->

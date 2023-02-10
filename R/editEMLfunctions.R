@@ -162,7 +162,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 #'
 #' @description set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore.
 #'
-#' @details Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Links:". Required child elements (bounding coordinates) are auto populated. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
+#' @details Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Link:". Required child elements (bounding coordinates) are auto populated to produce a rectangle that encompasses the park unit in question. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
 #'
 #' @inheritParams set_title
 #'
@@ -172,12 +172,14 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 #' @export
 #' @examples
 #' \dontrun{
-#' park_units <- ("ROMO, GRSD")
+#' park_units <- c("ROMO", "YELL")
 #' set_content_units(eml_object, park_units)
 #' }
-set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE) {
+set_content_units <- function(eml_object, park_units,
+                              force = FALSE,
+                              NPS = TRUE) {
   # add text to indicate that these are park unit connections.
-  units <- paste0("NPS Content Unit Links: ", park_units)
+  units <- paste0("NPS Content Unit Link: ", park_units)
 
   unit_list <- NULL
   for (i in seq_along(park_units)) {
@@ -206,26 +208,27 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
   # Are there content unit links already specified?
   exist_units <- NULL
   for (i in seq_along(doc)) {
-    if (suppressWarnings(stringr::str_detect(doc[i], "NPS Content Unit Link")) == TRUE) {
-      # seq<-append(seq, i)
-      exist_units <- append(exist_units, doc[[i]]$geographicDescription)
+    myMap <- purrr::map(doc, 1)[[i]]
+    if (suppressWarnings(stringr::str_detect(myMap,"NPS Content Unit Link")) == TRUE) {
+      exist_units <- append(exist_units, myMap)
     }
   }
-  # ineractive route:
+  # interactive route:
   if (force == FALSE) {
     # if there is no content unit links add it directly to eml_object
     if (is.null(exist_units)) {
       if (is.null(doc)) {
         eml_object$dataset$coverage$geographicCoverage <- unit_list
       } else {
-        if (length(doc) > 1) {
+        #if there are multiple existing geographic coverages:
+        if (length(seq_along(doc[[1]])) > 1) {
           # combine new and old geo coverages (new always at the top!)
           doc <- append(unit_list, doc)
           # write over the existing geographic coverage
           eml_object$dataset$coverage$geographicCoverage <- doc
         }
         # if there is only one geo coverage:
-        if (length(doc) == 1) {
+        if (length(seq_along(doc[[1]])) == 1) {
           geocov2 <- EML::eml$geographicCoverage(
             geographicDescription =
               doc$geographicDescription,
@@ -233,14 +236,18 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
               doc$boundingCoordinates
           )
           # add park unit connections and existing geo coverage (park units always on top!)
-          eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
+          unit_list<-append(unit_list, list(geocov2))
+          #insert into EML:
+          eml_object$dataset$coverage$geographicCoverage <- unit_list
+          #eml_object$dataset$coverage$geographicCoverage <- list(unit_list, (geocov2))
         }
       }
       cat("No previous Content Unit Links Detected\n")
-      cat("Your Content Unit Links have been set to: ",
-        crayon::blue$bold(park_units), ".",
+      cat("Your Content Unit Links have been set to:\n")
+      for(i in seq_along(park_units)){
+        cat(crayon::blue$bold(park_units[i]), "\n")
         sep = ""
-      )
+      }
     }
 
     # if there already content unit links:
@@ -256,28 +263,28 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
       }
       # Add to existing content unit links:
       if (var1 == 2) {
-        if (length(doc) > 1) {
+        #if there are multiple pre-existing geographic coverages:
+        if (length(seq_along(doc[[1]])) > 1) {
           # combine new and old geo coverages (new always at the top!)
           doc <- append(unit_list, doc)
-
           # write over the existing geographic coverage
           eml_object$dataset$coverage$geographicCoverage <- doc
-        }
+          }
 
         # if there is only one geo coverage:
-        if (length(doc) == 1) {
+        if (length(seq_along(doc[[1]])) == 1) {
           geocov2 <- EML::eml$geographicCoverage(
             geographicDescription =
               doc$geographicDescription,
             boundingCoordinates =
               doc$boundingCoordinates
           )
-
           # add park unit connections and existing geo coverage (park units always on top!)
-          eml_object$dataset$coverage$geographicCoverage <- list(geocov, geocov2)
+          unit_list<-append(unit_list, list(geocov2))
+          #insert into EML:
+          eml_object$dataset$coverage$geographicCoverage <- unit_list
         }
-
-        # get new geo units:
+        # Report on newly set content units; first get the new content units:
         newgeo <- eml_object$dataset$coverage$geographicCoverage
         exist_units <- NULL
         for (i in seq_along(newgeo)) {
@@ -288,7 +295,7 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
             exist_units <- append(exist_units, newgeo[[i]]$geographicDescription)
           }
         }
-        # return current/new units:
+        # print current/new units:
         cat("Your metadata now has the following Content Unit Links Specified:\n")
         for (i in seq_along(exist_units)) {
           cat(crayon::blue$bold(exist_units[i]), "\n")
@@ -297,10 +304,18 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
 
       # replace existing content unit links:
       if (var1 == 3) {
+
+        #if there is only one item in geoCov, it is not nested as deeply as when there are multiple. Renest single items so that all geoCov are at the same level of nesting:
+        if(!is.null(names(doc))){
+          doc <- list(doc)
+        }
+
+        #get all geographic coverage that is NOT content unit links:
         no_units <- NULL
         for (i in seq_along(doc)) {
+          myMap2 <- purrr::map(doc, 1)[[i]]
           if (suppressWarnings(stringr::str_detect(
-            doc[i],
+            myMap2,
             "NPS Content Unit Link"
           )) == FALSE) {
             no_units <- append(no_units, doc[i])
@@ -310,15 +325,12 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
         if (is.null(no_units)) {
           eml_object$dataset$coverage$geographicCoverage <- unit_list
         }
+        #if there are geographic units other than content units, add to those:
         if (!is.null(no_units)) {
-          if (length(no_units) == 1) {
-            geocov <- EML::eml$geographicCoverage(
-              geographicDescription =
-                doc[[1]]$geographicDescription,
-              boundingCoordinates =
-                doc[[1]]$boundingCoordinates
-            )
-            eml_Object$dataset$coverage$geographicCoverage <- list(unit_list, no_units)
+          #if there is only one non-content unit geographic coverage element:
+          unit_list<-append(unit_list, no_units)
+          #insert into EML:
+          eml_object$dataset$coverage$geographicCoverage <- unit_list
           }
           if (length(no_units) > 1) {
             my_list <- append(unit_list, no_units)
@@ -347,32 +359,46 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
         }
       }
     }
-  }
 
   # scripting route
   if (force == TRUE) {
-    no_units <- NULL
-    for (i in seq_along(doc)) {
-      if (suppressWarnings(stringr::str_detect(
-        doc[i],
-        "NPS Content Unit Link"
-      )) == FALSE) {
-        no_units <- append(no_units, doc[i])
+    # if the only geo unit was not a previous connection, add connections:
+    if (is.null(exist_units)) {
+      #if no geographic coverage at all:
+      if (is.null(doc)) {
+        eml_object$dataset$coverage$geographicCoverage <- unit_list
+      }
+      if (!is.null(doc)){
+        unit_list <- append(unit_list, doc)
+        eml_object$dataset$coverage$geographicCoverage <- unit_list
       }
     }
-    # if the only geo unit was a previous connection, replace it:
-    if (is.null(no_units)) {
-      eml_object$dataset$coverage$geographicCoverage <- unit_list
-    }
-    if (!is.null(no_units)) {
-      if (length(no_units) == 1) {
-        geocov <- EML::eml$geographicCoverage(
-          geographicDescription =
-            doc[[1]]$geographicDescription,
-          boundingCoordinates =
-            doc[[1]]$boundingCoordinates
-        )
-        eml_Object$dataset$coverage$geographicCoverage <- list(unit_list, no_units)
+    else {
+        # make sure everything is nested to the same hierarchical level:
+      if(!is.null(names(doc))){
+          doc <- list(doc)
+      }
+        #get all geographic coverage that is NOT content unit links:
+      no_units <- NULL
+      for (i in seq_along(doc)) {
+        myMap2 <- purrr::map(doc, 1)[[i]]
+        if (suppressWarnings(stringr::str_detect(
+          myMap2,
+          "NPS Content Unit Link"
+        )) == FALSE) {
+          no_units <- append(no_units, doc[i])
+        }
+      }
+        # if the only geo unit was a previous connection, replace it:
+      if (is.null(no_units)) {
+        eml_object$dataset$coverage$geographicCoverage <- unit_list
+       }
+        #if there are geographic units other than content units, add to those:
+      if (!is.null(no_units)) {
+        #if there is only one non-content unit geographic coverage element:
+        unit_list<-append(unit_list, no_units)
+        #insert into EML:
+        eml_object$dataset$coverage$geographicCoverage <- unit_list
       }
       if (length(no_units) > 1) {
         my_list <- append(unit_list, no_units)
@@ -404,9 +430,7 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
 #' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
-#' PUBVER - Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI.
-#' PUBFUL - Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package.
-#' NPSONLY - Contains CUI. For NPS access only.
+#' PUBLIC - Does NOT contain CUI.
 
 #' @returns an EML-formatted R object
 #' @export
@@ -414,7 +438,7 @@ set_content_units <- function(eml_object, park_units, force = FALSE, NPS = TRUE)
 #' \dontrun{
 #' set_cui(eml_object, "PUBFUL")
 #' }
-set_cui <- function(eml_object, cui_code = c("PUBFUL", "PUBVER", "NOCON", "DL ONLY", "FEDCON", "FED ONLY", "NPSONLY"), force = FALSE, NPS = TRUE) {
+set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), force = FALSE, NPS = TRUE) {
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code <- match.arg(cui_code)
 
@@ -1348,35 +1372,38 @@ set_int_rights <- function(eml_object,
       # make sure CUI and license agree:
       if(license == "CC0" || license == "public"){
         #set appropriate license:
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
+            eml_object$dataset$licensed$licenseName <- "CC0 1.0 Universal"
             cat("Your license has been set to:", crayon::blue$bold("CC0"))
           }
           if(license == "public"){
             eml_object$dataset$intellectualRights <- pub_domain
-            cat("Your license has been set to:", crayon::blue$bold("public domain"))
+            eml_object$dataset$licensed$licenseName <- "Public Domain"
+            cat("Your license has been set to:", crayon::blue$bold("Public Domain"))
           }
-
         }
         # warn user license not set, CUI and license don't agree:
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
           cat("Your CUI is set to ", crayon::blue$bold(cui3), ".")
           writeLines(paste0("To use a CC0 or public domain license",
-                       " your CUI must be either PUBFUL or PUBVER."))
+                       " your CUI must be PUBLIC."))
           cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
         }
       }
       if(license == "restricted"){
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           cat("Your CUI is set to ", crayon::blue$bold(cui3), ".\n", sep="")
-          writeLines(paste0("To use a restricted license, your CUI must NOT be set",
-                       " to PUBFUL or PUBVER."))
+          writeLines(paste0("To use a restricted license, ",
+                            "your CUI must NOT be set to PUBLIC."))
           cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
         }
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
-          cat("Your license has been set to ", crayon::bold$blue("restricted"), ".", sep="")
+          eml_object$dataset$licensed$licenseName <- "No License/Controlled Unclassified Information"
+          cat("Your license has been set to ",
+              crayon::bold$blue("Restricted"), ".", sep="")
         }
       }
     }
@@ -1396,7 +1423,7 @@ set_int_rights <- function(eml_object,
       cui3<-cui3$CUI
 
       if(license == "CC0" || license == "public"){
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
           }
@@ -1404,15 +1431,15 @@ set_int_rights <- function(eml_object,
             eml_object$dataset$intellectualRights <- pub_domain
           }
         }
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
          return()
         }
       }
       if(license == "restricted"){
-        if(cui3 == "PUBVER" || cui3 == "PUBFUL"){
+        if(cui3 == "PUBLIC"){
           return()
         }
-        if(cui3 != "PUBVER" && cui3 != "PUBFUL"){
+        if(cui3 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
         }
       }

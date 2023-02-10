@@ -1,3 +1,22 @@
+# EMLeditor v0.1.0.2 "Devils Tower"
+
+## February 09, 2023
+
+# Summary
+
+Bug fixes, update `set_cui()` codes, flesh out `set_int_rights`. Update documentation.
+
+### Major changes
+
+  * replaced PUBVER and PUBFUL codes with PUBLIC in `set_cui()`.
+  * removed NPSONLY code from `set_cui()`.
+  * major bug fixes to `set_content_units()`.
+  * updated `set_int_rights()` to also populate licenseName field.
+  
+### Minor changes
+
+  * fixed minor typos in documentation
+  * moved `set_int_rights()` from "additional functions" to "minimal workflow"
 
 # EMLeditor v0.1.0.1 "Whitebark Pine"
 
