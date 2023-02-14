@@ -42,7 +42,8 @@ Imports:
     lifecycle,
     here,
     DPchecker (>= 0.1.0),
-    purrr
+    purrr,
+    jsonlite
 Suggests: 
     knitr,
     rmarkdown,
