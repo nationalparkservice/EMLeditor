@@ -28,6 +28,9 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/check_eml.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/dev_set_doi2.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/dot-get_unit_polygon.html</loc>
   </url>
   <url>
@@ -101,6 +104,9 @@
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_doi.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/set_doi2.html</loc>
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_drr.html</loc>
