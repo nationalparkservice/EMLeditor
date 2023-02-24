@@ -129,7 +129,7 @@ get_title <- function(eml_object) {
 #' get_ds_id(eml_object)
 #' }
 get_ds_id <- function(eml_object) {
-  pid <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
+  pid <- eml_object$dataset$alternateIdentifier
   if (is.null(pid)) {
     warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
     ref_id <- NA # to do: check write.readMe whether NA needs to be in quotes.
@@ -300,7 +300,7 @@ get_author_list <- function(eml_object) {
 #' }
 get_doi <- function(eml_object) {
   # where EMLassemblyline stores DOIs.
-  pid <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
+  pid <- eml_object$dataset$alternateIdentifier
   if (is.null(pid)) {
     warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
     doi <- NA # to do: does NA need to be in quotes for write.ReadMe?

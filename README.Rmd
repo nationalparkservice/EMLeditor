@@ -22,9 +22,8 @@ knitr::opts_chunk$set(
 
 
 # EMLeditor 
-##### v0.1.0.2
-##### "Devils Tower"
-
+##### v0.1.0.3
+##### "Acadia"
 
 <!-- badges: start -->
 <!-- badges: end -->
