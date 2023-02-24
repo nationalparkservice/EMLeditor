@@ -229,18 +229,6 @@ harvesting.</licensename></p>
 <div class="section level4">
 <h4 id="add-a-data-package-doi">Add a data package DOI<a class="anchor" aria-label="anchor" href="#add-a-data-package-doi"></a>
 </h4>
-<<<<<<< HEAD
-<p>Add your data package’s Digital Object Identifier (DOI). To do this,
-you will need the seven-digit Reference ID from DataStore for the data
-package. To get the code, go to <a href="https://irma.nps.gov/DataStore/" class="external-link">DataStore</a> and initiate a
-draft reference (but do not activate it). This act reserves your DOI,
-but it is not activated until after your data package is published.</p>
-<p>There is no need to fill in any additional fields in DataStore at
-this point - many of them will automatically be populated based on your
-metadata at upload.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_doi.html">set_doi</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">1234567</span><span class="op">)</span></span></code></pre></div>
-=======
 <p>Add your data package’s Digital Object Identifier (DOI) to the
 metadata. The <code>set_datastore_doi()</code> function requires that
 you are logged on to the VPN. It initiates a draft data package
@@ -261,7 +249,6 @@ this process easier and less error prone).</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">set_datastore_doi</span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
->>>>>>> cdcf1491ca6d7e3808535e9e9752ba819faf3493
 </div>
 <div class="section level4">
 <h4 id="add-information-about-the-drr-optional">Add information about the DRR (optional)<a class="anchor" aria-label="anchor" href="#add-information-about-the-drr-optional"></a>
@@ -463,11 +450,7 @@ inspecting the .xml, file three good approaches are:</p>
 </ol>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use the eml_validate function from the EML package:</span></span>
-<<<<<<< HEAD
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span></span></code></pre></div>
-=======
 <span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
->>>>>>> cdcf1491ca6d7e3808535e9e9752ba819faf3493
 <ol start="2" style="list-style-type: decimal">
 <li>Build a <em>mock-up</em> of a readme file:</li>
 </ol>
@@ -496,11 +479,7 @@ package.</li>
 </ol>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#If you have not already written your metadata back to .xml:</span></span>
-<<<<<<< HEAD
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
-=======
 <span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta2</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
->>>>>>> cdcf1491ca6d7e3808535e9e9752ba819faf3493
 <span></span>
 <span><span class="co">#run checks on your metadata. You must tell the check_eml() function where your file is. It will default to the current working directory. There must be only one xml file in the directory.</span></span>
 <span></span>
