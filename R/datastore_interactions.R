@@ -26,9 +26,43 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   #get data package title from metadata:
   data_package_title <- EMLeditor::get_title(eml_object)
   if(force == FALSE){
+    #if there is an existing DOI in the metadata:
     if(!is.null(doc)){
-      cat("Your current DOI is: ", crayon::blue$bold(doc), ".\n", sep="")
-      cat("Are you sure you want to create a new draft reference on DataStore with a DOI?\n")
+      #get Datastore Reference ID:
+      DS_ref <- get_ds_id(eml_object)
+      url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
+      #API call to look for an existing reference:
+      test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+      status_code<-httr::stop_for_status(test_req)$status_code
+
+      #if API call fails, alert user and remind them to log on to VPN:
+      if(!status_code==200){
+        stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+      }
+
+      test_json <- httr::content(test_req, "text")
+      test_rjson <- jsonlite::fromJSON(test_json)
+
+      #tell user their current DOI:
+      cat("The current data package DOI in your metadata is:\n",
+          crayon::blue$bold(doc), ".\n\n", sep="")
+      #if API search did not find a corresponding reference on DataStore:
+      if(length(test_rjson) == 0){
+        cat("However, there is no draft reference associated with this DOI on DataStore.\n")
+      }
+      #if there is already a reference associated with this DOI on DataStore:
+      if(length(test_rjson > 0)){
+        cat("You already have a draft reference for this data package on DataStore.\n")
+        cat("The existing DataStore draft reference ID is:\n",
+            crayon::blue$bold(test_rjson$referenceId), ".\n", sep="")
+        cat("The existing DataStore draft reference title is:\n",
+            crayon::blue$bold(test_rjson$title), ".\n", sep="")
+        cat("The existing DataStore reference was created on:\n",
+            crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
+            ".\n\n", sep="")
+      }
+      #Ask if they really want a new DOI & new draft reference?
+      cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
       var1 <- readline(prompt = "1: Yes\n2: No\n")
       if (var1 == 2){
         cat("Function terminated. You have not created a new draft reference on DataStore and your original DOI has been retained.")
