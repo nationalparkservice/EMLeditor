@@ -227,14 +227,14 @@ harvesting.</licensename></p>
 <h4 id="add-a-data-package-doi">Add a data package DOI<a class="anchor" aria-label="anchor" href="#add-a-data-package-doi"></a>
 </h4>
 <p>Add your data package’s Digital Object Identifier (DOI) to the
-metadata. The <code>set_datastore_doi()</code> function requires that
+metadata. The <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> function requires that
 you are logged on to the VPN. It initiates a draft data package
 reference on DataStore, and populates the reference with a title pulled
-from your metadata, “[DRAFT] : <your data package title>”. This
+from your metadata, “[DRAFT] : &lt;your data package title&gt;”. This
 temporary title is purely for your tracking purposes and can easily be
-updated later. The <code>set_datastore_doi()</code> function will then
+updated later. The <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> function will then
 insert the DOI for your data package into your metadata. There are a few
-things to keep in mind:</your></p>
+things to keep in mind:</p>
 <ul>
 <li>Your DOI and the data package reference are not yet active and are
 not publicly accessible until after review and
@@ -245,7 +245,7 @@ so check the reference ID number carefully (We are working on making
 this process easier and less error prone).</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">set_datastore_doi</span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_datastore_doi.html">set_datastore_doi</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-information-about-the-drr-optional">Add information about the DRR (optional)<a class="anchor" aria-label="anchor" href="#add-information-about-the-drr-optional"></a>
@@ -371,7 +371,7 @@ such as Microsoft Word). This is a relatively simple function and does
 not readily support multiple paragraphs, bullet points, or the like.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#replace your abstract:</span></span>
-<span><span class="va">my_meta2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_abstract.html">set_abstract</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to."</span><span class="op">)</span></span>
+<span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_abstract.html">set_abstract</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to."</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#check the new abstract:</span></span>
 <span><span class="fu"><a href="../reference/get_abstract.html">get_abstract</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
