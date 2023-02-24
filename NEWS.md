@@ -1,3 +1,20 @@
+# EMLeditor v0.1.0.3 "Acadia"
+
+## February 24, 2023
+
+Summary
+
+Added a new function, `set_datastore_doi()` that will initiate a draft reference on DataStore and insert the DOI into metadata
+
+### Major changes:
+
+  * Added a new function, `set_datasore_doi()` that will initiate a draft reference on DataStore and insert the DOI into metadata. It requires that the user be logged on to the VPN and that the metadata has a title for the data package. The function will warn the user if the metadata already contains a DOI and will ask it they really want to generate a new draft reference and new DOI. 
+
+### Minor changes
+
+  * Updated documentation to reflect the new `set_datastore_doi()` function.
+  * Updated the `get_title()` and `get_doi()` functions to get just the data package title and just the data package DOI, respectively. They had been returning multiple titles and dois if the <title> and <alternateIdentifier> fields were used multiple times in the metadata.
+
 # EMLeditor v0.1.0.2 "Devils Tower"
 
 ## February 09, 2023
