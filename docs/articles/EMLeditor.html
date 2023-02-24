@@ -20,14 +20,15 @@
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-
+    
 
     <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-
+    
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.3</small>
 
+    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -52,13 +53,13 @@
 <li class="nav-item">
   <a class="external-link nav-link" href="https://github.com/nationalparkservice/EMLeditor/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
-
+     
   </a>
 </li>
       </ul>
 </div>
 
-
+    
   </div>
 </nav><div class="container template-article">
 
@@ -68,14 +69,14 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>EMLeditor</h1>
-
-
+            
+      
       <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/EMLeditor/blob/HEAD/vignettes/EMLeditor.Rmd" class="external-link"><code>vignettes/EMLeditor.Rmd</code></a></small>
       <div class="d-none name"><code>EMLeditor.Rmd</code></div>
     </div>
 
-
-
+    
+    
 <div class="section level2">
 <h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
 </h2>
@@ -220,18 +221,18 @@ your license in a <licensename> field in EML for DataStore
 harvesting.</licensename></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># choose from "restricted", "public" and "CC0", see above:</span></span>
-<span><span class="va">my_meta2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"public"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"public"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-a-data-package-doi">Add a data package DOI<a class="anchor" aria-label="anchor" href="#add-a-data-package-doi"></a>
 </h4>
 <p>Add your data package’s Digital Object Identifier (DOI) to the
-metadata. The <code>set_datastore_doi()</code> function requires that
+metadata. The <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> function requires that
 you are logged on to the VPN. It initiates a draft data package
 reference on DataStore, and populates the reference with a title pulled
 from your metadata, “[DRAFT] : <your data package title>”. This
 temporary title is purely for your tracking purposes and can easily be
-updated later. The <code>set_datastore_doi()</code> function will then
+updated later. The <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> function will then
 insert the DOI for your data package into your metadata. There are a few
 things to keep in mind:</your></p>
 <ul>
@@ -244,7 +245,7 @@ so check the reference ID number carefully (We are working on making
 this process easier and less error prone).</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">set_datastore_doi</span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_datastore_doi.html">set_datastore_doi</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-information-about-the-drr-optional">Add information about the DRR (optional)<a class="anchor" aria-label="anchor" href="#add-information-about-the-drr-optional"></a>
@@ -346,7 +347,8 @@ your title, you can update your title directly in EMLeditor using
 <code><a href="../reference/set_title.html">set_title()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#give my data package a new title:</span></span>
-<span><span class="va">my_meta2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_title.html">set_title</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"This is my new Title"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_title.html">set_title</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"This is my new Title"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#check the new title:</span></span>
 <span><span class="fu"><a href="../reference/get_title.html">get_title</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
@@ -510,9 +512,9 @@ package.</li>
     </footer>
 </div>
 
+  
 
-
-
+  
 
   </body>
 </html>
