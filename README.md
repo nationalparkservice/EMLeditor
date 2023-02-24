@@ -9,9 +9,9 @@ stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https:/
 
 # EMLeditor
 
-##### v0.1.0.0
+##### v0.1.0.3
 
-##### “Electric Peak”
+##### “Acadia”
 
 <!-- badges: start -->
 <!-- badges: end -->
