@@ -96,7 +96,7 @@ The `set_int_rights()` function will also put the name of your license in a <lic
 
 ```{r set_int_rights, eval=FALSE}
 # choose from "restricted", "public" and "CC0", see above:
-my_meta2<-set_int_rights(my_meta2, "public")
+my_meta2 <- set_int_rights(my_meta2, "public")
 ```
 
 ### Add a data package DOI
@@ -181,7 +181,8 @@ If your title has changed (for instance, perhaps reviewers have suggested a titl
 
 ```{r set_title, eval=FALSE}
 #give my data package a new title:
-my_meta2<-set_title(my_meta2, "This is my new Title")
+
+my_meta2 <- set_title(my_meta2, "This is my new Title")
 
 #check the new title:
 get_title(my_meta2)
