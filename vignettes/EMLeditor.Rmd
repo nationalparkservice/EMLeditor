@@ -193,7 +193,7 @@ Because your abstract will be prominently displayed on the DataStore landing pag
 
 ```{r set_abstract, eval=FALSE}
 #replace your abstract:
-my_meta2<-set_abstract(my_meta2, "This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to.")
+my_meta2 <- set_abstract(my_meta2, "This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to.")
 
 #check the new abstract:
 get_abstract(my_meta2)
