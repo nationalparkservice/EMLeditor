@@ -221,21 +221,31 @@ your license in a <licensename> field in EML for DataStore
 harvesting.</licensename></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># choose from "restricted", "public" and "CC0", see above:</span></span>
-<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"public"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">my_meta2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"public"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-a-data-package-doi">Add a data package DOI<a class="anchor" aria-label="anchor" href="#add-a-data-package-doi"></a>
 </h4>
-<p>Add your data package’s Digital Object Identifier (DOI). To do this,
-you will need the seven-digit Reference ID from DataStore for the data
-package. To get the code, go to <a href="https://irma.nps.gov/DataStore/" class="external-link">DataStore</a> and initiate a
-draft reference (but do not activate it). This act reserves your DOI,
-but it is not activated until after your data package is published.</p>
-<p>There is no need to fill in any additional fields in DataStore at
-this point - many of them will automatically be populated based on your
-metadata at upload.</p>
+<p>Add your data package’s Digital Object Identifier (DOI) to the
+metadata. The <code>set_datastore_doi()</code> function requires that
+you are logged on to the VPN. It initiates a draft data package
+reference on DataStore, and populates the reference with a title pulled
+from your metadata, “[DRAFT] : <your data package title>”. This
+temporary title is purely for your tracking purposes and can easily be
+updated later. The <code>set_datastore_doi()</code> function will then
+insert the DOI for your data package into your metadata. There are a few
+things to keep in mind:</your></p>
+<ul>
+<li>Your DOI and the data package reference are not yet active and are
+not publicly accessible until after review and
+activation/publication.</li>
+<li>Be sure to upload your data package to the correct draft reference!
+It is easy to create several draft references with the same draft title
+so check the reference ID number carefully (We are working on making
+this process easier and less error prone).</li>
+</ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_doi.html">set_doi</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="fl">1234567</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">set_datastore_doi</span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-information-about-the-drr-optional">Add information about the DRR (optional)<a class="anchor" aria-label="anchor" href="#add-information-about-the-drr-optional"></a>
@@ -337,10 +347,10 @@ your title, you can update your title directly in EMLeditor using
 <code><a href="../reference/set_title.html">set_title()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#give my data package a new title:</span></span>
-<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_title.html">set_title</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"This is my new Title"</span><span class="op">)</span></span>
+<span><span class="va">my_meta2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_title.html">set_title</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"This is my new Title"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#check the new title:</span></span>
-<span><span class="fu"><a href="../reference/get_title.html">get_title</a></span><span class="op">(</span><span class="va">mymetadata2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/get_title.html">get_title</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="edit-the-abstract">Edit the abstract<a class="anchor" aria-label="anchor" href="#edit-the-abstract"></a>
@@ -360,10 +370,10 @@ such as Microsoft Word). This is a relatively simple function and does
 not readily support multiple paragraphs, bullet points, or the like.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#replace your abstract:</span></span>
-<span><span class="va">mymetadata2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_abstract.html">set_abstract</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to."</span><span class="op">)</span></span>
+<span><span class="va">my_meta2</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/set_abstract.html">set_abstract</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"This is my new abstract. I can use this function to replace it as many times as I like until it looks just the way I want it to."</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#check the new abstract:</span></span>
-<span><span class="fu"><a href="../reference/get_abstract.html">get_abstract</a></span><span class="op">(</span><span class="va">mymetadata2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/get_abstract.html">get_abstract</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 <p>Check back here for more handy functions in the future. If there’s
 something you’d like to see added, please let us know by posting an <a href="https://github.com/nationalparkservice/EMLeditor/issues" class="external-link">Issue</a>
 on github.</p>
@@ -437,16 +447,16 @@ inspecting the .xml, file three good approaches are:</p>
 </ol>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use the eml_validate function from the EML package:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Build a <em>mock-up</em> of a readme file:</li>
 </ol>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Outputs readme to the screen</span></span>
-<span><span class="fu"><a href="../reference/write_readme.html">write_readme</a></span><span class="op">(</span><span class="va">mymetadata</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="../reference/write_readme.html">write_readme</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Alternatively, save the readme to a text file</span></span>
-<span><span class="fu"><a href="../reference/write_readme.html">write_readme</a></span><span class="op">(</span><span class="va">mymetadata</span>, <span class="st">"readme.txt"</span><span class="op">)</span> </span></code></pre></div>
+<span><span class="fu"><a href="../reference/write_readme.html">write_readme</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"readme.txt"</span><span class="op">)</span> </span></code></pre></div>
 <p>The <em>mock</em> readme file is an approximation of the readme file
 that will automatically be generated by DataStore upon upload and
 included in your data package. It’s a good, human readable, way to check
@@ -466,7 +476,7 @@ package.</li>
 </ol>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#If you have not already written your metadata back to .xml:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta2</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#run checks on your metadata. You must tell the check_eml() function where your file is. It will default to the current working directory. There must be only one xml file in the directory.</span></span>
 <span></span>
