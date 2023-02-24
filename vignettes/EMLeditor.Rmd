@@ -181,6 +181,7 @@ If your title has changed (for instance, perhaps reviewers have suggested a titl
 
 ```{r set_title, eval=FALSE}
 #give my data package a new title:
+
 my_meta2 <- set_title(my_meta2, "This is my new Title")
 
 #check the new title:
