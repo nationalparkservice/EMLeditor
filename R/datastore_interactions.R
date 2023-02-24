@@ -117,7 +117,7 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
     cat("Your newly specified DOI is: ", crayon::blue$bold(doc), ".\n",sep = "")
 
     #tell user location of draft reference:
-    url <- paste0("https://irmadev.nps.gov/DataStore/Reference/Profile/",
+    url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                 ds_ref)
     cat("You can check on your draft reference at:\n")
     cat(crayon::blue$bold(url), "\n")
