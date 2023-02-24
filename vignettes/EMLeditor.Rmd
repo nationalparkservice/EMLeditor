@@ -101,7 +101,7 @@ my_meta2 <- set_int_rights(my_meta2, "public")
 
 ### Add a data package DOI
 
-Add your data package's Digital Object Identifier (DOI) to the metadata. The `set_datastore_doi()` function requires that you are logged on to the VPN. It initiates a draft data package reference on DataStore, and populates the reference with a title pulled from your metadata, "[DRAFT] : <your data package title>". This temporary title is purely for your tracking purposes and can easily be updated later. The `set_datastore_doi()` function will then insert the DOI for your data package into your metadata. There are a few things to keep in mind:
+Add your data package's Digital Object Identifier (DOI) to the metadata. The `set_datastore_doi()` function requires that you are logged on to the VPN. It initiates a draft data package reference on DataStore, and populates the reference with a title pulled from your metadata, "[DRAFT] : \<your data package title\>". This temporary title is purely for your tracking purposes and can easily be updated later. The `set_datastore_doi()` function will then insert the DOI for your data package into your metadata. There are a few things to keep in mind:
 
   * Your DOI and the data package reference are not yet active and are not publicly accessible until after review and activation/publication.
   * Be sure to upload your data package to the correct draft reference! It is easy to create several draft references with the same draft title so check the reference ID number carefully (We are working on making this process easier and less error prone).
