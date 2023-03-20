@@ -302,7 +302,8 @@ get_doi <- function(eml_object) {
   # where EMLassemblyline stores DOIs.
   pid <- eml_object$dataset$alternateIdentifier
   if (is.null(pid)) {
-    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
+    cat("Your EML lacks a DOI in the \"alternateIdentifier\" tag.")
+    cat("Please use", crayon::green$bold("set_doi()"), "or", crayon::green$bold("set_datastore_doi()"), "to add your DOI")
     doi <- NA # to do: does NA need to be in quotes for write.ReadMe?
   } else {
     my_list <- NULL
