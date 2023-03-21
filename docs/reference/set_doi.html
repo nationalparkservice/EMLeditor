@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>eml_object</dt>
-<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(&lt;filename&gt;, from="xml").</p></dd>
+<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").</filename></p></dd>
 
 
 <dt>ds_ref</dt>
@@ -83,7 +83,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>set_doi checks to see if there is a DOI in the &lt;alternateIdentifier&gt; tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the &lt;alternateIdentifier&gt; tag, the function adds a DOI &amp; reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..</p>
+    <p>set_doi checks to see if there is a DOI in the <alternateidentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateidentifier> tag, the function adds a DOI &amp; reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..</alternateidentifier></alternateidentifier></p>
     </div>
 
     <div class="section level2">

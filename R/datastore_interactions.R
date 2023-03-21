@@ -147,10 +147,15 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 #'
 #' @param directory the location (path) to your data package files
 #' @param force logical, defaults to FALSE for a verbose interactive version. Set to TRUE to suppress interactions and facilitate scripting.
-#' @return
+#'
+#' @return invisible(NULL)
 #' @export
 #'
 #' @examples
+#'  \dontrun{
+#' dir <- here::here("..", "Downloads", "BICY")
+#' upload_data_package(dir)
+#' }
 upload_data_package <- function(directory = here::here(), force = FALSE){
   #load metadata
   metadata <- DPchecker::load_metadata(directory = directory)
