@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +60,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>eml_object</dt>
-<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(&lt;filename&gt;, from="xml").</p></dd>
+<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").</filename></p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -71,7 +71,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>get_content_units accesses the contents of the &lt;geographicDescription&gt; tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no &lt;geographicDescription&gt;, it alerts the user and suggests adding park unit connections using the set_park_units() function.</p>
+    <p><code>get_content_units()</code> accesses the contents of the <geographicdescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicdescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.</geographicdescription></geographicdescription></p>
     </div>
 
     <div class="section level2">

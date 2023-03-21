@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,24 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0.3" id="emleditor-v0103-acadia">EMLeditor v0.1.0.3 “Acadia”<a class="anchor" aria-label="anchor" href="#emleditor-v0103-acadia"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.0.4" id="emleditor-v0104-acadia">EMLeditor v0.1.0.4 “Acadia”<a class="anchor" aria-label="anchor" href="#emleditor-v0104-acadia"></a></h2>
+<div class="section level3">
+<h3 id="id_21-march-0-1-0-4">21 March 2023<a class="anchor" aria-label="anchor" href="#id_21-march-0-1-0-4"></a></h3>
+<p>Summary</p>
+<p>Added a new function <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> that will upload data package files to the appropriate draft reference on DataStore. Individual files must be &lt; 4Mb.</p>
+<div class="section level4">
+<h4 id="major-changes-0-1-0-4">Major changes:<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-4"></a></h4>
+<ul><li>Added <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> that will upload data package files to the appropriate draft reference on DataStore. The function is only compatible with .csv data files and requires a single EML metadata file ending in *_metadata.xml to all be present in a single folder/directory. The metadata file must have a DOI specified. <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> will extract the DOI from metadata and check to see if a corresponding reference exists on DataStore. If the reference exists, the function will upload each file in the data package (including the metadata file).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="minor-changes-0-1-0-4">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-1-0-4"></a></h4>
+<ul><li>Minor update to <code><a href="../reference/get_doi.html">get_doi()</a></code> points; if DOI doesn’t exist the function now refers users to both <code><a href="../reference/set_doi.html">set_doi()</a></code> and <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code>.</li>
+<li>Minor updates to documentation for consistency and grammar.</li>
+</ul></div>
+</div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0.3" id="emleditor-v0103-hall-of-mosses">EMLeditor v0.1.0.3 “Hall of Mosses”<a class="anchor" aria-label="anchor" href="#emleditor-v0103-hall-of-mosses"></a></h2>
 <div class="section level3">
 <h3 id="february-0-1-0-3">February 24, 2023<a class="anchor" aria-label="anchor" href="#february-0-1-0-3"></a></h3>
 <p>Summary</p>
