@@ -58,11 +58,15 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 
 #' Check & set a DOI
 #'
-#' @details set_doi checks to see if there is a DOI in the <alternateIdentifier> tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the <alternateIdentifier> tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input..
+#' @description `set_doi()` checks to see if there is a DOI in the alternateIdentifier tag. The EMLassemblyline package stores data package DOIs in this tag (although the official EML schema has the DOI in a different location). If there is no DOI in the alternateIdentifier tag, the function adds a DOI & reports the new DOI. If there is a DOI, the function reports the existing DOI, and prompts the user for input to either retain the existing DOI or overwrite it. Reports back the existing or new DOI, depending on the user input.
+#'
+#' As an alternative, consider using `set_datastore_doi()`, which will automatically initiate a draft reference on DataStore and inject the corresponding DOI into metadata.
+#'
+#'
 #'
 #' @inheritParams set_title
 #'
-#' @param ds_ref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.
+#' @param ds_ref is the same as the 7-digit reference code generated on DataStore when a draft reference is initiated.You should NOT include the full URL, DOI prefix, or anything except the 7-digit DataStore Reference Code.
 #'
 #' @returns an EML-formatted R object
 #' @export

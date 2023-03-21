@@ -70,10 +70,9 @@ write_readme <- function(eml_object, outfile = "") {
   cat(paste0("\n", "Files:"), file = outfile, sep = "\n", append = TRUE)
 
   cat(
-    stargazer::stargazer(file_info,
+    invisible(capture.output(stargazer::stargazer(file_info,
       summary = FALSE,
-      type = "text"
-    ),
+      type = "text"))),
     file = outfile,
     sep = "\n",
     append = TRUE

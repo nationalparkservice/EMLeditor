@@ -343,7 +343,7 @@ get_content_units <- function(eml_object) {
     # pull out just geographic description for unit connections:
     unit_cons <- NULL
     for (i in seq_along(units)) {
-      if (stringr::str_detect(units[i], "NPS Content Unit Links:")) {
+      if (stringr::str_detect(units[i], "NPS Unit Connections:")) {
         unit_cons <- append(unit_cons, units[i])
       }
     }
@@ -354,17 +354,17 @@ get_content_units <- function(eml_object) {
     punits <- NULL
     for (i in seq_along(unit_cons)) {
       if (unit_cons[i] == utils::tail(unit_cons, 1)) {
-        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
+        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
         punits <- append(punits, rem_text)
       } else {
-        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
+        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
         punits <- append(punits, paste0(rem_text, ", "))
       }
     }
     list_units <- paste(unlist(punits), collapse = "", sep = ",")
 
     # add "NPS Content Unit Links: " prefix back in to the sting:
-    list_units <- paste0("NPS Content Unit Links: ", list_units)
+    list_units <- paste0("NPS Unit Connections: ", list_units)
   }
   return(list_units)
 }
@@ -400,7 +400,10 @@ get_cui <- function(eml_object) {
     cui <- "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
   } else if (cui == "PUBFUL") {
     cui <- "Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
-  } else {
+  } else if (cui == "PUBLIC") {
+    cui <- "Does NOT contain CUI"
+  }
+  else {
     warning("CUI not properly specified. User set_cui to update the CUI code.")
     cui <- NA
   }
@@ -448,8 +451,8 @@ get_file_info <- function(eml_object) {
     dat <- data.frame(file_name, readable, file_descript)
     colnames(dat) <- c("FileName", "Size", "Description")
 
-    print("Current filenames and file descriptions:")
-    print(dat)
+    #print("Current filenames and file descriptions:")
+    return(dat)
   }
 }
 
@@ -473,7 +476,7 @@ get_drr_doi <- function(eml_object) {
     cat(crayon::red$bold("Warning: "),
     "You have not specified a DRR associated with this data package.
     If you have an associated DRR, specify its DOI using ",
-    crayon::green$bold("set_drr()"), ".", sep="")
+    crayon::green$bold("set_drr()"), ".\n", sep="")
     drr_doi <- NA # to do: test whether NA needs quotes for write.README.
   } else {
     return(doi)
