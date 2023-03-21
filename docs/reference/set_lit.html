@@ -12,7 +12,7 @@ set_lit takes a bibtex file (*.bib) as input and adds it as a bibtex list to EML
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@ set_lit takes a bibtex file (*.bib) as input and adds it as a bibtex list to EML
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>eml_object</dt>
-<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(&lt;filename&gt;, from="xml").</p></dd>
+<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").</filename></p></dd>
 
 
 <dt>bibtex_file</dt>
@@ -86,7 +86,7 @@ set_lit takes a bibtex file (*.bib) as input and adds it as a bibtex list to EML
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>looks for literature cited in the &lt;literatureCited&gt; tag and if it finds none, inserts citations for each entry in the *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file, or append additional references from the supplied .bib file. if force=TRUE, the existing literature cited will be replaced with the contents of the .bib file.</p>
+    <p>looks for literature cited in the <literaturecited> tag and if it finds none, inserts citations for each entry in the *.bib file. If literature cited exists it asks to either do nothing, replace the existing literature cited with the supplied .bib file, or append additional references from the supplied .bib file. if force=TRUE, the existing literature cited will be replaced with the contents of the .bib file.</literaturecited></p>
     </div>
 
     <div class="section level2">

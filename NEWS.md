@@ -1,4 +1,21 @@
-# EMLeditor v0.1.0.3 "Acadia"
+# EMLeditor v0.1.0.4 "Acadia"
+
+## 21 March 2023
+
+Summary
+
+Added a new function `upload_data_package()` that will upload data package files to the appropriate draft reference on DataStore. Individual files must be < 4Mb.
+
+### Major changes:
+
+  * Added `upload_data_package()` that will upload data package files to the appropriate draft reference on DataStore. The function is only compatible with .csv data files and requires a single EML metadata file ending in *_metadata.xml to all be present in a single folder/directory. The metadata file must have a DOI specified. `upload_data_package()` will extract the DOI from metadata and check to see if a corresponding reference exists on DataStore. If the reference exists, the function will upload each file in the data package (including the metadata file). 
+  
+### Minor changes
+
+  * Minor update to `get_doi()` points; if DOI doesn't exist the function now refers users to both `set_doi()` and `set_datastore_doi()`.
+  * Minor updates to documentation for consistency and grammar.
+
+# EMLeditor v0.1.0.3 "Hall of Mosses"
 
 ## February 24, 2023
 

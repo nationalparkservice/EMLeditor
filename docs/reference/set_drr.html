@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>eml_object</dt>
-<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(&lt;filename&gt;, from="xml").</p></dd>
+<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").</filename></p></dd>
 
 
 <dt>drr_ref_id</dt>
@@ -98,7 +98,7 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>adds uses the DataStore Reference ID for an associate DRR to the &lt;usageCitation&gt; as a properly formatted DOI (prefaced with "DRR: ") to the &lt;usageCitation&gt; element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the organization name (org_name) defaults to NPS.  If you do NOT want the organization name for the DRR to be NPS, set org_name="Your Favorite Organization" <em>and</em> set NPS=FALSE. Also sets the id flag for this usageCitation to "associatedDRR".</p>
+    <p>adds uses the DataStore Reference ID for an associate DRR to the <usagecitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usagecitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the organization name (org_name) defaults to NPS.  If you do NOT want the organization name for the DRR to be NPS, set org_name="Your Favorite Organization" <em>and</em> set NPS=FALSE. Also sets the id flag for this usageCitation to "associatedDRR".</usagecitation></usagecitation></p>
     </div>
 
     <div class="section level2">

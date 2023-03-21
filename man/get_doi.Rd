@@ -7,7 +7,7 @@
 get_doi(eml_object)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 }
 \value{
 a text string
@@ -16,7 +16,7 @@ a text string
 returns a text string that is the DOI for the data package
 }
 \details{
-get_doi accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
+\code{get_doi()} accesses the contents of the\if{html}{\out{<alternateIdentifier>}} tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
 }
 \examples{
 \dontrun{

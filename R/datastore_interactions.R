@@ -134,3 +134,206 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
 }
+
+#' Upload a data package to DataStore
+#'
+#' @description `upload_data_package()` inspects a data package and, if a DOI is supplied in the metadata, uploads the data files and metadata to the appropriate reference on DataStore. This function requires that you are logged on to the VPN. `upload_data_package()` will only work if each individual file in the data package is less than 4Mb. Larger files still require manual upload via the DataStore web interface. `upload_data_package()` just uploads files. It does not extract EML metadata to populate the reference fields on DataStore and it does not Activate the reference - the reference remains fully editable via the web interface. After using `upload_data_package()` you do not need to "save" the reference on DataStore; the files are automatically saved to the reference.
+#'
+#' @details Currently, only .csv data files and EML metadata files are supported. All .csvs must end in ".csv". The single metadata file must end in "_metadata.xml". If you have includced a DOI in your metadata, using `upload_data_package()` is preferrable to using the web interface to manually upload files because it insures that your files are uploaded to the correct reference (i.e. the DOI in your metadata corresponds to the draft reference code on DataStore).
+#'
+#' Once uploaded, you are advised to look at the 'Files and Links' tab on the DataStore web interface to make sure your files are there and you do not have any duplicates. You can delete files as necessary from the 'Files and Links' tab until the reference is activated.
+#'
+#' This function is primarily intended for uploading files to the data package reference type on DataStore, but will upload .csvs and a single EML metadata file saved as *_metadata.xml file to any reference type, assuming the metadata has a DOI listed in the expected location and there is a corresponding draft reference on DataStore.
+#'
+#' @param directory the location (path) to your data package files
+#' @param force logical, defaults to FALSE for a verbose interactive version. Set to TRUE to suppress interactions and facilitate scripting.
+#'
+#' @return invisible(NULL)
+#' @export
+#'
+#' @examples
+#'  \dontrun{
+#' dir <- here::here("..", "Downloads", "BICY")
+#' upload_data_package(dir)
+#' }
+upload_data_package <- function(directory = here::here(), force = FALSE){
+  #load metadata
+  metadata <- DPchecker::load_metadata(directory = directory)
+  #get doi from metadata
+  doi <- get_doi(metadata)
+  #extract DS reference - assumes 7 digit DS reference code:
+  DS_ref <- stringr::str_sub(doi,-7,-1)
+  #list files in data package
+
+  #test whether reference already exists or the DOI:
+  url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
+  #verbose approach:
+  if(force == FALSE){
+    #API call to look for an existing reference:
+    test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+    status_code <- httr::stop_for_status(test_req)$status_code
+
+    #if API call fails, alert user and remind them to log on to VPN:
+    if(!status_code == 200){
+      stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    }
+    test_json <- httr::content(test_req, "text")
+    test_rjson <- jsonlite::fromJSON(test_json)
+    if(length(test_rjson) > 0){
+      cat("A draft reference for this data package exists on DataStore.\n")
+      cat("The existing DataStore draft reference ID is:\n",
+        crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
+      cat("The existing DataStore draft reference title is:\n",
+        crayon::blue$bold(test_rjson$title), ".\n", sep = "")
+      cat("The existing DataStore reference was created on:\n",
+        crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
+        ".\n\n", sep = "")
+    }
+    if(length(test_rjson) == 0){
+      cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
+      cat("Please use ", crayon::bold$green("set_datastore_doi()"),
+          " to create a draft reference and insert the corresponding DOI into your metadata prior to uploading files.", sep = "")
+      return()
+    }
+    cat("Are you sure you want to upload your data package files to this reference?\n")
+    var1 <- readline(prompt = "1: Yes\n2: No\n")
+    if (var1 == 2){
+      cat("Function terminated. You have not uploaded any files to DataStore.")
+    }
+    if (var1 == 1){
+      #check for DOI & referenceId mismatch...this should never happen.
+      if(!DS_ref == test_rjson$referenceId){
+        cat("The DOI in your metadata, ", crayon::blue$bold(doi),
+          ", does not match the reference ID, ",
+          crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
+        cat("Your files were not uploaded.\n")
+        return()
+      }
+      #if DOI and referenceId match:
+      else{
+        #get list of files for terminal output (just names, not paths)
+        files_names <- list.files(path = directory,
+                            pattern = "*.csv")
+        #add metadata
+        files_names <- append(files_names,
+                        list.files(path = directory,
+                                   pattern = "*metadata.xml"))
+        #get list of .csvs for upload (names and paths)
+        files <- list.files(path = directory,
+                            pattern = "*.csv",
+                            full.names = TRUE)
+        #add metadata
+        files <- append(files,
+                      list.files(path = directory,
+                                 pattern = "*metadata.xml",
+                                 full.names = TRUE))
+        for(i in seq_along(files)){
+          #test for files >4Mb:
+          file_size_error <- NULL
+          if(file.size(files[i]) > 4194304){
+            #warn for each file >4Mb
+            cat(crayon::blue$bold(files_names[i]),
+              "is greater than 4Mb and cannot be uploaded with this funcion.\n",
+              sep = "")
+            file_size_error <- 1
+          }
+        }
+        # stop if any files >4Mb
+        if(!is.null(file_size_error)){
+          stop()
+        }
+        if(is.null(file_size_error)){
+          api_url <- paste0(
+            "https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/",
+              DS_ref, "/UploadFile")
+          #upload the files
+          for(i in seq_along(files)){
+            req <- httr::POST(
+              url = api_url,
+              httr::add_headers('Content-Type' = 'multipart/form-data'),
+              httr::authenticate(":", "", "ntlm"),
+              body = list(addressFile = httr::upload_file(files[i])),
+              encode = "multipart",
+              httr::progress(type = "up", con = ""))
+            status_code <- httr::stop_for_status(req)$status_code
+            if(status_code != 201){
+              stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
+            }
+            else{
+              cat("Your file, ", crayon::blue$bold(files_names[i]),
+                  ", has been uploaded to:\n", sep = "")
+              cat(req$headers$location, "\n", sep="")
+            }
+          }
+        }
+      }
+    }
+  }
+  #suppress interactive/verbose portions and facilitate scripting:
+  if(force == TRUE){
+    #API call to look for an existing reference:
+    test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+    status_code <- httr::stop_for_status(test_req)$status_code
+    #if API call fails, alert user and remind them to log on to VPN:
+    if(!status_code == 200){
+      stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    }
+    test_json <- httr::content(test_req, "text")
+    test_rjson <- jsonlite::fromJSON(test_json)
+    if(length(test_rjson) == 0){
+      cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
+      return()
+    }
+    #test that metadata DOI corresponds to the draft reference on DataStore
+    #this test should never fail.
+    if(!DS_ref == test_rjson$referenceId){
+      cat("The DOI in your metadata, ", crayon::blue$bold(doi),
+          ", does not match the reference ID, ",
+          crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
+      cat("Your files were not uploaded.\n")
+      return()
+    }
+    #get list of .csvs
+    files <- list.files(path = directory,
+                      pattern = "*.csv",
+                      full.names = TRUE)
+    #add metadata
+    files <- append(files,
+                  list.files(path = directory,
+                             pattern = "*metadata.xml",
+                             full.names = TRUE))
+    for(i in seq_along(files)){
+      #test for files >4Mb:
+      file_size_error <- NULL
+      if(file.size(files[i]) > 4194304){
+        #warn for each file >4Mb
+        cat(crayon::blue$bold(files[i]),
+            "is greater than 4Mb and cannot be uploaded with this funcion.\n",
+            sep = "")
+        file_size_error <- 1
+      }
+    }
+    # stop if any files >4Mb
+    if(!is.null(file_size_error)){
+      stop()
+    }
+    if(is.null(file_size_error)){
+      api_url <- paste0(
+        "https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/",
+          DS_ref, "/UploadFile")
+      #upload the files
+      for(i in seq_along(files)){
+        req <- httr::POST(
+          url = api_url,
+          httr::add_headers('Content-Type' = 'multipart/form-data'),
+          httr::authenticate(":", "", "ntlm"),
+          body = list(addressFile = httr::upload_file(files[i])),
+          encode = "multipart")
+        status_code <- httr::stop_for_status(req)$status_code
+        if(status_code != 201){
+          stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
+        }
+      }
+    }
+  }
+}

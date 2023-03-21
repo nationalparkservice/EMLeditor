@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 
 # EMLeditor 
-##### v0.1.0.3
+##### v0.1.0.4
 ##### "Acadia"
 
 <!-- badges: start -->

@@ -609,7 +609,7 @@ set_abstract <- function(eml_object,
   # interactive route:
   if (force == FALSE) {
     # get existing abstract, if any:
-    doc <- arcticdatautils::eml_get_simple(eml_object, "abstract")
+    doc <- eml_object$dataset$abstract
 
     if (is.null(doc)) {
       eml_object$dataset$abstract <- abstract

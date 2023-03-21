@@ -7,7 +7,7 @@
 write_readme(eml_object, outfile = "")
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{outfile}{is the name of the file you want to write, typically *.txt.}
 }

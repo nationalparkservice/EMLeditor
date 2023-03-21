@@ -7,7 +7,7 @@
 get_content_units(eml_object)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 }
 \value{
 a text string
@@ -16,7 +16,7 @@ a text string
 returns a string with the park unit codes where the data were collected
 }
 \details{
-get_content_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
+\code{get_content_units()} accesses the contents of the \if{html}{\out{<geographicDescription>}} tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no \if{html}{\out{<geographicDescription>}}, it alerts the user and suggests adding park unit connections using the set_park_units() function.
 }
 \examples{
 \dontrun{

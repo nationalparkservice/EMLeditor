@@ -7,7 +7,7 @@
 set_title(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{data_package_title}{is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.}
 

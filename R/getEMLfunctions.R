@@ -209,9 +209,9 @@ get_citation <- function(eml_object) {
 
 #' returns the authors
 #'
-#' @description get_author_list returns a text string with all of the authors listed under the <creator> tag.
+#' @description `get_author_list()` returns a text string with all of the authors listed under the <creator> tag.
 #'
-#' @details get_author_list assumes every author has at least 1 first name (either <givenName> or <givenName1>) and only one last name (<surName>). Middle names (<givenName2>) are optional. The author List is formatted with the last name, comma,  first name for the first author and the fist name, last name for all subsequent authors. The last author's name is preceeded by an 'and'.
+#' @details `get_author_list()` assumes every author has at least 1 first name (either givenName or givenName1) and only one last name (surName). Middle names (givenName2) are optional. The author List is formatted with the last name, comma,  first name for the first author and the fist name, last name for all subsequent authors. The last author's name is preceded by an 'and'.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -288,7 +288,7 @@ get_author_list <- function(eml_object) {
 #'
 #' @description returns a text string that is the DOI for the data package
 #'
-#' @details get_doi accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
+#' @details `get_doi()` accesses the contents of the<alternateIdentifier> tag and does some text manipulation to return a string with the DOI including the URL and prefaced by 'doi: '.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -302,7 +302,8 @@ get_doi <- function(eml_object) {
   # where EMLassemblyline stores DOIs.
   pid <- eml_object$dataset$alternateIdentifier
   if (is.null(pid)) {
-    warning("Your EML lacks a DOI in the \"alternateIdentifier\" tag.\n Please use the set_doi() function to add your DOI")
+    cat("Your EML lacks a DOI in the \"alternateIdentifier\" tag.")
+    cat("Please use", crayon::green$bold("set_doi()"), "or", crayon::green$bold("set_datastore_doi()"), "to add your DOI")
     doi <- NA # to do: does NA need to be in quotes for write.ReadMe?
   } else {
     my_list <- NULL
@@ -323,7 +324,7 @@ get_doi <- function(eml_object) {
 #'
 #' @description returns a string with the park unit codes where the data were collected
 #'
-#' @details get_content_units accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
+#' @details `get_content_units()` accesses the contents of the <geographicDescription> tags and returns the contents of the tag that contains the text "NPS Unit Connections". If there is no <geographicDescription>, it alerts the user and suggests adding park unit connections using the set_park_units() function.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -370,9 +371,9 @@ get_content_units <- function(eml_object) {
 
 #' returns a CUI statement
 #'
-#' @description get_cui returns an english-language translation of the CUI codes
+#' @description `get_cui()` returns an English-language translation of the CUI codes
 #'
-#' @details get_cui accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
+#' @details `get_cui()` accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
 #'
 #' @inheritParams get_begin_date
 #'
