@@ -343,7 +343,7 @@ get_content_units <- function(eml_object) {
     # pull out just geographic description for unit connections:
     unit_cons <- NULL
     for (i in seq_along(units)) {
-      if (stringr::str_detect(units[i], "NPS Content Unit Links:")) {
+      if (stringr::str_detect(units[i], "NPS Unit Connections:")) {
         unit_cons <- append(unit_cons, units[i])
       }
     }
@@ -354,17 +354,17 @@ get_content_units <- function(eml_object) {
     punits <- NULL
     for (i in seq_along(unit_cons)) {
       if (unit_cons[i] == utils::tail(unit_cons, 1)) {
-        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
+        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
         punits <- append(punits, rem_text)
       } else {
-        rem_text <- sub("NPS Content Unit Links: ", "", unit_cons[i])
+        rem_text <- sub("NPS Unit Connections: ", "", unit_cons[i])
         punits <- append(punits, paste0(rem_text, ", "))
       }
     }
     list_units <- paste(unlist(punits), collapse = "", sep = ",")
 
     # add "NPS Content Unit Links: " prefix back in to the sting:
-    list_units <- paste0("NPS Content Unit Links: ", list_units)
+    list_units <- paste0("NPS Unit Connections: ", list_units)
   }
   return(list_units)
 }
