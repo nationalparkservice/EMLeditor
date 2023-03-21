@@ -7,7 +7,7 @@
 set_abstract(eml_object, abstract, force = FALSE, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{abstract}{is a text string that is your abstract. You can generate this directly in R or import a .txt file.}
 

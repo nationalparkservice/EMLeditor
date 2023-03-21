@@ -7,7 +7,7 @@
 set_producing_units(eml_object, prod_units, force = FALSE, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{prod_units}{A string that is the producing unit Unit Code or a list of unit codes, for example "ROMO" or c("ROMN", "SODN")}
 

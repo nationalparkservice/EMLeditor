@@ -7,7 +7,7 @@
 get_lit(eml_object)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 }
 \value{
 character string
@@ -16,7 +16,7 @@ character string
 get_lit prints bibtex fromated literature cited to the screen.
 }
 \details{
-get_lit currently only supports bibtex formatted references. get_lit gets items from the <literatureCited> tag and prints them to the screen.
+get_lit currently only supports bibtex formatted references. get_lit gets items from the \if{html}{\out{<literatureCited>}} tag and prints them to the screen.
 }
 \examples{
 \dontrun{

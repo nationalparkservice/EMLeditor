@@ -14,7 +14,7 @@ set_drr(
 )
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{drr_ref_id}{a 7-digit string that is the DataStore Reference ID for the DRR associated with the data package.}
 
@@ -33,7 +33,7 @@ an EML-formatted R object
 set_drr adds the DOI of an associated DRR
 }
 \details{
-adds uses the DataStore Reference ID for an associate DRR to the <usageCitation> as a properly formatted DOI (prefaced with "DRR: ") to the <usageCitation> element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the organization name (org_name) defaults to NPS.  If you do NOT want the organization name for the DRR to be NPS, set org_name="Your Favorite Organization" \emph{and} set NPS=FALSE. Also sets the id flag for this usageCitation to "associatedDRR".
+adds uses the DataStore Reference ID for an associate DRR to the \if{html}{\out{<usageCitation>}} as a properly formatted DOI (prefaced with "DRR: ") to the \if{html}{\out{<usageCitation>}} element. Creates and populates required children elements for usageCitation including the DRR title, creator organization name, and report number. Note the organization name (org_name) defaults to NPS.  If you do NOT want the organization name for the DRR to be NPS, set org_name="Your Favorite Organization" \emph{and} set NPS=FALSE. Also sets the id flag for this usageCitation to "associatedDRR".
 }
 \examples{
 \dontrun{

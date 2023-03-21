@@ -7,16 +7,16 @@
 get_cui(eml_object)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 }
 \value{
 a text string
 }
 \description{
-get_cui returns an english-language translation of the CUI codes
+\code{get_cui()} returns an English-language translation of the CUI codes
 }
 \details{
-get_cui accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
+\code{get_cui()} accesses the contents of the Controlled Unclassified Information (CUI) tag, \if{html}{\out{<CUI>}} and returns an appropriate string of english-language text based on the properties of the CUI code. If thee \if{html}{\out{<CUI>}} tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
 }
 \examples{
 \dontrun{

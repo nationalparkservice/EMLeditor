@@ -12,7 +12,7 @@ set_int_rights(
 )
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{license}{String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBFUL or PUBVER. Restricted can only be used if CUI is set to any code that is NOT PUBFUL or PUBVER (see \code{set_cui()} for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights}
 

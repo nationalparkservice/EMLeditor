@@ -12,7 +12,7 @@ set_cui(
 )
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").}
+\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{cui_code}{a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
@@ -32,7 +32,7 @@ an EML-formatted R object
 set_cui adds CUI codes to EML metadata
 }
 \details{
-set_cui adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
+set_cui adds a CUI code to the tag \if{html}{\out{<CUI>}} under \if{html}{\out{<additionalMetadata>}}\if{html}{\out{<metadata>}}.
 }
 \examples{
 \dontrun{
