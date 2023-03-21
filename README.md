@@ -9,7 +9,7 @@ stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https:/
 
 # EMLeditor
 
-##### v0.1.0.3
+##### v0.1.0.4
 
 ##### “Acadia”
 
