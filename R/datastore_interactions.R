@@ -219,40 +219,41 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
               sep="")
             file_size_error<-1
           }
-          # stop if any files >4Mb
-          if(!is.null(file_size_error)){
-            stop()
-          }
-          if(is.null(file_size)){
-            api_url <- paste0
+        }
+        # stop if any files >4Mb
+        if(!is.null(file_size_error)){
+          stop()
+        }
+        if(is.null(file_size)){
+          api_url <- paste0
             ("https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/",
               DS_ref, "/UploadFile")
-            #upload the files
-            for(i in seq_along_files){
-              cat("Uploading: ", crayon::blue$bold(files[i]), sep="")
-              req<- httr::POST(
-                url = api_url,
-                httr::add_headers('Content-Type' = 'multipart/form-data'),
-                httr::authenticate(":", "", "ntlm"),
-                body = list(addressFile = httr::upload_file(files[i])),
-                encode="multipart",
-                httr::progress(type="up", con=""))
-              req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
-              status_code<-httr::stop_for_status(req)$status_code
-              if(status_code!=201){
-                stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
-              }
-              else{
-                cat("Your file, ", crayon::blue$bold(files[i]),
-                    ", has been uploaded to:\n", sep="")
-                cat(req$headers$location)
-              }
+          #upload the files
+          for(i in seq_along_files){
+            cat("Uploading: ", crayon::blue$bold(files[i]), sep="")
+            req<- httr::POST(
+              url = api_url,
+              httr::add_headers('Content-Type' = 'multipart/form-data'),
+              httr::authenticate(":", "", "ntlm"),
+              body = list(addressFile = httr::upload_file(files[i])),
+              encode="multipart",
+              httr::progress(type="up", con=""))
+            req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+            status_code<-httr::stop_for_status(req)$status_code
+            if(status_code!=201){
+              stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
+            }
+            else{
+              cat("Your file, ", crayon::blue$bold(files[i]),
+                  ", has been uploaded to:\n", sep="")
+              cat(req$headers$location)
             }
           }
         }
       }
     }
   }
+  #suppress interactive/verbose portions and facilitate scripting:
   if(force = TRUE){
     #API call to look for an existing reference:
     test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
@@ -289,27 +290,27 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
             sep="")
         file_size_error<-1
       }
-      # stop if any files >4Mb
-      if(!is.null(file_size_error)){
-        stop()
-      }
-      if(is.null(file_size)){
-        api_url <- paste0
+    }
+    # stop if any files >4Mb
+    if(!is.null(file_size_error)){
+      stop()
+    }
+    if(is.null(file_size)){
+      api_url <- paste0
         ("https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/",
           DS_ref, "/UploadFile")
-        #upload the files
-        for(i in seq_along_files){
-          req<- httr::POST(
-            url = api_url,
-            httr::add_headers('Content-Type' = 'multipart/form-data'),
-            httr::authenticate(":", "", "ntlm"),
-            body = list(addressFile = httr::upload_file(files[i])),
-            encode="multipart")
-          req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
-          status_code<-httr::stop_for_status(req)$status_code
-          if(status_code!=201){
-            stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
-          }
+      #upload the files
+      for(i in seq_along_files){
+        req<- httr::POST(
+          url = api_url,
+          httr::add_headers('Content-Type' = 'multipart/form-data'),
+          httr::authenticate(":", "", "ntlm"),
+          body = list(addressFile = httr::upload_file(files[i])),
+          encode="multipart")
+        req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+        status_code<-httr::stop_for_status(req)$status_code
+        if(status_code!=201){
+          stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
         }
       }
     }
