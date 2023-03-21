@@ -151,7 +151,7 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 #' @examples
 upload_data_package <- function(directory = here::here(), force = FALSE){
   #load metadata
-  metadata <- DPchecker::load_metadata
+  metadata <- DPchecker::load_metadata(directory = directory)
   #get doi from metadata
   doi <- get_doi(metadata)
   #extract DS reference - assumes 7 digit DS reference code:
