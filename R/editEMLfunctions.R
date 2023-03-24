@@ -164,7 +164,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 
 #' Add Park Unit Connections to metadata
 #'
-#' @description set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore.
+#' @description set_content_units adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore. Invalid park unit codes will return an error and the function will terminate. If you don't know a park unit code, see [`NPSutils::get_park_code()`](https://nationalparkservice.github.io/NPSutils/reference/get_park_code.html)
 #'
 #' @details Adds the Content Unit Link(s) to a <geographicCoverage>. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate <geographicCoverage> element. For each content unit link, the unit name will be listed under <geographicDescription> and prefaced with "NPS Content Unit Link:". Required child elements (bounding coordinates) are auto populated to produce a rectangle that encompasses the park unit in question. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
 #'
@@ -181,12 +181,24 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 #' }
 set_content_units <- function(eml_object, park_units,
                               force = FALSE,
-                              NPS = TRUE) {
+                              NPS = TRUE){
+  # test whether park units are actually park units:
+  null_units <- NULL
+  for(i in seq_along(park_units)){
+    is_unit <- .get_unit_polygon(park_units[i])
+    null_units <- append(null_units, is_unit)
+  }
+  # if any park unit is not valid, and exit function.
+  if(!identical(seq_along(null_units), seq_along(park_units))){
+    return()
+  }
+
   # add text to indicate that these are park unit connections.
   units <- paste0("NPS Content Unit Link: ", park_units)
 
+  #generate new geographic coverage for NPS Content Unit Links:
   unit_list <- NULL
-  for (i in seq_along(park_units)) {
+  for (i in seq_along(park_units)){
     poly <- .get_unit_polygon(park_units[i])
     poly <- as.data.frame(poly[[1]][1])
     N <- max(poly[, 2])
