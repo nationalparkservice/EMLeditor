@@ -133,8 +133,14 @@
   xml <- httr::content(httr::GET(units_url))
 
   # Create spatial feature from polygon info returned from NPS
-  park_polygon <- sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)
-
+  park_polygon <- tryCatch(
+    expr = {sf::st_as_sfc(xml[[1]]$Geography, geoJSON = TRUE)},
+    error = function(e) {
+      message(
+        paste0(crayon::bold$red(unit_code),
+               " is not a valid park unit. Please supply valid park units"))
+    }
+    )
   return(park_polygon)
 }
 
