@@ -1,3 +1,11 @@
+# EMLeditor v0.1.0.5 "Work in Progress"
+
+## 24 March 2023
+
+  * Added tryCatch to `.get_park_poygon()` to improve error handling for invalid park codes.
+  * Improved `set_content_units()` error handling to specifically test for invalid park codes prior to executing & report list of invalid park codes to user.
+  * Fixed (yet another) bug in `get_content_units()`.
+
 # EMLeditor v0.1.0.4 "Acadia"
 
 ## 21 March 2023
