@@ -137,7 +137,7 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 
 #' Upload a data package to DataStore
 #'
-#' @description `upload_data_package()` inspects a data package and, if a DOI is supplied in the metadata, uploads the data files and metadata to the appropriate reference on DataStore. This function requires that you are logged on to the VPN. `upload_data_package()` will only work if each individual file in the data package is less than 4Mb. Larger files still require manual upload via the DataStore web interface. `upload_data_package()` just uploads files. It does not extract EML metadata to populate the reference fields on DataStore and it does not Activate the reference - the reference remains fully editable via the web interface. After using `upload_data_package()` you do not need to "save" the reference on DataStore; the files are automatically saved to the reference.
+#' @description `upload_data_package()` inspects a data package and, if a DOI is supplied in the metadata, uploads the data files and metadata to the appropriate reference on DataStore. This function requires that you are logged on to the VPN. `upload_data_package()` will only work if each individual file in the data package is less than 32Mb. Larger files still require manual upload via the DataStore web interface. `upload_data_package()` just uploads files. It does not extract EML metadata to populate the reference fields on DataStore and it does not activate the reference - the reference remains fully editable via the web interface. After using `upload_data_package()` you do not need to "save" the reference on DataStore; the files are automatically saved to the reference.
 #'
 #' @details Currently, only .csv data files and EML metadata files are supported. All .csvs must end in ".csv". The single metadata file must end in "_metadata.xml". If you have includced a DOI in your metadata, using `upload_data_package()` is preferrable to using the web interface to manually upload files because it insures that your files are uploaded to the correct reference (i.e. the DOI in your metadata corresponds to the draft reference code on DataStore).
 #'
@@ -228,17 +228,17 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
                                  pattern = "*metadata.xml",
                                  full.names = TRUE))
         for(i in seq_along(files)){
-          #test for files >4Mb:
+          #test for files <32Mb:
           file_size_error <- NULL
-          if(file.size(files[i]) > 4194304){
-            #warn for each file >4Mb
+          if(file.size(files[i]) > 33554432){
+            #warn for each file >32Mb
             cat(crayon::blue$bold(files_names[i]),
-              "is greater than 4Mb and cannot be uploaded with this funcion.\n",
+              "is greater than 32Mb and cannot be uploaded with this funcion.\n",
               sep = "")
             file_size_error <- 1
           }
         }
-        # stop if any files >4Mb
+        # stop if any files >32Mb
         if(!is.null(file_size_error)){
           stop()
         }
@@ -303,17 +303,17 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
                              pattern = "*metadata.xml",
                              full.names = TRUE))
     for(i in seq_along(files)){
-      #test for files >4Mb:
+      #test for files <32Mb:
       file_size_error <- NULL
-      if(file.size(files[i]) > 4194304){
-        #warn for each file >4Mb
+      if(file.size(files[i]) > 33554432){
+        #warn for each file <32Mb
         cat(crayon::blue$bold(files[i]),
-            "is greater than 4Mb and cannot be uploaded with this funcion.\n",
+            "is greater than 32Mb and cannot be uploaded with this funcion.\n",
             sep = "")
         file_size_error <- 1
       }
     }
-    # stop if any files >4Mb
+    # stop if any files >32Mb
     if(!is.null(file_size_error)){
       stop()
     }
