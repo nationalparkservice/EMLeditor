@@ -1,5 +1,9 @@
 # EMLeditor v0.1.0.5 "Work in Progress"
 
+## 04 April 2023
+
+  * `upload_data_package()` maximum file size increased to 32Mb (from 4Mb)
+
 ## 24 March 2023
 
   * Added tryCatch to `.get_park_poygon()` to improve error handling for invalid park codes.
