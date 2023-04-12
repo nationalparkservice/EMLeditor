@@ -79,7 +79,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   if (force == TRUE) {
     eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
     # update data URLs to correspond to new DOI:
-    data_table <- EML::eml_get(mymeta, "dataTable")
+    data_table <- EML::eml_get(eml_object, "dataTable")
     data_table <- within(data_table, rm("@context"))
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                        ds_ref)
@@ -153,7 +153,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         doc <- sub(".*? ", "", doc)
 
         # update data URLs to correspond to new DOI:
-        data_table <- EML::eml_get(mymeta, "dataTable")
+        data_table <- EML::eml_get(eml_object, "dataTable")
         data_table <- within(data_table, rm("@context"))
         data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                            ds_ref)
