@@ -9,9 +9,9 @@ stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https:/
 
 # EMLeditor
 
-##### v0.1.0.4
+##### v0.1.0.5
 
-##### “Acadia”
+##### “Congaree Boardwalk Loop”
 
 <!-- badges: start -->
 <!-- badges: end -->
