@@ -6,6 +6,8 @@
 #'
 #' @details This function generates a draft reference on DataStore. If you run with force = FALSE (default), the function will report the draft reference URL and the draft title for the draft reference. Make sure you upload your data and metadata to the correct draft reference! Your draft reference title should read: "DRAFT: <your data package title>". This will be updated to your data package title when you upload your metadata.
 #'
+#' @details if you set a new DOI with `set_datastore_doi()`, it will also update all the links within the metadata to the data files to reflect the new draft reference and and DataStore location.
+#'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
 #' @param force logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.
@@ -109,6 +111,15 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   eml_object$dataset$alternateIdentifier <- paste0(
       "doi: https://doi.org/10.57830/",
       ds_ref)
+
+  # update data URLs to correspond to new DOI:
+  data_table <- EML::eml_get(mymeta, "dataTable")
+  data_table <- within(data_table, rm("@context"))
+  data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                     ds_ref)
+  for(i in seq_along(data_table)){
+    eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+    }
 
   if(force == FALSE){
     #print DOI to screen
