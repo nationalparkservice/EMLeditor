@@ -23,6 +23,8 @@ an EML-formatted R object
 To prevent generating too many (unused) draft references, \code{set_datastore_doi()} checks your metadata contents prior to initiating a draft reference on DataStore. If you already have a DOI specified, it will ask if you really want to over-write the DOI \strong{and} initiate a new draft reference. Setting force = TRUE will over-ride this aspect of the function, so use with care. the \code{set_datastore_doi()} function requires that your metadata already contain a data package title and if it is missing will prompt you to insert it and quit. Setting force = TRUE will not override this check. If R cannot successfully initiate a draft reference on DataStore, the function will remind you to log on to the VPN. If the problem persists, email irma@nps.gov.
 
 This function generates a draft reference on DataStore. If you run with force = FALSE (default), the function will report the draft reference URL and the draft title for the draft reference. Make sure you upload your data and metadata to the correct draft reference! Your draft reference title should read: "DRAFT: \if{html}{\out{<your data package title>}}". This will be updated to your data package title when you upload your metadata.
+
+if you set a new DOI with \code{set_datastore_doi()}, it will also update all the links within the metadata to the data files to reflect the new draft reference and and DataStore location.
 }
 \examples{
 \dontrun{

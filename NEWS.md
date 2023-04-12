@@ -1,5 +1,8 @@
 # EMLeditor v0.1.0.5 "Work in Progress"
 
+## 12 April 2023
+  * `set_doi()` and `set_datastore_doi()` will now automatically update the online urls listed in the metadata for each data file to correspond to the new location. Caution: metadata with a DOI generated prior to 12 April 2023 may have incorrect online URLs.
+
 ## 04 April 2023
 
   * `upload_data_package()` maximum file size increased to 32Mb (from 4Mb)
