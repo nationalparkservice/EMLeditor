@@ -62,7 +62,7 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 #'
 #' As an alternative, consider using `set_datastore_doi()`, which will automatically initiate a draft reference on DataStore and inject the corresponding DOI into metadata.
 #'
-#'
+#' @details if `set_doi()` is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference.
 #'
 #' @inheritParams set_title
 #'
@@ -78,6 +78,14 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   # scripting route:
   if (force == TRUE) {
     eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
+    # update data URLs to correspond to new DOI:
+    data_table <- EML::eml_get(mymeta, "dataTable")
+    data_table <- within(data_table, rm("@context"))
+    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                       ds_ref)
+    for(i in seq_along(data_table)){
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+    }
   }
   # interactive route:
   if (force == FALSE) {
@@ -143,6 +151,16 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         # get the new DOI:
         doc <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
         doc <- sub(".*? ", "", doc)
+
+        # update data URLs to correspond to new DOI:
+        data_table <- EML::eml_get(mymeta, "dataTable")
+        data_table <- within(data_table, rm("@context"))
+        data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                           ds_ref)
+        for(i in seq_along(data_table)){
+          eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+        }
+
         # print the new DOI to the screen:
         cat("Your newly specified DOI is: ",
           crayon::blue$bold(doc),
