@@ -2,6 +2,7 @@
 
 ## 12 April 2023
   * `set_doi()` and `set_datastore_doi()` will now automatically update the online urls listed in the metadata for each data file to correspond to the new location. Caution: metadata with a DOI generated prior to 12 April 2023 may have incorrect online URLs.
+  * Attempt to add .Rmd template to Rstudio
 
 ## 04 April 2023
 
