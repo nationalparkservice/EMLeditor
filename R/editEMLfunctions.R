@@ -22,7 +22,7 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
   }
   # interactive route:
   if (force == FALSE) {
-    doc <- arcticdatautils::eml_get_simple(eml_object, "title")
+    doc <-  eml_object$dataset$title
     if (is.null(doc)) {
       eml_object$dataset$title <- data_package_title
       cat("No previous title was detected. Your new title, ",
