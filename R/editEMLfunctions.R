@@ -1512,7 +1512,7 @@ set_int_rights <- function(eml_object,
 #' my_metadata <- set_data_urls(my_metadata, "https://my_custom_repository.com/data_files")}
 set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
   #get data tables:
-  data_table <- EML::eml_get(mymeta, "dataTable")
+  data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
 
   #default: no URL supplied; assumes NPS DataStore URLs:
@@ -1521,8 +1521,7 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
     if(is.na(doi)){
         return()
     }
-    # check DOI formatting to make sure it is an NPS doi
-
+    # to do: check DOI formatting to make sure it is an NPS doi
     ds_ref <- stringr::str_sub(doi, -7, -1)
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
