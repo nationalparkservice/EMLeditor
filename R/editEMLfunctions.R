@@ -1356,7 +1356,7 @@ set_publisher <- function(eml_object,
 #'
 #' @importFrom stats complete.cases
 #'
-#' @return emlObject
+#' @return eml_object
 #' @export
 #'
 #' @examples
@@ -1365,9 +1365,9 @@ set_publisher <- function(eml_object,
 #' set_int_rights(eml_object, "restricted")}
 #'
 set_int_rights <- function(eml_object,
-                          license=c("CC0", "public", "restricted"),
-                          force=FALSE,
-                          NPS=TRUE){
+                          license = c("CC0", "public", "restricted"),
+                          force = FALSE,
+                          NPS = TRUE){
   # verify license type selection; stop if does not equal one of 3 valid codes:
   license <- match.arg(license)
 
@@ -1491,4 +1491,56 @@ set_int_rights <- function(eml_object,
 }
 
 
+#' Set data URLs
+#'
+#' @description `set_data_urls()` inspects metadata and edits the online distribution url for each dataTable (data file) to correspond to the reference indicated by the DOI listed in the metadata. If your data files are stored on DataStore as part of the same reference as the data package, you do not need to supply a URL. If your data files will be stored to a different repository, you can supply that location.
+#'
+#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
+#'
+#' @inheritParams set_title
+#' @param url a string that identifies the online location of the data file (uniform resource locator)
+#'
+#' @return eml_object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # For data packages on DataStore, no url is necessary:
+#' my_metadata <- set_data_urls(my_metadata)
+#'
+#' # If data files are NOT on (or going to be on) DataStore, you must supply their location:
+#' my_metadata <- set_data_urls(my_metadata, "https://my_custom_repository.com/data_files")}
+set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
+  #get data tables:
+  data_table <- EML::eml_get(eml_object, "dataTable")
+  data_table <- within(data_table, rm("@context"))
 
+  #default: no URL supplied; assumes NPS DataStore URLs:
+  if(is.null(url)){
+    doi <- EMLeditor::get_doi(eml_object)
+    if(is.na(doi)){
+        return()
+    }
+    # to do: check DOI formatting to make sure it is an NPS doi
+    ds_ref <- stringr::str_sub(doi, -7, -1)
+    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                     ds_ref)
+    for(i in seq_along(data_table)){
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+    }
+    if(force == FALSE){
+      cat("The online URL listed for your digital files has been updated to correspond to the DOI in metadata.\n")
+    }
+  }
+  else{
+    for(i in seq_along(data_table)){
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- url
+    }
+  }
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+  return(eml_object)
+}

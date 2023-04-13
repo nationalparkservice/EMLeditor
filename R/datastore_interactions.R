@@ -113,7 +113,7 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
       ds_ref)
 
   # update data URLs to correspond to new DOI:
-  data_table <- EML::eml_get(mymeta, "dataTable")
+  data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
   data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
