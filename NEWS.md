@@ -1,3 +1,9 @@
+# EMLeditor v0.1.0.6 "Work in progress..."
+
+## 13 April 2023
+  * added `set_data_urls()` function to update dataTable urls in metadata to correspond to the DOI in the metadata. 
+  * updated `get_doi()` to add a line return to error message.
+
 # EMLeditor v0.1.0.5 "Congaree Boardwalk Loop"
 
 ## 12 April 2023
