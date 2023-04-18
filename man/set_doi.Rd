@@ -24,7 +24,7 @@ an EML-formatted R object
 As an alternative, consider using \code{set_datastore_doi()}, which will automatically initiate a draft reference on DataStore and inject the corresponding DOI into metadata.
 }
 \details{
-if \code{set_doi()} is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference.
+if \code{set_doi()} is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference. If you didn't have links to your data files, \code{set_doi()} will add them - but only if you actually update the doi.
 }
 \examples{
 \dontrun{

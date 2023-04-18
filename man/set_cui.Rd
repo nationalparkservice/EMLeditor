@@ -32,7 +32,7 @@ an EML-formatted R object
 set_cui adds CUI codes to EML metadata
 }
 \details{
-set_cui adds a CUI code to the tag \if{html}{\out{<CUI>}} under \if{html}{\out{<additionalMetadata>}}\if{html}{\out{<metadata>}}.
+set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.
 }
 \examples{
 \dontrun{
