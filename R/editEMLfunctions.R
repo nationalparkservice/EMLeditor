@@ -456,7 +456,7 @@ set_content_units <- function(eml_object, park_units,
 #'
 #' @description set_cui adds CUI codes to EML metadata
 #'
-#' @details set_cui adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
+#' @details set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.
 #'
 #' @inheritParams set_title
 #' @param cui_code a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
@@ -485,60 +485,64 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
   # get existing additionalMetadata elements:
   doc <- eml_object$additionalMetadata
 
-  x <- length(doc)
-
-  # Is CUI already specified?
-  exist_cui <- NULL
-  for (i in seq_along(doc)) {
-    if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
-      seq <- i
-      exist_cui <- doc[[i]]$metadata$CUI
-    }
+  #if no additional metadata at all....
+  if(is.null(doc)){
+    eml_object$additionalMetadata <- list(my_cui)
   }
+  if(!is.null(doc)){
 
-  # scripting route:
-  if (force == TRUE) {
-    eml_object$additionalMetadata[[seq]] <- my_cui
-  }
+    #helps track lists of different lengths/hierarchies
+    x <- length(doc)
 
-  # interactive route:
-  if (force == FALSE) {
-    # If no existing CUI, add it in:
-    if (is.null(exist_cui)) {
-      if (x == 1) {
-        eml_object$additionalMetadata <- list(my_cui, eml_object$additionalMetadata)
+    # Is CUI already specified?
+    exist_cui <- NULL
+    for (i in seq_along(doc)) {
+      if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
+        seq <- i
+        exist_cui <- doc[[i]]$metadata$CUI
       }
-      if (x > 1) {
-        eml_object$additionalMetadata[[x + 1]] <- my_cui
-      }
-      cat("No previous CUI was detected. Your CUI has been set to ",
-        crayon::bold$blue(cui_code), ".",
-        sep = ""
-      )
     }
 
-    # If existing CUI, stop.
-    if (!is.null(exist_cui)) {
-      cat("CUI has previously been specified as ", crayon::bold$blue(exist_cui),
-        ".\n",
-        sep = ""
-      )
-      var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
-      if (var1 == 1) {
-        eml_object$additionalMetadata[[seq]] <- my_cui
-        cat("Your CUI code has been rest to ", crayon::blue$bold(cui_code), ".",
-          sep = ""
-        )
+    # scripting route:
+    if (force == TRUE) {
+      #what is [[seq]]?
+      eml_object$additionalMetadata[[seq]] <- my_cui
+    }
+
+    # interactive route:
+    if (force == FALSE) {
+      # If no existing CUI, add it in:
+      if (is.null(exist_cui)) {
+        if (x == 1) {
+          eml_object$additionalMetadata <- list(my_cui,
+                                                eml_object$additionalMetadata)
+        }
+        if (x > 1) {
+          eml_object$additionalMetadata[[x + 1]] <- my_cui
+        }
+        cat("No previous CUI was detected. Your CUI has been set to ",
+            crayon::bold$blue(cui_code), ".", sep = "")
       }
-      if (var1 == 2) {
-        cat("Your original CUI code was retained")
+      # If existing CUI, stop.
+      if (!is.null(exist_cui)) {
+        cat("CUI has previously been specified as ",
+            crayon::bold$blue(exist_cui),
+            ".\n", sep = "")
+        var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+        if (var1 == 1) {
+          eml_object$additionalMetadata[[seq]] <- my_cui
+          cat("Your CUI code has been rest to ",
+              crayon::blue$bold(cui_code), ".", sep = "")
+        }
+        if (var1 == 2) {
+          cat("Your original CUI code was retained")
+        }
       }
     }
   }
-
   # Set NPS publisher, if it doesn't already exist
   if (NPS == TRUE) {
-    eml_object <- .set_npspublisher(eml_object)
+  eml_object <- .set_npspublisher(eml_object)
   }
 
   # add/updated EMLeditor and version to metadata:
