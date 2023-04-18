@@ -117,9 +117,16 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   data_table <- within(data_table, rm("@context"))
   data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
-  for(i in seq_along(data_table)){
-    eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+  # handle case when there is only one data table:
+  if("physical" %in% names(data_table)){
+    eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+  }
+  # handle case when there is only one data table:
+  else {
+    for(i in seq_along(data_table)){
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
     }
+  }
 
   if(force == FALSE){
     #print DOI to screen
@@ -127,11 +134,23 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
     doc <- sub(".*? ", "", doc)
     cat("Your newly specified DOI is: ", crayon::blue$bold(doc), ".\n",sep = "")
 
-    #tell user location of draft reference:
-    url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
-                ds_ref)
+    # update data URLs to correspond to new DOI:
+    data_table <- EML::eml_get(eml_object, "dataTable")
+    data_table <- within(data_table, rm("@context"))
+    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                       ds_ref)
+    # handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+    }
+    # handle case when there is only one data table:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      }
+    }
     cat("You can check on your draft reference at:\n")
-    cat(crayon::blue$bold(url), "\n")
+    cat(crayon::blue$bold(data_url), "\n")
     cat("Your draft title is:\n")
     cat(crayon::blue$bold(dynamic_title), "\n")
     cat("Your draft title will be updated upon metadata upload.")
