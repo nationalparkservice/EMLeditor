@@ -1,5 +1,10 @@
 # EMLeditor v0.1.0.6 "Work in progress..."
 
+## 18 April 2023
+  * updated `set_data_urls()`, `set_doi()`, and `set_datastore_doi()` to handle cases when there is only one dataTable (as well as multiple data tables).
+  * updated `set_cui()` to handle cases when there is no previus additionalMetadata element in metadata.
+  * updated `set_cui()` and `set_int_rights()` such that they can accept parameters in any case, not just upper (`set_cui()`) or lower (`set_int_rights()`).
+
 ## 13 April 2023
   * added `set_data_urls()` function to update dataTable urls in metadata to correspond to the DOI in the metadata. 
   * updated `get_doi()` to add a line return to error message.

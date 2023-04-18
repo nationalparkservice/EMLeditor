@@ -62,7 +62,7 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 #'
 #' As an alternative, consider using `set_datastore_doi()`, which will automatically initiate a draft reference on DataStore and inject the corresponding DOI into metadata.
 #'
-#' @details if `set_doi()` is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference.
+#' @details if `set_doi()` is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference. If you didn't have links to your data files, `set_doi()` will add them - but only if you actually update the doi.
 #'
 #' @inheritParams set_title
 #'
@@ -83,8 +83,15 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
     data_table <- within(data_table, rm("@context"))
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                        ds_ref)
-    for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+    #handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+    }
+    # handle case when there are multiple data tables:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      }
     }
   }
   # interactive route:
@@ -155,17 +162,24 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         # update data URLs to correspond to new DOI:
         data_table <- EML::eml_get(eml_object, "dataTable")
         data_table <- within(data_table, rm("@context"))
+
         data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                            ds_ref)
-        for(i in seq_along(data_table)){
-          eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+        #handle case when there is only one data table:
+        if("physical" %in% names(data_table)){
+          eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
         }
-
+        # handle case when there are multiple data tables:
+        else {
+            for(i in seq_along(data_table)){
+              eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+            }
+        }
         # print the new DOI to the screen:
-        cat("Your newly specified DOI is: ",
-          crayon::blue$bold(doc),
-          sep = ""
-        )
+        cat("Your newly specified DOI is: ", crayon::blue$bold(doc),
+            ".\n", sep = "")
+        cat("Your data files url also been updated to: ",
+            crayon::blue$bold(data_url), ".\n", sep = "")
       }
     }
   }
@@ -456,7 +470,7 @@ set_content_units <- function(eml_object, park_units,
 #'
 #' @description set_cui adds CUI codes to EML metadata
 #'
-#' @details set_cui adds a CUI code to the tag <CUI> under <additionalMetadata><metadata>.
+#' @details set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.
 #'
 #' @inheritParams set_title
 #' @param cui_code a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
@@ -472,7 +486,10 @@ set_content_units <- function(eml_object, park_units,
 #' \dontrun{
 #' set_cui(eml_object, "PUBFUL")
 #' }
-set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), force = FALSE, NPS = TRUE) {
+set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
+                                             "FEDCON", "FED ONLY"),
+                    force = FALSE, NPS = TRUE) {
+  cui_code <- toupper(cui_code)
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code <- match.arg(cui_code)
 
@@ -482,60 +499,64 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY", "FEDC
   # get existing additionalMetadata elements:
   doc <- eml_object$additionalMetadata
 
-  x <- length(doc)
-
-  # Is CUI already specified?
-  exist_cui <- NULL
-  for (i in seq_along(doc)) {
-    if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
-      seq <- i
-      exist_cui <- doc[[i]]$metadata$CUI
-    }
+  #if no additional metadata at all....
+  if(is.null(doc)){
+    eml_object$additionalMetadata <- list(my_cui)
   }
+  if(!is.null(doc)){
 
-  # scripting route:
-  if (force == TRUE) {
-    eml_object$additionalMetadata[[seq]] <- my_cui
-  }
+    #helps track lists of different lengths/hierarchies
+    x <- length(doc)
 
-  # interactive route:
-  if (force == FALSE) {
-    # If no existing CUI, add it in:
-    if (is.null(exist_cui)) {
-      if (x == 1) {
-        eml_object$additionalMetadata <- list(my_cui, eml_object$additionalMetadata)
+    # Is CUI already specified?
+    exist_cui <- NULL
+    for (i in seq_along(doc)) {
+      if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
+        seq <- i
+        exist_cui <- doc[[i]]$metadata$CUI
       }
-      if (x > 1) {
-        eml_object$additionalMetadata[[x + 1]] <- my_cui
-      }
-      cat("No prvious CUI was detected. Your CUI has been set to ",
-        crayon::bold$blue(cui_code), ".",
-        sep = ""
-      )
     }
 
-    # If existing CUI, stop.
-    if (!is.null(exist_cui)) {
-      cat("CUI has previously been specified as ", crayon::bold$blue(exist_cui),
-        ".\n",
-        sep = ""
-      )
-      var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
-      if (var1 == 1) {
-        eml_object$additionalMetadata[[seq]] <- my_cui
-        cat("Your CUI code has been rest to ", crayon::blue$bold(cui_code), ".",
-          sep = ""
-        )
+    # scripting route:
+    if (force == TRUE) {
+      #what is [[seq]]?
+      eml_object$additionalMetadata[[seq]] <- my_cui
+    }
+
+    # interactive route:
+    if (force == FALSE) {
+      # If no existing CUI, add it in:
+      if (is.null(exist_cui)) {
+        if (x == 1) {
+          eml_object$additionalMetadata <- list(my_cui,
+                                                eml_object$additionalMetadata)
+        }
+        if (x > 1) {
+          eml_object$additionalMetadata[[x + 1]] <- my_cui
+        }
+        cat("No previous CUI was detected. Your CUI has been set to ",
+            crayon::bold$blue(cui_code), ".", sep = "")
       }
-      if (var1 == 2) {
-        cat("Your original CUI code was retained")
+      # If existing CUI, stop.
+      if (!is.null(exist_cui)) {
+        cat("CUI has previously been specified as ",
+            crayon::bold$blue(exist_cui),
+            ".\n", sep = "")
+        var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+        if (var1 == 1) {
+          eml_object$additionalMetadata[[seq]] <- my_cui
+          cat("Your CUI code has been rest to ",
+              crayon::blue$bold(cui_code), ".", sep = "")
+        }
+        if (var1 == 2) {
+          cat("Your original CUI code was retained")
+        }
       }
     }
   }
-
   # Set NPS publisher, if it doesn't already exist
   if (NPS == TRUE) {
-    eml_object <- .set_npspublisher(eml_object)
+  eml_object <- .set_npspublisher(eml_object)
   }
 
   # add/updated EMLeditor and version to metadata:
@@ -1344,7 +1365,7 @@ set_publisher <- function(eml_object,
   return(eml_object)
 }
 
-#' Set Intellectual Rights
+#' Set Intellectual Rights (and license name)
 #'
 #' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
 #'
@@ -1369,6 +1390,7 @@ set_int_rights <- function(eml_object,
                           force = FALSE,
                           NPS = TRUE){
   # verify license type selection; stop if does not equal one of 3 valid codes:
+  license <- tolower(license)
   license <- match.arg(license)
 
   #set up license text:
@@ -1491,11 +1513,11 @@ set_int_rights <- function(eml_object,
 }
 
 
-#' Set data URLs
+#' Update (or add) data table URLs
 #'
 #' @description `set_data_urls()` inspects metadata and edits the online distribution url for each dataTable (data file) to correspond to the reference indicated by the DOI listed in the metadata. If your data files are stored on DataStore as part of the same reference as the data package, you do not need to supply a URL. If your data files will be stored to a different repository, you can supply that location.
 #'
-#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
+#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
 #'
 #' @inheritParams set_title
 #' @param url a string that identifies the online location of the data file (uniform resource locator)
@@ -1525,16 +1547,31 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
     ds_ref <- stringr::str_sub(doi, -7, -1)
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
-    for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+
+    #handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+    }
+    # handle case when there are multiple data tables:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      }
     }
     if(force == FALSE){
       cat("The online URL listed for your digital files has been updated to correspond to the DOI in metadata.\n")
     }
   }
   else{
-    for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- url
+    #handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- url
+    }
+    # handle case when there are multiple data tables:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- url
+      }
     }
   }
   if (NPS == TRUE) {
@@ -1544,3 +1581,4 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
   eml_object <- .set_version(eml_object)
   return(eml_object)
 }
+

@@ -2,11 +2,11 @@
 #'
 #' @description `set_datastore_doi()` differs from `set_doi()` in that this function generates a draft reference on DataStore and uses that draft reference to auto-populate the DOI within metadata whereas the later requires manually initiating a draft reference in DataStore and providing the reference ID to insert the DOI into metadata.
 #'
-#' @details To prevent generating too many (unused) draft references, `set_datastore_doi()` checks your metadata contents prior to initiating a draft reference on DataStore. If you already have a DOI specified, it will ask if you really want to over-write the DOI **and** initiate a new draft reference. Setting force = TRUE will over-ride this aspect of the function, so use with care. the `set_datastore_doi()` function requires that your metadata already contain a data package title and if it is missing will prompt you to insert it and quit. Setting force = TRUE will not override this check. If R cannot successfully initiate a draft reference on DataStore, the function will remind you to log on to the VPN. If the problem persists, email irma@nps.gov.
+#' @details To prevent generating too many (unused) draft references, `set_datastore_doi()` checks your metadata contents prior to initiating a draft reference on DataStore. If you already have a DOI specified, it will ask if you really want to over-write the DOI **and** initiate a new draft reference. Setting force = TRUE will over-ride this aspect of the function, so use with care. the `set_datastore_doi()` function requires that your metadata already contain a data package title and if it is missing will prompt you to insert it and quit. Setting force = TRUE will not override this check. If R cannot successfully initiate a draft reference on DataStore, the function will remind you to log on to the VPN. If the problem persists, email [irma@nps.gov](mailto:irma@nps.gov).
 #'
 #' @details This function generates a draft reference on DataStore. If you run with force = FALSE (default), the function will report the draft reference URL and the draft title for the draft reference. Make sure you upload your data and metadata to the correct draft reference! Your draft reference title should read: "DRAFT: <your data package title>". This will be updated to your data package title when you upload your metadata.
 #'
-#' @details if you set a new DOI with `set_datastore_doi()`, it will also update all the links within the metadata to the data files to reflect the new draft reference and and DataStore location.
+#' If you set a new DOI with `set_datastore_doi()`, it will also update all the links within the metadata to the data files to reflect the new draft reference and DataStore location. If you didn't have links to your data files, `set_datastore_doi()` will add them - but only if you actually update the doi.
 #'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
@@ -117,9 +117,16 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   data_table <- within(data_table, rm("@context"))
   data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
-  for(i in seq_along(data_table)){
-    eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+  # handle case when there is only one data table:
+  if("physical" %in% names(data_table)){
+    eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+  }
+  # handle case when there is only one data table:
+  else {
+    for(i in seq_along(data_table)){
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
     }
+  }
 
   if(force == FALSE){
     #print DOI to screen
@@ -127,11 +134,23 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
     doc <- sub(".*? ", "", doc)
     cat("Your newly specified DOI is: ", crayon::blue$bold(doc), ".\n",sep = "")
 
-    #tell user location of draft reference:
-    url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
-                ds_ref)
+    # update data URLs to correspond to new DOI:
+    data_table <- EML::eml_get(eml_object, "dataTable")
+    data_table <- within(data_table, rm("@context"))
+    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                       ds_ref)
+    # handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+    }
+    # handle case when there is only one data table:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      }
+    }
     cat("You can check on your draft reference at:\n")
-    cat(crayon::blue$bold(url), "\n")
+    cat(crayon::blue$bold(data_url), "\n")
     cat("Your draft title is:\n")
     cat(crayon::blue$bold(dynamic_title), "\n")
     cat("Your draft title will be updated upon metadata upload.")
