@@ -508,7 +508,7 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY", "FEDC
       if (x > 1) {
         eml_object$additionalMetadata[[x + 1]] <- my_cui
       }
-      cat("No prvious CUI was detected. Your CUI has been set to ",
+      cat("No previous CUI was detected. Your CUI has been set to ",
         crayon::bold$blue(cui_code), ".",
         sep = ""
       )
