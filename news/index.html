@@ -50,6 +50,12 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0.6" id="emleditor-v0106-work-in-progress">EMLeditor v0.1.0.6 “Work in progress…”<a class="anchor" aria-label="anchor" href="#emleditor-v0106-work-in-progress"></a></h2>
 <div class="section level3">
+<h3 id="id_18-april-0-1-0-6">18 April 2023<a class="anchor" aria-label="anchor" href="#id_18-april-0-1-0-6"></a></h3>
+<ul><li>updated <code><a href="../reference/set_data_urls.html">set_data_urls()</a></code>, <code><a href="../reference/set_doi.html">set_doi()</a></code>, and <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> to handle cases when there is only one dataTable (as well as multiple data tables).</li>
+<li>updated <code><a href="../reference/set_cui.html">set_cui()</a></code> to handle cases when there is no previus additionalMetadata element in metadata.</li>
+<li>updated <code><a href="../reference/set_cui.html">set_cui()</a></code> and <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> such that they can accept parameters in any case, not just upper (<code><a href="../reference/set_cui.html">set_cui()</a></code>) or lower (<code><a href="../reference/set_int_rights.html">set_int_rights()</a></code>).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_13-april-0-1-0-6">13 April 2023<a class="anchor" aria-label="anchor" href="#id_13-april-0-1-0-6"></a></h3>
 <ul><li>added <code><a href="../reference/set_data_urls.html">set_data_urls()</a></code> function to update dataTable urls in metadata to correspond to the DOI in the metadata.</li>
 <li>updated <code><a href="../reference/get_doi.html">get_doi()</a></code> to add a line return to error message.</li>
@@ -127,7 +133,7 @@ and <alternateidentifier> fields were used multiple times in the metadata.</alte
 </div>
 <div class="section level4">
 <h4 id="major-changes-0-1-0-1">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-1"></a></h4>
-<p><code><a href="../reference/check_eml.html">check_eml()</a></code> function is a wrapper that calls <code><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code> with <code>check_metadata-only = TRUE</code>. To run all the metadata-specific tests that will be run during a congruence test.</p>
+<p><code><a href="../reference/check_eml.html">check_eml()</a></code> function is a wrapper that calls <code><a href="https://rdrr.io/pkg/DPchecker/man/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code> with <code>check_metadata-only = TRUE</code>. To run all the metadata-specific tests that will be run during a congruence test.</p>
 </div>
 <div class="section level4">
 <h4 id="minor-changes-0-1-0-1">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-1-0-1"></a></h4>
