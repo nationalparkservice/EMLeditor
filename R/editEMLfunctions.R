@@ -472,7 +472,10 @@ set_content_units <- function(eml_object, park_units,
 #' \dontrun{
 #' set_cui(eml_object, "PUBFUL")
 #' }
-set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY", "FEDCON", "FED ONLY"), force = FALSE, NPS = TRUE) {
+set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
+                                             "FEDCON", "FED ONLY"),
+                    force = FALSE, NPS = TRUE) {
+  cui_code <- toupper(cui_code)
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code <- match.arg(cui_code)
 
