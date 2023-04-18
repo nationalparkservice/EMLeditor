@@ -83,8 +83,15 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
     data_table <- within(data_table, rm("@context"))
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                        ds_ref)
-    for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+    #handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+    }
+    # handle case when there are multiple data tables:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      }
     }
   }
   # interactive route:
@@ -155,17 +162,24 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         # update data URLs to correspond to new DOI:
         data_table <- EML::eml_get(eml_object, "dataTable")
         data_table <- within(data_table, rm("@context"))
+
         data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                            ds_ref)
-        for(i in seq_along(data_table)){
-          eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+        #handle case when there is only one data table:
+        if("physical" %in% names(data_table)){
+          eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
         }
-
+        # handle case when there are multiple data tables:
+        else {
+            for(i in seq_along(data_table)){
+              eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+            }
+        }
         # print the new DOI to the screen:
-        cat("Your newly specified DOI is: ",
-          crayon::blue$bold(doc),
-          sep = ""
-        )
+        cat("Your newly specified DOI is: ", crayon::blue$bold(doc),
+            ".\n", sep = "")
+        cat("Your data files url also been updated to: ",
+            crayon::blue$bold(data_url), ".\n", sep = "")
       }
     }
   }
