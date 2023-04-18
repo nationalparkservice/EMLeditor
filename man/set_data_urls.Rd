@@ -2,7 +2,7 @@
 % Please edit documentation in R/editEMLfunctions.R
 \name{set_data_urls}
 \alias{set_data_urls}
-\title{Set data URLs}
+\title{Update (or add) data table URLs}
 \usage{
 set_data_urls(eml_object, url = NULL, force = FALSE, NPS = TRUE)
 }

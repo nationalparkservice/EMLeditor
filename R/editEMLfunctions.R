@@ -1365,7 +1365,7 @@ set_publisher <- function(eml_object,
   return(eml_object)
 }
 
-#' Set Intellectual Rights
+#' Set Intellectual Rights (and license name)
 #'
 #' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
 #'
@@ -1513,7 +1513,7 @@ set_int_rights <- function(eml_object,
 }
 
 
-#' Set data URLs
+#' Update (or add) data table URLs
 #'
 #' @description `set_data_urls()` inspects metadata and edits the online distribution url for each dataTable (data file) to correspond to the reference indicated by the DOI listed in the metadata. If your data files are stored on DataStore as part of the same reference as the data package, you do not need to supply a URL. If your data files will be stored to a different repository, you can supply that location.
 #'
