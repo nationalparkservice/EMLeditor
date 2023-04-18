@@ -62,7 +62,7 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 #'
 #' As an alternative, consider using `set_datastore_doi()`, which will automatically initiate a draft reference on DataStore and inject the corresponding DOI into metadata.
 #'
-#' @details if `set_doi()` is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference.
+#' @details if `set_doi()` is used to change the DOI, it will also update the urls listed in metadata for each data file to reflect the new DOI/DataStore reference. If you didn't have links to your data files, `set_doi()` will add them - but only if you actually update the doi.
 #'
 #' @inheritParams set_title
 #'
@@ -1517,7 +1517,7 @@ set_int_rights <- function(eml_object,
 #'
 #' @description `set_data_urls()` inspects metadata and edits the online distribution url for each dataTable (data file) to correspond to the reference indicated by the DOI listed in the metadata. If your data files are stored on DataStore as part of the same reference as the data package, you do not need to supply a URL. If your data files will be stored to a different repository, you can supply that location.
 #'
-#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
+#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
 #'
 #' @inheritParams set_title
 #' @param url a string that identifies the online location of the data file (uniform resource locator)
@@ -1547,16 +1547,31 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
     ds_ref <- stringr::str_sub(doi, -7, -1)
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
-    for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+
+    #handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
+    }
+    # handle case when there are multiple data tables:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      }
     }
     if(force == FALSE){
       cat("The online URL listed for your digital files has been updated to correspond to the DOI in metadata.\n")
     }
   }
   else{
-    for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- url
+    #handle case when there is only one data table:
+    if("physical" %in% names(data_table)){
+      eml_object$dataset$dataTable$physical$distribution$online$url <- url
+    }
+    # handle case when there are multiple data tables:
+    else {
+      for(i in seq_along(data_table)){
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- url
+      }
     }
   }
   if (NPS == TRUE) {
@@ -1566,3 +1581,4 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
   eml_object <- .set_version(eml_object)
   return(eml_object)
 }
+
