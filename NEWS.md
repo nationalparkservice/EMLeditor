@@ -1,4 +1,7 @@
-# EMLeditor v0.1.0.6 "Work in progress..."
+# EMLeditor v0.1.0.6 "Double Arch"
+
+## 19 April 2023
+  * updated `set_content_units()` to include the attribute "system = content unit link" as part of the geographicCoverage element for each geographicCoverage element that is also a park content unit link (the old text in the field, "NPS Content Unit Link:" will be retained).
 
 ## 18 April 2023
   * updated `set_data_urls()`, `set_doi()`, and `set_datastore_doi()` to handle cases when there is only one dataTable (as well as multiple data tables).
