@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,11 +68,11 @@
 <div class="page-header"><h1 id="emleditor">EMLeditor<a class="anchor" aria-label="anchor" href="#emleditor"></a>
 </h1></div>
 <div class="section level5">
-<h5 id="v0105">v0.1.0.5<a class="anchor" aria-label="anchor" href="#v0105"></a>
+<h5 id="v0106">v0.1.0.6<a class="anchor" aria-label="anchor" href="#v0106"></a>
 </h5>
 </div>
 <div class="section level5">
-<h5 id="congaree-boardwalk-loop">“Congaree Boardwalk Loop”<a class="anchor" aria-label="anchor" href="#congaree-boardwalk-loop"></a>
+<h5 id="double-arch">“Double Arch”<a class="anchor" aria-label="anchor" href="#double-arch"></a>
 </h5>
 <!-- badges: start -->
 <!-- badges: end -->
@@ -102,10 +102,10 @@
 <p>You can install the development version of EMLeditor from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span></code></pre></div>
 <p>To install all the packages in the <a href="https://github.com/nationalparkservice/NPSdataverse" class="external-link">NPSdataverse</a> (including EMLeditor):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level1">
 <h1 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a>
@@ -120,7 +120,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/EML/" class="external-link">EML</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load a pre-existing EML-formated xml file:</span></span>
-<span><span class="va">my_eml</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"EML_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
+<span><span class="va">my_eml</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"EML_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># the 7-digit number is your DataStore Reference number.</span></span>
 <span><span class="co"># It is automatically generated when you initiate a draft Reference.</span></span>
@@ -128,10 +128,10 @@
 <span><span class="va">my_eml2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/set_doi.html">set_doi</a></span><span class="op">(</span><span class="va">my_eml</span>, <span class="st">"1234567"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># make sure your EML is valid.</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_eml2</span><span class="op">)</span></span>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_eml2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># write the new R object back to XML:</span></span>
-<span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_eml2</span>, <span class="st">"EML_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_eml2</span>, <span class="st">"EML_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-2">Example 2:<a class="anchor" aria-label="anchor" href="#example-2"></a>
@@ -139,7 +139,7 @@
 <p>When you upload a data package (data files and *_metadata.xml) to DataStore, DataStore will (or will soon) automatically create a readme.txt file to accompany your data package. You can generate a <em>mock</em> readme.txt file to see whether some of the basic metadata in your *_metadata.xml file is correct. There is no need to upload this <em>mock</em> file. It is just a tool for you to inspect your metadata. The actual readme generated by DataStore may deviate slightly.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load a pre-existing EML-formated xml file:</span></span>
-<span><span class="va">my_eml</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"my_EML_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
+<span><span class="va">my_eml</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"my_EML_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Do some stuff with your EML metadata in R.</span></span>
 <span><span class="co"># For instance, add a literature cited section.</span></span>
@@ -149,14 +149,14 @@
 <span><span class="va">my_eml2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/set_lit.html">set_lit</a></span><span class="op">(</span><span class="va">my_eml</span>, <span class="va">bibtex_file</span>, NPS <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># make sure your EML is valid:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_eml2</span><span class="op">)</span></span>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_eml2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># writes a .txt file to your working directory.</span></span>
 <span><span class="co"># (FYI Lit cited doesn't show up in the mock readme)</span></span>
 <span><span class="fu"><a href="reference/write_readme.html">write_readme</a></span><span class="op">(</span><span class="va">my_eml2</span>, <span class="st">"MockReadMe.txt"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Assuming you're happy with the readme file generated, write the object to XML:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_eml2</span>, <span class="st">"my_EML2_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_eml2</span>, <span class="st">"my_EML2_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 
@@ -196,7 +196,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: stable"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://www.codefactor.io/repository/github/roblbaker/emleditor" class="external-link"><img src="https://www.codefactor.io/repository/github/roblbaker/emleditor/badge" alt="CodeFactor"></a></li>
 </ul>
 </div>

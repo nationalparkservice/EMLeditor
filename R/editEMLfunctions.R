@@ -198,7 +198,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 #'
 #' @description `set_content_units()` adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore. Invalid park unit codes will return an error and the function will terminate. If you don't know a park unit code, see [get_park_code()](https://nationalparkservice.github.io/NPSutils/reference/get_park_code.html) from the [NPSutils](https://nationalparkservice.github.io/NPSutils/index.html) package].
 #'
-#' @details Adds the Content Unit Link(s) to a geographicCoverage. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate geographicCoverage element. For each content unit link, the unit name will be listed under geographicDescription and prefaced with "NPS Content Unit Link:". Required child elements (bounding coordinates) are auto populated to produce a rectangle that encompasses the park unit in question. If the default force=FALSE option is retained, the user will shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
+#' @details Adds the Content Unit Link(s) to a geographicCoverage. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate geographicCoverage element. For each content unit link, the unit name will be listed under geographicDescription and prefaced with "NPS Content Unit Link:". The geographicCoverage element will be given the attribute "system = content unit link". Required child elements (bounding coordinates) are auto populated to produce a rectangle that encompasses the park unit in question. If the default force=FALSE option is retained, the user will be shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
 #'
 #' @inheritParams set_title
 #'
@@ -224,10 +224,8 @@ set_content_units <- function(eml_object, park_units,
   if(!identical(seq_along(null_units), seq_along(park_units))){
     return()
   }
-
   # add text to indicate that these are park unit connections.
   units <- paste0("NPS Content Unit Link: ", park_units)
-
   #generate new geographic coverage for NPS Content Unit Links:
   unit_list <- NULL
   for (i in seq_along(park_units)){
@@ -244,20 +242,18 @@ set_content_units <- function(eml_object, park_units,
         northBoundingCoordinate = N,
         eastBoundingCoordinate = E,
         southBoundingCoordinate = S,
-        westBoundingCoordinate = W
-      )
-    )
+        westBoundingCoordinate = W),
+      system = "content unit link")
     unit_list <- append(unit_list, list(geocov))
   }
-
   # get geographic coverage from eml_object
   doc <- eml_object$dataset$coverage$geographicCoverage
-
   # Are there content unit links already specified?
   exist_units <- NULL
   for (i in seq_along(doc)) {
     myMap <- purrr::map(doc, 1)[[i]]
-    if (suppressWarnings(stringr::str_detect(myMap,"NPS Content Unit Link")) == TRUE) {
+    if (suppressWarnings(stringr::str_detect(myMap,
+                                             "NPS Content Unit Link")) == TRUE) {
       exist_units <- append(exist_units, myMap)
     }
   }
@@ -297,7 +293,6 @@ set_content_units <- function(eml_object, park_units,
         sep = ""
       }
     }
-
     # if there already content unit links:
     if (!is.null(exist_units)) {
       cat("Your metadata already has the following Content Unit Links Specified:\n")
@@ -318,7 +313,6 @@ set_content_units <- function(eml_object, park_units,
           # write over the existing geographic coverage
           eml_object$dataset$coverage$geographicCoverage <- doc
           }
-
         # if there is only one geo coverage:
         if (length(seq_along(doc[[1]])) == 1) {
           geocov2 <- EML::eml$geographicCoverage(
@@ -340,7 +334,8 @@ set_content_units <- function(eml_object, park_units,
             newgeo[i],
             "NPS Content Unit Link"
           )) == TRUE) {
-            exist_units <- append(exist_units, newgeo[[i]]$geographicDescription)
+            exist_units <- append(exist_units,
+                                  newgeo[[i]]$geographicDescription)
           }
         }
         # print current/new units:
@@ -349,15 +344,12 @@ set_content_units <- function(eml_object, park_units,
           cat(crayon::blue$bold(exist_units[i]), "\n")
         }
       }
-
       # replace existing content unit links:
       if (var1 == 3) {
-
         #if there is only one item in geoCov, it is not nested as deeply as when there are multiple. Renest single items so that all geoCov are at the same level of nesting:
         if(!is.null(names(doc))){
           doc <- list(doc)
         }
-
         #get all geographic coverage that is NOT content unit links:
         no_units <- NULL
         for (i in seq_along(doc)) {
@@ -384,7 +376,6 @@ set_content_units <- function(eml_object, park_units,
             my_list <- append(unit_list, no_units)
             eml_object$dataset$coverage$geographicCoverage <- my_list
           }
-
           # get new geo units:
           newgeo <- eml_object$dataset$coverage$geographicCoverage
           exist_units <- NULL
@@ -407,7 +398,6 @@ set_content_units <- function(eml_object, park_units,
         }
       }
     }
-
   # scripting route
   if (force == TRUE) {
     # if the only geo unit was not a previous connection, add connections:
@@ -454,15 +444,12 @@ set_content_units <- function(eml_object, park_units,
       }
     }
   }
-
   # Set NPS publisher, if it doesn't already exist
   if (NPS == TRUE) {
     eml_object <- .set_npspublisher(eml_object)
   }
-
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
-
   return(eml_object)
 }
 

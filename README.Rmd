@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
 
 
 # EMLeditor 
-##### v0.1.0.5
-##### "Congaree Boardwalk Loop"
+##### v0.1.0.6
+##### "Double Arch"
 
 <!-- badges: start -->
 <!-- badges: end -->

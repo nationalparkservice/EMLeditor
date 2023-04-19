@@ -3,15 +3,15 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-stable](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CodeFactor](https://www.codefactor.io/repository/github/roblbaker/emleditor/badge)](https://www.codefactor.io/repository/github/roblbaker/emleditor)
 <!-- badges: end -->
 
 # EMLeditor
 
-##### v0.1.0.5
+##### v0.1.0.6
 
-##### “Congaree Boardwalk Loop”
+##### “Double Arch”
 
 <!-- badges: start -->
 <!-- badges: end -->
