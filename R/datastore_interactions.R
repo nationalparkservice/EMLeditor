@@ -32,7 +32,8 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
     if(length(seq_along(doc)) > 1 ){
       cat("Your metadata does not have a previously specified DOI.\n", sep = "")
       cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
-      var1 <- readline(prompt = "1: Yes\n2: No\n")
+      message("1: Yes")
+      var1 <- readline(prompt = "2: No \n")
       if (var1 == 2){
         cat("Function terminated. You have not created a new draft reference on DataStore and a DOI has not been added to your metadata.")
         return()
@@ -76,7 +77,8 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
       }
       #Ask if they really want a new DOI & new draft reference?
       cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
-      var1 <- readline(prompt = "1: Yes\n2: No\n")
+      message("1: Yes")
+      var1 <- readline(prompt = "2: No\n")
       # if chooses not to add a new doi/generate a new draft reference:
       if (var1 == 2){
         cat("Function terminated. You have not created a new draft reference on DataStore and your original DOI has been retained.")
@@ -96,8 +98,8 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   #generate json body for rest api call:
   mylist <- list(referenceTypeId="dataPackage",
                  title=dynamic_title,
-                 location="string",
-                 issuedDate=list(year=0, month=0, day=0, precision="string"))
+                 location="",
+                 issuedDate=list(year=0, month=0, day=0, precision=""))
   bdy<-jsonlite::toJSON(mylist, pretty=TRUE, auto_unbox=TRUE)
   #Create empty draft reference:
   req <- httr::POST("https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/CreateDraft",
