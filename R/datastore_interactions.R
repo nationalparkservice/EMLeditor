@@ -24,12 +24,12 @@
 #' }
 set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   # check for existing DOI:
-  doc<- get_doi(eml_object)
+  doc<- utils::capture.output(get_doi(eml_object))
   #get data package title from metadata:
   data_package_title <- EMLeditor::get_title(eml_object)
   if(force == FALSE){
     #if there is an existing DOI in the metadata:
-    if(!is.null(doc)){
+    if(length(seq_along(doc)) == 1){
       #get Datastore Reference ID:
       DS_ref <- get_ds_id(eml_object)
       url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
@@ -47,7 +47,8 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 
       #tell user their current DOI:
       cat("The current data package DOI in your metadata is:\n",
-          crayon::blue$bold(doc), ".\n\n", sep="")
+          crayon::blue$bold("https://doi.org/10.57830/", DS_ref, sep=""),
+          ".\n\n", sep="")
       #if API search did not find a corresponding reference on DataStore:
       if(length(test_rjson) == 0){
         cat("However, there is no draft reference associated with this DOI on DataStore.\n")
@@ -130,9 +131,9 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 
   if(force == FALSE){
     #print DOI to screen
-    doc <- eml_object$dataset$alternateIdentifier
-    doc <- sub(".*? ", "", doc)
-    cat("Your newly specified DOI is: ", crayon::blue$bold(doc), ".\n",sep = "")
+    doc1 <- eml_object$dataset$alternateIdentifier
+    doc1 <- sub(".*? ", "", doc1)
+    cat("Your newly specified DOI is: ", crayon::blue$bold(doc1), ".\n",sep = "")
 
     # update data URLs to correspond to new DOI:
     data_table <- EML::eml_get(eml_object, "dataTable")
