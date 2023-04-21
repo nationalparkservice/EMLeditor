@@ -1,3 +1,8 @@
+# EMLeditor v0.1.0.7 "Work in progress"
+
+## 21 April 2023
+  * updated `set_datastore_doi()` so that it does not prompt to use `set_datastore_doi()` if there is no previous doi. Fixed readline prompt cursor on the wrong line. Now generates draft references with blank fields instead of place-holder strings (except for the title).
+
 # EMLeditor v0.1.0.6 "Double Arch"
 
 ## 19 April 2023
