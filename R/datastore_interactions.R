@@ -24,12 +24,23 @@
 #' }
 set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   # check for existing DOI:
-  doc<- get_doi(eml_object)
+  doc<- utils::capture.output(get_doi(eml_object))
   #get data package title from metadata:
   data_package_title <- EMLeditor::get_title(eml_object)
   if(force == FALSE){
-    #if there is an existing DOI in the metadata:
-    if(!is.null(doc)){
+    # if there is NOT an existing DOI in metadata:
+    if(length(seq_along(doc)) > 1 ){
+      cat("Your metadata does not have a previously specified DOI.\n", sep = "")
+      cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
+      message("1: Yes")
+      var1 <- readline(prompt = "2: No \n")
+      if (var1 == 2){
+        cat("Function terminated. You have not created a new draft reference on DataStore and a DOI has not been added to your metadata.")
+        return()
+      }
+    }
+    # if there is an existing DOI in the metadata:
+    if(length(seq_along(doc)) == 1){
       #get Datastore Reference ID:
       DS_ref <- get_ds_id(eml_object)
       url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
@@ -47,7 +58,8 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 
       #tell user their current DOI:
       cat("The current data package DOI in your metadata is:\n",
-          crayon::blue$bold(doc), ".\n\n", sep="")
+          crayon::blue$bold("https://doi.org/10.57830/", DS_ref, sep=""),
+          ".\n\n", sep="")
       #if API search did not find a corresponding reference on DataStore:
       if(length(test_rjson) == 0){
         cat("However, there is no draft reference associated with this DOI on DataStore.\n")
@@ -65,53 +77,48 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
       }
       #Ask if they really want a new DOI & new draft reference?
       cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
-      var1 <- readline(prompt = "1: Yes\n2: No\n")
+      message("1: Yes")
+      var1 <- readline(prompt = "2: No\n")
+      # if chooses not to add a new doi/generate a new draft reference:
       if (var1 == 2){
         cat("Function terminated. You have not created a new draft reference on DataStore and your original DOI has been retained.")
         return()
       }
     }
   }
-  #enforce existence of a title prior to proceeding with DOI, regardless of force=FALSE or force=TRUE (could change this: it doesn't really need a title for DataStore, it's just to help the user keep track of draft references in DataStore):
+  # enforce existence of a title prior to proceeding with DOI, regardless of force=FALSE or force=TRUE (could change this: it doesn't really need a title for DataStore, it's just to help the user keep track of draft references in DataStore):
   if(is.null(data_package_title)){
     cat("Your data package does not have a title.\n")
     cat("Use ", crayon::green$bold("set_title()"),
         "to set the title before adding your DOI.\n", sep="")
     stop()
   }
-
   #generate draft title:
   dynamic_title <- paste0("[DRAFT]: ", data_package_title)
-
   #generate json body for rest api call:
   mylist <- list(referenceTypeId="dataPackage",
                  title=dynamic_title,
-                 location="string",
-                 issuedDate=list(year=0, month=0, day=0, precision="string"))
+                 location="",
+                 issuedDate=list(year=0, month=0, day=0, precision=""))
   bdy<-jsonlite::toJSON(mylist, pretty=TRUE, auto_unbox=TRUE)
-
   #Create empty draft reference:
   req <- httr::POST("https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/CreateDraft",
                 httr::authenticate(":", "", "ntlm"),
                 httr::add_headers('Content-Type'='application/json'),
                 body = bdy)
-
   #check status code; suggest logging in to VPN if errors occur:
   status_code<-httr::stop_for_status(req)$status_code
   if(!status_code==200){
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
-
   #get draft reference code:
   json <- httr::content(req, "text")
   rjson <- jsonlite::fromJSON(json)
   ds_ref <- rjson$referenceCode
-
   # insert/replace DOI:
   eml_object$dataset$alternateIdentifier <- paste0(
       "doi: https://doi.org/10.57830/",
       ds_ref)
-
   # update data URLs to correspond to new DOI:
   data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
@@ -127,40 +134,21 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
       eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
     }
   }
-
   if(force == FALSE){
     #print DOI to screen
-    doc <- eml_object$dataset$alternateIdentifier
-    doc <- sub(".*? ", "", doc)
-    cat("Your newly specified DOI is: ", crayon::blue$bold(doc), ".\n",sep = "")
-
-    # update data URLs to correspond to new DOI:
-    data_table <- EML::eml_get(eml_object, "dataTable")
-    data_table <- within(data_table, rm("@context"))
-    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
-                       ds_ref)
-    # handle case when there is only one data table:
-    if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
-    }
-    # handle case when there is only one data table:
-    else {
-      for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
-      }
-    }
+    doc1 <- eml_object$dataset$alternateIdentifier
+    doc1 <- sub(".*? ", "", doc1)
+    cat("Your newly specified DOI is: ", crayon::blue$bold(doc1), ".\n",sep = "")
     cat("You can check on your draft reference at:\n")
     cat(crayon::blue$bold(data_url), "\n")
     cat("Your draft title is:\n")
     cat(crayon::blue$bold(dynamic_title), "\n")
     cat("Your draft title will be updated upon metadata upload.")
   }
-
   # Set NPS publisher, if it doesn't already exist
   if (NPS == TRUE) {
     eml_object <- .set_npspublisher(eml_object)
   }
-
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
 }
