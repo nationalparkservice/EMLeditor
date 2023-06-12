@@ -193,7 +193,7 @@ get_citation <- function(eml_object) {
     warning("No doi specified. Please use set_doi to add a DOI.")
   }
   if (is.null(author_list)) {
-    warning("No authors listed. Please add authors as \"creator\" in EMLassemlbyline.")
+    warning("No creators detected. Please add at least one \"creator\" in EMLassemlbyline with a valid givenName and surName.")
   }
   if (is.null(title)) {
     warning("No title specified.")
