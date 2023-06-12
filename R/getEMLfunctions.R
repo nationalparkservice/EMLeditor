@@ -281,6 +281,9 @@ get_author_list <- function(eml_object) {
         last_first <- toString(last_first)
       }
     }
+    if(is.null(last_first)){
+      cat("There is something wrong with the creators field. Please check that you have a supplied a givenName and surName for each creator.")
+    }
   }
 }
 
