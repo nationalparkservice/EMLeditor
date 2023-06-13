@@ -1690,3 +1690,80 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 
   return(eml_object)
 }
+
+#' Add an organization as a creator to metadata (author in DataStore)
+#'
+#'
+#' @param eml_object
+#' @param creator_orgs
+#' @param RORs
+#' @param force
+#' @param NPS
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE, NPS = TRUE){
+
+
+  #get creators (what if there are none?)
+  creator <- eml_object[["dataset"]][["creator"]]
+
+  # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  names_list <- c("individualName", "organizationName", "positionName")
+  if(sum(names_list %in% names(creator)) > 0){
+    creator <- list(creator)
+  }
+
+  #generate list of creator orgs and directories
+  create_orgs <- NULL
+  for(i in seq_along(creator_orgs)){
+    org <- EML::eml$creator(
+      organizationName = creator_orgs[i],
+      userId = list(RORs[i], directory = "https://ror.org"))
+    create_orgs <- append(create_orgs, org)
+  }
+
+  #append creator orgs to existing creator list:
+  new_creator_list <- append(creator, list(create_orgs))
+
+  #replace old creator list with new creator list
+  eml_object[["dataset"]][["creator"]] <- new_creator_list
+
+  if(force == FALSE){
+    creator <- eml_object[["dataset"]][["creator"]]
+    creator_list <- NULL
+    for(i in seq_along(creator)){
+      if("individualName" %in% names(creator[[i]])){
+        creator_list <- append(creator_list, creator[[i]][["individualName"]][["surName"]])
+      }
+      else{
+        creator_list <- append(creator_list, creator[[i]][["organizationName"]])
+      }
+    }
+    cat("Your current creators (authors on DataStore) are:\n")
+    cat(creator_list, sep = "\n")
+  }
+
+  #add NPS publisher & for or by nps
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadataa
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+
+
+
+
+
+
+
+
+
+
+
