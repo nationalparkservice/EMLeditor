@@ -1693,20 +1693,32 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 
 #' Add an organization as a creator to metadata (author in DataStore)
 #'
+#' @description `set_creator_orgs()` allows a user to add an organization as a creator to metadata. EMLassemblyline can link an individual person who is a creator to the organization they are associated with, but currently does not allow organizations themselves to be listed as creators. `set_creator_orgs()` takes a list of organizations (and their RORs, if they have them) and appends them to the end of the creator list. This allows organizations (such as a Network or a Park) to author data packages.
 #'
-#' @param eml_object
-#' @param creator_orgs
-#' @param RORs
-#' @param force
-#' @param NPS
+#' @details because `set_creator_orgs()` merely appends organizations, it 1) assumes that there is already one creator (as required by EMLassemblyline) and 2) does not allow the user to change authorship order. To change the order of the authors, see `set_creator_order()`. Creator organizations and their RORs need to be supplied in two lists where the organization and ROR are correctly matched (i.e. the 3rd organization is associated with the 3rd ROR in a list). If one or more of your creator organizations does not have a ROR, enter "NA".
 #'
-#' @return
+#' @inheritParams set_title
+#' @param creator_orgs List. A list of one or more organizations.
+#' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see https:/ror.org) that correspond to the organization in question. If an organization does not hae a ROR ID (or you don't know it), enter "NA".
+#'
+#' @return eml_object
 #' @export
 #'
 #' @examples
+#'  \dontrun{
+#'  #add one organization and it's ROR:
+#'  mymetadata <- set_creator_orgs(mymetadata, "National Park Service", "044zqqy65")
+#'
+#'  #add one organization that does not have a ROR:
+#'  mymetadata <- set_creator_orgs(mymetadata, "My Favorite ROR-less Organization")
+#'
+#'  #add multiple organizations, some of which do not have RORs:
+#'  my_orgs <- c("National Park Service", "My Favorite ROR-less Organization")
+#'  my_RORs <- c("044zqqy65", "NA")
+#'
+#'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+#'  }
 set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE, NPS = TRUE){
-
-
   #get creators (what if there are none?)
   creator <- eml_object[["dataset"]][["creator"]]
 
@@ -1719,14 +1731,18 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
   #generate list of creator orgs and directories
   create_orgs <- NULL
   for(i in seq_along(creator_orgs)){
-    org <- EML::eml$creator(
-      organizationName = creator_orgs[i],
-      userId = list(RORs[i], directory = "https://ror.org"))
-    create_orgs <- append(create_orgs, org)
+      org <- EML::eml$creator(
+        individualName = NULL,
+        organizationName = creator_orgs[i],
+        positionName = NULL,
+        address = NULL,
+        electronicMailAddress = NULL,
+        userId = list(RORs[i], directory = "https://ror.org"))
+      create_orgs <- append(create_orgs, list(org))
   }
 
   #append creator orgs to existing creator list:
-  new_creator_list <- append(creator, list(create_orgs))
+  new_creator_list <- append(creator, create_orgs)
 
   #replace old creator list with new creator list
   eml_object[["dataset"]][["creator"]] <- new_creator_list
@@ -1735,7 +1751,7 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
     creator <- eml_object[["dataset"]][["creator"]]
     creator_list <- NULL
     for(i in seq_along(creator)){
-      if("individualName" %in% names(creator[[i]])){
+      if(!is.null(creator[[i]][["individualName"]])){
         creator_list <- append(creator_list, creator[[i]][["individualName"]][["surName"]])
       }
       else{
