@@ -1,5 +1,8 @@
 # EMLeditor v0.1.0.7 "Work in progress"
 
+## 13 June 2023
+  * added the function `set_creator_orcid()` which allows users to add or edit ORCiDs for individuals (not organizations) listed as creators
+
 ## 12 June 2023
   * updated error messages in `get_author_list()` and `get_citation()` to be more informative, especially when surName is missing from the creator/individualName
 
