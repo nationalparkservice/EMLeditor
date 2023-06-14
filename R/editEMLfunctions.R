@@ -1748,14 +1748,20 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
   eml_object[["dataset"]][["creator"]] <- new_creator_list
 
   if(force == FALSE){
-    creator <- eml_object[["dataset"]][["creator"]]
+    creator_new <- eml_object[["dataset"]][["creator"]]
+
+    #if only one creator:
+    if(sum(names_list %in% names(creator_new)) > 0){
+      creator_new <- list(creator_new)
+    }
+
     creator_list <- NULL
-    for(i in seq_along(creator)){
-      if(!is.null(creator[[i]][["individualName"]])){
-        creator_list <- append(creator_list, creator[[i]][["individualName"]][["surName"]])
+    for(i in seq_along(creator_new)){
+      if(!is.null(creator_new[[i]][["individualName"]])){
+        creator_list <- append(creator_list, creator_new[[i]][["individualName"]][["surName"]])
       }
       else{
-        creator_list <- append(creator_list, creator[[i]][["organizationName"]])
+        creator_list <- append(creator_list, creator_new[[i]][["organizationName"]])
       }
     }
     if(force = FALSE){
@@ -1773,6 +1779,60 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
 
   return(eml_object)
 }
+
+#' Rearrange the order of creators (authors)
+#'
+#' @description The `set_creator_order()` function allows users to rearrange to order of creators (authors on DataStore).
+#'
+#' @param eml_object
+#' @param new_order
+#' @param force
+#' @param NPS
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_creator_order <- function(eml_object,
+                              new_order = NA,
+                              force = FALSE,
+                              NPS = TRUE){
+  #get existing creators
+  creator <- eml_object[["dataset"]][["creator"]]
+
+  # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  names_list <- c("individualName", "organizationName", "positionName")
+  if(sum(names_list %in% names(creator)) > 0){
+    creator <- list(creator)
+  }
+
+  #generate list of creators in current order:
+  creator_list <- NULL
+  for(i in seq_along(creator_new)){
+    if(!is.null(creator_new[[i]][["individualName"]])){
+      creator_list <- append(creator_list, creator_new[[i]][["individualName"]][["surName"]])
+    }
+    else{
+      creator_list <- append(creator_list, creator_new[[i]][["organizationName"]])
+    }
+  }
+
+  if(force = FALSE){
+    cat("Your current creators are in the following order:\n")
+    print(creator_list)
+
+  }
+
+
+
+
+}
+
+
+
+
+
+
 
 
 
