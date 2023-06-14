@@ -1758,8 +1758,10 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
         creator_list <- append(creator_list, creator[[i]][["organizationName"]])
       }
     }
-    cat("Your current creators (authors on DataStore) are:\n")
-    cat(creator_list, sep = "\n")
+    if(force = FALSE){
+      cat("Your newly assigned creators (authors on DataStore) are:\n")
+      cat(creator_list, sep = "\n")
+    }
   }
 
   #add NPS publisher & for or by nps
