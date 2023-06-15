@@ -1764,7 +1764,7 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
         creator_list <- append(creator_list, creator_new[[i]][["organizationName"]])
       }
     }
-    if(force = FALSE){
+    if(force == FALSE){
       cat("Your newly assigned creators (authors on DataStore) are:\n")
       cat(creator_list, sep = "\n")
     }
@@ -1808,18 +1808,34 @@ set_creator_order <- function(eml_object,
 
   #generate list of creators in current order:
   creator_list <- NULL
-  for(i in seq_along(creator_new)){
-    if(!is.null(creator_new[[i]][["individualName"]])){
-      creator_list <- append(creator_list, creator_new[[i]][["individualName"]][["surName"]])
+  for(i in seq_along(creator)){
+    if(!is.null(creator[[i]][["individualName"]])){
+      creator_list <- append(creator_list, creator[[i]][["individualName"]][["surName"]])
     }
     else{
-      creator_list <- append(creator_list, creator_new[[i]][["organizationName"]])
+      creator_list <- append(creator_list, creator[[i]][["organizationName"]])
     }
   }
 
-  if(force = FALSE){
+  #if verbose and no order supplied, interactively ask for new creator order:
+  if(force == FALSE & is.na(new_order)){
     cat("Your current creators are in the following order:\n")
-    print(creator_list)
+    creator_df<-data.frame(order=1:length(creator_list), creator_list)
+    colnames(creator_df)<-c("Order", "Creator")
+    print(creator_df, row.names=FALSE)
+    cat()
+    cat("Please enter a comma-separated list for the new creator order.\n")
+    cat("For example to put 5 items in reverse order, enter: 5, 4, 3, 2, 1\n")
+    cat("To remove the 3rd item in a list of 5, enter: 1, 2, 4, 5\n\n")
+    var1 <- readline(prompt="")
+    ord <- as.list(strsplit(var1, ","))[[1]]
+    ord <- trimws(ord)
+    ord <- as.numeric(ord)
+
+
+    creator2<-list(creator[2], creator[1])
+
+
 
   }
 
