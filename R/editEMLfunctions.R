@@ -1808,6 +1808,14 @@ set_creator_order <- function(eml_object,
                               new_order = NA,
                               force = FALSE,
                               NPS = TRUE){
+  #exit function if sufficient information not provided:
+  if(sum(is.na(new_order)) > 0){
+    if(force == TRUE){
+      cat("If you set force=TRUE, you must supply a comma-separated list for the new_order argument, e.g. new_order = c(2,1).\n")
+      return(eml_object)
+    }
+  }
+
   #get existing creators
   creator <- eml_object[["dataset"]][["creator"]]
 
@@ -1832,19 +1840,21 @@ set_creator_order <- function(eml_object,
   }
 
   #if verbose and no order supplied, interactively ask for new creator order:
-  if(sum(force == FALSE & is.na(new_order)) == 2){
-    cat("Your current creators are in the following order:\n")
-    creator_df<-data.frame(order=1:length(creator_list), creator_list)
-    colnames(creator_df)<-c("Order", "Creator")
-    print(creator_df, row.names=FALSE)
-    cat()
-    cat("Please enter a comma-separated numbers for the new creator order.\n")
-    cat("Example: to put 5 creators in reverse order, enter: 5, 4, 3, 2, 1\n")
-    cat("Example: to remove the 3rd item in a list of 5, enter: 1, 2, 4, 5\n\n")
-    var1 <- readline(prompt="")
-    ord <- as.list(strsplit(var1, ","))[[1]]
-    ord <- trimws(ord)
-    new_order <- as.numeric(ord)
+  if(force == FALSE){
+    if(sum(is.na(new_order)) > 0){
+      cat("Your current creators are in the following order:\n")
+      creator_df<-data.frame(order=1:length(creator_list), creator_list)
+      colnames(creator_df)<-c("Order", "Creator")
+      print(creator_df, row.names=FALSE)
+      cat()
+      cat("Please enter comma-separated numbers for the new creator order.\n")
+      cat("Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1\n")
+      cat("Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5\n\n")
+      var1 <- readline(prompt="")
+      ord <- as.list(strsplit(var1, ","))[[1]]
+      ord <- trimws(ord)
+      new_order <- as.numeric(ord)
+    }
   }
 
   #generate the new creator list based on the old one
