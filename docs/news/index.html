@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0.7" id="emleditor-v0107-work-in-progress">EMLeditor v0.1.0.7 “Work in progress”<a class="anchor" aria-label="anchor" href="#emleditor-v0107-work-in-progress"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.0.7" id="emleditor-v0107-clingmans-dome">EMLeditor v0.1.0.7 “Clingmans Dome”<a class="anchor" aria-label="anchor" href="#emleditor-v0107-clingmans-dome"></a></h2>
+<div class="section level3">
+<h3 id="id_16-june-0-1-0-7">16 June 2023<a class="anchor" aria-label="anchor" href="#id_16-june-0-1-0-7"></a></h3>
+<ul><li>added the function <code><a href="../reference/set_creator_order.html">set_creator_order()</a></code>, which allows users to re-order the creators (authors on DataStore) as well as remove creators.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_14-june-0-1-0-7">14 June 2023<a class="anchor" aria-label="anchor" href="#id_14-june-0-1-0-7"></a></h3>
+<ul><li>updates to the EML creation script; the make_eml() function stopped saving an EML object in R and was just writing a .xml to the working directory. Add the the arguments <code>return.obj = TRUE</code> and <code>write.file = FALSE</code> to get it to do the opposite: save an EML object to R for further processing and not write the .xml (so as not to create confusion later on)</li>
+<li>added the function <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code> which allows users to add organizations as creators (authors on DataStore). EMLassemblyline did not appear to support this functionality.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="id_13-june-0-1-0-7">13 June 2023<a class="anchor" aria-label="anchor" href="#id_13-june-0-1-0-7"></a></h3>
 <ul><li>added the function <code><a href="../reference/set_creator_orcids.html">set_creator_orcids()</a></code> which allows users to add or edit ORCiDs for individuals (not organizations) listed as creators</li>

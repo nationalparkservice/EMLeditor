@@ -1,4 +1,11 @@
-# EMLeditor v0.1.0.7 "Work in progress"
+# EMLeditor v0.1.0.7 "Clingmans Dome"
+
+## 16 June 2023
+  * added the function `set_creator_order()`, which allows users to re-order the creators (authors on DataStore) as well as remove creators. 
+
+## 14 June 2023
+  * updates to the EML creation script; the make_eml() function stopped saving an EML object in R and was just writing a .xml to the working directory. Add the the arguments `return.obj = TRUE` and `write.file = FALSE` to get it to do the opposite: save an EML object to R for further processing and not write the .xml (so as not to create confusion later on)
+  * added the function `set_creator_orgs()` which allows users to add organizations as creators (authors on DataStore). EMLassemblyline did not appear to support this functionality. 
 
 ## 13 June 2023
   * added the function `set_creator_orcids()` which allows users to add or edit ORCiDs for individuals (not organizations) listed as creators

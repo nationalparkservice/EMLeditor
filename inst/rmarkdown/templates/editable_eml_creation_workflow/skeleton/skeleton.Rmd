@@ -193,7 +193,9 @@ my_metadata <- make_eml(path = working_folder,
                data.table.url = data_urls,
                temporal.coverage = c(startdate, enddate),
                maintenance.description = data_type,
-               package.id = metadata_id)
+               package.id = metadata_id,
+               return.obj = TRUE, 
+               write.file = FALSE)
 ```
 
 ## Check for EML validity 

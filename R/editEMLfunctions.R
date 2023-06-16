@@ -1690,3 +1690,242 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 
   return(eml_object)
 }
+
+#' Add an organization as a creator to metadata (author in DataStore)
+#'
+#' @description `set_creator_orgs()` allows a user to add an organization as a creator to metadata. EMLassemblyline can link an individual person who is a creator to the organization they are associated with, but currently does not allow organizations themselves to be listed as creators. `set_creator_orgs()` takes a list of organizations (and their RORs, if they have them) and appends them to the end of the creator list. This allows organizations (such as a Network or a Park) to author data packages.
+#'
+#' @details because `set_creator_orgs()` merely appends organizations, it 1) assumes that there is already one creator (as required by EMLassemblyline) and 2) does not allow the user to change authorship order. To change the order of the authors, see `set_creator_order()`. Creator organizations and their RORs need to be supplied in two lists where the organization and ROR are correctly matched (i.e. the 3rd organization is associated with the 3rd ROR in a list). If one or more of your creator organizations does not have a ROR, enter "NA".
+#'
+#' @inheritParams set_title
+#' @param creator_orgs List. A list of one or more organizations.
+#' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see https:/ror.org) that correspond to the organization in question. If an organization does not hae a ROR ID (or you don't know it), enter "NA".
+#'
+#' @return eml_object
+#' @export
+#'
+#' @examples
+#'  \dontrun{
+#'  #add one organization and it's ROR:
+#'  mymetadata <- set_creator_orgs(mymetadata, "National Park Service", "044zqqy65")
+#'
+#'  #add one organization that does not have a ROR:
+#'  mymetadata <- set_creator_orgs(mymetadata, "My Favorite ROR-less Organization")
+#'
+#'  #add multiple organizations, some of which do not have RORs:
+#'  my_orgs <- c("National Park Service", "My Favorite ROR-less Organization")
+#'  my_RORs <- c("044zqqy65", "NA")
+#'
+#'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+#'  }
+set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE, NPS = TRUE){
+  #get creators (what if there are none?)
+  creator <- eml_object[["dataset"]][["creator"]]
+
+  # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  names_list <- c("individualName", "organizationName", "positionName")
+  if(sum(names_list %in% names(creator)) > 0){
+    creator <- list(creator)
+  }
+
+  #generate list of creator orgs and directories
+  create_orgs <- NULL
+  for(i in seq_along(creator_orgs)){
+      org <- EML::eml$creator(
+        individualName = NULL,
+        organizationName = creator_orgs[i],
+        positionName = NULL,
+        address = NULL,
+        electronicMailAddress = NULL,
+        userId = list(RORs[i], directory = "https://ror.org"))
+      create_orgs <- append(create_orgs, list(org))
+  }
+
+  #append creator orgs to existing creator list:
+  new_creator_list <- append(creator, create_orgs)
+
+  #replace old creator list with new creator list
+  eml_object[["dataset"]][["creator"]] <- new_creator_list
+
+  if(force == FALSE){
+    creator_new <- eml_object[["dataset"]][["creator"]]
+
+    #if only one creator:
+    if(sum(names_list %in% names(creator_new)) > 0){
+      creator_new <- list(creator_new)
+    }
+
+    creator_list <- NULL
+    for(i in seq_along(creator_new)){
+      if(!is.null(creator_new[[i]][["individualName"]])){
+        creator_list <- append(creator_list, creator_new[[i]][["individualName"]][["surName"]])
+      }
+      else{
+        creator_list <- append(creator_list, creator_new[[i]][["organizationName"]])
+      }
+    }
+    if(force == FALSE){
+      cat("Your newly assigned creators (authors on DataStore) are:\n")
+      cat(creator_list, sep = "\n")
+    }
+  }
+
+  #add NPS publisher & for or by nps
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadataa
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+#' Rearrange the order of creators (authors)
+#'
+#' @description The `set_creator_order()` requires that your metadata contain two or more creators. The function allows users to rearrange the order of creators (authors on DataStore) or delete a creator.
+#'
+#' @inheritParams set_title
+#' @param new_order List. Defaults to NA for interactively re-ordering the creators.
+#'
+#' @return eml_object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # fully interactive route:
+#' meta2 <- set_creator_order(eml_object)
+#'
+#' # specify an order in advance (reverse the order of 2 creators):
+#' meta2 <- set_creator_order(eml_object, c(2,1))
+#'
+#' # specify an order in advance (remove the second creator):
+#' meta2 <- set_creator_order(eml_object, 1)
+#'
+#' # scripting route: turn off all function feedback (you must specify the
+#' # new creator order when you call the function; you cannot do it
+#' # interactively):
+#' meta2 <- set_creator_order(eml_object, c(2,1), force=TRUE)
+#' }
+set_creator_order <- function(eml_object,
+                              new_order = NA,
+                              force = FALSE,
+                              NPS = TRUE){
+  #exit function if sufficient information not provided:
+  if(sum(is.na(new_order)) > 0){
+    if(force == TRUE){
+      cat("If you set force=TRUE, you must supply a comma-separated list for the new_order argument, e.g. new_order = c(2,1).\n")
+      return(eml_object)
+    }
+  }
+
+  #get existing creators
+  creator <- eml_object[["dataset"]][["creator"]]
+
+  # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  names_list <- c("individualName", "organizationName", "positionName")
+  if(sum(names_list %in% names(creator)) > 0 | length(creator) == 1){
+    cat("Only one Creator was detected in metadata.\n")
+    cat("Metadata must contain at least one Creator.\n")
+    cli::cli_inform("Use {.fn EMLeditor::set_creator_orgs} to add additional organizations as creators.\n")
+    return(eml_object)
+  }
+
+  #generate list of creators in current order:
+  creator_list <- NULL
+  for(i in seq_along(creator)){
+    if(!is.null(creator[[i]][["individualName"]])){
+      creator_list <- append(creator_list, creator[[i]][["individualName"]][["surName"]])
+    }
+    else{
+      creator_list <- append(creator_list, creator[[i]][["organizationName"]])
+    }
+  }
+
+  #if verbose and no order supplied, interactively ask for new creator order:
+  if(force == FALSE){
+    if(sum(is.na(new_order)) > 0){
+      cat("Your current creators are in the following order:\n\n")
+      creator_df<-data.frame(order=1:length(creator_list), creator_list)
+      colnames(creator_df)<-c("Order", "Creator")
+      print(creator_df, row.names=FALSE)
+      cat("\n")
+      cat("Please enter comma-separated numbers for the new creator order.\n")
+      cat("Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1\n")
+      cat("Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5\n\n")
+      var1 <- readline(prompt="")
+      #don't allow user to remove all creators!
+      if(nchar(var1)==0){
+        cat("You cannot delete all creators.")
+        cat("Please enter comma-separated numbers for the new creator order.\n")
+        var1 <- readline(prompt="")
+      }
+      ord <- as.list(strsplit(var1, ","))[[1]]
+      ord <- trimws(ord)
+      new_order <- as.numeric(ord)
+    }
+  }
+
+  #generate the new creator list based on the old one
+  new_cr_order<-NULL
+  for(num in new_order){
+    curr_creator<-creator[[num]]
+    new_cr_order <- append(new_cr_order, list(curr_creator))
+  }
+
+  #replace old creator list with new creator list
+  eml_object[["dataset"]][["creator"]] <- new_cr_order
+
+  #report back on new creator order:
+  if(force == FALSE){
+    creator_reordered <- eml_object[["dataset"]][["creator"]]
+
+    # If there's only one creator (i.e. someone deletes all but one!), creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+    if(sum(names_list %in% names(creator_reordered)) > 0){
+      creator_reordered <- list(creator_reordered)
+    }
+    #generate list of creators in current order:
+    creator_list2 <- NULL
+    for(i in seq_along(creator_reordered)){
+      if(!is.null(creator_reordered[[i]][["individualName"]])){
+        creator_list2 <- append(
+                        creator_list2,
+                        creator_reordered[[i]][["individualName"]][["surName"]])
+      }
+      else{
+        creator_list2 <- append(creator_list2,
+                                creator_reordered[[i]][["organizationName"]])
+      }
+    }
+    cat("Your new creators order is:\n")
+    creator_df2<-data.frame(order=1:length(creator_list2), creator_list2)
+    colnames(creator_df2)<-c("Order", "Creator")
+    print(creator_df2, row.names=FALSE)
+  }
+
+  #add NPS publisher & for or by nps
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadataa
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
