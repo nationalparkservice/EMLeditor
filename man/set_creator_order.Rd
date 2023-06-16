@@ -19,9 +19,20 @@ set_creator_order(eml_object, new_order = NA, force = FALSE, NPS = TRUE)
 eml_object
 }
 \description{
-The \code{set_creator_order()} function allows users to rearrange to order of creators (authors on DataStore).
+The \code{set_creator_order()} requires that your metadata contain two or more creators. The function allows users to rearrange the order of creators (authors on DataStore) or delete a creator.
 }
 \examples{
 \dontrun{
-meta2 <- set_creator_order(eml_object)}
+# fully interactive route:
+meta2 <- set_creator_order(eml_object)
+
+# specify an order in advance (reverse the order of 2 creators):
+meta2 <- set_creator_order(eml_object, c(2,1))
+
+# specify an order in advance (remove the second creator):
+meta2 <- set_creator_order(eml_object, 1)
+
+# scripting route: turn off all function feedback (you must specify the new creator order when you call the function; you cannot do it interactively):
+meta2 <- set_creator_order(eml_object, c(2,1), force=TRUE)
+}
 }
