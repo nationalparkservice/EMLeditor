@@ -1801,7 +1801,9 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
 #' # specify an order in advance (remove the second creator):
 #' meta2 <- set_creator_order(eml_object, 1)
 #'
-#' # scripting route: turn off all function feedback (you must specify the new creator order when you call the function; you cannot do it interactively):
+#' # scripting route: turn off all function feedback (you must specify the
+#' # new creator order when you call the function; you cannot do it
+#' # interactively):
 #' meta2 <- set_creator_order(eml_object, c(2,1), force=TRUE)
 #' }
 set_creator_order <- function(eml_object,
