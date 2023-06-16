@@ -1842,15 +1842,21 @@ set_creator_order <- function(eml_object,
   #if verbose and no order supplied, interactively ask for new creator order:
   if(force == FALSE){
     if(sum(is.na(new_order)) > 0){
-      cat("Your current creators are in the following order:\n")
+      cat("Your current creators are in the following order:\n\n")
       creator_df<-data.frame(order=1:length(creator_list), creator_list)
       colnames(creator_df)<-c("Order", "Creator")
       print(creator_df, row.names=FALSE)
-      cat()
+      cat("\n")
       cat("Please enter comma-separated numbers for the new creator order.\n")
       cat("Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1\n")
       cat("Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5\n\n")
       var1 <- readline(prompt="")
+      #don't allow user to remove all creators!
+      if(nchar(var1)==0){
+        cat("You cannot delete all creators.")
+        cat("Please enter comma-separated numbers for the new creator order.\n")
+        var1 <- readline(prompt="")
+      }
       ord <- as.list(strsplit(var1, ","))[[1]]
       ord <- trimws(ord)
       new_order <- as.numeric(ord)
