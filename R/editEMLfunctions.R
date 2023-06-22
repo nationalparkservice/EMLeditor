@@ -1387,35 +1387,28 @@ set_int_rights <- function(eml_object,
 
   # get CUI info from additionalMetadata:
   cui <- eml_object$additionalMetadata
-
-  # turn cui nested list into a flattened data frame:
-  cui2 <- dplyr::bind_rows(lapply(cui,
-                                  function(x) data.frame(as.list(x),
-                                                         stringsAsFacotrs=F)))
+  cui2 <- NULL #record CUI dissemination code
+  for(i in seq_along(cui)){
+    if("CUI" %in% names(cui[[i]][["metadata"]])){
+      cui2 <- cui[[i]][["metadata"]][["CUI"]]
+    }
+  }
   # Verbose option with feedback:
   if(force == FALSE){
     # enforce CUI info prior to setting license:
     # if there is no CUI specified, stop.
-    if(is.null(cui2$CUI)){
-      #cat("No CUI information found.\n")
-      #cat("Use", crayon::bold$green("set_cui()"), "to specify CUI.")
+    if(is.null(cui2)){
       return(paste0(cat("No CUI information found.\n"),
                     cat("You must set CUI prior to setting the license.\nUse",
                         crayon::bold$green("set_cui()"),
                         "to specify CUI.")))
     }
-
     # if CUI was specified:
-    if(!is.null(cui2$CUI)){
-
-      # retrieve just the cell containing the CUI code:
-      cui3<-cui2[stats::complete.cases(cui2$CUI),]
-      cui3<-cui3$CUI
-
+    if(!is.null(cui2)){
       # make sure CUI and license agree:
       if(license == "CC0" || license == "public"){
         #set appropriate license:
-        if(cui3 == "PUBLIC"){
+        if(cui2 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
             eml_object$dataset$licensed$licenseName <- "CC0 1.0 Universal"
@@ -1428,21 +1421,21 @@ set_int_rights <- function(eml_object,
           }
         }
         # warn user license not set, CUI and license don't agree:
-        if(cui3 != "PUBLIC"){
-          cat("Your CUI is set to ", crayon::blue$bold(cui3), ".")
+        if(cui2 != "PUBLIC"){
+          cat("Your CUI is set to ", crayon::blue$bold(cui2), ".")
           writeLines(paste0("To use a CC0 or public domain license",
                        " your CUI must be PUBLIC."))
           cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
         }
       }
       if(license == "restricted"){
-        if(cui3 == "PUBLIC"){
-          cat("Your CUI is set to ", crayon::blue$bold(cui3), ".\n", sep="")
+        if(cui2 == "PUBLIC"){
+          cat("Your CUI is set to ", crayon::blue$bold(cui2), ".\n", sep="")
           writeLines(paste0("To use a restricted license, ",
                             "your CUI must NOT be set to PUBLIC."))
           cat("Use", crayon::bold$green("set_cui()"), "to change your CUI.")
         }
-        if(cui3 != "PUBLIC"){
+        if(cui2 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
           eml_object$dataset$licensed$licenseName <- "No License/Controlled Unclassified Information"
           cat("Your license has been set to ",
@@ -1455,18 +1448,24 @@ set_int_rights <- function(eml_object,
   #silent option for scripting:
   if(force == TRUE){
     #if no CUI specified, stop.
-    if(is.null(cui2$CUI)){
+    if(is.null(cui2)){
       return()
     }
 
     #if CUI has been specified:
-    if(!is.null(cui2$CUI)){
+    if(!is.null(cui2)){
       # retrieve just the cell containing the CUI code:
-      cui3<-cui2[complete.cases(cui2$CUI),]
-      cui3<-cui3$CUI
+      # get CUI info from additionalMetadata:
+      cui <- eml_object$additionalMetadata
+      cui2 <- NULL #record CUI dissemination code
+      for(i in seq_along(cui)){
+        if("CUI" %in% names(cui[[i]][["metadata"]])){
+          cui2 <- cui[[i]][["metadata"]][["CUI"]]
+        }
+      }
 
       if(license == "CC0" || license == "public"){
-        if(cui3 == "PUBLIC"){
+        if(cui2 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
           }
@@ -1474,15 +1473,15 @@ set_int_rights <- function(eml_object,
             eml_object$dataset$intellectualRights <- pub_domain
           }
         }
-        if(cui3 != "PUBLIC"){
+        if(cui2 != "PUBLIC"){
          return()
         }
       }
       if(license == "restricted"){
-        if(cui3 == "PUBLIC"){
+        if(cui2 == "PUBLIC"){
           return()
         }
-        if(cui3 != "PUBLIC"){
+        if(cui2 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
         }
       }
