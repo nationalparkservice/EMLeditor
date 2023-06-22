@@ -30,17 +30,13 @@ useful to people outside the NPS.
 EMLeditor’s primary objective is to edit and view EML formatted files,
 not to generate them from scratch. A suggested workflow is:
 
-1)  Use the EMLassemblyline::make_eml() to generate an initial EML
-    document and save it as a .xml file (NPS naming convention is:
-    \*\_metadata.xml)
-2)  Use the EML::read_eml() function to load your EML file into R as an
-    R object.
-3)  Use EMLeditor functions to edit the metadata in R and evaluate
-    whether your metadata is acceptable (don’t forget to use
-    EML::eml_validate() to make sure you are generating valid EML).
-4)  Use the EML::write_eml() function to write the R object back to XML
-    (remember the NPS naming convention for metadata files is
-    \*\_metadata.xml).
+1) Use the `EMLassemblyline::make_eml()` to generate an initial EML document.
+2) Use EMLeditor functions to edit the metadata in R and evaluate whether your metadata is acceptable (don't forget to use `EML::eml_validate()` to make sure you are generating valid EML).
+3) Use the `EML::write_eml()` function to write the R object back to XML (remember the NPS naming convention for metadata files is *_metadata.xml).
+4) Check your EML and data package using `DPchecker::run_congruence_checks()`.
+5) Upload to DataStore (via web or `EMLeditor::uplad_datapackage()`).
+6) Extract metadata on DataStore.
+7) Please *DO NOT ACTIVATE* the DataStore reference: prior to activation, data packages need to be reviewed via a yet-to-be-created process.
 
 If you use EMLeditor functions to alter your metadata (e.g. “set” class
 functions) they will also silently add the National Park Service as a
