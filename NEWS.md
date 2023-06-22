@@ -1,3 +1,11 @@
+# EMLeditor v0.1.0.8 "Work in progress"
+
+## 22 June 2023
+  * Bug fix for `set_int_rights()` - previously it only worked if you used `set_cui()`, exported to .xml and then re-imported to R. Now you can go straight from `set_cuio()` to `set_int_rights()`.
+  * Updated documentation: more information on additional functions available and how to use `upload_datapackage()` function
+  * updated the EML script template: EMLassemblyline::make_eml now does not write a .xml by default but instead defaults to generating an R object that can subsequently be processed via EMLeditor functions.
+
+
 # EMLeditor v0.1.0.7 "Clingmans Dome"
 
 ## 16 June 2023
