@@ -25,9 +25,8 @@ Install packages. If you have not recently installed packages, please re-install
 ```
 ```{r package_install, eval=FALSE}
 #install packages
-install.packages("devtools")
+install.packages(c("devtools", "tidyverse")
 devtools::install_github("nationalparkservice/NPSdataverse")
-install.packages(c("lubridate", "tidyverse"))
 ```
 ```{r load_packages}
 # When loading packages, you may be advised to update to more recent versions
@@ -36,7 +35,6 @@ install.packages(c("lubridate", "tidyverse"))
 # EMLeditor, DPchecker and NPSutils as these NPS packages are under constant 
 # development.
 library(NPSdataverse)
-library(lubridate)
 library(tidyverse)
 ```
 
@@ -327,7 +325,7 @@ check_metadata()
 ```
 
 ## Check your data package 
-If your data package is now complete, you can run some test prior to upload to make sure that the package fits some minimal set of requirements and that the data and metadata are properly specified and coincide. This assumes thatyour data package is in the root of your R project. 
+If your data package is now complete, you can run some test prior to upload to make sure that the package fits some minimal set of requirements and that the data and metadata are properly specified and coincide. This assumes that your data package is in the root of your R project. 
 ```{r congruence_tests}
 # this assumes that the data package is the working directory
 run_congruence_checks()
@@ -338,7 +336,7 @@ run_congruence_checks()
 
 
 ## Upload your data package 
-If everything checked out, you should be ready to upload your data package! We recommend using `upload_data_package()` to accomplish this. The function automatically checks your DOI and uploads to the correct reference on DataStore. All of your files for the data package need to be in the same folder, there can be only one .xml file (ending in "_metadata.xml") and all the other files should be data files in .csv format. Each individual file should be < 32Mb.  If you have files > 32Mb, you will need to upload them manually using the web interface. Just make sure you upload them to the correct reference!
+If everything checked out, you should be ready to upload your data package! We recommend using `upload_data_package()` to accomplish this. The function automatically checks your DOI and uploads to the correct reference on DataStore. All of your files for the data package need to be in the same folder, there can be only one .xml file (ending in "_metadata.xml") and all the other files should be data files in .csv format. Each individual file should be < 32Mb.  If you have files > 32Mb, you will need to upload them manually using the web interface on DataStore. 
 ```{r upload}
 # this assumes your data package is in the current working directory
 upload_data_package()
@@ -347,6 +345,6 @@ upload_data_package()
 #upload_data_package("C:/Users/<yourusername>/Documents/my_data_package)
 ```
 
-From within DataStore you should (soon) be able to extract all the information from the metadata file to populate the relevant DataStore fields.
+From within DataStore you should be able to extract all the information from the metadata file to populate the relevant DataStore fields.
 
 Please don't activate your reference just yet! Data package references need to be reviewed prior to activation. We are still working on what that review process will look like.
