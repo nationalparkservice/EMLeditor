@@ -105,14 +105,23 @@ using:</p>
 <p>EMLeditor’s primary objective is to edit and view EML formatted
 files, not to generate them from scratch. A suggested workflow is:</p>
 <ol style="list-style-type: decimal">
-<li>Use the EMLassemblyline::make_eml() to generate an initial EML
-document.</li>
+<li>Use the <code><a href="https://ediorg.github.io/EMLassemblyline/reference/make_eml.html" class="external-link">EMLassemblyline::make_eml()</a></code> to generate an
+initial EML document.</li>
 <li>Use EMLeditor functions to edit the metadata in R and evaluate
 whether your metadata is acceptable (don’t forget to use
-EML::eml_validate() to make sure you are generating valid EML).</li>
-<li>Use the EML::write_eml() function to write the R object back to XML
-(remember the NPS naming convention for metadata files is
+<code><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">EML::eml_validate()</a></code> to make sure you are generating valid
+EML).</li>
+<li>Use the <code><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">EML::write_eml()</a></code> function to write the R object
+back to XML (remember the NPS naming convention for metadata files is
 *_metadata.xml).</li>
+<li>Check your EML and data package using
+<code><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code>.</li>
+<li>Upload to DataStore (via web or
+<code>EMLeditor::uplad_datapackage()</code>).</li>
+<li>Extract metadata on DataStore.</li>
+<li>Please <em>DO NOT ACTIVATE</em> the DataStore reference: prior to
+activation, data packages need to be reviewed via a yet-to-be-created
+process.</li>
 </ol>
 <p>If you use EMLeditor functions to alter your metadata (e.g. any
 function with the prefix “set_” in the name) they will also silently add
