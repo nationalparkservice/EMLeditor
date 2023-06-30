@@ -45,7 +45,9 @@ Imports:
     purrr,
     jsonlite,
     tibble,
-    cli
+    cli, 
+    XML,
+    curl
 Suggests: 
     knitr,
     rmarkdown,
