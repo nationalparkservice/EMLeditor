@@ -1731,7 +1731,7 @@ set_creator_orgs <- function(eml_object,
                              force = FALSE,
                              NPS = TRUE){
   #stop if not enough info provided:
-  if(is.na(creator_orgs) & is.na(park_units)){
+  if(sum(!is.na(creator_orgs) > 0) & sum(!is.na(park_units)) > 0) {
     cat("You must supply either a creator organization name or a park unit.\n")
     stop()
   }
