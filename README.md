@@ -67,6 +67,12 @@ To install all the packages in the
 devtools::install_github("nationalparkservice/NPSdataverse")
 ```
 
+It is recommended to always load EMLeditor via 
+```r
+library(NPSdataverse)
+```
+loading the entire NPSdataverse library is the preferred method as it will check whether all of your NPSdataverse packages are up to date (including EMLeditor) and provide instructions on how to update them if you are not working with the latest version.
+
 # Details
 
 For a detailed description of how to use EML editor functions and a
