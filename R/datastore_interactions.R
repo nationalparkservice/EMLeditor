@@ -22,9 +22,9 @@
 #' \dontrun{
 #' eml_object <- set_datastore_doi(eml_object)
 #' }
-set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
+set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
   # check for existing DOI:
-  doc<- utils::capture.output(get_doi(eml_object))
+  doc <- utils::capture.output(get_doi(eml_object))
   #get data package title from metadata:
   data_package_title <- EMLeditor::get_title(eml_object)
   if(force == FALSE){
@@ -46,10 +46,10 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
       url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
       #API call to look for an existing reference:
       test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
-      status_code<-httr::stop_for_status(test_req)$status_code
+      status_code <- httr::stop_for_status(test_req)$status_code
 
       #if API call fails, alert user and remind them to log on to VPN:
-      if(!status_code==200){
+      if(!status_code == 200){
         stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
       }
 
@@ -58,8 +58,8 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
 
       #tell user their current DOI:
       cat("The current data package DOI in your metadata is:\n",
-          crayon::blue$bold("https://doi.org/10.57830/", DS_ref, sep=""),
-          ".\n\n", sep="")
+          crayon::blue$bold("https://doi.org/10.57830/", DS_ref, sep = ""),
+          ".\n\n", sep = "")
       #if API search did not find a corresponding reference on DataStore:
       if(length(test_rjson) == 0){
         cat("However, there is no draft reference associated with this DOI on DataStore.\n")
@@ -68,12 +68,12 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
       if(length(test_rjson > 0)){
         cat("You already have a draft reference for this data package on DataStore.\n")
         cat("The existing DataStore draft reference ID is:\n",
-            crayon::blue$bold(test_rjson$referenceId), ".\n", sep="")
+            crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
         cat("The existing DataStore draft reference title is:\n",
-            crayon::blue$bold(test_rjson$title), ".\n", sep="")
+            crayon::blue$bold(test_rjson$title), ".\n", sep = "")
         cat("The existing DataStore reference was created on:\n",
             crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
-            ".\n\n", sep="")
+            ".\n\n", sep = "")
       }
       #Ask if they really want a new DOI & new draft reference?
       cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
@@ -90,25 +90,28 @@ set_datastore_doi <- function(eml_object, force=FALSE, NPS=TRUE){
   if(is.null(data_package_title)){
     cat("Your data package does not have a title.\n")
     cat("Use ", crayon::green$bold("set_title()"),
-        "to set the title before adding your DOI.\n", sep="")
+        "to set the title before adding your DOI.\n", sep = "")
     stop()
   }
   #generate draft title:
   dynamic_title <- paste0("[DRAFT]: ", data_package_title)
   #generate json body for rest api call:
-  mylist <- list(referenceTypeId="dataPackage",
-                 title=dynamic_title,
-                 location="",
-                 issuedDate=list(year=0, month=0, day=0, precision=""))
-  bdy<-jsonlite::toJSON(mylist, pretty=TRUE, auto_unbox=TRUE)
+  mylist <- list(referenceTypeId = "dataPackage",
+                 title = dynamic_title,
+                 location = "",
+                 issuedDate = list(year = 0,
+                                   month = 0,
+                                   day = 0,
+                                   precision = ""))
+  bdy <- jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE)
   #Create empty draft reference:
   req <- httr::POST("https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/CreateDraft",
                 httr::authenticate(":", "", "ntlm"),
                 httr::add_headers('Content-Type'='application/json'),
                 body = bdy)
   #check status code; suggest logging in to VPN if errors occur:
-  status_code<-httr::stop_for_status(req)$status_code
-  if(!status_code==200){
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
   #get draft reference code:
