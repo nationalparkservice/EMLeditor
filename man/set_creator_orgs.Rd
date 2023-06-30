@@ -6,7 +6,8 @@
 \usage{
 set_creator_orgs(
   eml_object,
-  creator_orgs,
+  creator_orgs = NA,
+  park_units = NA,
   RORs = NA,
   force = FALSE,
   NPS = TRUE
@@ -15,7 +16,9 @@ set_creator_orgs(
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
-\item{creator_orgs}{List. A list of one or more organizations.}
+\item{creator_orgs}{List. Defaults to NA. A list of one or more organizations.}
+
+\item{park_units}{List. Defaults to NA. A list of park units. If any park units are specified, it they will supersede anything listed under creator_orgs.}
 
 \item{RORs}{List. Defaults to NA. An optional list of one or more ROR IDs (see https:/ror.org) that correspond to the organization in question. If an organization does not hae a ROR ID (or you don't know it), enter "NA".}
 
@@ -31,6 +34,8 @@ eml_object
 }
 \details{
 because \code{set_creator_orgs()} merely appends organizations, it 1) assumes that there is already one creator (as required by EMLassemblyline) and 2) does not allow the user to change authorship order. To change the order of the authors, see \code{set_creator_order()}. Creator organizations and their RORs need to be supplied in two lists where the organization and ROR are correctly matched (i.e. the 3rd organization is associated with the 3rd ROR in a list). If one or more of your creator organizations does not have a ROR, enter "NA".
+
+You can use the park_units parameter to specify park units. This will utilize the IRMA units look-up service to fill in the organizationName element, thus ensuring that there are no spelling errors or deviations unit names. You can use either park_units or creator_orgs but not both because if you have specified any park_units, these will over-write the creator_orgs in your function call. Thus, if you would like to add park units as creators and some non-park unit organization as a creator you need to call the function twice. When specifying park_units, they will be added in the order they occur in the IRMA units list, not necessarily the order they were supplied to the function. Use \code{set_creator_order()} to re-order them if desired.
 }
 \examples{
  \dontrun{
@@ -45,5 +50,9 @@ because \code{set_creator_orgs()} merely appends organizations, it 1) assumes th
  my_RORs <- c("044zqqy65", "NA")
 
  mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+
+ #add multiple park units as organization names:
+ park_units <- c("ROMN", "SFCN", "YELL")
+
  }
 }

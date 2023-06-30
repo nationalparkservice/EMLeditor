@@ -89,12 +89,12 @@ using:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#install the NPSdataverse:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nationalparkservice/NPSdataverse" class="external-link">NPSdataverse</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#individual install:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/EMLeditor"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"EML"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/EML/" class="external-link">EML</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nationalparkservice/EMLeditor" class="external-link">EMLeditor</a></span><span class="op">)</span></span></code></pre></div>
@@ -105,17 +105,17 @@ using:</p>
 <p>EMLeditor’s primary objective is to edit and view EML formatted
 files, not to generate them from scratch. A suggested workflow is:</p>
 <ol style="list-style-type: decimal">
-<li>Use the <code><a href="https://ediorg.github.io/EMLassemblyline/reference/make_eml.html" class="external-link">EMLassemblyline::make_eml()</a></code> to generate an
+<li>Use the <code><a href="https://rdrr.io/pkg/EMLassemblyline/man/make_eml.html" class="external-link">EMLassemblyline::make_eml()</a></code> to generate an
 initial EML document.</li>
 <li>Use EMLeditor functions to edit the metadata in R and evaluate
 whether your metadata is acceptable (don’t forget to use
-<code><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">EML::eml_validate()</a></code> to make sure you are generating valid
+<code><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">EML::eml_validate()</a></code> to make sure you are generating valid
 EML).</li>
-<li>Use the <code><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">EML::write_eml()</a></code> function to write the R object
+<li>Use the <code><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">EML::write_eml()</a></code> function to write the R object
 back to XML (remember the NPS naming convention for metadata files is
 *_metadata.xml).</li>
 <li>Check your EML and data package using
-<code><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code>.</li>
+<code><a href="https://rdrr.io/pkg/DPchecker/man/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code>.</li>
 <li>Upload to DataStore (via web or
 <code>EMLeditor::uplad_datapackage()</code>).</li>
 <li>Extract metadata on DataStore.</li>
@@ -150,7 +150,7 @@ scripting with EMLeditor</a>.</p>
 <h4 id="import-your-metadata-into-r">Import your metadata into R<a class="anchor" aria-label="anchor" href="#import-your-metadata-into-r"></a>
 </h4>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"mymetadata_metdata.xml"</span>, from<span class="op">=</span><span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"mymetadata_metdata.xml"</span>, from<span class="op">=</span><span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-information-about-cui">Add information about CUI<a class="anchor" aria-label="anchor" href="#add-information-about-cui"></a>
@@ -317,7 +317,7 @@ EML. There are only two quick steps left:</p>
 </h4>
 <p>OK, this first one might take a tick to run:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 <p>If eml_validate returns errors, inspect them and fix them. Feel free
 to contribute an <a href="https://github.com/nationalparkservice/EMLeditor/issues" class="external-link">issue</a>,
 or email <a href="mailto:robert_baker@nps.gov?subject=EMLeditor%20issues">Rob
@@ -333,7 +333,7 @@ _metadata.xml. Also, when uploading your data package (data files and
 metadata) to DataStore, make sure to upload it to the correct draft
 reference!</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_meta2</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="check-your-data-package">Check your data package<a class="anchor" aria-label="anchor" href="#check-your-data-package"></a>
@@ -344,7 +344,7 @@ package</a> to run automated checks on your data package. DPchecker
 should have loaded when you loaded the NPSdataverse:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#path to your data package:</span></span>
-<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"data_packages"</span>, <span class="st">"my_current_package"</span><span class="op">)</span></span>
+<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"data_packages"</span>, <span class="st">"my_current_package"</span><span class="op">)</span></span>
 <span><span class="fu">run_congruence_checks</span><span class="op">(</span><span class="va">dir</span><span class="op">)</span></span></code></pre></div>
 <p>Any errors (a red X) should be addressed before moving forward.
 Warnings (a yellow !) are worth looking at, but may not need to be
@@ -363,7 +363,7 @@ in via VPN for this part, and it will only work if each individual file
 is &lt;32Mb.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#path to your package:</span></span>
-<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"data_pacakges"</span>, <span class="st">"my_current_package"</span><span class="op">)</span></span>
+<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"data_pacakges"</span>, <span class="st">"my_current_package"</span><span class="op">)</span></span>
 <span><span class="fu">upload_datapackage</span><span class="op">(</span><span class="va">dir</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -380,7 +380,7 @@ re-run EMLassemblyline.</p>
 </h4>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#path to your data package:</span></span>
-<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"data_packges"</span>, <span class="st">"my_current_package"</span><span class="op">)</span></span>
+<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">".."</span>, <span class="st">"data_packges"</span>, <span class="st">"my_current_package"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#load data metadata (via DPchecker):</span></span>
 <span><span class="va">my_meta2</span> <span class="op">&lt;-</span> <span class="fu">load_metadata</span><span class="op">(</span><span class="va">dir</span><span class="op">)</span></span></code></pre></div>
@@ -502,7 +502,7 @@ inspecting the .xml, file three good approaches are:</p>
 </ol>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use the eml_validate function from the EML package:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/emld/man/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_meta2</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Build a <em>mock-up</em> of a readme file:</li>
 </ol>
@@ -531,7 +531,7 @@ package.</li>
 </ol>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#If you have not already written your metadata back to .xml:</span></span>
-<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta2</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
+<span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">mymeta2</span>, <span class="st">"my_metadata.xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#run checks on your metadata. You must tell the check_eml() function where your file is. It will default to the current working directory. There must be only one xml file in the directory.</span></span>
 <span></span>
@@ -539,13 +539,13 @@ package.</li>
 <span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#to change to a new sub-directory:</span></span>
-<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"my_new_directory"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"my_new_directory"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#to change to a directory higher up in the hierarchy:</span></span>
-<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#to move higher up in the hierarchy, then select a different subdirectory:</span></span>
-<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">"a_different_sub_directory"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span>directory<span class="op">=</span><span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">".."</span>, <span class="st">"a_different_sub_directory"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

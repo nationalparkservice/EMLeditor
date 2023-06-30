@@ -50,6 +50,10 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0.8" id="emleditor-v0108-work-in-progress">EMLeditor v0.1.0.8 “Work in progress”<a class="anchor" aria-label="anchor" href="#emleditor-v0108-work-in-progress"></a></h2>
 <div class="section level3">
+<h3 id="id_30-june-0-1-0-8">30 June 2023<a class="anchor" aria-label="anchor" href="#id_30-june-0-1-0-8"></a></h3>
+<ul><li>Added a “park_units” parameter to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>. This takes a park unit (or list of park units) and uses the IRMA units service to populate the organizationName with the FullName of the park_unit specified. If you specify park_units, you cannot also specify “creator_orgs” - non-park unit organizations must be added as creators using a separate call to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code> (and the creators can subsequently be reorganized using <code><a href="../reference/set_creator_order.html">set_creator_order()</a></code>).</li>
+</ul></div>
+<div class="section level3">
 <h3 id="id_22-june-0-1-0-8">22 June 2023<a class="anchor" aria-label="anchor" href="#id_22-june-0-1-0-8"></a></h3>
 <ul><li>Bug fix for <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> - previously it only worked if you used <code><a href="../reference/set_cui.html">set_cui()</a></code>, exported to .xml and then re-imported to R. Now you can go straight from <code>set_cuio()</code> to <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code>.</li>
 <li>Updated documentation: more information on additional functions available and how to use <code>upload_datapackage()</code> function</li>
@@ -170,7 +174,7 @@ and <alternateidentifier> fields were used multiple times in the metadata.</alte
 </div>
 <div class="section level4">
 <h4 id="major-changes-0-1-0-1">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-0-1"></a></h4>
-<p><code><a href="../reference/check_eml.html">check_eml()</a></code> function is a wrapper that calls <code><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code> with <code>check_metadata-only = TRUE</code>. To run all the metadata-specific tests that will be run during a congruence test.</p>
+<p><code><a href="../reference/check_eml.html">check_eml()</a></code> function is a wrapper that calls <code><a href="https://rdrr.io/pkg/DPchecker/man/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code> with <code>check_metadata-only = TRUE</code>. To run all the metadata-specific tests that will be run during a congruence test.</p>
 </div>
 <div class="section level4">
 <h4 id="minor-changes-0-1-0-1">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-1-0-1"></a></h4>
