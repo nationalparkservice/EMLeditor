@@ -1696,8 +1696,11 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #'
 #' @details because `set_creator_orgs()` merely appends organizations, it 1) assumes that there is already one creator (as required by EMLassemblyline) and 2) does not allow the user to change authorship order. To change the order of the authors, see `set_creator_order()`. Creator organizations and their RORs need to be supplied in two lists where the organization and ROR are correctly matched (i.e. the 3rd organization is associated with the 3rd ROR in a list). If one or more of your creator organizations does not have a ROR, enter "NA".
 #'
+#' You can use the park_units parameter to specify park units. This will utilize the IRMA units look-up service to fill in the organizationName element, thus ensuring that there are no spelling errors or deviations unit names. You can use either park_units or creator_orgs but not both because if you have specified any park_units, these will over-write the creator_orgs in your function call. Thus, if you would like to add park units as creators and some non-park unit organization as a creator you need to call the function twice. When specifying park_units, they will be added in the order they occur in the IRMA units list, not necessarily the order they were supplied to the function. Use `set_creator_order()` to re-order them if desired.
+#'
 #' @inheritParams set_title
-#' @param creator_orgs List. A list of one or more organizations.
+#' @param creator_orgs List. Defaults to NA. A list of one or more organizations.
+#' @param park_units List. Defaults to NA. A list of park units. If any park units are specified, it they will supersede anything listed under creator_orgs.
 #' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see https:/ror.org) that correspond to the organization in question. If an organization does not hae a ROR ID (or you don't know it), enter "NA".
 #'
 #' @return eml_object
@@ -1716,8 +1719,23 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #'  my_RORs <- c("044zqqy65", "NA")
 #'
 #'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+#'
+#'  #add multiple park units as organization names:
+#'  park_units <- c("ROMN", "SFCN", "YELL")
+#'
 #'  }
-set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE, NPS = TRUE){
+set_creator_orgs <- function(eml_object,
+                             creator_orgs = NA,
+                             park_units = NA,
+                             RORs = NA,
+                             force = FALSE,
+                             NPS = TRUE){
+  #stop if not enough info provided:
+  if(is.na(creator_orgs) & is.na(park_units)){
+    cat("You must supply either a creator organization name or a park unit.\n")
+    stop()
+  }
+
   #get creators (what if there are none?)
   creator <- eml_object[["dataset"]][["creator"]]
 
@@ -1725,6 +1743,23 @@ set_creator_orgs <- function(eml_object, creator_orgs, RORs = NA, force = FALSE,
   names_list <- c("individualName", "organizationName", "positionName")
   if(sum(names_list %in% names(creator)) > 0){
     creator <- list(creator)
+  }
+
+  #if park units are supplied - over-writes organization names!
+  if(sum(!is.na(park_units)) > 0){
+    creator_orgs <- NULL
+    f <- file.path(tempdir(), "irmadownload.xml")
+    if (!file.exists(f)) {
+      # access all park codes from NPS xml file
+      curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+      }
+    result <- XML::xmlParse(file = f)
+    dat <- XML::xmlToDataFrame(result) # xml to dataframe
+
+    alpha <- dat %>% dplyr::filter(grepl(paste(park_units, collapse = '|'), UnitCode, ignore.case = TRUE))
+
+    park_name <- alpha$FullName
+    creator_orgs <- append(creator_orgs, park_name)
   }
 
   #generate list of creator orgs and directories
