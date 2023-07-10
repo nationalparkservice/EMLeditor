@@ -109,7 +109,7 @@ data_taxa_fields <- "scientific_Name"
 Specify the tables and fields that contain geographic coordinates and site names. This information will be used to fill out the geographic coverage elements of the metadata. If your data package does not have geographic information skip this step. If the only geographic information you are supplying is the park units (and their bounding boxes) you can also skip this step; Park Units and the corresponding GPS coordinates for their bounding boxes will be added at a later step. If your coordinates are in UTMs and not GPS, try the [`convert_utm_to_ll()`](https://nationalparkservice.github.io/QCkit/reference/convert_utm_to_ll.html) function in the [QCkit package](https://nationalparkservice.github.io/QCkit/)
 ```{r geo_info}
 data_coordinates_table <- "qry_Export_AA_points.csv"
-data_latitutde <- "decimalLatitutde"
+data_latitutde <- "decimalLatitude"
 data_longitude <- "decimalLongitude"
 data_sitename <- "Point_ID"
 ```
@@ -202,7 +202,7 @@ This is a good point to pause and test whether your EML is valid.
 eml_validate(my_metadata)
 ```
 
-if your EML is valid you should see the following (admittedly crypitic) result:
+if your EML is valid you should see the following (admittedly cryptic) result:
 ```
 # [1] TRUE
 # attr(,"errors")
@@ -315,13 +315,13 @@ write_eml(my_metadata, "mymetadatafilename_metadata.xml")
 ```
 
 ## Check your .xml file  
-You're EML metadata file should be ready for upload. You can run some additional tests on your .xml metadata file using `check_meta()`. This function assumes there is only one .xml file in the directory:
-```{r check_meta}
+You're EML metadata file should be ready for upload. You can run some additional tests on your .xml metadata file using `check_eml()`. This function assumes there is only one .xml file in the directory:
+```{r check_eml}
 # This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.
-check_metadata()
+check_eml()
 
 # If you .xml file with metadata is in a different directory, you will have to specify that:
-#check_metadata("C:/Users/<yourusername>/Documents/your_data_package")
+#check_eml("C:/Users/<yourusername>/Documents/your_data_package")
 ```
 
 ## Check your data package 

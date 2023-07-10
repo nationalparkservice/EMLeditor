@@ -1,5 +1,7 @@
 # EMLeditor v0.1.0.8 "Work in progress"
 
+## 10 July 2023
+  * Fixed minor typos in EML creation script.
 ## 30 June 2023
   * Added a "park_units" parameter to `set_creator_orgs()`. This takes a park unit (or list of park units) and uses the IRMA units service to populate the organizationName with the FullName of the park_unit specified. If you specify park_units, you cannot also specify "creator_orgs" - non-park unit organizations must be added as creators using a separate call to `set_creator_orgs()` (and the creators can subsequently be reorganized using `set_creator_order()`).
 
