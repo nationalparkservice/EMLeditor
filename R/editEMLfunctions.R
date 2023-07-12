@@ -1572,10 +1572,10 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 #'
 #' @description `set_creator_orcids()` allows users to add ORCiDs to creators or edit/update existing ORCiDs associated with creators. ORCiDs are persistent digital identifiers associated with individual people and remain constant despite name changes. They can help disambiguate creators with similar names and associated all the products of one creator in one space despite variations in how the name was used (e.g. Rob Baker and Robert Baker and. Robert L. Baker but NOT any of the 15 million or so other Robert Bakers). To register an ORCiD or manage your ORCiD profile, go to [https://orcid.org/](https://orcid.org/).
 #'
-#' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put "NA" in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs.
+#' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put "NA" in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs; this will automatically be inserted for you.
 #'
 #' @inheritParams set_title
-#' @param orcids String. One or more ORCiDs listed in the same order as the corresponding creators. Use "NA" if a creator does not have an ORCiD. Do not include the full URL. Format as: xxxx-xxxx-xxxx-xxxx.
+#' @param orcids String. One or more ORCiDs listed in the same order as the corresponding creators. Use "NA" if a creator does not have an ORCiD. Do not include the full URL. Format as: xxxx-xxxx-xxxx-xxxx (the https://orcid.org/ prefix will be added for you).
 #'
 #' @return eml_object
 #' @export
@@ -1623,15 +1623,14 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
   if(force == FALSE){
     #if there are already orcids:
     if(!is.null(existing_orcid)){
-      #construct tibble of exiting orcids:
+      #construct tibble of existing orcids:
       current_orcids <- tibble::tibble(surName, existing_orcid)
       #construct tibble of replacement orcids:
       new_orcids <- tibble::tibble(surName, orcids)
-      cat("Your data package contains ORCiDs for the following creators:\n")
-      print(current_orcids)
-      cat("\nAre you sure you want to replace the existing ORCiDs?\n")
-      cat("\nWith the following:\n")
-      print(new_orcids)
+      cat("Your data package contains ORCiDs for the following creators:\n\n")
+      cat(format(tibble::as_tibble(current_orcids))[c(-3L, -1L)], sep = "\n")
+      cat("\nAre you sure you want to replace the existing ORCiDs with the following:\n\n")
+      cat(format(tibble::as_tibble(new_orcids))[c(-3L, -1L)], sep = "\n")
       var1 <- readline(prompt = cat("\n\n1: Yes\n2: No\n\n"))
 
       if(var1 == 2){
@@ -1645,7 +1644,7 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
   author_order <- 1
   for(i in seq_along(creator)){
     if("individualName" %in% names(creator[[i]])){
-      replace_orcid <- orcids[author_order]
+      replace_orcid <- paste0("https://orcid.org/", orcids[author_order])
       author_order <- author_order +1
       userId2 <- list(list(userId = replace_orcid), directory = "https://orcid.org")
       creator[[i]][["userId"]] <- userId2
@@ -1673,10 +1672,10 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
         existing_orcid <- append(existing_orcid, creator[[i]][["userId"]][[1]][["userId"]])
       }
     }
-    #construct tibble of exiting orcids:
+    #construct tibble of existing orcids:
     new_orcids <- tibble::tibble(surName, existing_orcid)
     cat("Your new ORCiDs are:\n")
-    print(new_orcids)
+    cat(format(tibble::as_tibble(new_orcids))[c(-3L, -1L)], sep = "\n")
   }
 
   #add NPS publisher & for or by nps
