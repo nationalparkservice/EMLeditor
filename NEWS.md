@@ -1,5 +1,8 @@
 # EMLeditor v0.1.0.8 "Work in progress"
 
+## 12 July 2023
+  * Add global variable bindings
+  * Fix how set_creator_orcids handles orcids; now takes a 19-char string as input and saves orcid as a 37-char string with "https://orcid.org/" prefix.
 ## 10 July 2023
   * Fixed minor typos in EML creation script.
 ## 30 June 2023
