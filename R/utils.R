@@ -1,3 +1,9 @@
+#this gets rid of the "no visible binding for global variable 'x'" error in build checks:
+globalVariables(c("UnitCode",
+                  "Name",
+                  "Alpha_3_B"))
+
+
 #' inject NPS Publisher info into metadata
 #'
 #' @description .set_npspublisher injects static NPS-specific publisher info into eml documents. Calls the sub-function set.forOrByNPS, which adds an additionalMetadata element with for or by NPS = TRUE.

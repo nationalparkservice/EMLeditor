@@ -50,8 +50,11 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0.8" id="emleditor-v0108-work-in-progress">EMLeditor v0.1.0.8 “Work in progress”<a class="anchor" aria-label="anchor" href="#emleditor-v0108-work-in-progress"></a></h2>
 <div class="section level3">
-<h3 id="id_30-june-0-1-0-8">30 June 2023<a class="anchor" aria-label="anchor" href="#id_30-june-0-1-0-8"></a></h3>
-<ul><li>Added a “park_units” parameter to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>. This takes a park unit (or list of park units) and uses the IRMA units service to populate the organizationName with the FullName of the park_unit specified. If you specify park_units, you cannot also specify “creator_orgs” - non-park unit organizations must be added as creators using a separate call to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code> (and the creators can subsequently be reorganized using <code><a href="../reference/set_creator_order.html">set_creator_order()</a></code>).</li>
+<h3 id="id_12-july-0-1-0-8">12 July 2023<a class="anchor" aria-label="anchor" href="#id_12-july-0-1-0-8"></a></h3>
+<ul><li>Add global variable bindings</li>
+<li>Fix how set_creator_orcids handles orcids; now takes a 19-char string as input and saves orcid as a 37-char string with “<a href="https://orcid.org/" class="external-link uri">https://orcid.org/</a>” prefix. ## 10 July 2023</li>
+<li>Fixed minor typos in EML creation script. ## 30 June 2023</li>
+<li>Added a “park_units” parameter to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>. This takes a park unit (or list of park units) and uses the IRMA units service to populate the organizationName with the FullName of the park_unit specified. If you specify park_units, you cannot also specify “creator_orgs” - non-park unit organizations must be added as creators using a separate call to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code> (and the creators can subsequently be reorganized using <code><a href="../reference/set_creator_order.html">set_creator_order()</a></code>).</li>
 </ul></div>
 <div class="section level3">
 <h3 id="id_22-june-0-1-0-8">22 June 2023<a class="anchor" aria-label="anchor" href="#id_22-june-0-1-0-8"></a></h3>
