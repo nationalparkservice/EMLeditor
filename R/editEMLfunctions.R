@@ -754,7 +754,7 @@ set_additional_info <- function(eml_object,
 #'
 #' @details Users may want to edit the methods if errors or non-ASCII text characters are discovered because the methods are prominently displayed on DataStore. To avoid non-standard characters, users are highly encouraged to generate methods using a text editor such as Notepad rather than a word processor such as MS Word.
 #'
-#' At this time, `set_methods()` does not support complex formatting such as, bullets, tabs, or multiple spaces. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
+#' At this time, `set_methods()` does not support complex formatting such as, bullets, tabs, or multiple spaces. All text will be included in a description element (which is itself a child element of a single methodStep element within the methods element). Additional child elments of methods or methodStep such as subStep, software, instrumentation, citation, sampling, etc are not supported at this time. All of this information may be added as text. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
 #'
 #' @inheritParams set_titlet
 #' @param methods
@@ -770,9 +770,12 @@ set_methods <- function(eml_object,
                                 method,
                                 force = FALSE,
                                 NPS = TRUE) {
-  # scripting route:
+  method_list <- list(methodStep =
+                        list(description = list(method)))
+
+    # scripting route:
   if (force == TRUE) {
-    eml_object$dataset$methods <- method
+    eml_object$dataset$methods <- method_list
   }
 
   # interactive route:
@@ -781,7 +784,7 @@ set_methods <- function(eml_object,
     doc <- eml_object$dataset$methods
 
     if (is.null(doc)) {
-      eml_object$dataset$methods <- method
+      eml_object$dataset$methods <- method_list
       cat("No previous methods were detected.\n")
       cat("Your new methods section has been added.\n")
       cat("View the current methods using get_methods.")
@@ -791,7 +794,7 @@ set_methods <- function(eml_object,
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
-        eml_object$dataset$methods <- method
+        eml_object$dataset$methods <- method_list
         cat("You have replaced your Methods.\n")
         cat("View the current Methods using get_methods.")
       }
