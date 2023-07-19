@@ -747,6 +747,70 @@ set_additional_info <- function(eml_object,
   return(eml_object)
 }
 
+
+#' Sets the Methods in metadata
+#'
+#' @description `set_methods()` will check for and add/replace methods in the metadata
+#'
+#' @details Users may want to edit the methods if errors or non-ASCII text characters are discovered because the methods are prominently displayed on DataStore. To avoid non-standard characters, users are highly encouraged to generate methods using a text editor such as Notepad rather than a word processor such as MS Word.
+#'
+#' At this time, `set_methods()` does not support complex formatting such as, bullets, tabs, or multiple spaces. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
+#'
+#' @inheritParams set_titlet
+#' @param methods
+#'
+#' @return An EML-formatted object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' eml_object <- set_methods(eml_objec "Here are some methods we performed.")
+#' }
+set_methods <- function(eml_object,
+                                method,
+                                force = FALSE,
+                                NPS = TRUE) {
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$methods <- method
+  }
+
+  # interactive route:
+  if (force == FALSE) {
+    # get existing abstract, if any:
+    doc <- eml_object$dataset$methods
+
+    if (is.null(doc)) {
+      eml_object$dataset$methods <- method
+      cat("No previous methods were detected.\n")
+      cat("Your new methods section has been added.\n")
+      cat("View the current methods using get_methods.")
+    } else {
+      cat("Your EML already has a Methods section.\n")
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      # if User opts to replace abstract:
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        eml_object$dataset$methods <- method
+        cat("You have replaced your Methods.\n")
+        cat("View the current Methods using get_methods.")
+      }
+      # if User opts not to replace abstract:
+      if (var1 == 2) {
+        cat("Your original methods section was retained.\n")
+        cat("View the current methods using get_methods.")
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+  return(eml_object)
+}
+
 #' Edit literature cited
 #'
 #' @description `r lifecycle::badge("experimental")`
