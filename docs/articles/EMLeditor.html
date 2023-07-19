@@ -304,11 +304,11 @@ network.</p>
 be a single park (ROMO) or a network (ROMN). It may be identical to the
 units listed in the previous step, overlapping, or entirely
 different.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#a single proucing unit:</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="st">"ROMN"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#for collaborative projects with multiple producing units:</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="fu">c</span>(<span class="st">"ROMN"</span>, <span class="st">"GRYN"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co">#a single proucing unit:</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="st">"ROMN"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#for collaborative projects with multiple producing units:</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>my_meta2 <span class="ot">&lt;-</span> <span class="fu">set_producing_units</span>(my_meta2, <span class="fu">c</span>(<span class="st">"ROMN"</span>, <span class="st">"GRYN"</span>)</span></code></pre></div>
 <p>Great! You’re done adding the essential NPS-specific metadata to your
 EML. There are only two quick steps left:</p>
 </div>
@@ -425,9 +425,9 @@ not readily support multiple paragraphs, bullet points, or the like.</p>
 <div class="section level4">
 <h4 id="save-your-changes">Save your changes:<a class="anchor" aria-label="anchor" href="#save-your-changes"></a>
 </h4>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#don't forget to write your metadata back to .xml!</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#(this will save your .xml to your working directory - don't forget to replace your old metadata file in your data package folder)</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>EML<span class="sc">::</span><span class="fu">write_eml</span>(my_meta2, <span class="st">"my_new_metadata.xml"</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co">#don't forget to write your metadata back to .xml!</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="co">#(this will save your .xml to your working directory - don't forget to replace your old metadata file in your data package folder)</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>EML<span class="sc">::</span><span class="fu">write_eml</span>(my_meta2, <span class="st">"my_new_metadata.xml"</span></span></code></pre></div>
 <p>For a full list of available EMLeditor functions, see the <a href="../reference/index.html">EMLeditor reference page</a>.</p>
 <p>Check back here for more handy functions in the future. If there’s
 something you’d like to see added, please let us know by posting an <a href="https://github.com/nationalparkservice/EMLeditor/issues" class="external-link">Issue</a>
