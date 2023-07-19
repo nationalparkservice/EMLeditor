@@ -764,7 +764,7 @@ set_additional_info <- function(eml_object,
 #'
 #' @examples
 #' \dontrun{
-#' eml_object <- set_methods(eml_objec "Here are some methods we performed.")
+#' eml_object <- set_methods(eml_object, "Here are some methods we performed.")
 #' }
 set_methods <- function(eml_object,
                                 method,
