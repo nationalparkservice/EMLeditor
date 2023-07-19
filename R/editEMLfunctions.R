@@ -756,7 +756,7 @@ set_additional_info <- function(eml_object,
 #'
 #' At this time, `set_methods()` does not support complex formatting such as, bullets, tabs, or multiple spaces. All text will be included in a description element (which is itself a child element of a single methodStep element within the methods element). Additional child elments of methods or methodStep such as subStep, software, instrumentation, citation, sampling, etc are not supported at this time. All of this information may be added as text. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
 #'
-#' @inheritParams set_titlet
+#' @inheritParams set_title
 #' @param methods
 #'
 #' @return An EML-formatted object
