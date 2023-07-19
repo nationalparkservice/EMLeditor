@@ -626,9 +626,9 @@ set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force =
 
 #' adds an abstract
 #'
-#' @description set_abstract adds (or replaces) a simple abstract.
+#' @description `set_abstract()` adds (or replaces) a simple abstract.
 #'
-#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set_abstract does not allow for complex formatting such as bullets, tabs, or multiple spaces. You can add line breaks with "\n". You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#' @details Checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set_abstract does not allow for complex formatting such as bullets, tabs, or multiple spaces. You can add line breaks with "\\n" and a new paragraph (blank line between text) with "\\n\\n". You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
 #' @inheritParams set_title
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
@@ -686,11 +686,11 @@ set_abstract <- function(eml_object,
 
 #' Set Notes for DataStore landing page
 #'
-#' @description `set_additional_info()` will add information to the additionalInfo element in EML. The contents of this element are used to populate the 'notes' field on the DataStore landing page. Users may want to edit the notes if errors or non-ASCII text characters are discovered because the notes are prominently displayed on DataStore.
+#' @description `set_additional_info()` will add information to the additionalInfo element in EML.
 #'
-#' To avoid non-standard characters, users are highly encouraged to generate Notes using a text editor such as Notepad rather than a word processor such as MS Word.
+#' @details The contents of the additionalInformation element are used to populate the 'notes' field on the DataStore landing page. Users may want to edit the notes if errors or non-ASCII text characters are discovered because the notes are prominently displayed on DataStore. To avoid non-standard characters, users are highly encouraged to generate Notes using a text editor such as Notepad rather than a word processor such as MS Word.
 #'
-#' At this time, `set_additional_info()` does not support complex formatting such as multiple paragraphs, bullets, tabs, or multiple spacing. You can add line breaks with "\n".
+#' At this time, `set_additional_info()` does not support complex formatting such as, bullets, tabs, or multiple spaces. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
 #'
 #' @inheritParams set_title
 #' @param additional_info String. Will become the "notes" on the DataStore landing page.
