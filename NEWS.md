@@ -1,5 +1,12 @@
 # EMLeditor v0.1.0.8 "Work in progress"
 
+## 19 July 2023
+  * Fix examples in `set_creator_orgs()`
+  * Add function `set_methods()` allows user to add or replace existing methods sections.
+  * Add function `get_methods()` returns the methods section (as a list)
+  * Add function `set_additiona_info()` allows the user to set or replace existing addtitionalInfo. AdditionalInfo becomes "Notes" on the DataStore landing page.
+  * Add function `get_additional_info()` returns the additionalInfo ("notes") from metadata.
+
 ## 12 July 2023
   * Add global variable bindings
   * Fix how set_creator_orcids handles orcids; now takes a 19-char string as input and saves orcid as a 37-char string with "https://orcid.org/" prefix.

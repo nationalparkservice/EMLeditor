@@ -626,9 +626,9 @@ set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force =
 
 #' adds an abstract
 #'
-#' @description set_abstract adds (or replaces) a simple abstract.
+#' @description `set_abstract()` adds (or replaces) a simple abstract.
 #'
-#' @details checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set_abstract does not allow for paragraphs or complex formatting. You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
+#' @details Checks for an abstract. If no abstract is found, it inserts the abstract given in @param abstract. If an existing abstract is found, the user is asked whether they want to replace it or not and the appropriate action is taken. Currently set_abstract does not allow for complex formatting such as bullets, tabs, or multiple spaces. You can add line breaks with "\\n" and a new paragraph (blank line between text) with "\\n\\n". You are strongly encouraged to open your abstract in a text editor such as notepad and make sure there are no stray characters. If you need multiple paragraphs, you will need to do that via EMLassemblyline (for now).
 #'
 #' @inheritParams set_title
 #' @param abstract is a text string that is your abstract. You can generate this directly in R or import a .txt file.
@@ -672,6 +672,136 @@ set_abstract <- function(eml_object,
       if (var1 == 2) {
         cat("Your original abstract was retained.\n")
         cat("View the current abstract using get_abstract.")
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+  return(eml_object)
+}
+
+#' Set Notes for DataStore landing page
+#'
+#' @description `set_additional_info()` will add information to the additionalInfo element in EML.
+#'
+#' @details The contents of the additionalInformation element are used to populate the 'notes' field on the DataStore landing page. Users may want to edit the notes if errors or non-ASCII text characters are discovered because the notes are prominently displayed on DataStore. To avoid non-standard characters, users are highly encouraged to generate Notes using a text editor such as Notepad rather than a word processor such as MS Word.
+#'
+#' At this time, `set_additional_info()` does not support complex formatting such as, bullets, tabs, or multiple spaces. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
+#'
+#' @inheritParams set_title
+#' @param additional_info String. Will become the "notes" on the DataStore landing page.
+#'
+#' @return an EML-formated R object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' eml_object <- set_additional_info(eml_object, "Here is some text for the Notes section on DataStore.")
+#' }
+set_additional_info <- function(eml_object,
+                         additional_info,
+                         force = FALSE,
+                         NPS = TRUE) {
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$additionalInfo <- additional_info
+  }
+
+  # interactive route:
+  if (force == FALSE) {
+    # get existing abstract, if any:
+    doc <- eml_object$dataset$additionalInfo
+
+    if (is.null(doc)) {
+      eml_object$dataset$additionalInfo <- additional_info
+      cat("No previous additionalInfo was detected.\n")
+      cat("Your new additionalInfo has been added.\n")
+      cat("View the current additionalInfo using get_additional_info.")
+    } else {
+      cat("Your EML already has additionalInfo.\n")
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      # if User opts to replace abstract:
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        eml_object$dataset$additionalInfo <- additional_info
+        cat("You have replaced your additionalInfo.\n")
+        cat("View the current additionalInfo using get_additional_info.")
+      }
+      # if User opts not to replace abstract:
+      if (var1 == 2) {
+        cat("Your original additionalInfo was retained.\n")
+        cat("View the current additionalInfo using get_additional_info.")
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+  return(eml_object)
+}
+
+
+#' Sets the Methods in metadata
+#'
+#' @description `set_methods()` will check for and add/replace methods in the metadata
+#'
+#' @details Users may want to edit the methods if errors or non-ASCII text characters are discovered because the methods are prominently displayed on DataStore. To avoid non-standard characters, users are highly encouraged to generate methods using a text editor such as Notepad rather than a word processor such as MS Word.
+#'
+#' At this time, `set_methods()` does not support complex formatting such as, bullets, tabs, or multiple spaces. All text will be included in a description element (which is itself a child element of a single methodStep element within the methods element). Additional child elments of methods or methodStep such as subStep, software, instrumentation, citation, sampling, etc are not supported at this time. All of this information may be added as text. You can add line breaks with "\\n" and a new paragraph (a blank line between text) with "\\n\\n".
+#'
+#' @inheritParams set_title
+#' @param methods
+#'
+#' @return An EML-formatted object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' eml_object <- set_methods(eml_object, "Here are some methods we performed.")
+#' }
+set_methods <- function(eml_object,
+                                method,
+                                force = FALSE,
+                                NPS = TRUE) {
+  method_list <- list(methodStep =
+                        list(description = list(method)))
+
+    # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$methods <- method_list
+  }
+
+  # interactive route:
+  if (force == FALSE) {
+    # get existing abstract, if any:
+    doc <- eml_object$dataset$methods
+
+    if (is.null(doc)) {
+      eml_object$dataset$methods <- method_list
+      cat("No previous methods were detected.\n")
+      cat("Your new methods section has been added.\n")
+      cat("View the current methods using get_methods.")
+    } else {
+      cat("Your EML already has a Methods section.\n")
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      # if User opts to replace abstract:
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        eml_object$dataset$methods <- method_list
+        cat("You have replaced your Methods.\n")
+        cat("View the current Methods using get_methods.")
+      }
+      # if User opts not to replace abstract:
+      if (var1 == 2) {
+        cat("Your original methods section was retained.\n")
+        cat("View the current methods using get_methods.")
       }
     }
   }
@@ -1708,7 +1838,7 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #' @examples
 #'  \dontrun{
 #'  #add one organization and it's ROR:
-#'  mymetadata <- set_creator_orgs(mymetadata, "National Park Service", "044zqqy65")
+#'  mymetadata <- set_creator_orgs(mymetadata, "National Park Service", RORs="044zqqy65")
 #'
 #'  #add one organization that does not have a ROR:
 #'  mymetadata <- set_creator_orgs(mymetadata, "My Favorite ROR-less Organization")
@@ -1717,10 +1847,12 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #'  my_orgs <- c("National Park Service", "My Favorite ROR-less Organization")
 #'  my_RORs <- c("044zqqy65", "NA")
 #'
-#'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+#'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, RORs=my_RORs)
 #'
 #'  #add multiple park units as organization names:
 #'  park_units <- c("ROMN", "SFCN", "YELL")
+#'
+#'  mymetadata <- set_creator_orgs(mymetadata, park_units=park_units)
 #'
 #'  }
 set_creator_orgs <- function(eml_object,

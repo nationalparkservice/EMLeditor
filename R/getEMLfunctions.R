@@ -94,6 +94,38 @@ get_abstract <- function(eml_object) {
   return(txt)
 }
 
+#' Get additional information (Notes on DataStore)
+#'
+#' @description `get_methods()` returns the text stored in the methods element of EML metadata. The returned text is not manipulated in any way. DataStore unlist the returned object (get rid of tags such as $methodStep, $methodStep$description and $methodStep$description$para and remove the numbers in brackets). the "\\n" character combination is interpretted as a line break (as are blank lines). However, DataStpre will not filter out stray characters such as &amp;#13;. Use the `set_methods()` function to edit and replace the text stored in the methods field.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return List
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_additional_info(eml_object)
+#' }
+get_additional_info <- function(eml_object) {
+  doc <- eml_object$dataset$additionalInfo
+  if(is.null(doc)) {
+    warning("Your EML lacks additional info. Use set_additional_info() to add it.")
+  }
+  return(doc)
+
+}
+
+get_methods <- function(eml_object){
+  doc <- eml_object$dataset$methods
+  if(is.null(doc)){
+    warning("Your EML lacks a methods section. Use set_methods to add methods.")
+  }
+  return(doc)
+}
+
+
+
 #' returns the data package title
 #'
 #' @description get_title returns a text string that is the title of the data package

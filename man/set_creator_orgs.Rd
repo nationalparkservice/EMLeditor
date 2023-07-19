@@ -40,7 +40,7 @@ You can use the park_units parameter to specify park units. This will utilize th
 \examples{
  \dontrun{
  #add one organization and it's ROR:
- mymetadata <- set_creator_orgs(mymetadata, "National Park Service", "044zqqy65")
+ mymetadata <- set_creator_orgs(mymetadata, "National Park Service", RORs="044zqqy65")
 
  #add one organization that does not have a ROR:
  mymetadata <- set_creator_orgs(mymetadata, "My Favorite ROR-less Organization")
@@ -49,10 +49,12 @@ You can use the park_units parameter to specify park units. This will utilize th
  my_orgs <- c("National Park Service", "My Favorite ROR-less Organization")
  my_RORs <- c("044zqqy65", "NA")
 
- mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+ mymetadata <- set_creator_orgs(mymetadata, my_orgs, RORs=my_RORs)
 
  #add multiple park units as organization names:
  park_units <- c("ROMN", "SFCN", "YELL")
+
+ mymetadata <- set_creator_orgs(mymetadata, park_units=park_units)
 
  }
 }
