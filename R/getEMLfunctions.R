@@ -100,7 +100,7 @@ get_abstract <- function(eml_object) {
 #'
 #' @inheritParams get_begin_date
 #'
-#' @return
+#' @return List
 #' @export
 #'
 #' @examples
