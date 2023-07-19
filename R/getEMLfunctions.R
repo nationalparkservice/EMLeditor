@@ -94,6 +94,30 @@ get_abstract <- function(eml_object) {
   return(txt)
 }
 
+#' Get additional information (Notes on DataStore)
+#'
+#' @description `get_additional_information()` returns the text stored in the additionalInformation element of EML metadata. This text is used to generate the text in the Notes section of the reference landing page on DataStore. The returned text is not manipulated in any way. DataStore will handle the $para tags but will not strip out stray characters such as &amp;#13;. Use the `set_additional_info()` function to edit and replace the text stored in the additionalInfo field.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_additional_info(eml_object)
+#' }
+get_additional_info <- function(eml_object) {
+  doc <- eml_object$dataset$additionalInfo
+  if(is.null(doc)) {
+    warning("Your EML lacks additional info. Use set_additional_info() to add it.")
+  }
+  return(doc)
+
+}
+
+
+
 #' returns the data package title
 #'
 #' @description get_title returns a text string that is the title of the data package
