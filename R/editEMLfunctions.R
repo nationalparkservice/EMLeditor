@@ -684,6 +684,69 @@ set_abstract <- function(eml_object,
   return(eml_object)
 }
 
+#' Set Notes for DataStore landing page
+#'
+#' @description `set_additional_info()` will add information to the additionalInfo element in EML. The contents of this element are used to populate the 'notes' field on the DataStore landing page. Users may want to edit the notes if errors or non-ASCII text characters are discovred because the notes are prominently displayed on DataStore.
+#'
+#' Users are highly encouraged to generate Notes using a text editor such as Notepad rather than a word processor such as MS Word.
+#'
+#' @inheritParams set_title
+#' @param additional_info String. Will become the "notes" on the DataStore landing page.
+#' @param force
+#' @param NPS
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' eml_object <- set_additional_info(eml_object, "Here is some text for the Notes section on DataStore.")
+#' }
+set_additional_info <- function(eml_object,
+                         additional_info,
+                         force = FALSE,
+                         NPS = TRUE) {
+  # scripting route:
+  if (force == TRUE) {
+    eml_object$dataset$additionalInfo <- additional_info
+  }
+
+  # interactive route:
+  if (force == FALSE) {
+    # get existing abstract, if any:
+    doc <- eml_object$dataset$additionalInfo
+
+    if (is.null(doc)) {
+      eml_object$dataset$additionalInfo <- additional_info
+      cat("No previous additionalInfo was detected.\n")
+      cat("Your new additionalInfo has been added.\n")
+      cat("View the current additionalInfo using get_additional_info.")
+    } else {
+      cat("Your EML already has additionalInfo.\n")
+      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      # if User opts to replace abstract:
+      if (var1 == 1) {
+        # print the existing DOI to the screen:
+        eml_object$dataset$additionalInfo <- additional_info
+        cat("You have replaced your additionalInfo.\n")
+        cat("View the current additionalInfo using get_additional_info.")
+      }
+      # if User opts not to replace abstract:
+      if (var1 == 2) {
+        cat("Your original additionalInfo was retained.\n")
+        cat("View the current additionalInfo using get_additional_info.")
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+  return(eml_object)
+}
+
 #' Edit literature cited
 #'
 #' @description `r lifecycle::badge("experimental")`
@@ -1708,7 +1771,7 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #' @examples
 #'  \dontrun{
 #'  #add one organization and it's ROR:
-#'  mymetadata <- set_creator_orgs(mymetadata, "National Park Service", "044zqqy65")
+#'  mymetadata <- set_creator_orgs(mymetadata, "National Park Service", RORs="044zqqy65")
 #'
 #'  #add one organization that does not have a ROR:
 #'  mymetadata <- set_creator_orgs(mymetadata, "My Favorite ROR-less Organization")
@@ -1717,10 +1780,12 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #'  my_orgs <- c("National Park Service", "My Favorite ROR-less Organization")
 #'  my_RORs <- c("044zqqy65", "NA")
 #'
-#'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, my_RORs)
+#'  mymetadata <- set_creator_orgs(mymetadata, my_orgs, RORs=my_RORs)
 #'
 #'  #add multiple park units as organization names:
 #'  park_units <- c("ROMN", "SFCN", "YELL")
+#'
+#'  mymetadata <- set_creator_orgs(mymetadata, park_units=park_units)
 #'
 #'  }
 set_creator_orgs <- function(eml_object,
