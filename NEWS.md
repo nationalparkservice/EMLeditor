@@ -1,5 +1,8 @@
 # EMLeditor v0.1.0.8 "Work in progress"
 
+## 15 August 2023
+  * Fix bugs in `get_authors()`
+  * Fix bugs in `get_abstract()`
 ## 19 July 2023
   * Fix examples in `set_creator_orgs()`
   * Add function `set_methods()` allows user to add or replace existing methods sections.
