@@ -256,7 +256,7 @@ get_citation <- function(eml_object) {
 #' }
 get_author_list <- function(eml_object) {
   # get author names & affiliations
-  authors <- arcticdatautils::eml_get_simple(eml_object, "creator")
+  authors <- eml_object[["dataset"]][["creator"]]
 
   # if no authors are specified (not really possible with EMLassemblyline)
   if (is.null(authors)) {
@@ -288,7 +288,6 @@ get_author_list <- function(eml_object) {
     author <- NULL
     last_first <- NULL
 
-    # single author:
     if (length(last_name) > 0) {
       # single author:
       if (length(last_name) == 1) {
@@ -298,7 +297,7 @@ get_author_list <- function(eml_object) {
 
       # multi-author:
       else {
-        for (i in seq_along(last_name)) {
+        for (i in 1:length(seq_along(last_name))) {
           if (i == 1) {
             author <- paste0(last_name[i], ", ", first_name[i])
           }
@@ -318,6 +317,7 @@ get_author_list <- function(eml_object) {
       cat("There is something wrong with the creators field. Please check that you have a supplied a givenName and surName for each creator.")
     }
   }
+  return(last_first)
 }
 
 #' returns the DOI
