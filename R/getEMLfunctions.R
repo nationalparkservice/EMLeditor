@@ -72,7 +72,7 @@ get_abstract <- function(eml_object) {
   } else {
     Encoding(doc) <- "UTF-8" # helps with weird characters
     txt <- NULL
-    for (i in seq_along(doc)) {
+    for (i in 1:length(seq_along(doc))) {
       if (nchar(doc[i]) > 0) {
         mypara <- gsub("[\r?\n|\r]", "", doc[i]) # get rid of line breaks and carriage returns
         mypara <- gsub("&#13;", " ", mypara) # get rid of carriage symbols
@@ -84,9 +84,10 @@ get_abstract <- function(eml_object) {
         mypara <- gsub("   ", " ", mypara) # get rid of 3x spaces
         mypara <- gsub("  ", " ", mypara) # get rid of 2x spaces
         mypara <- gsub("  ", " ", mypara) # rerun for 4x spaces
-        txt <- paste(txt, mypara, sep = "")
-        if (i < seq_along(doc)) {
-          txt <- paste(txt, "\n\n\t", sep = "") # add paragraph sep
+        txt <- paste0(txt, mypara)
+        print(txt)
+        if (i < length(seq_along(doc))) {
+          txt <- paste0(txt, "\n\n\t") # add paragraph sep
         }
       }
     }
