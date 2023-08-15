@@ -65,16 +65,17 @@ get_end_date <- function(eml_object) {
 #' writeLines(abstract)
 #' }
 get_abstract <- function(eml_object) {
-  doc <- arcticdatautils::eml_get_simple(eml_object, "abstract")
+  doc <- eml_object[["dataset"]][["abstract"]]
   if (is.null(doc)) {
     warning("Your EML lacks an abstract. Use set_abstract() to add one.")
     txt <- NA # to do: test whether NA needs quotes for write.README.
   } else {
-    Encoding(doc) <- "UTF-8" # helps with weird characters
+    #doc<-enc2utf8(doc) # helps with weird characters
     txt <- NULL
     for (i in 1:length(seq_along(doc))) {
       if (nchar(doc[i]) > 0) {
         mypara <- gsub("[\r?\n|\r]", "", doc[i]) # get rid of line breaks and carriage returns
+        mypara <- enc2utf8(mypara) #set encoding to UTF-8 deals with many stray characters
         mypara <- gsub("&#13;", " ", mypara) # get rid of carriage symbols
         mypara <- gsub("&amp;#13;", ". ", mypara)
         mypara <- gsub("<literalLayout>", "", mypara) # get rid of literalLayout tag
@@ -85,7 +86,6 @@ get_abstract <- function(eml_object) {
         mypara <- gsub("  ", " ", mypara) # get rid of 2x spaces
         mypara <- gsub("  ", " ", mypara) # rerun for 4x spaces
         txt <- paste0(txt, mypara)
-        print(txt)
         if (i < length(seq_along(doc))) {
           txt <- paste0(txt, "\n\n\t") # add paragraph sep
         }
