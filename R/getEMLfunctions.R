@@ -65,16 +65,17 @@ get_end_date <- function(eml_object) {
 #' writeLines(abstract)
 #' }
 get_abstract <- function(eml_object) {
-  doc <- arcticdatautils::eml_get_simple(eml_object, "abstract")
+  doc <- eml_object[["dataset"]][["abstract"]]
   if (is.null(doc)) {
     warning("Your EML lacks an abstract. Use set_abstract() to add one.")
     txt <- NA # to do: test whether NA needs quotes for write.README.
   } else {
-    Encoding(doc) <- "UTF-8" # helps with weird characters
+    #doc<-enc2utf8(doc) # helps with weird characters
     txt <- NULL
-    for (i in seq_along(doc)) {
+    for (i in 1:length(seq_along(doc))) {
       if (nchar(doc[i]) > 0) {
         mypara <- gsub("[\r?\n|\r]", "", doc[i]) # get rid of line breaks and carriage returns
+        mypara <- enc2utf8(mypara) #set encoding to UTF-8 deals with many stray characters
         mypara <- gsub("&#13;", " ", mypara) # get rid of carriage symbols
         mypara <- gsub("&amp;#13;", ". ", mypara)
         mypara <- gsub("<literalLayout>", "", mypara) # get rid of literalLayout tag
@@ -84,9 +85,9 @@ get_abstract <- function(eml_object) {
         mypara <- gsub("   ", " ", mypara) # get rid of 3x spaces
         mypara <- gsub("  ", " ", mypara) # get rid of 2x spaces
         mypara <- gsub("  ", " ", mypara) # rerun for 4x spaces
-        txt <- paste(txt, mypara, sep = "")
-        if (i < seq_along(doc)) {
-          txt <- paste(txt, "\n\n\t", sep = "") # add paragraph sep
+        txt <- paste0(txt, mypara)
+        if (i < length(seq_along(doc))) {
+          txt <- paste0(txt, "\n\n\t") # add paragraph sep
         }
       }
     }
@@ -255,7 +256,7 @@ get_citation <- function(eml_object) {
 #' }
 get_author_list <- function(eml_object) {
   # get author names & affiliations
-  authors <- arcticdatautils::eml_get_simple(eml_object, "creator")
+  authors <- eml_object[["dataset"]][["creator"]]
 
   # if no authors are specified (not really possible with EMLassemblyline)
   if (is.null(authors)) {
@@ -287,7 +288,6 @@ get_author_list <- function(eml_object) {
     author <- NULL
     last_first <- NULL
 
-    # single author:
     if (length(last_name) > 0) {
       # single author:
       if (length(last_name) == 1) {
@@ -297,7 +297,7 @@ get_author_list <- function(eml_object) {
 
       # multi-author:
       else {
-        for (i in seq_along(last_name)) {
+        for (i in 1:length(seq_along(last_name))) {
           if (i == 1) {
             author <- paste0(last_name[i], ", ", first_name[i])
           }
@@ -317,6 +317,7 @@ get_author_list <- function(eml_object) {
       cat("There is something wrong with the creators field. Please check that you have a supplied a givenName and surName for each creator.")
     }
   }
+  return(last_first)
 }
 
 #' returns the DOI
