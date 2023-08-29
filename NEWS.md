@@ -1,4 +1,7 @@
-# EMLeditor v0.1.0.8 "Work in progress"
+EMLeditor v0.1.1 "Big South Fork"
+
+## 29 August 2023
+  Updated all rest API services from v4/v5 to v6. Units services remain at v2.
 
 ## 15 August 2023
   * Fix bugs in `get_authors()`
