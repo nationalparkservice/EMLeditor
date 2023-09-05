@@ -44,7 +44,6 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
       #get Datastore Reference ID:
       DS_ref <- get_ds_id(eml_object)
       url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
-      url <- paste0(x, "ReferenceCodeSearch?q=", DS_ref)
       #API call to look for an existing reference:
       test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
       status_code <- httr::stop_for_status(test_req)$status_code
