@@ -43,7 +43,7 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
     if(length(seq_along(doc)) == 1){
       #get Datastore Reference ID:
       DS_ref <- get_ds_id(eml_object)
-      url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
+      url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
       #API call to look for an existing reference:
       test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
       status_code <- httr::stop_for_status(test_req)$status_code
@@ -105,7 +105,8 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
                                    precision = ""))
   bdy <- jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE)
   #Create empty draft reference:
-  req <- httr::POST("https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/CreateDraft",
+  post_url <- paste0(.ds_secure_api(), "Reference/CreateDraft")
+  req <- httr::POST(post_url,
                 httr::authenticate(":", "", "ntlm"),
                 httr::add_headers('Content-Type'='application/json'),
                 body = bdy)
@@ -187,7 +188,7 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
   #list files in data package
 
   #test whether reference already exists or the DOI:
-  url <- paste0("https://irmaservices.nps.gov/datastore-secure/v4/rest/ReferenceCodeSearch?q=", DS_ref)
+  url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
   #verbose approach:
   if(force == FALSE){
     #API call to look for an existing reference:
@@ -264,9 +265,7 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
           stop()
         }
         if(is.null(file_size_error)){
-          api_url <- paste0(
-            "https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/",
-              DS_ref, "/UploadFile")
+          api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
           #upload the files
           for(i in seq_along(files)){
             req <- httr::POST(
@@ -339,9 +338,7 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
       stop()
     }
     if(is.null(file_size_error)){
-      api_url <- paste0(
-        "https://irmaservices.nps.gov/datastore-secure/v4/rest/Reference/",
-          DS_ref, "/UploadFile")
+      api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
       #upload the files
       for(i in seq_along(files)){
         req <- httr::POST(
