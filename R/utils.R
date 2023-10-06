@@ -10,7 +10,7 @@ assign("ds_api", "https://irmaservices.nps.gov/datastore/v6/rest/", envir=.pkggl
 assign("ds_secure_api", "https://irmaservices.nps.gov/datastore-secure/v6/rest/", envir=.pkgglobalenv)
 
 #data_store dev api (requires secure)
-assign("ds_dev_api", "https://irmadevservices.nps.gov/datastore/v6/rest/", envir = .pkgglobalenv)
+assign("ds_dev_api", "https://irmadevservices.nps.gov/datastore-secure/v6/rest/", envir = .pkgglobalenv)
 
 .ds_api <- function(x){
   get("ds_api", envir = .pkgglobalenv)
