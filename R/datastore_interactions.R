@@ -109,7 +109,7 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev=FALSE){
                                    precision = ""))
   bdy <- jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE)
   #Create empty draft reference:
-  if(dev=TRUE){
+  if(dev == TRUE){
     post_url <- paste0(.ds_dev_api(), "Reference/CreateDraft")
   } else {
     post_url <- paste0(.ds_secure_api(), "Reference/CreateDraft")
@@ -203,7 +203,7 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
   #list files in data package
 
   #test whether reference already exists or the DOI:
-  if(dev = TRUE){
+  if(dev == TRUE){
     url <- paste0(.ds_dev_api(), "ReferenceCodeSearch?q=", DS_ref)
   } else {
     url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
@@ -230,8 +230,8 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
           crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
           ".\n\n", sep = "")
       if(test_rjson$fileCount > 0){
-        cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.")
-        return()
+        cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.\n")
+        return(invisible())
       }
     }
     if(length(test_rjson) == 0){
@@ -288,7 +288,7 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
           stop()
         }
         if(is.null(file_size_error)){
-          if(dev = TRUE){
+          if(dev == TRUE){
             api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/UploadFile")
           } else {
             api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
@@ -331,6 +331,10 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
       cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
       return()
     }
+    if(test_rjson$fileCount > 0){
+      cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.\n")
+      return(invisible())
+    }
     #test that metadata DOI corresponds to the draft reference on DataStore
     #this test should never fail.
     if(!DS_ref == test_rjson$referenceId){
@@ -365,7 +369,7 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
       stop()
     }
     if(is.null(file_size_error)){
-      if(dev = TRUE){
+      if(dev == TRUE){
         api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/UploadFile")
       } else {
         api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
