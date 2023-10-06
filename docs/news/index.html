@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,10 +48,24 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0.8" id="emleditor-v0108-work-in-progress">EMLeditor v0.1.0.8 “Work in progress”<a class="anchor" aria-label="anchor" href="#emleditor-v0108-work-in-progress"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.2" id="emleditor-v012-mukooda-trail">EMLeditor v0.1.2 “Mukooda Trail”<a class="anchor" aria-label="anchor" href="#emleditor-v012-mukooda-trail"></a></h2>
 <div class="section level3">
-<h3 id="id_19-july-0-1-0-8">19 July 2023<a class="anchor" aria-label="anchor" href="#id_19-july-0-1-0-8"></a></h3>
-<ul><li>Fix examples in <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>
+<h3 id="id_06-october-0-1-2">06 October 2023<a class="anchor" aria-label="anchor" href="#id_06-october-0-1-2"></a></h3>
+<p>Updated <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> and <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> functions to allow them to work with IRMA dev for testing and training purposes. Updated <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> to prevent file upload if the reference already has files associated with it.</p>
+</div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.1" id="emleditor-v011-big-south-fork">EMLeditor v0.1.1 “Big South Fork”<a class="anchor" aria-label="anchor" href="#emleditor-v011-big-south-fork"></a></h2>
+<div class="section level3">
+<h3 id="id_29-august-0-1-1">29 August 2023<a class="anchor" aria-label="anchor" href="#id_29-august-0-1-1"></a></h3>
+<p>Updated all rest API services from v4/v5 to v6. Units services remain at v2.</p>
+</div>
+<div class="section level3">
+<h3 id="id_15-august-0-1-1">15 August 2023<a class="anchor" aria-label="anchor" href="#id_15-august-0-1-1"></a></h3>
+<ul><li>Fix bugs in <code>get_authors()</code>
+</li>
+<li>Fix bugs in <code><a href="../reference/get_abstract.html">get_abstract()</a></code> ## 19 July 2023</li>
+<li>Fix examples in <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>
 </li>
 <li>Add function <code><a href="../reference/set_methods.html">set_methods()</a></code> allows user to add or replace existing methods sections.</li>
 <li>Add function <code>get_methods()</code> returns the methods section (as a list)</li>
@@ -59,14 +73,14 @@
 <li>Add function <code><a href="../reference/get_additional_info.html">get_additional_info()</a></code> returns the additionalInfo (“notes”) from metadata.</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_12-july-0-1-0-8">12 July 2023<a class="anchor" aria-label="anchor" href="#id_12-july-0-1-0-8"></a></h3>
+<h3 id="id_12-july-0-1-1">12 July 2023<a class="anchor" aria-label="anchor" href="#id_12-july-0-1-1"></a></h3>
 <ul><li>Add global variable bindings</li>
 <li>Fix how set_creator_orcids handles orcids; now takes a 19-char string as input and saves orcid as a 37-char string with “<a href="https://orcid.org/" class="external-link uri">https://orcid.org/</a>” prefix. ## 10 July 2023</li>
 <li>Fixed minor typos in EML creation script. ## 30 June 2023</li>
 <li>Added a “park_units” parameter to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>. This takes a park unit (or list of park units) and uses the IRMA units service to populate the organizationName with the FullName of the park_unit specified. If you specify park_units, you cannot also specify “creator_orgs” - non-park unit organizations must be added as creators using a separate call to <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code> (and the creators can subsequently be reorganized using <code><a href="../reference/set_creator_order.html">set_creator_order()</a></code>).</li>
 </ul></div>
 <div class="section level3">
-<h3 id="id_22-june-0-1-0-8">22 June 2023<a class="anchor" aria-label="anchor" href="#id_22-june-0-1-0-8"></a></h3>
+<h3 id="id_22-june-0-1-1">22 June 2023<a class="anchor" aria-label="anchor" href="#id_22-june-0-1-1"></a></h3>
 <ul><li>Bug fix for <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> - previously it only worked if you used <code><a href="../reference/set_cui.html">set_cui()</a></code>, exported to .xml and then re-imported to R. Now you can go straight from <code>set_cuio()</code> to <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code>.</li>
 <li>Updated documentation: more information on additional functions available and how to use <code>upload_datapackage()</code> function</li>
 <li>updated the EML script template: EMLassemblyline::make_eml now does not write a .xml by default but instead defaults to generating an R object that can subsequently be processed via EMLeditor functions.</li>

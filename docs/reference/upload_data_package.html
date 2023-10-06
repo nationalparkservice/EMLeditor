@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">upload_data_package</span><span class="op">(</span>directory <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">upload_data_package</span><span class="op">(</span>directory <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span>, force <span class="op">=</span> <span class="cn">FALSE</span>, dev <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,6 +66,10 @@
 <dt>force</dt>
 <dd><p>logical, defaults to FALSE for a verbose interactive version. Set to TRUE to suppress interactions and facilitate scripting.</p></dd>
 
+
+<dt>dev</dt>
+<dd><p>Logical. Defaults to FALSE. When dev = TRUE, all api actions are re-routed to the development server (as opposed to when dev = FALSE when api actions will target the production server).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -75,9 +79,11 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Currently, only .csv data files and EML metadata files are supported. All .csvs must end in ".csv". The single metadata file must end in "_metadata.xml". If you have includced a DOI in your metadata, using <code>upload_data_package()</code> is preferrable to using the web interface to manually upload files because it insures that your files are uploaded to the correct reference (i.e. the DOI in your metadata corresponds to the draft reference code on DataStore).</p>
+    <p>Currently, only .csv data files and EML metadata files are supported. All .csvs must end in ".csv". The single metadata file must end in "_metadata.xml". If you have included a DOI in your metadata, using <code>upload_data_package()</code> is preferable to using the web interface to manually upload files because it insures that your files are uploaded to the correct reference (i.e. the DOI in your metadata corresponds to the draft reference code on DataStore).</p>
 <p>Once uploaded, you are advised to look at the 'Files and Links' tab on the DataStore web interface to make sure your files are there and you do not have any duplicates. You can delete files as necessary from the 'Files and Links' tab until the reference is activated.</p>
 <p>This function is primarily intended for uploading files to the data package reference type on DataStore, but will upload .csvs and a single EML metadata file saved as *_metadata.xml file to any reference type, assuming the metadata has a DOI listed in the expected location and there is a corresponding draft reference on DataStore.</p>
+<p>Due to a known bug in the DataStore API, you can only use this function to upload files once. If you need to replace files, you must do that through the DataStore GUI.</p>
+<p>#' If you would like to test out the function without making uploading to DataStore, set the parameter dev=TRUE. That will re-route all of the API requests to the development server. You must be logged in to the VPN to access irmadev and you must have a draft reference on the dev server (using set_datastore_doi() with dev=TRUE).</p>
     </div>
 
     <div class="section level2">
