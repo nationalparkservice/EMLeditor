@@ -4,7 +4,7 @@
 \alias{set_datastore_doi}
 \title{Initiates a draft reference and inserts the reserved DOI into metadata}
 \usage{
-set_datastore_doi(eml_object, force = FALSE, NPS = TRUE)
+set_datastore_doi(eml_object, force = FALSE, NPS = TRUE, dev = FALSE)
 }
 \arguments{
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
@@ -12,6 +12,8 @@ set_datastore_doi(eml_object, force = FALSE, NPS = TRUE)
 \item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
 \item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
+
+\item{dev}{Logical. Defaults to FALSE. When dev = TRUE, all api actions are re-routed to the development server (as opposed to when dev = FALSE when api actions will target the production server).}
 }
 \value{
 an EML-formatted R object
@@ -25,6 +27,8 @@ To prevent generating too many (unused) draft references, \code{set_datastore_do
 This function generates a draft reference on DataStore. If you run with force = FALSE (default), the function will report the draft reference URL and the draft title for the draft reference. Make sure you upload your data and metadata to the correct draft reference! Your draft reference title should read: "DRAFT: \if{html}{\out{<your data package title>}}". This will be updated to your data package title when you upload your metadata.
 
 If you set a new DOI with \code{set_datastore_doi()}, it will also update all the links within the metadata to the data files to reflect the new draft reference and DataStore location. If you didn't have links to your data files, \code{set_datastore_doi()} will add them - but only if you actually update the doi.
+
+If you would like to test out the function without making excess references on DataStore, set the parameter dev=TRUE. That will re-route all of the API requests to the development server. You must be logged in to the VPN to access irmadev.
 }
 \examples{
 \dontrun{

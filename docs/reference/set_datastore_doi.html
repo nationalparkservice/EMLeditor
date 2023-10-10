@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_datastore_doi</span><span class="op">(</span><span class="va">eml_object</span>, force <span class="op">=</span> <span class="cn">FALSE</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_datastore_doi</span><span class="op">(</span><span class="va">eml_object</span>, force <span class="op">=</span> <span class="cn">FALSE</span>, NPS <span class="op">=</span> <span class="cn">TRUE</span>, dev <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,6 +70,10 @@
 <dt>NPS</dt>
 <dd><p>Logical. Defaults to TRUE. <strong>Most users should leave this as the default</strong>. Only under specific circumstances should it be set to FALSE: if you are <strong>not</strong> publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.</p></dd>
 
+
+<dt>dev</dt>
+<dd><p>Logical. Defaults to FALSE. When dev = TRUE, all api actions are re-routed to the development server (as opposed to when dev = FALSE when api actions will target the production server).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -82,6 +86,7 @@
     <p>To prevent generating too many (unused) draft references, <code>set_datastore_doi()</code> checks your metadata contents prior to initiating a draft reference on DataStore. If you already have a DOI specified, it will ask if you really want to over-write the DOI <strong>and</strong> initiate a new draft reference. Setting force = TRUE will over-ride this aspect of the function, so use with care. the <code>set_datastore_doi()</code> function requires that your metadata already contain a data package title and if it is missing will prompt you to insert it and quit. Setting force = TRUE will not override this check. If R cannot successfully initiate a draft reference on DataStore, the function will remind you to log on to the VPN. If the problem persists, email <a href="mailto:irma@nps.gov">irma@nps.gov</a>.</p>
 <p>This function generates a draft reference on DataStore. If you run with force = FALSE (default), the function will report the draft reference URL and the draft title for the draft reference. Make sure you upload your data and metadata to the correct draft reference! Your draft reference title should read: "DRAFT: <your data package title>". This will be updated to your data package title when you upload your metadata.</your></p>
 <p>If you set a new DOI with <code>set_datastore_doi()</code>, it will also update all the links within the metadata to the data files to reflect the new draft reference and DataStore location. If you didn't have links to your data files, <code>set_datastore_doi()</code> will add them - but only if you actually update the doi.</p>
+<p>If you would like to test out the function without making excess references on DataStore, set the parameter dev=TRUE. That will re-route all of the API requests to the development server. You must be logged in to the VPN to access irmadev.</p>
     </div>
 
     <div class="section level2">

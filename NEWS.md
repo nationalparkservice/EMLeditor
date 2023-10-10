@@ -1,4 +1,10 @@
-EMLeditor v0.1.1 "Big South Fork"
+# EMLeditor v0.1.2 "Mukooda Trail"
+
+## 06 October 2023
+  Updated `set_datastore_doi()` and `upload_data_package()` functions to allow them to work with IRMA dev for testing and training purposes.
+  Updated `upload_data_package()` to prevent file upload if the reference already has files associated with it.
+
+# EMLeditor v0.1.1 "Big South Fork"
 
 ## 29 August 2023
   Updated all rest API services from v4/v5 to v6. Units services remain at v2.

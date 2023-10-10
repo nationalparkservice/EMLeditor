@@ -9,9 +9,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 # EMLeditor
 
-##### v0.1.0.7
+##### v0.1.2
 
-##### “Clingmans Dome”
+##### “Mukooda Trail”
 
 <!-- badges: start -->
 <!-- badges: end -->

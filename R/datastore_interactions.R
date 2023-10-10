@@ -8,11 +8,15 @@
 #'
 #' If you set a new DOI with `set_datastore_doi()`, it will also update all the links within the metadata to the data files to reflect the new draft reference and DataStore location. If you didn't have links to your data files, `set_datastore_doi()` will add them - but only if you actually update the doi.
 #'
+#' If you would like to test out the function without making excess references on DataStore, set the parameter dev=TRUE. That will re-route all of the API requests to the development server. You must be logged in to the VPN to access irmadev.
+#'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #'
 #' @param force logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.
 #'
 #' @param NPS Logical. Defaults to TRUE. **Most users should leave this as the default**. Only under specific circumstances should it be set to FALSE: if you are **not** publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.
+#'
+#' @param dev Logical. Defaults to FALSE. When dev = TRUE, all api actions are re-routed to the development server (as opposed to when dev = FALSE when api actions will target the production server).
 #'
 #' @return an EML-formatted R object
 #'
@@ -22,7 +26,7 @@
 #' \dontrun{
 #' eml_object <- set_datastore_doi(eml_object)
 #' }
-set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
+set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev=FALSE){
   # check for existing DOI:
   doc <- utils::capture.output(get_doi(eml_object))
   #get data package title from metadata:
@@ -105,11 +109,15 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
                                    precision = ""))
   bdy <- jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE)
   #Create empty draft reference:
-  post_url <- paste0(.ds_secure_api(), "Reference/CreateDraft")
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(), "Reference/CreateDraft")
+  } else {
+    post_url <- paste0(.ds_secure_api(), "Reference/CreateDraft")
+  }
   req <- httr::POST(post_url,
-                httr::authenticate(":", "", "ntlm"),
-                httr::add_headers('Content-Type'='application/json'),
-                body = bdy)
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'),
+                    body = bdy)
   #check status code; suggest logging in to VPN if errors occur:
   status_code <- httr::stop_for_status(req)$status_code
   if(!status_code == 200){
@@ -121,8 +129,8 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
   ds_ref <- rjson$referenceCode
   # insert/replace DOI:
   eml_object$dataset$alternateIdentifier <- paste0(
-      "doi: https://doi.org/10.57830/",
-      ds_ref)
+    "doi: https://doi.org/10.57830/",
+    ds_ref)
   # update data URLs to correspond to new DOI:
   data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
@@ -161,14 +169,21 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
 #'
 #' @description `upload_data_package()` inspects a data package and, if a DOI is supplied in the metadata, uploads the data files and metadata to the appropriate reference on DataStore. This function requires that you are logged on to the VPN. `upload_data_package()` will only work if each individual file in the data package is less than 32Mb. Larger files still require manual upload via the DataStore web interface. `upload_data_package()` just uploads files. It does not extract EML metadata to populate the reference fields on DataStore and it does not activate the reference - the reference remains fully editable via the web interface. After using `upload_data_package()` you do not need to "save" the reference on DataStore; the files are automatically saved to the reference.
 #'
-#' @details Currently, only .csv data files and EML metadata files are supported. All .csvs must end in ".csv". The single metadata file must end in "_metadata.xml". If you have includced a DOI in your metadata, using `upload_data_package()` is preferrable to using the web interface to manually upload files because it insures that your files are uploaded to the correct reference (i.e. the DOI in your metadata corresponds to the draft reference code on DataStore).
+#' @details Currently, only .csv data files and EML metadata files are supported. All .csvs must end in ".csv". The single metadata file must end in "_metadata.xml". If you have included a DOI in your metadata, using `upload_data_package()` is preferable to using the web interface to manually upload files because it insures that your files are uploaded to the correct reference (i.e. the DOI in your metadata corresponds to the draft reference code on DataStore).
 #'
 #' Once uploaded, you are advised to look at the 'Files and Links' tab on the DataStore web interface to make sure your files are there and you do not have any duplicates. You can delete files as necessary from the 'Files and Links' tab until the reference is activated.
 #'
 #' This function is primarily intended for uploading files to the data package reference type on DataStore, but will upload .csvs and a single EML metadata file saved as *_metadata.xml file to any reference type, assuming the metadata has a DOI listed in the expected location and there is a corresponding draft reference on DataStore.
 #'
+#' Due to a known bug in the DataStore API, you can only use this function to upload files once. If you need to replace files, you must do that through the DataStore GUI.
+#'
+#' #' If you would like to test out the function without making uploading to DataStore, set the parameter dev=TRUE. That will re-route all of the API requests to the development server. You must be logged in to the VPN to access irmadev and you must have a draft reference on the dev server (using set_datastore_doi() with dev=TRUE).
+#'
 #' @param directory the location (path) to your data package files
+#'
 #' @param force logical, defaults to FALSE for a verbose interactive version. Set to TRUE to suppress interactions and facilitate scripting.
+#'
+#' @param dev Logical. Defaults to FALSE. When dev = TRUE, all api actions are re-routed to the development server (as opposed to when dev = FALSE when api actions will target the production server).
 #'
 #' @return invisible(NULL)
 #' @export
@@ -178,7 +193,7 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE){
 #' dir <- here::here("..", "Downloads", "BICY")
 #' upload_data_package(dir)
 #' }
-upload_data_package <- function(directory = here::here(), force = FALSE){
+upload_data_package <- function(directory = here::here(), force = FALSE, dev = FALSE){
   #load metadata
   metadata <- DPchecker::load_metadata(directory = directory)
   #get doi from metadata
@@ -188,7 +203,11 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
   #list files in data package
 
   #test whether reference already exists or the DOI:
-  url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
+  if(dev == TRUE){
+    url <- paste0(.ds_dev_api(), "ReferenceCodeSearch?q=", DS_ref)
+  } else {
+    url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
+  }
   #verbose approach:
   if(force == FALSE){
     #API call to look for an existing reference:
@@ -204,12 +223,16 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
     if(length(test_rjson) > 0){
       cat("A draft reference for this data package exists on DataStore.\n")
       cat("The existing DataStore draft reference ID is:\n",
-        crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
+          crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
       cat("The existing DataStore draft reference title is:\n",
-        crayon::blue$bold(test_rjson$title), ".\n", sep = "")
+          crayon::blue$bold(test_rjson$title), ".\n", sep = "")
       cat("The existing DataStore reference was created on:\n",
-        crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
-        ".\n\n", sep = "")
+          crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
+          ".\n\n", sep = "")
+      if(test_rjson$fileCount > 0){
+        cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.\n")
+        return(invisible())
+      }
     }
     if(length(test_rjson) == 0){
       cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
@@ -226,8 +249,8 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
       #check for DOI & referenceId mismatch...this should never happen.
       if(!DS_ref == test_rjson$referenceId){
         cat("The DOI in your metadata, ", crayon::blue$bold(doi),
-          ", does not match the reference ID, ",
-          crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
+            ", does not match the reference ID, ",
+            crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
         cat("Your files were not uploaded.\n")
         return()
       }
@@ -235,28 +258,28 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
       else{
         #get list of files for terminal output (just names, not paths)
         files_names <- list.files(path = directory,
-                            pattern = "*.csv")
+                                  pattern = "*.csv")
         #add metadata
         files_names <- append(files_names,
-                        list.files(path = directory,
-                                   pattern = "*metadata.xml"))
+                              list.files(path = directory,
+                                         pattern = "*metadata.xml"))
         #get list of .csvs for upload (names and paths)
         files <- list.files(path = directory,
                             pattern = "*.csv",
                             full.names = TRUE)
         #add metadata
         files <- append(files,
-                      list.files(path = directory,
-                                 pattern = "*metadata.xml",
-                                 full.names = TRUE))
+                        list.files(path = directory,
+                                   pattern = "*metadata.xml",
+                                   full.names = TRUE))
         for(i in seq_along(files)){
           #test for files <32Mb:
           file_size_error <- NULL
           if(file.size(files[i]) > 33554432){
             #warn for each file >32Mb
             cat(crayon::blue$bold(files_names[i]),
-              "is greater than 32Mb and cannot be uploaded with this funcion.\n",
-              sep = "")
+                "is greater than 32Mb and cannot be uploaded with this funcion.\n",
+                sep = "")
             file_size_error <- 1
           }
         }
@@ -265,7 +288,11 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
           stop()
         }
         if(is.null(file_size_error)){
-          api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
+          if(dev == TRUE){
+            api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/UploadFile")
+          } else {
+            api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
+          }
           #upload the files
           for(i in seq_along(files)){
             req <- httr::POST(
@@ -304,6 +331,10 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
       cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
       return()
     }
+    if(test_rjson$fileCount > 0){
+      cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.\n")
+      return(invisible())
+    }
     #test that metadata DOI corresponds to the draft reference on DataStore
     #this test should never fail.
     if(!DS_ref == test_rjson$referenceId){
@@ -315,13 +346,13 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
     }
     #get list of .csvs
     files <- list.files(path = directory,
-                      pattern = "*.csv",
-                      full.names = TRUE)
+                        pattern = "*.csv",
+                        full.names = TRUE)
     #add metadata
     files <- append(files,
-                  list.files(path = directory,
-                             pattern = "*metadata.xml",
-                             full.names = TRUE))
+                    list.files(path = directory,
+                               pattern = "*metadata.xml",
+                               full.names = TRUE))
     for(i in seq_along(files)){
       #test for files <32Mb:
       file_size_error <- NULL
@@ -338,7 +369,11 @@ upload_data_package <- function(directory = here::here(), force = FALSE){
       stop()
     }
     if(is.null(file_size_error)){
-      api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
+      if(dev == TRUE){
+        api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/UploadFile")
+      } else {
+        api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
+      }
       #upload the files
       for(i in seq_along(files)){
         req <- httr::POST(
