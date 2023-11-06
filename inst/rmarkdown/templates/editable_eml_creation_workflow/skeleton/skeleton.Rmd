@@ -307,11 +307,6 @@ if your EML is valid you should see the following (admittedly crypitic):
 
 if your EML is not schema valid, the function will notify you of specific problems you need to address. We HIGHLY recommend that you use the EMLassemblyline and/or EMLeditor functions to fix your EML and do not attempt to edit it by hand.
 
-You can also try generating a *mock* README.txt file. This file should have properly formatted titles, DOIs, citation, abstract, a table with your data package files in it, etc. **DO NOT** upload this file to DataStore. This is for your information only. Sometime seeing your metadata in this format may help you spot errors or inconsistancies you would otherwise miss. XML was never really designed to be human readable, and it shows.
-```{r write_readme}
-write_readme(my_metadata)
-```
-
 ## Write your EML to an xml file 
 Now it's time to convert your R object to an .xml file and save it. Keep in mind that the file name should end with "_metadata.xml".
 ```{r write_eml}
