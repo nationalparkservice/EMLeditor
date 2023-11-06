@@ -2,8 +2,9 @@
 
 ## 2023-11-06
   * Updated EML template script to fix typos, remove the write_readme section, and add more explanation of the personnel.txt file.
-  * 
-
+  * Updated `set_datastore_doi()` to use the correct doi prefix when dev = TRUE and display the correct URL upon draft reference creation.
+  
+ 
 # EMLeditor v0.1.2 "Mukooda Trail"
 
 ## 06 October 2023
