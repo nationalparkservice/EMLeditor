@@ -1,8 +1,14 @@
+# EMLeditor v0.1.3 "Single Pen"
+
+## 2023-11-06
+  * Updated EML template script to fix typos, remove the write_readme section, and add more explanation of the personnel.txt file.
+  * 
+
 # EMLeditor v0.1.2 "Mukooda Trail"
 
 ## 06 October 2023
-  Updated `set_datastore_doi()` and `upload_data_package()` functions to allow them to work with IRMA dev for testing and training purposes.
-  Updated `upload_data_package()` to prevent file upload if the reference already has files associated with it.
+  * Updated `set_datastore_doi()` and `upload_data_package()` functions to allow them to work with IRMA dev for testing and training purposes.
+* Updated `upload_data_package()` to prevent file upload if the reference already has files associated with it.
 
 # EMLeditor v0.1.1 "Big South Fork"
 
