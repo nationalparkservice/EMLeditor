@@ -1,0 +1,48 @@
+---
+title: "Pre-Requisites"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pre-Requisites}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+Prior to generating EML you will need the following:
+
+### Data
+A set of fully QA/QC'd data files in .csv format. If these are exported from a database, you may want to think strategically about what those files look like and how they will be accessed and utilized by future users of the data package (including, potentially, yourself!). It is worth running through the example metadata creation to understand how these files will be used. 
+
+Data files must be encoded in UTF-8 format. If aren't sure whether your .csvs are in UTF-8 you can convert them to UTF-8. Opening the .csv in Excel, then choose to File from the main menu and the "Save As" option. Finally, select "CSV UTF-8 (Comma separated) (*.csv)") as the file format from the drop-down menu.
+
+All of your files for a single data package must be in the same directory. There should be no additional .csv files in this directory.
+
+### Software
+R and probably Rstudio installed on your computer. These are both available in Software Center. See the [R Advisory Group's website](https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/SitePages/R-Adv.aspx) for more information. You will also need to install the R package [tidyverse](https://www.tidyverse.org/) as well as some other packages from CRAN. Many of these are available as part of the [NPSdataverse](https://nationalparkservice.github.io/NPSdataverse/) package. 
+
+```{r install, eval=FALSE}
+#install packages:
+install.packages(c("devtools", "tidyverse"))
+
+#the NPSdataverse includes EMLassemblyline, EMLeditor, and several other useful packages:
+devtools::install_github("nationalparkservice/NPSdataverse")
+
+library(tidyverse)
+library(NPSdataverse)
+```
+
+### Internet access
+A strong internet connection, particularly if you have taxonomic information.  EMLassemblyline uses API searches of various taxonomic databases and use the scientific names in your data files to populate taxonomic coverage fields from Kingdom down to species (and beyond). This can be time consuming if you have many unique taxonomic names.
+
+### MS excel
+Access to MS excel (or any other spreadsheet type program). This will really help editing the tab-delimited .txt template files generated while using EMLassemblyline.
+
+### A text editor
+Access to notepad or other text editor (NOT MS Word) for writing abstracts, etc. while avoiding non-UTF-8 encoded characters.
