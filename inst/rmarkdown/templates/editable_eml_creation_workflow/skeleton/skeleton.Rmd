@@ -129,6 +129,8 @@ The next set of functions are meant to be considered one by one and only run if 
 #### FUNCTION 1 - Core Metadata Information
 This function creates blank .txt template files for the abstract, additional information, custom units, intellectual rights, keywords, methods, and personnel. Be sure the edit the personnel text file in Excel as it has columns. Remember that the role "creator" is required! EMLassemblyline will also warn you if you do not  include a "PI" role, but you can ignore the warning; this role is not required. Typically these files can be reused between years.
 
+The personnel.txt file can best be edited in excel. You must list at least one person with a "creator" role and one person with a "contact" role (you can list the same person twice for both.).  Creators will be authors and included in the data package citation. You do not need to list anyone as the "PI" and can list as many additional people with custome roles as desired (e.g. "field technician", "laboratory assistant"). Each individual must have a surName. The electornicMailAddress is an email and the userId is the persons's [ORCID](https://orcid.org) (if they have one). List the ORCID as just the 16 digit string, do not include the https://orcid.org prefix (e.g. xxxx-xxxx-xxxx-xxxx). You can leave the projectTitle, fundingAgency, and fundingNumber blank.
+
 We encourage you to craft your abstract in a text editor, NOT Word. Your abstract will be forwarded to data.gov, DataCite, google dataset search, etc. so it is worth some time to carefully consider what is relevant and important information for an abstract. Abstracts must be greater than 20 words. Good abstracts tend to be 250 words or less. You may consider including the following information: The premise for the data collection (why was it done?), why is it important, a brief overview of relevant methods, and a brief explanation of what data are included such as the period of time, location(s), and type of data collected. Keep in mind that if you have lengthy descriptions of methods, provenance, data QA/QC, etc it may be better to expand upon these topics in a Data Release Report or similar document uploaded separately to DataStore.
 
 Currently this function inserts a Creative Common 0 license. The CC0 license will need to be updated. However, to ensure that the licence meets NPS specifications and properly coincides with CUI designations, the best way to update the license information is during a later step using `EMLeditor::set_int_rights()`. There is no need to edit this .txt file.
@@ -279,7 +281,7 @@ my_metadata <- set_language(my_metadata, "English")
 #### Add content unit links 
 These are the park units where data were collected from, for instance ROMO, not ROMN. If the data package includes data from more than one park, they can all be listed. For instance, if data were collected from all park units within a network, each unit should be listed separately rather than the network. This is because the geographic coordinates corresponding to bounding boxes for each park unit listed will automatically be generated and inserted into the metadata. Individual park units will be more informative than the bounding box for the entire network.
 ```{r content_units}
-park_units <- c("ROMO", "GRSD", "YELL")
+park_units <- c("ROMO", "GRSA", "YELL")
 my_metadata <- set_content_units(my_metadata, park_units)
 ```
 
