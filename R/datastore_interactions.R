@@ -26,7 +26,7 @@
 #' \dontrun{
 #' eml_object <- set_datastore_doi(eml_object)
 #' }
-set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev=FALSE){
+set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE){
   # check for existing DOI:
   doc <- utils::capture.output(get_doi(eml_object))
   #get data package title from metadata:
