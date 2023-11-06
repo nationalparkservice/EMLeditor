@@ -344,6 +344,6 @@ upload_data_package()
 #upload_data_package("C:/Users/<yourusername>/Documents/my_data_package)
 ```
 
-From within DataStore you should be able to extract all the information from the metadata file to populate the relevant DataStore fields.
+From within DataStore you should be able to extract all the information from the metadata file to populate the relevant DataStore fields. In the upper right, select "Edit" from the drop down menu. Then click on the "Files and Links" tab. On the left side of the files list, select the radio button corresponding to your metadata. Then click the "Extract Metadata" button from the top right of box with the files listed in it. 
 
 Please don't activate your reference just yet! Data package references need to be reviewed prior to activation. We are still working on what that review process will look like.
