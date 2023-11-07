@@ -15,13 +15,12 @@ This script acts as a template file for end-to-end creation of EML metadata in R
 # Good additional references
 [EMLassemblyline](https://ediorg.github.io/EMLassemblyline/)
 [EMLeditor](https://nationalparkservice.github.io/EMLeditor/index.html)
-[NPS EML Script](https://nationalparkservice.github.io/NPS_EML_Script/)
 [EVER Veg Map AA dataset](https://github.com/nationalparkservice/NPS_EML_Script/tree/main/Example_files) (for testing purposes)
 
 # Install and Load R Packages 
 Install packages. If you have not recently installed packages, please re-install them. You will want to make sure you have the latest versions of all the NPSdataverse packages - QCkit, EMLeditor, DPchecker, and NPSutils - as they are under constant development. If you are on the VPN, you will need to set your CRAN mirror to Texas 1. If you run into errors installing packages from github on NPS computers you may first need to run:
 ```{r renviron, eval=FALSE}
->options(download.file.method="wininet")
+options(download.file.method="wininet")
 ```
 ```{r package_install, eval=FALSE}
 #install packages
@@ -135,14 +134,14 @@ We encourage you to craft your abstract in a text editor, NOT Word. Your abstrac
 
 Currently this function inserts a Creative Common 0 license. The CC0 license will need to be updated. However, to ensure that the licence meets NPS specifications and properly coincides with CUI designations, the best way to update the license information is during a later step using `EMLeditor::set_int_rights()`. There is no need to edit this .txt file.
 ```{r core}
-template_core_metadata(path = working_folder, 
+EMLassemblyline::template_core_metadata(path = working_folder, 
                        license = "CC0") # that '0' is a zero!
 ```
 
 #### FUNCTION 2 - Data Table Attributes
 This function creates an "attributes_datafilename.txt" file for each data file. This can be opened in Excel (we recommend against trying to update these in a text editor) and fill in/adjust the columns for attributeDefinition, class, unit, etc. refer to https://ediorg.github.io/EMLassemblyline/articles/edit_tmplts.html for helpful hints and `view_unit_dictionary()` for potential units. This will only need to be run again if the attributes (name, order or new/deleted fields) are modified from the previous year. NOTE that if these files already exist from a previous run, they are not overwritten.
 ```{r attributes}
-template_table_attributes(path = working_folder, 
+EMLassemblyline::template_table_attributes(path = working_folder, 
                           data.table = data_files, 
                           write.file = TRUE)
 ```
@@ -150,7 +149,7 @@ template_table_attributes(path = working_folder,
 #### FUNCTION 3 - Data Table Categorical Variable
 This function Creates a "catvars_datafilename.txt" file for each data file that has columns with a class = categorical. These .txt files will include each unique 'code' and allow input of the corresponding 'definition'.NOTE that since the list of codes is harvested from the data itself, it's possible that additional codes may have been relevant/possible but they are not automatically included here. Consider your lookup lists carefully to see if additional options should be included (e.g if your dataset DPL values are all set to "Accepted" this  function will not include "Raw" or "Provisional" in the resulting file and you may want to add those manually). NOTE that if these files already exist from a previous run, they are not overwritten.
 ```{r cat_vars}
-template_categorical_variables(path = working_folder, 
+EMLassemblyline::template_categorical_variables(path = working_folder, 
                                data.path = working_folder, 
                                write.file = TRUE)
 ```
@@ -163,7 +162,7 @@ locations, survey plots, or bounding boxes for locations within a park, etc) ple
 
 This function creates a geographic_coverage.txt file that lists your sites as points as long as your coordinates are in lat/long. If your coordinates are in UTM it is probably easiest to convert them first or create the geographic_coverage.txt file another way (see [QCkit](https://nationalparkservice.github.io/QCkit/) for R functions that will convert UTM to lat/long).
 ```{r geo_cov}
-template_geographic_coverage(path = working_folder, 
+EMLassemblyline::template_geographic_coverage(path = working_folder, 
                              data.path = working_folder,
                              data.table = data_coordinates_table, 
                              lat.col = data_latitude, 
@@ -175,7 +174,7 @@ template_geographic_coverage(path = working_folder,
 #### FUNCTION 5 - Taxonomic Coverage
 This function creates a taxonomic_coverage.txt file if you have taxonomic data. Currently supported authorities are 3 = ITIS, 9 = WORMS, and 11 = GBIF. In the example below, the function will first try to find the scientific name at ITIS and if it fails will then look at GBIF. If you have lots of taxa, this could take some time to complete.
 ```{r tax_cov}
-template_taxonomic_coverage(path = working_folder, 
+EMLassemblyline::template_taxonomic_coverage(path = working_folder, 
                             data.path = working_folder, 
                             taxa.table = data_taxa_tables,
                             taxa.col = data_taxa_fields, 
@@ -187,7 +186,7 @@ template_taxonomic_coverage(path = working_folder,
 ## Create an EML File
 Run this (it may take a little while) and see if it validates (you should see 'Validation passed'). It will generate an R object called "my_metadata". The function could alert you of some issues to review as. Run the function `issues()` at the end of the process to get feedback on items that might be missing or need attention. Fix these issues and then re-run the `make_eml()` function.
 ```{r make_eml}
-my_metadata <- make_eml(path = working_folder,
+my_metadata <- EMLassemblyline::make_eml(path = working_folder,
                dataset.title = package_title,
                data.table = data_files,
                data.table.name = data_names,
@@ -203,7 +202,7 @@ my_metadata <- make_eml(path = working_folder,
 ## Check for EML validity 
 This is a good point to pause and test whether your EML is valid. 
 ```{r validate}
-eml_validate(my_metadata)
+EML::eml_validate(my_metadata)
 ```
 
 if your EML is valid you should see the following (admittedly cryptic) result:
@@ -232,7 +231,7 @@ dissemination codes. Watch out for the spaces! These are:
 More information about these codes can be found at: [https://www.archives.gov/cui/registry/limited-dissemination](https://www.archives.gov/cui/registry/limited-dissemination)
 
 ```{r cui_dissemination}
-my_metadata <- set_cui(my_metadata, "PUBLIC")
+my_metadata <- EMLeditor::set_cui(my_metadata, "PUBLIC")
 # note that in this case I have added the CUI code to the original R object, 
 # "my_metadata" but by giving it a new name, i.e. "my_meta2" I could have
 # created a new R object. Sometimes creating a new R object is preferable 
@@ -251,16 +250,16 @@ The `set_int_rights()` function will also put the name of your license in a fiel
 
 ```{r int_rights}
 # choose from "restricted", "public" or "CC0" (zero), see above:
-my_metadata <- set_int_rights(my_metadata, "public")
+my_metadata <- EMLeditor::set_int_rights(my_metadata, "public")
 ```
 
 #### Add a data package DOI 
-Add your data package's Digital Object Identifier (DOI) to the metadata. The `set_datastore_doi()` function requires that you are logged on to the VPN. It initiates a draft data package reference on DataStore, and populates the reference with a title pulled from your metadata, “[DRAFT] : <your data package title>”. This temporary title is purely for your tracking purposes and can easily be updated later. The `set_datastore_doi()` function will then insert the corresponding DOI for your data package into your metadata. Now that a draft reference has been initiated on DataStore, it is possible to fill in the online URL for each data file. `set_datastore_doi()` automatically does that for you too. There are a few things to keep in mind:
+Add your data package's Digital Object Identifier (DOI) to the metadata. The `set_datastore_doi()` initiates a draft data package reference on DataStore, and populates the reference with a title pulled from your metadata, “[DRAFT] : <your data package title>”. This temporary title is purely for your tracking purposes and can easily be updated later. The `set_datastore_doi()` function will then insert the corresponding DOI for your data package into your metadata. Now that a draft reference has been initiated on DataStore, it is possible to fill in the online URL for each data file. `set_datastore_doi()` automatically does that for you too. There are a few things to keep in mind:
   1) Your DOI and the data package reference are not yet active and are not publicly accessible until after review and activation/publication.
   2) We suggest you NOT manually upload files. If you manually upload your files, be sure to upload your data package to the correct draft reference! It is easy to create several draft references with the same draft title but different DataStore reference IDs and DOIs. So check the reference ID number carefully
   3) There is no need to fill in additional fields in DataStore at this point - many of them will be auto-populated based on the metadata you upload. Any fields you do populate will be over-written by the content in your metadata.
 ```{r DS_doi}
-my_metadata <- set_datastore_doi(my_metadata)
+my_metadata <- EMLeditor::set_datastore_doi(my_metadata)
 ```
 
 #### Add information about a DRR (optional) 
@@ -270,26 +269,26 @@ You will need the DOI for the DRR you are drafting as well as the DRR's Title. G
 it will not be activated until after publication so that you have plenty of 
 time to construct the DRR.
 ```{r DRR_links}
-my_metadata <- set_drr(my_metadata, 7654321, "DRR Title")
+my_metadata <- EMLeditor::set_drr(my_metadata, 7654321, "DRR Title")
 ```
 
 #### Set the language 
 This is the human language (as opposed to computer language) that the data package and metadata are constructed in. Examples include English, Spanish, Navajo, etc. A full list of available languages is available from the Libraryof Congress. Please use the "English Name of Language" as an input. The function will then convert your input to the appropriate 3-character ISO 639-2 code.Available languages: [https://www.loc.gov/standards/iso639-2/php/code_list.php](https://www.loc.gov/standards/iso639-2/php/code_list.php)
 ```{r language}
-my_metadata <- set_language(my_metadata, "English")
+my_metadata <- EMLeditor::set_language(my_metadata, "English")
 ```
 #### Add content unit links 
 These are the park units where data were collected from, for instance ROMO, not ROMN. If the data package includes data from more than one park, they can all be listed. For instance, if data were collected from all park units within a network, each unit should be listed separately rather than the network. This is because the geographic coordinates corresponding to bounding boxes for each park unit listed will automatically be generated and inserted into the metadata. Individual park units will be more informative than the bounding box for the entire network.
 ```{r content_units}
 park_units <- c("ROMO", "GRSA", "YELL")
-my_metadata <- set_content_units(my_metadata, park_units)
+my_metadata <- EMLeditor::set_content_units(my_metadata, park_units)
 ```
 
 #### Add the Producing Unit(s)
 This is the unit(s) responsible for generating the data package. It may be a single park (ROMO) or a network (ROMN). It may be identical to the units listed in the previous step, overlapping, or entirely different.
 ```{r prod_units}
 # a single producing unit:
-my_metadata <- set_producing_units(my_metadata, "ROMN")
+my_metadata <- EMLeditor::set_producing_units(my_metadata, "ROMN")
 # alternatively, a list of producing units:
 my_metadata <- set_producing_units(my_metadata, c("ROMN", "GRYN"))
 ```
@@ -298,7 +297,7 @@ my_metadata <- set_producing_units(my_metadata, c("ROMN", "GRYN"))
 Almost done! This is another great time to validate your EML and make sure
 Everything is schema valid. Run:
 ```{r val_eml}
-eml_validate(my_metadata)
+EML::eml_validate(my_metadata)
 ```
 if your EML is valid you should see the following (admittedly crypitic):
 # [1] TRUE
@@ -310,14 +309,14 @@ if your EML is not schema valid, the function will notify you of specific proble
 ## Write your EML to an xml file 
 Now it's time to convert your R object to an .xml file and save it. Keep in mind that the file name should end with "_metadata.xml".
 ```{r write_eml}
-write_eml(my_metadata, "mymetadatafilename_metadata.xml")
+EML::write_eml(my_metadata, "mymetadatafilename_metadata.xml")
 ```
 
 ## Check your .xml file  
 You're EML metadata file should be ready for upload. You can run some additional tests on your .xml metadata file using `check_eml()`. This function assumes there is only one .xml file in the directory:
 ```{r check_eml}
 # This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.
-check_eml()
+EMLeditor::check_eml()
 
 # If you .xml file with metadata is in a different directory, you will have to specify that:
 #check_eml("C:/Users/<yourusername>/Documents/your_data_package")
@@ -327,7 +326,7 @@ check_eml()
 If your data package is now complete, you can run some test prior to upload to make sure that the package fits some minimal set of requirements and that the data and metadata are properly specified and coincide. This assumes that your data package is in the root of your R project. 
 ```{r congruence_tests}
 # this assumes that the data package is the working directory
-run_congruence_checks()
+DPchecker::run_congruence_checks()
 
 # if your data package is somewhere else, specify that:
 # run_congruence_checks("C:/Users/<yourusername>/Documents/my_data_package")
@@ -338,7 +337,7 @@ run_congruence_checks()
 If everything checked out, you should be ready to upload your data package! We recommend using `upload_data_package()` to accomplish this. The function automatically checks your DOI and uploads to the correct reference on DataStore. All of your files for the data package need to be in the same folder, there can be only one .xml file (ending in "_metadata.xml") and all the other files should be data files in .csv format. Each individual file should be < 32Mb.  If you have files > 32Mb, you will need to upload them manually using the web interface on DataStore. 
 ```{r upload}
 # this assumes your data package is in the current working directory
-upload_data_package()
+EMLeditor::upload_data_package()
 
 # If your data package is somewhere else, specify that:
 #upload_data_package("C:/Users/<yourusername>/Documents/my_data_package)
