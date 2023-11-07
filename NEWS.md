@@ -3,6 +3,10 @@
 ## 2023-11-06
   * Updated EML template script to fix typos, remove the write_readme section, and add more explanation of the personnel.txt file.
   * Updated `set_datastore_doi()` to use the correct doi prefix when dev = TRUE and display the correct URL upon draft reference creation.
+  * Ported over most of the documentation on the EML Creation Script from the NPS_EML_Script repo to all be held under this repo.
+  * Updated docuementation on making EML
+  * Updated the Readme to reflect the fact that all EML creation documentation/instructions are now included in the EMLeditor package
+  * Removed the "Get Started" ()
   
  
 # EMLeditor v0.1.2 "Mukooda Trail"
