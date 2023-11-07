@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,10 +19,17 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../articles/EMLeditor.html">Get started</a>
-</li>
-<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/a01_prereqs.html">Pre-Requisites</a>
+    <a class="dropdown-item" href="../articles/a02_EML_creation_script.html">EML Creation Script</a>
+    <a class="dropdown-item" href="../articles/a03_Template_edits.html">Editing .txt Files</a>
+    <a class="dropdown-item" href="../articles/a04_Editing_fixing_eml.html">Editing or fixing EML Files</a>
+    <a class="dropdown-item" href="../articles/a05_advanced_functionality.html">Advanced Functionality</a>
+  </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -48,11 +55,24 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.3" id="emleditor-v013-single-pen">EMLeditor v0.1.3 “Single Pen”<a class="anchor" aria-label="anchor" href="#emleditor-v013-single-pen"></a></h2>
+<div class="section level3">
+<h3 id="id_2023-0-1-3">2023-11-07<a class="anchor" aria-label="anchor" href="#id_2023-0-1-3"></a></h3>
+<ul><li>Updated EML template script to fix typos, remove the write_readme section, and add more explanation of the personnel.txt file.</li>
+<li>Updated <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> to use the correct doi prefix when dev = TRUE and display the correct URL upon draft reference creation.</li>
+<li>Ported over most of the documentation on the EML Creation Script from the NPS_EML_Script repo to all be held under this repo.</li>
+<li>Updated documentation on making EML; updated the Readme to reflect the fact that all EML creation documentation/instructions are now included in the EMLeditor package</li>
+<li>Removed the “Get Started” (EMLeditor.rmd) file as it was pretty redundant with the readme.md file.</li>
+<li>Updated the template script in R studio to include package provenance for function calls.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.2" id="emleditor-v012-mukooda-trail">EMLeditor v0.1.2 “Mukooda Trail”<a class="anchor" aria-label="anchor" href="#emleditor-v012-mukooda-trail"></a></h2>
 <div class="section level3">
 <h3 id="id_06-october-0-1-2">06 October 2023<a class="anchor" aria-label="anchor" href="#id_06-october-0-1-2"></a></h3>
-<p>Updated <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> and <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> functions to allow them to work with IRMA dev for testing and training purposes. Updated <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> to prevent file upload if the reference already has files associated with it.</p>
-</div>
+<ul><li>Updated <code><a href="../reference/set_datastore_doi.html">set_datastore_doi()</a></code> and <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> functions to allow them to work with IRMA dev for testing and training purposes.</li>
+<li>Updated <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> to prevent file upload if the reference already has files associated with it.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="emleditor-v011-big-south-fork">EMLeditor v0.1.1 “Big South Fork”<a class="anchor" aria-label="anchor" href="#emleditor-v011-big-south-fork"></a></h2>

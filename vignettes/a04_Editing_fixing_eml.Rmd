@@ -1,0 +1,148 @@
+---
+title: "Editing or fixing EML Files"
+description: |
+  Resources and Guides for using EMLassemblyline to create EML for National Park Service data packages
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Editing or fixing EML Files}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Overview
+EMLeditor is designed not only to generate metadata that interacts with DataStore but to also allow users to 'surgically' edit EML fields without having to edit any of the .txt templates or run the `EML::make_eml()` command (which can be time consuming, especially if there is substantial taxonomic information). Using EMLeditor also means you don't need to edit the .xml file by hand. We **strongly discourage** editing the .xml file by hand!
+
+If you find typos or mistakes in your EML or if after your data package is reviewed changes to the EML are requested, it is our hope that you can use the EMLeditor functions to make changes to your EML rather than re-running the entire EML creation script.
+
+When you run the `DPchecker::run_congruence_checks()` function on your data package, each warning and error returned should include an indication of how to address the problem. If the problem is with the metadata (as opposed to the data), DPchecker should give you a specific function you can use to fix the metadata using the EMLeditor package.
+
+To edit your EML in R using EMLeditor, you will first need to load the *_metadata.xml file in to R, edit the R object from within R, and then write the edited R object back to .xml.
+
+# Function list
+The [References](../reference/index.html) page has a comprehensive list of all the available functions and links to documentation on how to use each function along with examples.
+
+# Loading .xml into R
+There are two main methods of loading your \*_metadata.xml file in to R to work on it. You can either use the DPchecker `load_metadata()` function or you can use the EML `read_eml()` function. The main benefit of `load_metadata()` is that you don't need to specify the file name or type, so there is less typing. The downside to `load_metadata()` is that it is less flexible: if there are multiple .xml files in the directory or the metadata file doesn't end in \*_metadata.xml it just won't work.
+
+Using `load_metadata()`:
+```{r load_metadata, eval = FALSE}
+#assuming your metadata file is in your current working directory:
+metadata <- load_metadata()
+
+#assuming your metadata file is in sub-directory of your current directory, "../other/directory":
+dir <- here::here("other", "directory")
+metadata <- load_metadata(directory = dir)
+```
+
+Using `read_eml()`:
+```{r read_eml, eval = FALSE}
+#this assumes your metadata file is in your current working directory and is called 'filename_metadata.xml'
+metadata <- read_eml("filename_metadata.xml", from = "xml")
+
+#or if your metadata is in a different directory, change to that directory:
+setwd("C:/Users/username/Documents/data_package_directory")
+metadata <- read_eml("filename_metadata.xml", from = "xml")
+```
+
+# Examples of editing metadata
+
+## Edit the title
+
+First, you might want to view the current title:
+```{r get_title, eval = FALSE}
+get_title(metadata)
+```
+
+Then you can consider editing the title:
+```{r set_title, eval = FALSE}
+metadata <- set_title(metadata, "My New and Improved Data Package Title")
+```
+
+## Edit the abstract
+View your current abstract:
+```{r get_abstract, eval = FALSE}
+get_abstract(metadata)
+```
+
+Supply a new abstract. This function is relatively simple and does not support multiple parts or paragraphs, it's probably best to keep the text relatively short and straight forward.
+```{r set_abstract, eval = FALSE}
+new_abstract <- "Put your new abstract here. It should be more than 20 words and shoudl be sufficient for a knowledgeable person to understand what whas done, when, and where including both data collection and data QA/QC but does nto need to be as detailed as a methods statement"
+metadata <- set_abstract(metadata, new_abstract)
+```
+
+## Add ORCIDs
+Do this BEFORE adding any organizations as creators. If you already have organizations as creators, you may want to temporarily remove them while you add ORCIDs for individuals (see `set_creator_order()`). If you did not know that you the authors/creators of your data package had ORCIDs (or you didn't register one until after making the initial metadata), you can add ORCIDs for individual creators. Make sure to list the ORCIDs in the same order as the authors/creators are listed. If a creator does not have an ORCID, list it as NA:
+```{r set_orcids, eval=FALSE}
+#single author publications:
+metadata <- set_creator_orcids(metadata, "1234-1234-1234-1234")
+
+#multiple author publications where the middle author does not have an ORCID:
+creator_orcids <- c("1234-1234-1234-1234", NA, "4321-4321-4321-4321")
+metadata <- set_creator_orcids(metadata, creator_orcids)
+```
+
+## Add an Organization as an author
+You can add an organization as an author ("creator") and then re-order the authors to reflect whatever order you would like them to appear in the citation.
+
+First, view the current authors ("creators"). Note that this function will only return a list of individual creators and will not return any organizations that may already be listed as creators/authors:
+```{r get_authors, eval = FALSE}
+get_author_list(metadata)
+[1] "Smith, John C."
+```
+
+Add an organization as an author:
+```{r add_org_author, eval = FALSE}
+# Set an outside organization as an author:
+metadata <- set_creator_orgs(metadata, creator_orgs = "Broadleaf, Inc.")
+
+# Set a park unit as a creator
+metadata <- set_creator_orgs(metadata, park_units = "YELL")
+
+# You can also add a list of organizations as authors for collaborative works:
+networks <- c("ROMN", "MOJN")
+metadata <- set_creator_orgs(metadata, park_units = networks)
+```
+
+## Re-order or remove authors
+You may notice that any author or creator you add will be added to the end of the list of authors/creators. You may then wish to re-order the authors/creators. The `set_creator_order()` function's default interactive mode lists all the authors in order (surName only for individuals) and asks you to supply an order. You can also use this function to remove authors. 
+```{r reorder_authors, eval = FALSE}
+metadata <- set_creator_order(metadata)
+#Your current creators are in the following order:
+
+# Order                   Creator
+#     1                     Smith
+#     2           Broadleaf, Inc.
+#     3 Yellowstone National Park
+#     4     Mojave Desert Network
+#     5    Rocky Mountain Network
+
+#Please enter comma-separated numbers for the new creator order.
+#Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1
+#Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5
+
+5, 4, 3, 2, 1
+
+#Your new creators order is:
+# Order                   Creator
+#     1    Rocky Mountain Network
+#     2     Mojave Desert Network
+#     3 Yellowstone National Park
+#     4           Broadleaf, Inc.
+#     5                     Smith
+```
+
+# Write your edits to .xml
+Before writing your edits to .xml, make sure to validate your EML:
+```{r eml_validate, eval = FALSE}
+test_validate_schema(metadata)
+```
+
+Write your R object to .xml. Don't forget that the filename must end in *_metadata.xml:
+```{r write_eml, eval= FALSE}
+write_eml(metadata, "filename_metadata.xml")
+```
+
+At this point, you should re-run the congruence checks to make sure your data package is still passes them all (or passes any previous warnings/errors you got):
+```{r congruence_checks, eval = FALSE}
+#Assuming you data package is in the working directory and there are no extra .csv or .xml files in that directory:
+run_congruence_checks()
+```

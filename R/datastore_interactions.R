@@ -26,7 +26,7 @@
 #' \dontrun{
 #' eml_object <- set_datastore_doi(eml_object)
 #' }
-set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev=FALSE){
+set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE){
   # check for existing DOI:
   doc <- utils::capture.output(get_doi(eml_object))
   #get data package title from metadata:
@@ -128,14 +128,25 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev=FALSE){
   rjson <- jsonlite::fromJSON(json)
   ds_ref <- rjson$referenceCode
   # insert/replace DOI:
+  if(dev == TRUE){
+    eml_object$dataset$alternateIdentifier <- paste0(
+      "doi: https://doi.org/10.82495/",
+      ds_ref)
+  } else {
   eml_object$dataset$alternateIdentifier <- paste0(
     "doi: https://doi.org/10.57830/",
     ds_ref)
+  }
   # update data URLs to correspond to new DOI:
   data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
-  data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+  if(dev == TRUE){
+    data_url <- paste0("https://irmadev.nps.gov/DataStore/Reference/Profile/",
+                       ds_ref)
+  } else {
+    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
+  }
   # handle case when there is only one data table:
   if("physical" %in% names(data_table)){
     eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
