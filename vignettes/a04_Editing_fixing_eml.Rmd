@@ -28,7 +28,7 @@ Using `load_metadata()`:
 #assuming your metadata file is in your current working directory:
 metadata <- load_metadata()
 
-#assuming your metadata file is in another directory:
+#assuming your metadata file is in sub-directory of your current directory, "../other/directory":
 dir <- here::here("other", "directory")
 metadata <- load_metadata(directory = dir)
 ```
@@ -69,30 +69,80 @@ new_abstract <- "Put your new abstract here. It should be more than 20 words and
 metadata <- set_abstract(metadata, new_abstract)
 ```
 
-## Add an Organization as an author
-You can add an individual or an organization as an author ("creator") and then re-order the authors to reflect whatever order you would like them to appear in the citation.
+## Add ORCIDs
+Do this BEFORE adding any organizations as creators. If you already have organizations as creators, you may want to temporarily remove them while you add ORCIDs for individuals (see `set_creator_order()`). If you did not know that you the authors/creators of your data package had ORCIDs (or you didn't register one until after making the initial metadata), you can add ORCIDs for individual creators. Make sure to list the ORCIDs in the same order as the authors/creators are listed. If a creator does not have an ORCID, list it as NA:
+```{r set_orcids, eval=FALSE}
+#single author publications:
+metadata <- set_creator_orcids(metadata, "1234-1234-1234-1234")
 
-First, view the current authors ("creators"). Note that this function will does not yet work well if there is already an organization as an author:
+#multiple author publications where the middle author does not have an ORCID:
+creator_orcids <- c("1234-1234-1234-1234", NA, "4321-4321-4321-4321")
+metadata <- set_creator_orcids(metadata, creator_orcids)
+```
+
+## Add an Organization as an author
+You can add an organization as an author ("creator") and then re-order the authors to reflect whatever order you would like them to appear in the citation.
+
+First, view the current authors ("creators"). Note that this function will only return a list of individual creators and will not return any organizations that may already be listed as creators/authors:
 ```{r get_authors, eval = FALSE}
 get_author_list(metadata)
+[1] "Smith, John C."
 ```
 
 Add an organization as an author:
 ```{r add_org_author, eval = FALSE}
-# Set a park unit as an author:
-metadata <- set_creator_orgs(metadata, park_units = "IMD")
-
 # Set an outside organization as an author:
 metadata <- set_creator_orgs(metadata, creator_orgs = "Broadleaf, Inc.")
 
-# Optionally, supply a custom ROR (Reasearch Organization Registry) ID if you have one:
-metadata <- set_creator_orgs(metadata, park_units = "YELL", RORs = "04rw5yk74")
+# Set a park unit as a creator
+metadata <- set_creator_orgs(metadata, park_units = "YELL")
+
+# You can also add a list of organizations as authors for collaborative works:
+networks <- c("ROMN", "MOJN")
+metadata <- set_creator_orgs(metadata, park_units = networks)
 ```
 
-Any author or creator you add will be added to the end of the list of authors/creators. You may then wish to re-order the authors/creators:
+## Re-order or remove authors
+You may notice that any author or creator you add will be added to the end of the list of authors/creators. You may then wish to re-order the authors/creators. The `set_creator_order()` function's default interactive mode lists all the authors in order (surName only for individuals) and asks you to supply an order. You can also use this function to remove authors. 
 ```{r reorder_authors, eval = FALSE}
+metadata <- set_creator_order(metadata)
+#Your current creators are in the following order:
 
+# Order                   Creator
+#     1                     Smith
+#     2           Broadleaf, Inc.
+#     3 Yellowstone National Park
+#     4     Mojave Desert Network
+#     5    Rocky Mountain Network
 
+#Please enter comma-separated numbers for the new creator order.
+#Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1
+#Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5
 
+5, 4, 3, 2, 1
 
+#Your new creators order is:
+# Order                   Creator
+#     1    Rocky Mountain Network
+#     2     Mojave Desert Network
+#     3 Yellowstone National Park
+#     4           Broadleaf, Inc.
+#     5                     Smith
+```
 
+# Write your edits to .xml
+Before writing your edits to .xml, make sure to validate your EML:
+```{r eml_validate, eval = FALSE}
+test_validate_schema(metadata)
+```
+
+Write your R object to .xml. Don't forget that the filename must end in *_metadata.xml:
+```{r write_eml, eval= FALSE}
+write_eml(metadata, "filename_metadata.xml")
+```
+
+At this point, you should re-run the congruence checks to make sure your data package is still passes them all (or passes any previous warnings/errors you got):
+```{r congruence_checks, eval = FALSE}
+#Assuming you data package is in the working directory and there are no extra .csv or .xml files in that directory:
+run_congruence_checks()
+```
