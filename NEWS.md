@@ -1,3 +1,9 @@
+# EMLeditor v0.1.4 "Mackinac Island"
+
+## 2024-01-18
+
+  * Added the function `remove_datastore_files()`, which can detach files from a DataStore Reference. In conjunction with `upload_data_package()` this allows a user to update and make changes to the files in a data package (for instance, in response to review of the data package) prior to activating the data package.
+
 # EMLeditor v0.1.3 "Single Pen"
 
 ## 2023-11-07

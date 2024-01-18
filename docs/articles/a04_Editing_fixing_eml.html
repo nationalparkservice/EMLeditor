@@ -9,8 +9,8 @@
 ">
 <title>Editing or fixing EML Files • EMLeditor</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Editing or fixing EML Files">
 <meta property="og:description" content="Resources and Guides for using EMLassemblyline to create EML for National Park Service data packages
@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">EMLeditor</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ EMLeditor also means you don’t need to edit the .xml file by hand. We
 package is reviewed changes to the EML are requested, it is our hope
 that you can use the EMLeditor functions to make changes to your EML
 rather than re-running the entire EML creation script.</p>
-<p>When you run the <code><a href="https://rdrr.io/pkg/DPchecker/man/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code>
+<p>When you run the <code><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">DPchecker::run_congruence_checks()</a></code>
 function on your data package, each warning and error returned should
 include an indication of how to address the problem. If the problem is
 with the metadata (as opposed to the data), DPchecker should give you a
@@ -123,7 +123,7 @@ documentation on how to use each function along with examples.</p>
 <p>There are two main methods of loading your *_metadata.xml file in to
 R to work on it. You can either use the DPchecker
 <code>load_metadata()</code> function or you can use the EML
-<code><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml()</a></code> function. The main benefit of
+<code><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml()</a></code> function. The main benefit of
 <code>load_metadata()</code> is that you don’t need to specify the file
 name or type, so there is less typing. The downside to
 <code>load_metadata()</code> is that it is less flexible: if there are
@@ -135,16 +135,16 @@ multiple .xml files in the directory or the metadata file doesn’t end in
 <span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">load_metadata</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#assuming your metadata file is in sub-directory of your current directory, "../other/directory":</span></span>
-<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/here/man/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"other"</span>, <span class="st">"directory"</span><span class="op">)</span></span>
+<span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"other"</span>, <span class="st">"directory"</span><span class="op">)</span></span>
 <span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">load_metadata</span><span class="op">(</span>directory <span class="op">=</span> <span class="va">dir</span><span class="op">)</span></span></code></pre></div>
-<p>Using <code><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml()</a></code>:</p>
+<p>Using <code><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml()</a></code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#this assumes your metadata file is in your current working directory and is called 'filename_metadata.xml'</span></span>
-<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
+<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#or if your metadata is in a different directory, change to that directory:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"C:/Users/username/Documents/data_package_directory"</span><span class="op">)</span></span>
-<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/EML/man/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="examples-of-editing-metadata">Examples of editing metadata<a class="anchor" aria-label="anchor" href="#examples-of-editing-metadata"></a>
@@ -259,7 +259,7 @@ EML:</p>
 <p>Write your R object to .xml. Don’t forget that the filename must end
 in *_metadata.xml:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/EML/man/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="st">"filename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="st">"filename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, you should re-run the congruence checks to make sure
 your data package is still passes them all (or passes any previous
 warnings/errors you got):</p>
@@ -280,7 +280,7 @@ warnings/errors you got):</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer>
