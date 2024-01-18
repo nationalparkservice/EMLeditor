@@ -422,7 +422,7 @@ upload_data_package <- function(directory = here::here(),
 
 #' Remove files from a data package Reference on DataStore
 #'
-#' @description The `remove_datastore_files()` function detaches all files associated with the relevant DataStore Reference. Once the files are detached, they cannot be re-attached.  Instead, updated files can be re-uploaded and attached to the reference via `upload_data_package()`.
+#' @description The `remove_datastore_files()` function requires that you are logged in to the VPN. You must also have permissions to edit the DataStore Reference in question, and the Reference must not be activated. In that case, `remove_datastore_files()` detaches all files associated with the relevant DataStore Reference. Once the files are detached, they cannot be re-attached.  Instead, updated files can be re-uploaded and attached to the reference via `upload_data_package()`.
 #'
 #' In the interactive mode (force = FALSE), you will be informed of the Reference number, Reference title, Reference creation date, and a list of files currently attached to the Reference. Once the files are successfully detached, you will be informed of a list of file names that were detached.
 #'
@@ -490,9 +490,10 @@ remove_datastore_files <- function(data_store_reference,
           cat("The existing Reference does not have files attached.")
           cat("Use EMLeditor::upload_data_package() to upload files.")
         }
+        return(invisible())
       }
     }
-    return()
+
   }
 
   #get DataStore Reference Resources (files)
@@ -515,7 +516,7 @@ remove_datastore_files <- function(data_store_reference,
 
   #if there ARE files already associated with the reference:
   if (force == FALSE) {
-    cat("The existing Reference already has the following files attached:")
+    cat("The existing Reference already has the following files attached:\n")
     for (i in seq_along(resource_id)) {
       cat(crayon::bold$blue(test_rjson$fileName[i]), "\n")
     }
@@ -526,7 +527,7 @@ remove_datastore_files <- function(data_store_reference,
     var1 <- readline(prompt = "1: Yes\n2: No\n")
     if (var1 == 2) {
       cat("You have not removed any files from the Reference.")
-      return()
+      return(invisible())
     }
   }
 
@@ -545,12 +546,17 @@ remove_datastore_files <- function(data_store_reference,
         url = api_url,
         httr::add_headers('Content-Type' = 'multipart/form-data'),
         httr::authenticate(":", "", "ntlm"),
-        #body = list(addressFile = httr::upload_file(files[i])),
         encode = "multipart")
     #check status code
-    status_code <- httr::stop_for_status(req)$status_code
+    status_code <- req$status_code
     #return status code error
-    if (status_code != 201) {
+    if (status_code == 500) {
+      x <- paste0("Internal Server Error 500. Is this Reference ",
+                  DS_ref,
+                  " already activated?")
+      stop(x)
+    }
+    if (status_code != 200) {
       err <- "DataStore connection failed.
               Your file(s) were not successfully removed."
       err <- strwrap(err, width = 10000, simplify = TRUE)
@@ -561,10 +567,10 @@ remove_datastore_files <- function(data_store_reference,
   #report on deleted files if verbose
   if (force == FALSE) {
     cat("The following files have been removed from Reference ",
-        DS_ref, sep = "")
+        DS_ref, ":\n", sep = "")
     for (i in seq_along(resource_id)) {
       cat(crayon::bold$blue(test_rjson$fileName[i]), "\n")
     }
   }
-  return()
+  return(invisible())
 }
