@@ -204,7 +204,9 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE
 #' dir <- here::here("..", "Downloads", "BICY")
 #' upload_data_package(dir)
 #' }
-upload_data_package <- function(directory = here::here(), force = FALSE, dev = FALSE){
+upload_data_package <- function(directory = here::here(),
+                                force = FALSE,
+                                dev = FALSE){
   #load metadata
   metadata <- DPchecker::load_metadata(directory = directory)
   #get doi from metadata
@@ -241,8 +243,9 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
           crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
           ".\n\n", sep = "")
       if(test_rjson$fileCount > 0){
-        cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.\n")
-        return(invisible())
+        cat("The existing Reference already has files attached.")
+        cat("Use EMLeditor::remove_reference_files() before uploading new files.")
+        return()
       }
     }
     if(length(test_rjson) == 0){
@@ -400,4 +403,135 @@ upload_data_package <- function(directory = here::here(), force = FALSE, dev = F
       }
     }
   }
+}
+
+
+#' Remove files from a data package Reference on DataStore
+#'
+#' @description The `remove_datastore_files()` function detaches all files associated with the relevant DataStore Reference. Once the files are detached, updated files can be re-uploaded and attached to the reference via `upload_data_package()`.
+#'
+#' @param data_store_reference Integer. the 7-digit DataStore Reference number
+#' @param force Logical. Defaults to FALSE. Set to TRUE to avoid interactive components and most user feedback.
+#' @param dev Logical. Defaults to FALSE. set to TRUE if you want to detete files from a DataStore reference on the Development server.
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#' #'  \dontrun{
+#' remove_datastore_files(1234567)
+#' remove_datastore_files(1234567, force = TRUE, dev = TRUE)
+#' }
+remove_datastore_files <- function(data_store_reference,
+                                   force = FALSE,
+                                   dev = FALSE) {
+  DS_ref <- data_store_reference
+  #list files in data package
+
+  #test whether reference already exists or the DOI:
+  if(dev == TRUE){
+    url <- paste0(.ds_dev_api(), "ReferenceCodeSearch?q=", DS_ref)
+  } else {
+    url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
+  }
+  #API call to look for an existing reference:
+  test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+  status_code <- httr::stop_for_status(test_req)$status_code
+
+  #if API call fails, alert user and remind them to log on to VPN:
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  test_json <- httr::content(test_req, "text")
+  test_rjson <- jsonlite::fromJSON(test_json)
+
+  #if there are no files already associated with the reference:
+  if(length(test_rjson) > 0){
+    if (force == FALSE) {
+      cat("A draft reference for this data package exists on DataStore.\n")
+      cat("The existing DataStore draft reference ID is:\n",
+        crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
+      cat("The existing DataStore draft reference title is:\n",
+        crayon::blue$bold(test_rjson$title), ".\n", sep = "")
+      cat("The existing DataStore reference was created on:\n",
+        crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
+        ".\n\n", sep = "")
+      if (test_rjson$fileCount == 0) {
+        if (force == FALSE) {
+          cat("The existing Reference does not have files attached.")
+          cat("Use EMLeditor::upload_data_package() to upload files.")
+        }
+      }
+    }
+    return()
+  }
+
+  #if there ARE files already associated with the reference:
+  if (force == FALSE) {
+    cat("The existing Reference already has files attached.")
+    x <- "Would you like to remove all of the attached files from the
+        Reference?"
+    x <- strwrap(x, width=10000, simplify=TRUE)
+    cat(x)
+    var1 <- readline(prompt = "1: Yes\n2: No\n")
+    if (var1 == 2) {
+      cat("You have not removed any files from the Reference.")
+      return()
+    }
+  }
+
+  if(dev == TRUE){
+    url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/DigitalFiles")
+  } else {
+    url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/DigitalFiles")
+  }
+  test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+  status_code <- httr::stop_for_status(test_req)$status_code
+
+  #if API call fails, alert user and remind them to log on to VPN:
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  test_json <- httr::content(test_req, "text")
+  test_rjson <- jsonlite::fromJSON(test_json)
+  # get list of attached files:
+  resource_id <- test_rjson$resourceId
+
+  #construct delete request urls
+  for(i in seq_along(resource_id)){
+    if(dev == TRUE){
+      api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref,
+                    "/DigitalFiles/", resource_id[i])
+    } else {
+      api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref,
+                    "/DigitalFiles/", resource_id[i])
+    }
+    #delete each file
+    deleted_file <- NULL
+    req <- httr::DELETE(
+        url = api_url,
+        httr::add_headers('Content-Type' = 'multipart/form-data'),
+        httr::authenticate(":", "", "ntlm"),
+        #body = list(addressFile = httr::upload_file(files[i])),
+        encode = "multipart")
+    #check status code
+    status_code <- httr::stop_for_status(req)$status_code
+    #return status code error
+    if(status_code != 201){
+      err <- "DataStore connection failed.
+              Your file(s) were not successfully removed."
+      err <- strwrap(err, width=10000, simplify=TRUE)
+
+      stop(err)
+    }
+  }
+  #report on deleted files if verbose
+  if (force == FALSE) {
+    cat("The following files have been removed from Reference ",
+        DS_ref, sep = "")
+    for (i in seq_along(resource_id)) {
+      cat(crayon::bold$blue(test_rjson$fileName[i]), "\n")
+    }
+  }
+  return()
 }
