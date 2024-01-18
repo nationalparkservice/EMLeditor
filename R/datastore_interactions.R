@@ -216,24 +216,24 @@ upload_data_package <- function(directory = here::here(),
   #list files in data package
 
   #test whether reference already exists or the DOI:
-  if(dev == TRUE){
+  if (dev == TRUE) {
     url <- paste0(.ds_dev_api(), "ReferenceCodeSearch?q=", DS_ref)
   } else {
     url <- paste0(.ds_secure_api(), "ReferenceCodeSearch?q=", DS_ref)
   }
   #verbose approach:
-  if(force == FALSE){
+  if (force == FALSE) {
     #API call to look for an existing reference:
     test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
     status_code <- httr::stop_for_status(test_req)$status_code
 
     #if API call fails, alert user and remind them to log on to VPN:
-    if(!status_code == 200){
+    if (!status_code == 200) {
       stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
     }
     test_json <- httr::content(test_req, "text")
     test_rjson <- jsonlite::fromJSON(test_json)
-    if(length(test_rjson) > 0){
+    if (length(test_rjson) > 0) {
       cat("A draft reference for this data package exists on DataStore.\n")
       cat("The existing DataStore draft reference ID is:\n",
           crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
@@ -242,13 +242,13 @@ upload_data_package <- function(directory = here::here(),
       cat("The existing DataStore reference was created on:\n",
           crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
           ".\n\n", sep = "")
-      if(test_rjson$fileCount > 0){
+      if (test_rjson$fileCount > 0) {
         cat("The existing Reference already has files attached.")
         cat("Use EMLeditor::remove_reference_files() before uploading new files.")
         return()
       }
     }
-    if(length(test_rjson) == 0){
+    if (length(test_rjson) == 0) {
       cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
       cat("Please use ", crayon::bold$green("set_datastore_doi()"),
           " to create a draft reference and insert the corresponding DOI into your metadata prior to uploading files.", sep = "")
@@ -256,12 +256,12 @@ upload_data_package <- function(directory = here::here(),
     }
     cat("Are you sure you want to upload your data package files to this reference?\n")
     var1 <- readline(prompt = "1: Yes\n2: No\n")
-    if (var1 == 2){
+    if (var1 == 2) {
       cat("Function terminated. You have not uploaded any files to DataStore.")
     }
-    if (var1 == 1){
+    if (var1 == 1) {
       #check for DOI & referenceId mismatch...this should never happen.
-      if(!DS_ref == test_rjson$referenceId){
+      if (!DS_ref == test_rjson$referenceId) {
         cat("The DOI in your metadata, ", crayon::blue$bold(doi),
             ", does not match the reference ID, ",
             crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
@@ -269,7 +269,7 @@ upload_data_package <- function(directory = here::here(),
         return()
       }
       #if DOI and referenceId match:
-      else{
+      else {
         #get list of files for terminal output (just names, not paths)
         files_names <- list.files(path = directory,
                                   pattern = "*.csv")
@@ -286,10 +286,10 @@ upload_data_package <- function(directory = here::here(),
                         list.files(path = directory,
                                    pattern = "*metadata.xml",
                                    full.names = TRUE))
-        for(i in seq_along(files)){
+        for (i in seq_along(files)) {
           #test for files <32Mb:
           file_size_error <- NULL
-          if(file.size(files[i]) > 33554432){
+          if (file.size(files[i]) > 33554432) {
             #warn for each file >32Mb
             cat(crayon::blue$bold(files_names[i]),
                 "is greater than 32Mb and cannot be uploaded with this funcion.\n",
@@ -298,17 +298,19 @@ upload_data_package <- function(directory = here::here(),
           }
         }
         # stop if any files >32Mb
-        if(!is.null(file_size_error)){
+        if (!is.null(file_size_error)) {
           stop()
         }
-        if(is.null(file_size_error)){
-          if(dev == TRUE){
-            api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/UploadFile")
+        if (is.null(file_size_error)) {
+          if (dev == TRUE) {
+            api_url <- paste0(.ds_dev_api(),
+                              "Reference/", DS_ref, "/UploadFile")
           } else {
-            api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
+            api_url <- paste0(.ds_secure_api(),
+                              "Reference/", DS_ref, "/UploadFile")
           }
           #upload the files
-          for(i in seq_along(files)){
+          for (i in seq_along(files)) {
             req <- httr::POST(
               url = api_url,
               httr::add_headers('Content-Type' = 'multipart/form-data'),
@@ -317,10 +319,13 @@ upload_data_package <- function(directory = here::here(),
               encode = "multipart",
               httr::progress(type = "up", con = ""))
             status_code <- httr::stop_for_status(req)$status_code
-            if(status_code != 201){
-              stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
+            if (status_code != 201) {
+              x <- "DataStore Connection failed.
+                    Your file was not successfully uploaded."
+              x <- strwrap(x, width = 10000, simplify = TRUE)
+              stop(x)
             }
-            else{
+            else {
               cat("Your file, ", crayon::blue$bold(files_names[i]),
                   ", has been uploaded to:\n", sep = "")
               cat(req$headers$location, "\n", sep="")
@@ -331,27 +336,33 @@ upload_data_package <- function(directory = here::here(),
     }
   }
   #suppress interactive/verbose portions and facilitate scripting:
-  if(force == TRUE){
+  if (force == TRUE) {
     #API call to look for an existing reference:
     test_req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
     status_code <- httr::stop_for_status(test_req)$status_code
     #if API call fails, alert user and remind them to log on to VPN:
-    if(!status_code == 200){
-      stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    if (!status_code == 200) {
+      stop("DataStore connection failed. Are you logged in to the VPN?")
     }
     test_json <- httr::content(test_req, "text")
     test_rjson <- jsonlite::fromJSON(test_json)
-    if(length(test_rjson) == 0){
-      cat("There is no draft reference on DataStore corresponding to your metadata DOI to upload your files to.\n")
+    if (length(test_rjson) == 0) {
+      x <- "There is no draft reference on DataStore corresponding to your
+            metadata DOI to upload your files to.\n"
+      x <- strwrap(x, width = 10000, simplify = TRUE)
+      cat(x)
       return()
     }
-    if(test_rjson$fileCount > 0){
-      cat("The existing reference already has files uploaded. To add, remove, or change files please use the DataStore GUI.\n")
+    if (test_rjson$fileCount > 0) {
+      x <- "The existing reference already has files uploaded.
+            To add, remove, or change files please use the DataStore GUI.\n"
+      x <- strwrap(x, width = 10000, simplify = TRUE)
+      cat(x)
       return(invisible())
     }
     #test that metadata DOI corresponds to the draft reference on DataStore
     #this test should never fail.
-    if(!DS_ref == test_rjson$referenceId){
+    if (!DS_ref == test_rjson$referenceId) {
       cat("The DOI in your metadata, ", crayon::blue$bold(doi),
           ", does not match the reference ID, ",
           crayon::blue$bold(test_rjson$referenceId), ".\n", sep = "")
@@ -367,10 +378,10 @@ upload_data_package <- function(directory = here::here(),
                     list.files(path = directory,
                                pattern = "*metadata.xml",
                                full.names = TRUE))
-    for(i in seq_along(files)){
+    for (i in seq_along(files)) {
       #test for files <32Mb:
       file_size_error <- NULL
-      if(file.size(files[i]) > 33554432){
+      if (file.size(files[i]) > 33554432) {
         #warn for each file <32Mb
         cat(crayon::blue$bold(files[i]),
             "is greater than 32Mb and cannot be uploaded with this funcion.\n",
@@ -379,17 +390,17 @@ upload_data_package <- function(directory = here::here(),
       }
     }
     # stop if any files >32Mb
-    if(!is.null(file_size_error)){
+    if (!is.null(file_size_error)) {
       stop()
     }
-    if(is.null(file_size_error)){
-      if(dev == TRUE){
+    if (is.null(file_size_error)) {
+      if (dev == TRUE) {
         api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/UploadFile")
       } else {
         api_url <- paste0(.ds_secure_api(), "Reference/", DS_ref, "/UploadFile")
       }
       #upload the files
-      for(i in seq_along(files)){
+      for (i in seq_along(files)) {
         req <- httr::POST(
           url = api_url,
           httr::add_headers('Content-Type' = 'multipart/form-data'),
@@ -398,7 +409,10 @@ upload_data_package <- function(directory = here::here(),
           encode = "multipart")
         status_code <- httr::stop_for_status(req)$status_code
         if (status_code != 201) {
-          stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
+          x <- "DataStore connection failed.
+                Your file was not successfully uploaded."
+          x <- strwrap(x, width = 10000, simplify = TRUE)
+          stop(x)
         }
       }
     }
