@@ -426,6 +426,8 @@ upload_data_package <- function(directory = here::here(),
 #'
 #' In the interactive mode (force = FALSE), you will be informed of the Reference number, Reference title, Reference creation date, and a list of files currently attached to the Reference. Once the files are successfully detached, you will be informed of a list of file names that were detached.
 #'
+#' Note that `remove_datastore_files()` is intended to be used with the data package Reference type on DataStore but in theory will allow you to remove files from ANY reference type.
+#'
 #' @param data_store_reference Integer. the 7-digit DataStore Reference number
 #' @param force Logical. Defaults to FALSE. Set to TRUE to avoid interactive components and most user feedback.
 #' @param dev Logical. Defaults to FALSE. set to TRUE if you want to detete files from a DataStore reference on the Development server.
