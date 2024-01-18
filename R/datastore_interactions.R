@@ -397,7 +397,7 @@ upload_data_package <- function(directory = here::here(),
           body = list(addressFile = httr::upload_file(files[i])),
           encode = "multipart")
         status_code <- httr::stop_for_status(req)$status_code
-        if(status_code != 201){
+        if (status_code != 201) {
           stop("ERROR: DataStore connection failed. Your file was not successfully uploaded.")
         }
       }
@@ -408,7 +408,9 @@ upload_data_package <- function(directory = here::here(),
 
 #' Remove files from a data package Reference on DataStore
 #'
-#' @description The `remove_datastore_files()` function detaches all files associated with the relevant DataStore Reference. Once the files are detached, updated files can be re-uploaded and attached to the reference via `upload_data_package()`.
+#' @description The `remove_datastore_files()` function detaches all files associated with the relevant DataStore Reference. Once the files are detached, they cannot be re-attached.  Instead, updated files can be re-uploaded and attached to the reference via `upload_data_package()`.
+#'
+#' In the interactive mode (force = FALSE), you will be informed of the Reference number, Reference title, Reference creation date, and a list of files currently attached to the Reference. Once the files are successfully detached, you will be informed of a list of file names that were detached.
 #'
 #' @param data_store_reference Integer. the 7-digit DataStore Reference number
 #' @param force Logical. Defaults to FALSE. Set to TRUE to avoid interactive components and most user feedback.
@@ -439,14 +441,25 @@ remove_datastore_files <- function(data_store_reference,
   status_code <- httr::stop_for_status(test_req)$status_code
 
   #if API call fails, alert user and remind them to log on to VPN:
-  if(!status_code == 200){
+  if (!status_code == 200) {
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
   test_json <- httr::content(test_req, "text")
   test_rjson <- jsonlite::fromJSON(test_json)
 
+  #if the Reference doesn't appear to exist:
+  if (length(test_rjson) == 0) {
+    if (force == FALSE) {
+      long_text <- "Please double check the
+                    DataStore Reference number you provided."
+      long_text <- strwrap(long_text, width = 10000, simplify = TRUE)
+      cat("Reference ", crayon::red$bold(DS_ref), " does not exist. ",
+          long_text, sep = "")
+    }
+    return()
+  }
   #if there are no files already associated with the reference:
-  if(length(test_rjson) > 0){
+  if (length(test_rjson) > 0) {
     if (force == FALSE) {
       cat("A draft reference for this data package exists on DataStore.\n")
       cat("The existing DataStore draft reference ID is:\n",
@@ -466,20 +479,7 @@ remove_datastore_files <- function(data_store_reference,
     return()
   }
 
-  #if there ARE files already associated with the reference:
-  if (force == FALSE) {
-    cat("The existing Reference already has files attached.")
-    x <- "Would you like to remove all of the attached files from the
-        Reference?"
-    x <- strwrap(x, width=10000, simplify=TRUE)
-    cat(x)
-    var1 <- readline(prompt = "1: Yes\n2: No\n")
-    if (var1 == 2) {
-      cat("You have not removed any files from the Reference.")
-      return()
-    }
-  }
-
+  #get DataStore Reference Resources (files)
   if(dev == TRUE){
     url <- paste0(.ds_dev_api(), "Reference/", DS_ref, "/DigitalFiles")
   } else {
@@ -497,9 +497,26 @@ remove_datastore_files <- function(data_store_reference,
   # get list of attached files:
   resource_id <- test_rjson$resourceId
 
+  #if there ARE files already associated with the reference:
+  if (force == FALSE) {
+    cat("The existing Reference already has the following files attached:")
+    for (i in seq_along(resource_id)) {
+      cat(crayon::bold$blue(test_rjson$fileName[i]), "\n")
+    }
+    x <- "Would you like to remove ALL of the attached files from the
+        Reference?"
+    x <- strwrap(x, width = 10000, simplify = TRUE)
+    cat(x)
+    var1 <- readline(prompt = "1: Yes\n2: No\n")
+    if (var1 == 2) {
+      cat("You have not removed any files from the Reference.")
+      return()
+    }
+  }
+
   #construct delete request urls
-  for(i in seq_along(resource_id)){
-    if(dev == TRUE){
+  for (i in seq_along(resource_id)) {
+    if (dev == TRUE) {
       api_url <- paste0(.ds_dev_api(), "Reference/", DS_ref,
                     "/DigitalFiles/", resource_id[i])
     } else {
@@ -517,10 +534,10 @@ remove_datastore_files <- function(data_store_reference,
     #check status code
     status_code <- httr::stop_for_status(req)$status_code
     #return status code error
-    if(status_code != 201){
+    if (status_code != 201) {
       err <- "DataStore connection failed.
               Your file(s) were not successfully removed."
-      err <- strwrap(err, width=10000, simplify=TRUE)
+      err <- strwrap(err, width = 10000, simplify = TRUE)
 
       stop(err)
     }
