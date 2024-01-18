@@ -436,7 +436,7 @@ upload_data_package <- function(directory = here::here(),
 #' @export
 #'
 #' @examples
-#' #'  \dontrun{
+#' \dontrun{
 #' remove_datastore_files(1234567)
 #' remove_datastore_files(1234567, force = TRUE, dev = TRUE)
 #' }
