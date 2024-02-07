@@ -24,7 +24,7 @@ options(download.file.method="wininet")
 ```
 ```{r package_install, eval=FALSE}
 #install packages
-install.packages(c("devtools", "tidyverse")
+install.packages(c("devtools", "tidyverse"))
 devtools::install_github("nationalparkservice/NPSdataverse")
 ```
 ```{r load_packages}
