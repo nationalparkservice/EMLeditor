@@ -120,7 +120,7 @@ get_additional_info <- function(eml_object) {
 get_methods <- function(eml_object){
   doc <- eml_object$dataset$methods
   if(is.null(doc)){
-    warning("Your EML lacks a methods section. Use set_methods to add methods.")
+    warning("Your EML lacks a methods section. Use set_methods() to add methods.")
   }
   return(doc)
 }
@@ -174,7 +174,7 @@ get_ds_id <- function(eml_object) {
     }
     ref_id <- stringr::str_sub(doi, start = -7)
     if (suppressWarnings(is.na(as.numeric(ref_id)))) {
-      warning("Your DOI is not consistent with an NPS DOI. Use set_doi to update your DOI.")
+      warning("Your DOI is not consistent with an NPS DOI. Use set_doi() to update your DOI.")
       ref_id <- NA
     }
   }
@@ -223,7 +223,7 @@ get_citation <- function(eml_object) {
 
   # piece it together:
   if (is.null(doi)) {
-    warning("No doi specified. Please use set_doi to add a DOI.")
+    warning("No doi specified. Please use set_doi() to add a DOI.")
   }
   if (is.null(author_list)) {
     warning("No creators detected. Please add at least one \"creator\" in EMLassemlbyline with a valid givenName and surName.")
@@ -440,7 +440,7 @@ get_cui <- function(eml_object) {
     cui <- "Does NOT contain CUI"
   }
   else {
-    warning("CUI not properly specified. User set_cui to update the CUI code.")
+    warning("CUI not properly specified. Use set_cui() to update the CUI code.")
     cui <- NA
   }
   return(cui)
@@ -468,7 +468,7 @@ get_file_info <- function(eml_object) {
   file_name <- arcticdatautils::eml_get_simple(eml_object, "objectName")
 
   if (is.null(file_name)) {
-    warning("You have not specified data file names, sizes, or descriptons. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undefined units will often cause this problem.")
+    warning("You have not specified data file names, sizes, or descriptions. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undefined units will often cause this problem.")
     print("NA")
   } else {
     # get file sizes (assumes in bytes)
