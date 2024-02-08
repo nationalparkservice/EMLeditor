@@ -468,7 +468,7 @@ get_file_info <- function(eml_object) {
   file_name <- arcticdatautils::eml_get_simple(eml_object, "objectName")
 
   if (is.null(file_name)) {
-    warning("You have not specified data file names, sizes, or descripions. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undifined units will often cause this problem.")
+    warning("You have not specified data file names, sizes, or descriptons. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undefined units will often cause this problem.")
     print("NA")
   } else {
     # get file sizes (assumes in bytes)
