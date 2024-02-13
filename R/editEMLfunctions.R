@@ -453,9 +453,120 @@ set_content_units <- function(eml_object, park_units,
   return(eml_object)
 }
 
+#' Adds CUI dissemination codes to metadata
+#'
+#' @description
+#'  `set_cui_code()` adds CUI dissemination codes to EML metadata
+#'
+#' @details set_cui_code adds a CUI dissemination code to the tag CUI under additionalMetadata/metadata.
+#'
+#' @details
+#'
+#' @inheritParams set_title
+#' @param cui_code a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
+#' FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
+#' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
+#' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
+#' NOCON - Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
+#' PUBLIC - Does NOT contain CUI.
+
+#' @returns an EML-formatted R object
+#' @export
+#' @examples
+#' \dontrun{
+#' set_cui_dissem(eml_object, "PUBFUL")
+#' }
+set_cui_code <- function(eml_object,
+                           cui_code = c("PUBLIC",
+                                               "NOCON",
+                                               "DL ONLY",
+                                               "FEDCON",
+                                               "FED ONLY"),
+                           force = FALSE,
+                           NPS = TRUE) {
+
+  cui_code <- toupper(cui_code)
+  # verify CUI code entry; stop if does not equal one of six valid codes listed above:
+  cui_code <- match.arg(cui_code)
+
+  # Generate new CUI element for additionalMetadata
+  my_cui <- list(metadata = list(CUI = cui_code), id = "CUI")
+
+  # get existing additionalMetadata elements:
+  doc <- eml_object$additionalMetadata
+
+  #if no additional metadata at all....
+  if(is.null(doc)){
+    eml_object$additionalMetadata <- list(my_cui)
+  }
+  if(!is.null(doc)){
+
+    #helps track lists of different lengths/hierarchies
+    x <- length(doc)
+
+    # Is CUI already specified?
+    exist_cui <- NULL
+    for (i in seq_along(doc)) {
+      if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
+        seq <- i
+        exist_cui <- doc[[i]]$metadata$CUI
+      }
+    }
+
+    # scripting route:
+    if (force == TRUE) {
+      #what is [[seq]]?
+      eml_object$additionalMetadata[[seq]] <- my_cui
+    }
+
+    # interactive route:
+    if (force == FALSE) {
+      # If no existing CUI, add it in:
+      if (is.null(exist_cui)) {
+        if (x == 1) {
+          eml_object$additionalMetadata <- list(my_cui,
+                                                eml_object$additionalMetadata)
+        }
+        if (x > 1) {
+          eml_object$additionalMetadata[[x + 1]] <- my_cui
+        }
+        cat("No previous CUI was detected. Your CUI has been set to ",
+            crayon::bold$blue(cui_code), ".", sep = "")
+      }
+      # If existing CUI, stop.
+      if (!is.null(exist_cui)) {
+        cat("CUI has previously been specified as ",
+            crayon::bold$blue(exist_cui),
+            ".\n", sep = "")
+        var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+        if (var1 == 1) {
+          eml_object$additionalMetadata[[seq]] <- my_cui
+          cat("Your CUI code has been rest to ",
+              crayon::blue$bold(cui_code), ".", sep = "")
+        }
+        if (var1 == 2) {
+          cat("Your original CUI code was retained")
+        }
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/updated EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+
 #' Adds CUI to metadata
 #'
-#' @description set_cui adds CUI codes to EML metadata
+#' @description
+#' #' `r lifecycle::badge("deprecated")`
+#'  set_cui adds CUI dissemination codes to EML metadata
 #'
 #' @details set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.
 #'
@@ -476,6 +587,9 @@ set_content_units <- function(eml_object, park_units,
 set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
                                              "FEDCON", "FED ONLY"),
                     force = FALSE, NPS = TRUE) {
+  #add in deprecation
+  lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_dissem()")
+
   cui_code <- toupper(cui_code)
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code <- match.arg(cui_code)
@@ -550,6 +664,43 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
   eml_object <- .set_version(eml_object)
 
   return(eml_object)
+}
+
+#' The function sets the CUI marking for the data package
+#'
+#' @description  The Controlled Unclassified Information (CUI) marking is different from the CUI dissemination code. The CUI dissemination code (set `set_cui_dissem()`) sets who can have access to the data package. The CUI marking set by `set_cui_marking()` specifies the reason (if any) that the data are being restricted.
+#' If the CUI dissemination code is set to PUBLIC, the CUI marking must also be PUBLIC.
+#' If the CUI dissemination code is set to anything other than PUBLIC, the CUI marking must be set to SP-NPSR, SP-HISTP or SP-ARCHR.
+#'
+#' @details CUI markings are the legal justification for why data are being restricted from the public. If data contain no CUI, the CUI marking must be set to PUBLIC (and the CUI dissemination code must be set to PUBLIC and the license must be set to CC0 or Public Domain). If the data contain CUI (i.e. the CUI dissemination code is not PUBLIC), you must use the CUI marking to provide a legal justification for why the data are restricted. Only one CUI marking can be applied. At NPS, the following markings are available:
+#'
+#' PUBLIC: The data contain no CUI, dissemination is not restricted.
+#' SP-NPSR: "National Park System Resources" - This material contains information concerning the nature and specific location of a National Park System resource that is endangered, threatened, rare, or commercially valuable, of mineral or paleontological objects within System units, or of objects of cultural patrimony within System units.
+#' SP-HISTP: "Historic Properties" - This material contains information related to the location, character, or ownership of historic property.
+#' SP-ARCHR: "Archaeological Resources" - This material contains information related to information about the nature and location of any archaeological resource for which the excavation or removal requires a permit or other permission.
+#'
+#' For more information on CUI markings, please visit the [CUI Markings](https://www.archives.gov/cui/registry/category-marking-list) list maintained by the National Archives.
+#'
+#'
+#' @param eml_object
+#' @param cui_code
+#' @param force
+#' @param NPS
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_cui_marking <- function (eml_object,
+                          cui_code = c("PUBLIC",
+                                       "SP-NPSR",
+                                       "SP-HISTP",
+                                       "SP-ARCHR"),
+                          force = FALSE,
+                          NPS = TRUE) {
+
+
+
 }
 
 #' adds DRR connection
