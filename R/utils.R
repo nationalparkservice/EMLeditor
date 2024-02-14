@@ -233,3 +233,19 @@ globalVariables(c("UnitCode",
   }
   return(eml_object)
 }
+
+
+#' Get Binary User Input
+#'
+#' Gets and returns binary user input (1 or 2)
+#'
+#' @return Factor. 1 or 2.
+#'
+#' @examples
+#' \dontrun{
+#' var1 <- .get_user_input()
+#' }
+.get_user_input <- function () {
+  var1 <- readline(prompt = "1: Yes\n2: No\n")
+  return(var1)
+}
