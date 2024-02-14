@@ -744,14 +744,26 @@ set_cui_marking <- function (eml_object,
 
   existing_cui_marking <- add_meta[[y]][["metadata"]][["CUImarking"]]
 
+  #don't replace an existing CUI marking with the same marking
+  if (!is.null(y) && existing_cui_marking == cui_marking) {
+    if (force == FALSE) {
+      cat("Your metadata already have an existing CUI marking of ",
+          crayon::bold$blue(existing_cui_marking),
+      ".\n",
+      sep = "")
+      cat("Your metadata CUI marking was not updated.\n")
+    }
+    return()
+  }
+
   #if CUI markings already exist, ask if they should be replaced/changed?
   if (!is.null(y) & force == FALSE) {
     cat("Your metadata already contains the CUI marking: ",
         crayon::blue$bold(existing_cui_marking),
         ".\n",
         sep = "")
-      cat("Are you sure you want to change it? \n\n 1: Yes\n 2: No\n")
-      var1 <- readline(prompt = "")
+      cat("Are you sure you want to change it?\n")
+      var1 <- .get_user_input()
     if (var1 == 2) {
       cat("Your original CUI marking has been retained")
       return()
