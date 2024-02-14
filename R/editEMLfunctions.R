@@ -456,14 +456,14 @@ set_content_units <- function(eml_object, park_units,
 #' Adds CUI dissemination codes to metadata
 #'
 #' @description
-#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to public domain (see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
+#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to public domain (or CC0; see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
 #'
-#' @details `set_cui_code()` adds a CUI dissemination code to the tag CUI under additionalMetadata/metadata. The available choices for CUI dissemination codes at NPS are (pay attendtion to the spaces!):
+#' @details `set_cui_code()` adds a CUI dissemination code to the tag CUI under additionalMetadata/metadata. The available choices for CUI dissemination codes at NPS are (pay attention to the spaces!):
 #'
 #' PUBLIC: The data contain no CUI, dissemination is not restricted.
 #' FED ONLY: Contains CUI. Only federal employees should have access (similar to the "internal only" setting in DataStore)
 #' FEDCON: Contains CUI Only federal employees and federal contractors should have access to the data (again, very similar to the DataStore "internal only" setting)
-#' DL ONLY: Contains CUI. Should only be availabel to a named list of individuals. (where and how to supply that list TBD)
+#' DL ONLY: Contains CUI. Should only be available to a named list of individuals. (where and how to supply that list TBD)
 #' NOCON - Contains CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
 #'
 #' For a more detailed explanation of the CUI dissemination codes, please see the national archives [CUI Registry: Limited Dissemination Controls](https://www.archives.gov/cui/registry/limited-dissemination) web page.
@@ -481,10 +481,10 @@ set_content_units <- function(eml_object, park_units,
 #' }
 set_cui_code <- function(eml_object,
                            cui_code = c("PUBLIC",
-                                               "NOCON",
-                                               "DL ONLY",
-                                               "FEDCON",
-                                               "FED ONLY"),
+                                        "NOCON",
+                                        "DL ONLY",
+                                        "FEDCON",
+                                        "FED ONLY"),
                            force = FALSE,
                            NPS = TRUE) {
 
@@ -671,7 +671,7 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
 
 #' The function sets the CUI marking for the data package
 #'
-#' @description  The Controlled Unclassified Information (CUI) marking is different from the CUI dissemination code. The CUI dissemination code (set `set_cui_dissem()`) sets who can have access to the data package. The CUI marking set by `set_cui_marking()` specifies the reason (if any) that the data are being restricted.
+#' @description  The Controlled Unclassified Information (CUI) marking is different from the CUI dissemination code. The CUI dissemination code (set `set_cui_code()`) sets who can have access to the data package. The CUI marking set by `set_cui_marking()` specifies the reason (if any) that the data are being restricted.
 #' If the CUI dissemination code is set to PUBLIC, the CUI marking must also be PUBLIC.
 #' If the CUI dissemination code is set to anything other than PUBLIC, the CUI marking must be set to SP-NPSR, SP-HISTP or SP-ARCHR.
 #'
