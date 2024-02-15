@@ -2,9 +2,6 @@ good_dir <- here::here("tests", "testthat", "good")
 bad_dir <- here::here("tests", "testhat", "bad")
 
 #load datasets etc to to test functions with
-BICY_meta <- EML::read_eml(here::here("tests", "testthat", "good", "BICY",
-                                      "BICY_metadata.xml"),
-                           from ="xml")
 BICY_EMLed_meta <- EML::read_eml(here::here("tests",
                                             "testthat", "good", "BICY",
                                             "BICY_EMLeditor_metadata.xml"),
@@ -19,10 +16,11 @@ BUIS_EMLed_meta <- EML::read_eml(here::here("tests", "testthat", "good", "BUIS",
 # ---- set_title ----
 test_that("set_title works on valid eml", {
   title <- "Test Title"
-  new_meta <- set_title(BICY_meta, title, force=TRUE)
+  new_meta <- set_title(BICY_EMLed_meta, title, force=TRUE)
   expect_equal(new_meta$dataset$title, title)
 }
 )
+
 
 # ---- set_doi ----
 test_that("set_doi works on valid eml", {
