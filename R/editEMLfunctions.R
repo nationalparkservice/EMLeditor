@@ -32,7 +32,8 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
       )
     } else {
       cat("Your EML already has an title, ", crayon::blue$bold(doc), ".", sep = "")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n")
+      var1 <- EMLeditor::.get_user_input()
       # if User opts to retain DOI, retain it
       if (var1 == 1) {
         # print the existing DOI to the screen:
