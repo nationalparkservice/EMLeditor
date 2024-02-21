@@ -249,3 +249,7 @@ globalVariables(c("UnitCode",
   var1 <- readline(prompt = "1: Yes\n2: No\n")
   return(var1)
 }
+
+.get_user_input3 <- function() {
+  var1 <- readline(prompt = (""))
+}
