@@ -31,9 +31,9 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
         sep = ""
       )
     } else {
-      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".", sep = "")
+      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".\n", sep = "")
       cat("Are you sure you want to replace it?\n")
-      var1 <- EMLeditor::.get_user_input()
+      var1 <- .get_user_input()
       # if User opts to retain DOI, retain it
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -98,67 +98,48 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   # interactive route:
   if (force == FALSE) {
     # Look for an existing data package DOI:
-    doc <- arcticdatautils::eml_get_simple(
-      eml_object,
-      "alternateIdentifier"
-    )
+    doi <- eml_object$dataset$alternateIdentifier
 
     # If there is no existing DOI, add a DOI to the metadata
-    if (is.null(doc)) {
+    if (is.null(doi)) {
       eml_object$dataset$alternateIdentifier <- paste0(
         "doi: https://doi.org/10.57830/",
         ds_ref
       )
-      doc <- arcticdatautils::eml_get_simple(
-        eml_object,
-        "alternateIdentifier"
-      )
-      doc <- sub(".*? ", "", doc)
+      #get new doi:
+      doi <- eml_object$dataset$alternateIdentifier
+      doi <- sub(".*? ", "", doi)
       # print the new DOI to the screen:
       cat("No DOI detected.")
       cat("Your newly specified DOI is: ",
-        crayon::blue$bold(doc),
+        crayon::blue$bold(doi),
         sep = ""
       )
     }
 
     # If there is a DOI, find the correct doi by searching for the text "doi: ".
     else {
-      my_list <- NULL
-
-      # hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
-      if (length(doc) > 1) {
-        for (i in seq_along(doc)) {
-          if (stringr::str_detect(doc[i], "doi:")) {
-            my_list <- append(my_list, doc[i])
-          }
-        }
-      }
-      # if there is only one alternateIdentifier:
-      else {
-        my_list <- doc
-      }
-      doi <- my_list[[1]]
-
       # If a DOI exists, ask the user what to do about it:
-      cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n")
-      cat(crayon::blue$bold(doc),
+      cat("Your EML already has a DOI:\n")
+      cat(crayon::blue$bold(doi),
         "\n\n",
         sep = ""
       )
-      var1 <- readline(prompt = cat("Enter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
+      cat("Are you sure you want to replace your DOI?\n")
+      var1 <- .get_user_input()
       # if User opts to retain DOI, retain it
-      if (var1 == 1) {
+      if (var1 == 2) {
         # print the existing DOI to the screen:
         doi <- sub(".*? ", "", doi)
         cat("Your DOI remains: ", crayon::blue$bold(doi), sep = "")
       }
       # if User opts to change DOI, change it:
-      if (var1 == 2) {
-        eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
+      if (var1 == 1) {
+        eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/",
+                                                         ds_ref)
         # get the new DOI:
-        doc <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-        doc <- sub(".*? ", "", doc)
+        doi <- eml_object$dataset$alternateIdentifier
+        doi <- sub(".*? ", "", doi)
 
         # update data URLs to correspond to new DOI:
         data_table <- EML::eml_get(eml_object, "dataTable")
@@ -177,7 +158,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
             }
         }
         # print the new DOI to the screen:
-        cat("Your newly specified DOI is: ", crayon::blue$bold(doc),
+        cat("Your newly specified DOI is: ", crayon::blue$bold(doi),
             ".\n", sep = "")
         cat("Your data files url also been updated to: ",
             crayon::blue$bold(data_url), ".\n", sep = "")
