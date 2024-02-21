@@ -510,7 +510,8 @@ set_cui_code <- function(eml_object,
         cat("CUI has previously been specified as ",
             crayon::bold$blue(exist_cui),
             ".\n", sep = "")
-        var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+        cat("Are you sure you want to reset it?")
+        var1 <- .get_user_input() #1 = yes, 2 = no
         if (var1 == 1) {
           eml_object$additionalMetadata[[seq]] <- my_cui
           cat("Your CUI code has been rest to ",
@@ -615,7 +616,7 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
         cat("CUI has previously been specified as ",
             crayon::bold$blue(exist_cui),
             ".\n", sep = "")
-        var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+        var1 <- .get_user_input() #1 = yes, 2 = no
         if (var1 == 1) {
           eml_object$additionalMetadata[[seq]] <- my_cui
           cat("Your CUI code has been rest to ",
@@ -856,7 +857,8 @@ set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force =
         ".\n",
         sep = ""
       )
-      var1 <- readline(prompt = "Are you sure you want to change it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to change it?\n")
+      var1 <- .get_user_input() #1 = Yes; 2 = No
       if (var1 == 1) {
         eml_object$dataset$usageCitation <- cite
         cat("Your new DRR is: ", crayon::blue$bold(doc$title), ".\n", sep = "")
@@ -916,7 +918,8 @@ set_abstract <- function(eml_object,
       cat("View the current abstract using get_abstract.")
     } else {
       cat("Your EML already has an abstract.\n")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -979,7 +982,8 @@ set_additional_info <- function(eml_object,
       cat("View the current additionalInfo using get_additional_info.")
     } else {
       cat("Your EML already has additionalInfo.\n")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -1046,7 +1050,8 @@ set_methods <- function(eml_object,
       cat("View the current methods using get_methods.")
     } else {
       cat("Your EML already has a Methods section.\n")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -1103,6 +1108,7 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
       cat("You have already specified literature cited.\n")
       cat("To view yourcurrent literature, use get_lit\n")
       var1 <- readline(prompt = "Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
+      var1 <- .get_user_input3() #
       if (var1 == 1) {
         print("No changes were made to literature cited.")
       }
@@ -1183,7 +1189,8 @@ set_producing_units <- function(eml_object,
     if (!is.null(doc)) {
       cat("Your metadata already contains the following Producing Unit(s):\n")
       cat(crayon::blue$bold(get_producing_units(eml_object)), "\n")
-      var1 <- readline(prompt = "Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace them?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace metadataProvider, replace it:
       if (var1 == 1) {
         eml_object$dataset$metadataProvider <- plist
@@ -1286,7 +1293,8 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
       }
 
       # does the user want to change the language?
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
 
       # if yes, change the language and report the change:
       if (var1 == 1) {
@@ -1388,10 +1396,8 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
         crayon::bold$blue(doc$title), ".",
         sep = ""
       )
-
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n
-                     1: Yes\n 2: No\n")
-
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1=yes, 2=no
       # if yes, change the project:
       if (var1 == 1) {
         eml_object$dataset$project <- proj
@@ -1621,7 +1627,8 @@ set_publisher <- function(eml_object,
             "\n\n",
             sep = ""
           )
-          var1 <- readline(prompt = "Would you like to replace your existing publisher? \n\n 1: Yes\n 2: No\n")
+          cat("Would you like to replace your existing publisher?\n\n")
+          var1 <- .get_user_input() #1: Yes; 2: No\n")
           if (var1 == 1) {
             eml_object$dataset$publisher <- pubset
             cat("Your new publisher is:\n\n")
@@ -1707,7 +1714,8 @@ set_publisher <- function(eml_object,
             "\n\n",
             sep = ""
           )
-          var2 <- readline(prompt = "Would you like to replace your agency? \n\n 1: Yes\n 2: No\n")
+          cat("Would you like to replace your agency?\n\n")
+          var2 <- .get_user_input() #1 = yes, 2 = no
           if (var2 == 1) {
             # Since there are existing additionalMetadata elements:
             if (length(add_meta) == 1) {
@@ -2018,7 +2026,7 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
       cat(format(tibble::as_tibble(current_orcids))[c(-3L, -1L)], sep = "\n")
       cat("\nAre you sure you want to replace the existing ORCiDs with the following:\n\n")
       cat(format(tibble::as_tibble(new_orcids))[c(-3L, -1L)], sep = "\n")
-      var1 <- readline(prompt = cat("\n\n1: Yes\n2: No\n\n"))
+      var1 <- .get_user_input() #1: Yes; 2: No
 
       if(var1 == 2){
         cat("Your original ORCiDs were retained.")
@@ -2274,7 +2282,7 @@ set_creator_order <- function(eml_object,
       cat("Please enter comma-separated numbers for the new creator order.\n")
       cat("Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1\n")
       cat("Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5\n\n")
-      var1 <- readline(prompt="")
+      var1 <- .get_user_input3() # waits for any user input
       #don't allow user to remove all creators!
       if(nchar(var1)==0){
         cat("You cannot delete all creators.")
