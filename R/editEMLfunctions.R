@@ -15,7 +15,10 @@
 #' data_package_title <- "New Title. Must match DataStore Reference title."
 #' eml_object <- set_title(eml_object, data_package_title)
 #' }
-set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE) {
+set_title <- function(eml_object,
+                      data_package_title,
+                      force = FALSE,
+                      NPS = TRUE) {
   # scripting route:
   if (force == TRUE) {
     eml_object$dataset$title <- data_package_title
@@ -31,7 +34,9 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
         sep = ""
       )
     } else {
-      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".\n", sep = "")
+      cat("Your EML already has an title, ",
+          crayon::blue$bold(doc),
+          ".\n", sep = "")
       cat("Are you sure you want to replace it?\n")
       var1 <- .get_user_input()
       # if User opts to retain DOI, retain it
@@ -78,7 +83,8 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   # scripting route:
   if (force == TRUE) {
-    eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
+    eml_object$dataset$alternateIdentifier <- paste0(
+      "doi: https://doi.org/10.57830/", ds_ref)
     # update data URLs to correspond to new DOI:
     data_table <- EML::eml_get(eml_object, "dataTable")
     data_table <- within(data_table, rm("@context"))
@@ -135,8 +141,8 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
       }
       # if User opts to change DOI, change it:
       if (var1 == 1) {
-        eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/",
-                                                         ds_ref)
+        eml_object$dataset$alternateIdentifier <- paste0(
+          "doi: https://doi.org/10.57830/", ds_ref)
         # get the new DOI:
         doi <- eml_object$dataset$alternateIdentifier
         doi <- sub(".*? ", "", doi)
@@ -608,12 +614,12 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
         if (x > 1) {
           eml_object$additionalMetadata[[x + 1]] <- my_cui
         }
-        cat("No previous CUI was detected. Your CUI has been set to ",
+        cat("No previous CUI code was detected. Your CUI code has been set to ",
             crayon::bold$blue(cui_code), ".", sep = "")
       }
       # If existing CUI, stop.
       if (!is.null(exist_cui)) {
-        cat("CUI has previously been specified as ",
+        cat("CUI code has previously been specified as ",
             crayon::bold$blue(exist_cui),
             ".\n", sep = "")
         var1 <- .get_user_input() #1 = yes, 2 = no
@@ -2342,7 +2348,67 @@ set_creator_order <- function(eml_object,
   return(eml_object)
 }
 
+#' Adds a missing value code and definition to EML metadata
+#'
+#' @description Missing data must have a missing data code and missing data code definition. `set_missing_data()` can add a single missing value code and single missing value code definition. Missing data should be clearly indicated in the data with a missing data code (i.g "NA", "NaN", "Missing", "blank" etc.). It is generally a good idea to not use special characters for missing data codes (e.g. N/A is not advised). If it is absolutely necessary to leave a cell empty with no code, that cell still needs a missing value code and definition in the metadata. Acceptable codes in this case are "empty" and "blank" with a suitable definition that states the cells are purposefully left empty.
+#'
+#' @details The `set_missing_data()` function can take a list of files, column names, codes, and definitions. Make sure that each missing value has a filename, column, single code, and single definition associated with it (if you need multiple missing value codes and definitions per column, please use the `set_more_missing()` function). Make sure that the orders for you match up. If you have many missing value codes and definitions, you might consider constructing a dataframe to describe them:
+#'
+#' df <- data.frame(filenames   = c("table1.csv",
+#'                                  "table1.csv",
+#'                                  "table2.csv",
+#'                                  "table3.csv"),
+#'                  columns     = c("date",
+#'                                  "scientificName",
+#'                                  "eventID",
+#'                                  "decimalLatitude"),
+#'                  codes       = c(NA, NA, "missing", "blank"),
+#'                  definitions = c("not recorded",
+#'                                  "not identified",
+#'                                  "not recorded",
+#'                                  "intentionally left blank - not recorded"))
+#'
+#' meta2 <- set_missing_data(metadata,
+#'                           df$filenames,
+#'                           df$columns,
+#'                           df$codes,
+#'                           df$definitions)
+#'
+#'
+#' @param eml_object
+#' @param filenames
+#' @param columns
+#' @param codes
+#' @param definitions
+#' @param force
+#' @param NPS
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_missing_data <- function(eml_object,
+                             filenames,
+                             columns,
+                             codes,
+                             definitions,
+                             force = FALSE,
+                             NPS = TRUE) {
 
+  #test that the number of filenames, columns, codes, and definitions match:
+  lists <- list(filenames, columns, codes, definitions)
+  if (sum(seq_along(unique(lapply(lists, seq_along))) != 1) > 0) {
+    if (force = FALSE) {
+      msg <- paste0("The number of filenames, columns, codes, ",
+                    "and defintions must be the same.")
+      cat(msg)
+    }
+    return()
+  }
+
+
+
+}
 
 
 
