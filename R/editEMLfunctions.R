@@ -2354,15 +2354,15 @@ set_creator_order <- function(eml_object,
 #'
 #' @details The `set_missing_data()` function can take a list of files, column names, codes, and definitions. Make sure that each missing value has a filename, column, single code, and single definition associated with it (if you need multiple missing value codes and definitions per column, please use the `set_more_missing()` function). Make sure that the orders for you match up. If you have many missing value codes and definitions, you might consider constructing a dataframe to describe them:
 #'
-#' df <- data.frame(filenames   = c("table1.csv",
+#' df <- data.frame(files   = c("table1.csv",
 #'                                  "table1.csv",
 #'                                  "table2.csv",
 #'                                  "table3.csv"),
-#'                  columns     = c("date",
+#'                  columns     = c("eventDate",
 #'                                  "scientificName",
 #'                                  "eventID",
 #'                                  "decimalLatitude"),
-#'                  codes       = c(NA, NA, "missing", "blank"),
+#'                  codes       = c("NA", "NA", "missing", "blank"),
 #'                  definitions = c("not recorded",
 #'                                  "not identified",
 #'                                  "not recorded",
@@ -2388,40 +2388,82 @@ set_creator_order <- function(eml_object,
 #'
 #' @examples
 set_missing_data <- function(eml_object,
-                             filenames,
+                             files,
                              columns,
                              codes,
                              definitions,
                              force = FALSE,
                              NPS = TRUE) {
 
-  #test that the number of filenames, columns, codes, and definitions match:
-  lists <- list(filenames, columns, codes, definitions)
+  #test that the number of data files, columns, codes, and definitions match:
+  lists <- list(files, columns, codes, definitions)
   if (sum(seq_along(unique(lapply(lists, seq_along))) != 1) > 0) {
-    if (force = FALSE) {
+    if (force == FALSE) {
       msg <- paste0("The number of filenames, columns, codes, ",
                     "and defintions must be the same.")
       cat(msg)
     }
     return()
   }
+  #tun user input into a dataframe for easier manipulation later on:
+  user_df <- data.frame(files, columns, codes, definitions)
 
+  #get dataTable from metadata
+  data_tbl <- eml_object$dataset$dataTable
+  # If there's only one csv, data_tbl ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  if ("attributeList" %in% names(data_tbl)) {
+    data_tbl <- list(data_tbl)
+  }
+  #
 
+  #get the attribute list for each file:
+  for (i in seq_along(unique(files))) {
+    for(j in seq_along(data_tbl)) {
+      if (data_tbl[[j]][["physical"]][["objectName"]] == unique(files[i])) {
+        attrs <- data_tbl[[j]][["attributeList"]][["attribute"]]
+        #if only one attribute, renest so the code works consistently:
+        if (!is.null(names(attrs))) {
+          attrs <- list(attrs)
+        }
 
+        #get the new missing codes for that file:
+        df <- user_df[which(user_df$files == files[i]),]
+
+        #find the correct attribute for each column:
+        for (k in seq_along(df$columns)) {
+          for (l in seq_along(attrs)) {
+            if (attrs[[l]][["attributeName"]] == df$columns[k]) {
+
+              #extract that attribute
+              attr_add_missing <- attrs[[l]]
+
+              # if it already has a missing value code, ask before replacing:
+              if (!is.null(attr_add_missing[["missingValueCode"]])) {
+                if (force == FALSE) {
+                  cat("File ", crayon::blue$bold(files[i]),
+                      " column ", crayon::blue$bold(df$columns[k]),
+                      " already has a missing value code.\n", sep ="")
+                  cat("Would you like to replace it?\\n")
+                  var1 <- .get_user_input() #1 = yes, 2 = no
+                  if (var1 = 2) { next } # Skip this column
+                }
+              }
+
+              #add/replace the missing value codes:
+              attr_add_missing$missingValueCode <- list(
+                code = df$codes[k],
+                codeExplantion = df$definitions[k])
+
+              #put new attr_add_missing back into attrs:
+              attrs[[l]] <- attr_add_missing
+            }
+          }
+        }
+        # put new attrs back into data_tbl:
+
+      }
+    }
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
