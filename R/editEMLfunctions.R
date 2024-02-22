@@ -2352,13 +2352,14 @@ set_creator_order <- function(eml_object,
 #'
 #' @description Missing data must have a missing data code and missing data code definition. `set_missing_data()` can add a single missing value code and single missing value code definition. Missing data should be clearly indicated in the data with a missing data code (i.g "NA", "NaN", "Missing", "blank" etc.). It is generally a good idea to not use special characters for missing data codes (e.g. N/A is not advised). If it is absolutely necessary to leave a cell empty with no code, that cell still needs a missing value code and definition in the metadata. Acceptable codes in this case are "empty" and "blank" with a suitable definition that states the cells are purposefully left empty.
 #'
-#' @details The `set_missing_data()` function can take a list of files, column names, codes, and definitions. Make sure that each missing value has a filename, column, single code, and single definition associated with it (if you need multiple missing value codes and definitions per column, please use the `set_more_missing()` function). Make sure that the orders for you match up. If you have many missing value codes and definitions, you might consider constructing a dataframe to describe them:
+#' @details The `set_missing_data()` be used on an individual column or can accept lists of files, column names, codes, and definitions. Make sure that each missing value has a file, column, single code, and single definition associated with it (if you need multiple missing value codes and definitions per column, please use the `set_more_missing()` function). If you have many missing value codes and definitions, you might consider constructing (or import) a dataframe to describe them:
 #'
-#' df <- data.frame(files   = c("table1.csv",
-#'                                  "table1.csv",
+#' Example data frame:
+#' df <- data.frame(files       = c("table1.csv",
 #'                                  "table2.csv",
-#'                                  "table3.csv"),
-#'                  columns     = c("eventDate",
+#'                                  "table3.csv",
+#'                                  "table4.csv"),
+#'                  columns     = c("EventDate",
 #'                                  "scientificName",
 #'                                  "eventID",
 #'                                  "decimalLatitude"),
@@ -2368,25 +2369,41 @@ set_creator_order <- function(eml_object,
 #'                                  "not recorded",
 #'                                  "intentionally left blank - not recorded"))
 #'
-#' meta2 <- set_missing_data(metadata,
-#'                           df$filenames,
-#'                           df$columns,
-#'                           df$codes,
-#'                           df$definitions)
+#' meta2 <- set_missing_data(eml_object = metadata,
+#'                           files = df$files,
+#'                           columns = df$columns,
+#'                           codes = df$codes,
+#'                           definitions = df$definitions)
 #'
 #'
-#' @param eml_object
-#' @param filenames
-#' @param columns
-#' @param codes
-#' @param definitions
-#' @param force
-#' @param NPS
+#' @inheritParams set_title
+#' @param filenames String or List of strings. These are the files that contain undocumented missing data, e.g "my_data_file1.csv".
+#' @param columns String or List of strings. These are the columns with missing data for which you would like to add missing data codes and explanations in to the metadata, e.g. "scientificName".
+#' @param codes String or list of strings. These are the missing value codes you would like associated with the column in question, e.g. "missing" or "NA".
+#' @param definitions String or list of strings. These are the missing value code definitions associated with the missing value codes, e.g "not recorded" or "sample damaged when the lab flooded".
 #'
-#' @return
+#' @return eml_object
 #' @export
 #'
 #' @examples
+#' #' \dontrun{
+#' For a single column of data in a single file:
+#' meta2 <- set_missing_data(my_metadata,
+#'                           "table1.csv",
+#'                           "scientificName",
+#'                           "NA",
+#'                           "Unable to identify")
+#'
+#' For multiple columns of data, potentially across multiple files:
+#' (blank cells must have the missing value code of "blank" or "empty")
+#' meta2 <- set_missing_data(my_metadata,
+#'                          files = c("table1.csv", "table1.csv", "table2.csv"),
+#'                          columns = c("date", "time", "scientificName"),
+#'                          codes = c("NA", "missing", "blank"),
+#'                          definitions = c("date not recorded",
+#'                                          "time not recorded",
+#'                                          "intentionally left blank - unable to identify))
+#'
 set_missing_data <- function(eml_object,
                              files,
                              columns,
@@ -2407,15 +2424,12 @@ set_missing_data <- function(eml_object,
   }
   #tun user input into a dataframe for easier manipulation later on:
   user_df <- data.frame(files, columns, codes, definitions)
-
   #get dataTable from metadata
   data_tbl <- eml_object$dataset$dataTable
   # If there's only one csv, data_tbl ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
   if ("attributeList" %in% names(data_tbl)) {
     data_tbl <- list(data_tbl)
   }
-  #
-
   #get the attribute list for each file:
   for (i in seq_along(unique(files))) {
     for(j in seq_along(data_tbl)) {
@@ -2425,45 +2439,49 @@ set_missing_data <- function(eml_object,
         if (!is.null(names(attrs))) {
           attrs <- list(attrs)
         }
-
         #get the new missing codes for that file:
         df <- user_df[which(user_df$files == files[i]),]
-
         #find the correct attribute for each column:
         for (k in seq_along(df$columns)) {
           for (l in seq_along(attrs)) {
             if (attrs[[l]][["attributeName"]] == df$columns[k]) {
-
-              #extract that attribute
+              #extract that specific attribute
               attr_add_missing <- attrs[[l]]
-
               # if it already has a missing value code, ask before replacing:
               if (!is.null(attr_add_missing[["missingValueCode"]])) {
                 if (force == FALSE) {
                   cat("File ", crayon::blue$bold(files[i]),
                       " column ", crayon::blue$bold(df$columns[k]),
                       " already has a missing value code.\n", sep ="")
-                  cat("Would you like to replace it?\\n")
+                  cat("Would you like to replace it?\n")
                   var1 <- .get_user_input() #1 = yes, 2 = no
-                  if (var1 = 2) { next } # Skip this column
+                  if (var1 == 2) { next } # Skip this column
                 }
               }
-
               #add/replace the missing value codes:
               attr_add_missing$missingValueCode <- list(
                 code = df$codes[k],
-                codeExplantion = df$definitions[k])
-
+                codeExplanation = df$definitions[k])
               #put new attr_add_missing back into attrs:
               attrs[[l]] <- attr_add_missing
             }
           }
         }
         # put new attrs back into data_tbl:
-
+        data_tbl[[j]][["attributeList"]][["attribute"]] <- attrs
       }
     }
+    # put new data_tbl back into EML:
+    eml_object$dataset$dataTable <- data_tbl
   }
+  #add NPS publisher & for or by nps
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadataa
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
 }
 
 
