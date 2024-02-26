@@ -1,5 +1,9 @@
 # EMLeditor v0.1.4
 
+## 2024-02-22
+  * Added function `set_missing_data()` which allows users to add missing data codes and missing data code definitions to metadata.
+  * Added utility functions `.get_user_input()` and `.get_user_input3()`. Refactored all set_ class functions to use these sub-functions rather than readlines() to get user input.
+
 ## 2024-02-13
   * Deprecated `set_cui()` in favor of `set_cui_dissem()`, which does the exact same thing as `set_cui()` but the function name has been updated to distinguish the action of the function from the newly added `set_cui_code()` function.
   * Updated the publisher contact email in `set_npspublisher()` from irma@nps.gov to nrss_datastore@nps.gov to reflect DataStore changes in the contact email address.
