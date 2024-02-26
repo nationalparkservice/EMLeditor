@@ -237,7 +237,7 @@ globalVariables(c("UnitCode",
 
 #' Get Binary User Input
 #'
-#' Gets and returns binary user input (1 or 2)
+#' Prompts for, gets, and returns binary user input (1 or 2)
 #'
 #' @return Factor. 1 or 2.
 #'
@@ -250,6 +250,15 @@ globalVariables(c("UnitCode",
   return(var1)
 }
 
+#' Get open ended user input
+#'
+#' @description Does not prompt for user input. Takes any user input supplied and returns it.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 .get_user_input3 <- function() {
   var1 <- readline(prompt = (""))
+  return(var1)
 }
