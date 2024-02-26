@@ -1,15 +1,22 @@
 good_dir <- here::here("tests", "testthat", "good")
 bad_dir <- here::here("tests", "testhat", "bad")
 
+
+
+
+
 #load datasets etc to to test functions with
 BICY_EMLed_meta <- EML::read_eml(here::here("tests",
-                                            "testthat", "good", "BICY",
+                                            "testthat",
+                                            "good",
+                                            "BICY",
                                             "BICY_EMLeditor_metadata.xml"),
                                  from="xml")
-BUIS_meta <- EML::read_eml(here::here("tests", "testthat", "good", "BUIS",
-                                      "BUIS_metadata.xml"),
-                           from="xml")
-BUIS_EMLed_meta <- EML::read_eml(here::here("tests", "testthat", "good", "BUIS",
+
+BUIS_EMLed_meta <- EML::read_eml(here::here("tests",
+                                            "testthat",
+                                            "good",
+                                            "BUIS_Herps_test",
                                             "BUIS_EMLeditor_metadata.xml"),
                                  from="xml")
 
@@ -23,15 +30,30 @@ test_that("set_title works on valid eml", {
 
 
 # ---- set_doi ----
-test_that("set_doi works on valid eml", {
+test_that("set_doi adds doi on valid eml", {
   # No existing DOI
-  doi <- "fakedoi"
-  new_meta_doi <- set_doi(BICY_meta, doi, force=TRUE)
+  doi <- "1234567"
+  new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=TRUE)
   expect_match(new_meta_doi$dataset$alternateIdentifier, doi)
+}
+)
 
+test_that("set_doi returns valid eml, interactive mode on", {
+  doi <- "1234567"
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=TRUE)
+    validation <- EML::eml_validate(new_meta_doi)
+    expect_equal(validation[1], TRUE)
+    })
+})
+
+test_that("set_doi works on eml with a valid doi", {
+  doi <- "1234567"
+  new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=TRUE) #add a doi
   # Replace previously existing DOI
-  another_doi <- "anotherfakedoi"
-  new_meta_replace_doi <- set_doi(new_meta_doi, doi, force=TRUE)
+  another_doi <- "7654321"
+  new_meta_replace_doi <- set_doi(new_meta_doi, another_doi, force=TRUE)
   expect_match(new_meta_replace_doi$dataset$alternateIdentifier, another_doi)
 }
 )
@@ -50,3 +72,69 @@ test_that("set_content_units works on valid eml", {
   expect_true("NPS Content Unit Link: PARA" %in% geo_desc)
 }
 )
+
+# ----- test set_missing_data ----
+
+test_that("set_missing_data retruns valid EML, interactive1", {
+return_val_1 <- function() {1}
+local({mockr::local_mock(.get_user_input = return_val_1)
+
+  x <- set_missing_data(eml_object = BICY_EMLed_meta,
+                   file = "Mini_BICY_Veg_Transect_Cleaned.csv",
+                   columns = "scientificName",
+                   codes = "NA",
+                   definitions = "unidentifiable",
+                   force = FALSE,
+                   NPS = TRUE)
+  validation <- EML::eml_validate(x)
+  expect_equal(validation[1], TRUE)
+  })
+
+})
+
+test_that("set_missing_data retruns valid EML, interactive2", {
+  return_val_1 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+
+    x <- set_missing_data(eml_object = BICY_EMLed_meta,
+                          file = "Mini_BICY_Veg_Transect_Cleaned.csv",
+                          columns = "scientificName",
+                          codes = "NA",
+                          definitions = "unidentifiable",
+                          force = FALSE,
+                          NPS = TRUE)
+    validation <- EML::eml_validate(x)
+    expect_equal(validation[1], TRUE)
+  })
+
+})
+
+test_that("set_missing_data retruns valid EML, scripting method", {
+  x <- set_missing_data(eml_object = BICY_EMLed_meta,
+                        file = "Mini_BICY_Veg_Transect_Cleaned.csv",
+                        columns = "scientificName",
+                        codes = "NA",
+                        definitions = "unidentifiable",
+                        force = TRUE,
+                        NPS = TRUE)
+  validation <- EML::eml_validate(x)
+  expect_equal(validation[1], TRUE)
+})
+
+test_that("set_missing_data handles vectorized input", {
+  x <- set_missing_data(eml_object = BICY_EMLed_meta,
+                        file = c("Mini_BICY_Veg_Transect_Cleaned.csv",
+                                 "Mini_BICY_Veg_Transect_Cleaned.csv",
+                                 "Mini_BICY_Veg_Geography.csv"),
+                        columns = c("scientificName",
+                                    "vernacularName",
+                                    "parkID"),
+                        codes = c("NA", "NA", "empty"),
+                        definitions = c("Not recorded",
+                                        "Not recorded",
+                                        "Intentionally blank - database error"),
+                        force = TRUE,
+                        NPS = TRUE)
+  validation <- EML::eml_validate(x)
+  expect_equal(validation[1], TRUE)
+})
