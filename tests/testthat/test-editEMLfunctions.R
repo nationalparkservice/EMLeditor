@@ -25,8 +25,37 @@ test_that("set_title works on valid eml", {
   title <- "Test Title"
   new_meta <- set_title(BICY_EMLed_meta, title, force=TRUE)
   expect_equal(new_meta$dataset$title, title)
-}
-)
+})
+
+
+test_that("set_title does not change title if user says not to", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+
+    title <- "Test Title"
+    new_meta <- set_title(BICY_EMLed_meta, title, force = FALSE, NPS = FALSE)
+
+    expect_equal(new_meta$dataset$title, BICY_EMLed_meta$dataset$title)
+  })
+})
+
+test_that("set_title changes if users says to change", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+
+    title <- "Test Title"
+    new_meta <- set_title(BICY_EMLed_meta, title, force = FALSE, NPS = FALSE)
+
+    expect_equal(new_meta$dataset$title, title)
+      })
+})
+
+test_that("set_title produces valid EML when title is changed", {
+  title <- "Test Title"
+  new_meta <- set_title(BICY_EMLed_meta, title, force=TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
 
 
 # ---- set_doi ----
