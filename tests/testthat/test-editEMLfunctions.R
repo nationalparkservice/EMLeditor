@@ -59,7 +59,7 @@ test_that("set_title produces valid EML when title is changed", {
 
 
 # ---- set_doi ----
-test_that("set_doi adds doi on valid eml", {
+test_that("set_doi adds doi on valid eml, scripting route", {
   # No existing DOI
   doi <- "1234567"
   new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=TRUE)
@@ -71,7 +71,7 @@ test_that("set_doi returns valid eml, interactive mode on", {
   doi <- "1234567"
   return_val_1 <- function() {1}
   local({mockr::local_mock(.get_user_input = return_val_1)
-    new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=TRUE)
+    new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=FALSE)
     validation <- EML::eml_validate(new_meta_doi)
     expect_equal(validation[1], TRUE)
     })
@@ -84,8 +84,19 @@ test_that("set_doi works on eml with a valid doi", {
   another_doi <- "7654321"
   new_meta_replace_doi <- set_doi(new_meta_doi, another_doi, force=TRUE)
   expect_match(new_meta_replace_doi$dataset$alternateIdentifier, another_doi)
-}
-)
+})
+
+test_that("set_doi does not replace doi when user says not to", {
+  doi <- "1234567"
+  new_meta_doi <- set_doi(BICY_EMLed_meta, doi, force=TRUE) #add a doi
+  # do not Replace previously existing DOI
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta_doi2 <- set_doi(new_meta_doi, doi, force=FALSE)
+    expect_equal(new_meta_doi2$dataset$alternateIdentifier,
+                 new_meta_doi$dataset$alternateIdentifier)
+  })
+})
 
 # ---- set_content_units ----
 test_that("set_content_units works on valid eml", {
