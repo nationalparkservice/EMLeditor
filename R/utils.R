@@ -170,7 +170,7 @@ globalVariables(c("UnitCode",
     error = function(e) {
       message(
         paste0(crayon::bold$red(unit_code),
-               " is not a valid park unit. Please supply valid park units"))
+               " is not a valid park unit. Please supply valid park units."))
     }
     )
   return(park_polygon)
