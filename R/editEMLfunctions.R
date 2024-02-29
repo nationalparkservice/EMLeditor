@@ -205,16 +205,13 @@ set_content_units <- function(eml_object, park_units,
   # test whether park units are actually park units:
   null_units <- NULL
   for(i in seq_along(park_units)){
-    is_unit <- .get_unit_polygon(park_units[i])
+    is_unit <- .get_unit_polygon(park_units[i]) #
     null_units <- append(null_units, is_unit)
   }
-  # if any park unit is not valid, an exit function.
-  if(!identical(seq_along(null_units), seq_along(park_units))){
-    if (force == FALSE) {
-      cat("Some of the park units you supplied are not in the park unit list.")
-    }
+  if (is.null(null_units)) {
     return()
   }
+
   # add text to indicate that these are park unit connections.
   units <- paste0("NPS Content Unit Link: ", park_units)
   #generate new geographic coverage for NPS Content Unit Links:
