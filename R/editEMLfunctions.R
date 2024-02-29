@@ -490,7 +490,7 @@ set_cui_code <- function(eml_object,
 
     # scripting route:
     if (force == TRUE) {
-      #what is [[seq]]?
+      #what is [[seq]]? It works but...
       eml_object$additionalMetadata[[seq]] <- my_cui
     }
 
