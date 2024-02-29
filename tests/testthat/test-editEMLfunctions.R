@@ -27,7 +27,6 @@ test_that("set_title works on valid eml", {
   expect_equal(new_meta$dataset$title, title)
 })
 
-
 test_that("set_title does not change title if user says not to", {
   return_val_2 <- function() {2}
   local({mockr::local_mock(.get_user_input = return_val_2)
@@ -101,17 +100,174 @@ test_that("set_doi does not replace doi when user says not to", {
 # ---- set_content_units ----
 test_that("set_content_units works on valid eml", {
   new_units <- c("JOTR", "DEVA")
-  new_meta <- set_content_units(BICY_meta, new_units, force=TRUE)
+  new_meta <- set_content_units(BICY_EMLed_meta, new_units, force=TRUE)
   geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
   expect_true(all(c("NPS Content Unit Link: JOTR", "NPS Content Unit Link: DEVA") %in% geo_desc))
+})
 
+test_that("set_content_units works with a single input", {
   # Try it with a single unit that is not a capital-P park
   new_units <- c("PARA")
-  new_meta <- set_content_units(new_meta, new_units, force=TRUE)
+  new_meta <- set_content_units(BICY_EMLed_meta, new_units, force=TRUE)
   geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
   expect_true("NPS Content Unit Link: PARA" %in% geo_desc)
-}
+})
+
+test_that("set_content_units retains input when told to", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input3 = return_val_1)
+    new_units <- c("PARA")
+    new_meta <- set_content_units(BICY_EMLed_meta,
+                                  new_units,
+                                  force = TRUE)
+    new_meta2 <- set_content_units(new_meta,
+                                   "YELL",
+                                   force = FALSE)
+    geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
+    expect_false("NPS Content Unit Link: YELL" %in% geo_desc)
+  })
+})
+
+test_that("set_content_units adds input when told to", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input3 = return_val_1)
+    new_units <- c("PARA")
+    new_meta <- set_content_units(BICY_EMLed_meta,
+                                  new_units,
+                                  force = TRUE)
+    new_meta2 <- set_content_units(new_meta,
+                                   "YELL",
+                                   force = FALSE)
+    geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
+    expect_true("NPS Content Unit Link: YELL" %in% geo_desc)
+  })
+})
+
+test_that("set_content_units replaces input when told to", {
+  return_val_3 <- function() {3}
+  local({mockr::local_mock(.get_user_input3 = return_val_3)
+    new_units <- c("PARA")
+    new_meta <- set_content_units(BICY_EMLed_meta,
+                                  new_units,
+                                  force = TRUE)
+    new_meta2 <- set_content_units(new_meta,
+                                   "YELL",
+                                   force = FALSE)
+    geo_desc <- arcticdatautils::eml_get_simple(new_meta2, "geographicDescription")
+    expect_true("NPS Content Unit Link: YELL" %in% geo_desc)
+  })
+})
+
+test_that("set_content_units works on valid eml", {
+  new_units <- c("JOTR", "DEVA")
+  new_meta <- set_content_units(BICY_EMLed_meta, new_units, force=TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_content_units produces valid EML with a single input", {
+  # Try it with a single unit that is not a capital-P park
+  new_units <- c("PARA")
+  new_meta <- set_content_units(BICY_EMLed_meta, new_units, force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_content_units returns null for invalid park unit", {
+  new_units <- c("TRBX")
+  x <- set_content_units(BICY_EMLed_meta, new_units, force = TRUE)
+  expect_equal(is.null(x), TRUE)
+})
+
+# ----- test set_cui_code ----
+
+test_that("set_cui_code returns valid EML", {
+  cui <- "NOCON"
+  new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_cui_code updates CUI code in EML", {
+  cui <- "NOCON"
+  new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = TRUE)
+  x <- get_cui(new_meta)
+  expect_equal(x, "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
+})
+
+test_that("set_cui_code updates when requested", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+     cui <- "NOCON"
+     new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = FALSE)
+     x <- get_cui(new_meta)
+     expect_equal(x,
+                  "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
+   })
+})
+
+test_that("set_cui_code does not update when requested not to", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    cui <- "NOCON"
+    new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = FALSE)
+    x <- get_cui(new_meta)
+    expect_equal(x,
+                 "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
 )
+  })
+})
+
+# ----- test set_cui ------ DEPRECATED
+test_that("set_cui is deprecated", {
+  rlang::local_options(lifecycle_verbosity = "error")
+  cui <- "NOCON"
+  expect_error(set_cui(BICY_EMLed_meta,
+                       cui_code = cui,
+                       force = TRUE),
+               class = "defunctError")
+})
+
+test_that("set_cui returns valid EML", {
+  cui <- "NOCON"
+  new_meta <- suppressWarnings(set_cui(BICY_EMLed_meta,
+                                       cui_code = cui,
+                                       force = TRUE))
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_cui updates CUI code in EML", {
+  cui <- "NOCON"
+  new_meta <- suppressWarnings(set_cui_code(BICY_EMLed_meta,
+                                            cui_code = cui,
+                                            force = TRUE))
+  x <- get_cui(new_meta)
+  expect_equal(x, "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
+})
+
+test_that("set_cui updates when requested", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    cui <- "NOCON"
+    new_meta <- suppressWarnings(set_cui_code(BICY_EMLed_meta,
+                                              cui_code = cui,
+                                              force = FALSE))
+    x <- get_cui(new_meta)
+    expect_equal(x,
+                 "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
+  })
+})
+
+test_that("set_cui does not update when requested not to", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    cui <- "NOCON"
+    new_meta <- suppressWarnings(set_cui_code(BICY_EMLed_meta,
+                                              cui_code = cui,
+                                              force = FALSE))
+    x <- get_cui(new_meta)
+    expect_equal(x,
+                 "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
+    )
+  })
+})
 
 # ----- test set_missing_data ----
 
@@ -133,8 +289,8 @@ local({mockr::local_mock(.get_user_input = return_val_1)
 })
 
 test_that("set_missing_data retruns valid EML, interactive2", {
-  return_val_1 <- function() {2}
-  local({mockr::local_mock(.get_user_input = return_val_1)
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
 
     x <- set_missing_data(eml_object = BICY_EMLed_meta,
                           file = "Mini_BICY_Veg_Transect_Cleaned.csv",
