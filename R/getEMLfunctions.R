@@ -405,9 +405,52 @@ get_content_units <- function(eml_object) {
   return(list_units)
 }
 
+#' returns a CUI dissemination code statement
+#'
+#' @description `get_cui_code()` returns an English-language translation of the CUI dissemination codes. It supersedes `get_cui()`, which has been deprecated.
+#'
+#' @details `get_cui_code()` accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return a text string
+#' @export
+#' @examples
+#' \dontrun{
+#' get_cui(eml_object)
+#' }
+get_cui_code <- function(eml_object) {
+  cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
+  if (is.null(cui)) {
+    cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
+    cui <- "No CUI specified."
+  } else if (cui == "FED ONLY") {
+    cui <- "Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)."
+  } else if (cui == "FEDCON") {
+    cui <- "Contains CUI. Only federal employees and federal contractors should have access (also very much like current \"internal only\" setting in DataStore)."
+  } else if (cui == "DL ONLY") {
+    cui <- "Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)."
+  } else if (cui == "NOCON") {
+    cui <- "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot."
+  } else if (cui == "PUBVER") {
+    cui <- "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
+  } else if (cui == "PUBFUL") {
+    cui <- "Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
+  } else if (cui == "PUBLIC") {
+    cui <- "Does NOT contain CUI"
+  }
+  else {
+    warning("CUI not properly specified. Use set_cui() to update the CUI code.")
+    cui <- NA
+  }
+  return(cui)
+}
+
 #' returns a CUI statement
 #'
-#' @description `get_cui()` returns an English-language translation of the CUI codes
+#' @description
+#' #' `r lifecycle::badge("deprecated")`
+#' Deprecated in favor of `get_cui_code()`. `get_cui()` returns an English-language translation of the CUI codes
 #'
 #' @details `get_cui()` accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
 #'
@@ -420,6 +463,9 @@ get_content_units <- function(eml_object) {
 #' get_cui(eml_object)
 #' }
 get_cui <- function(eml_object) {
+  #add in deprecation
+  lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_dissem()")
+
   cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
   if (is.null(cui)) {
     cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
