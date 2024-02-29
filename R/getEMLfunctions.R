@@ -492,6 +492,27 @@ get_cui <- function(eml_object) {
   return(cui)
 }
 
+#' Returns the CUI marking
+#'
+#' @description
+#' For data with controlled unclassified information (CUI), `get_cui_marking()` eturns the specific marking and the english language explanation of the marking. For data without CUI, it informs that there is no CUI and returns the code "PUBLIC".
+#'
+#' @details
+#' CUI markings are defined by the U.S. National Archives (nara.gov). NPS users can designate one of three CUI markings, plus the code "PUBLIC" (essentially, no marking necessary). The three markings are: SP-NPSR, SP-HISTP or SP-ARCHR.
+#' For more information on CUI markings, please visit the [CUI Markings](https://www.archives.gov/cui/registry/category-marking-list) list maintained by the National Archives.
+#'
+#'
+##' @inheritParams get_begin_date
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_cui_marking <- function(eml_object) {
+
+
+}
+
 
 #' displays file names, sizes, and descriptions
 #'
