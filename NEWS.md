@@ -1,5 +1,8 @@
 # EMLeditor v0.1.4
 
+## 2024-02-29
+  * Add function `get_cui_code()`. Deprecate function `get_cui()`.
+
 ## 2024-02-22
   * Added function `set_missing_data()` which allows users to add missing data codes and missing data code definitions to metadata.
   * Added utility functions `.get_user_input()` and `.get_user_input3()`. Refactored all set_ class functions to use these sub-functions rather than readlines() to get user input.
