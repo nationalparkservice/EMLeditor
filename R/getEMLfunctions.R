@@ -504,13 +504,62 @@ get_cui <- function(eml_object) {
 #'
 ##' @inheritParams get_begin_date
 #'
-#' @return
+#' @return String (invisibly)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' get_cui_marking(eml_object)
+#' }
 get_cui_marking <- function(eml_object) {
+  # get existing additionalMetadata elements:
+  add_meta <- eml_object$additionalMetadata
 
+  #get location of CUI markings from addtiional metadata
+  y <- NULL
+  for (i in 1:length(seq_along(add_meta))) {
+    if(names(add_meta[[i]][["metadata"]]) == "CUImarking") {
+      y <- i
+      break
+    }
+  }
+  #if there is not yet any CUI marking:
+  if (is.null(y)) {
+    cat("Your metadata do not yet contain a CUI marking.\n")
+    cat("Please use ",
+        crayon::green$bold("set_cui_marking"),
+        " to add the appropriate CUI marking to your metadata.",
+        sep = "")
+    return(invisible())
+  }
 
+  #if CUI marking exists:
+  if (!is.null(y)) {
+    #get existing CUI marking:
+    existing_cui_marking <- add_meta[[y]][["metadata"]][["CUImarking"]]
+    if(existing_cui_marking == "PUBLIC") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue("PUBLIC"),
+                    ". This means the data do not contain CUI.")
+    } else if (existing_cui_marking == "SP-NPSR") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue$bold(existing_cui_marking),
+                    ". This means .....")
+    } else if (existing_cui_marking == "SP-HISTP") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue$bold(existing_cui_marking),
+                    ". This means .....")
+    } else if (existing_cui_marking == "SP-ARCHR") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue$bold(existing_cui_marking),
+                    ". This means . . .. ")
+    } else {
+      warning("CUI marking is not properly set. Please use set_cui_marking to fix it.")
+      msg <- NA
+    }
+  }
+  cat(msg)
+  return(invisible(msg))
 }
 
 
