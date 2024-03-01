@@ -544,15 +544,24 @@ get_cui_marking <- function(eml_object) {
     } else if (existing_cui_marking == "SP-NPSR") {
       msg <- paste0("Your CUI marking is set to ",
                     crayon::blue$bold(existing_cui_marking),
-                    ". This means .....")
+                    ". This means the CUI in the data is related to",
+                    " information concerning the nature and specific location",
+                    " of a National Park System resource that is endangered, ",
+                    "threatened, rare, or commercially valuable, of mineral",
+                    " or paleontological objects within System units, or of",
+                    " objects of cultural patrimony within System unit")
     } else if (existing_cui_marking == "SP-HISTP") {
       msg <- paste0("Your CUI marking is set to ",
                     crayon::blue$bold(existing_cui_marking),
-                    ". This means .....")
+                    ". This means the CUI in the data is related to the",
+                    " location character, or ownership of historic property.")
     } else if (existing_cui_marking == "SP-ARCHR") {
       msg <- paste0("Your CUI marking is set to ",
                     crayon::blue$bold(existing_cui_marking),
-                    ". This means . . .. ")
+                    ". This means the CUI in the data is related to ",
+                    "information about the nature and location of any",
+                    " archaeological resource for which the excavation or",
+                    " removal requires a permit or other permission.")
     } else {
       warning("CUI marking is not properly set. Please use set_cui_marking to fix it.")
       msg <- NA
