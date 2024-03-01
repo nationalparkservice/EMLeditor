@@ -2,6 +2,7 @@
 
 ## 2024-02-29
   * Add function `get_cui_code()`. Deprecate function `get_cui()`.
+  * Add function `get_cui_marking()`.
 
 ## 2024-02-22
   * Added function `set_missing_data()` which allows users to add missing data codes and missing data code definitions to metadata.
