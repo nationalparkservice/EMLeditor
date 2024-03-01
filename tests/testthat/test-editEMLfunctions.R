@@ -55,8 +55,6 @@ test_that("set_title produces valid EML when title is changed", {
   expect_equal(EML::eml_validate(new_meta)[1], TRUE)
 })
 
-
-
 # ---- set_doi ----
 test_that("set_doi adds doi on valid eml, scripting route", {
   # No existing DOI
@@ -268,6 +266,34 @@ test_that("set_cui does not update when requested not to", {
     )
   })
 })
+
+# ----- test set_cui_marking ----
+
+test_that("set_cui_marking returns valid EML", {
+  marking <- "PUBLIC"
+  code <- "PUBLIC"
+  new_meta <- set_cui_code(BICY_EMLed_meta,
+                           cui_code = code,
+                           force = TRUE)
+  new_meta2 <- set_cui_marking(new_meta,
+                               cui_marking = marking,
+                               force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_cui_marking adds CUI marking to EML", {
+  code <- "PUBLIC"
+  marking <- "PUBLIC"
+  new_meta <- (set_cui_code(BICY_EMLed_meta,
+                            cui_code = code,
+                            force = TRUE))
+  new_meta2 <- set_cui_marking(new_meta,
+                               cui_marking = marking,
+                               force = TRUE)
+  new_marking <- get_cui_marking(new_meta2)
+  expect_equal(new_marking, "Your CUI marking is set to PUBLIC. This means the data do not contain CUI.")
+})
+
 
 # ----- test set_missing_data ----
 
