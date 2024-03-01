@@ -696,7 +696,7 @@ set_cui_marking <- function (eml_object,
 
   #if no CUI dissemination code exit the function; warn if force == FALSE
   if (is.null(x)) {
-    if (force == TRUE) {
+    if (force == FALSE) {
       cat("Your metadata does not contain a CUI dissemination code.")
       cat("Use ",
           crayon::bold$green("set_cui_code()"),
@@ -715,35 +715,37 @@ set_cui_marking <- function (eml_object,
     }
   }
 
-  existing_cui_marking <- add_meta[[y]][["metadata"]][["CUImarking"]]
+  #if CUI marking already exists:
+  if (!is.null(y)) {
+    #get existing CUI marking:
+    existing_cui_marking <- add_meta[[y]][["metadata"]][["CUImarking"]]
 
-  #don't replace an existing CUI marking with the same marking
-  if (!is.null(y) && existing_cui_marking == cui_marking) {
-    if (force == FALSE) {
-      cat("Your metadata already have an existing CUI marking of ",
-          crayon::bold$blue(existing_cui_marking),
-      ".\n",
-      sep = "")
-      cat("Your metadata CUI marking was not updated.\n")
-    }
-    return()
-  }
-
-  #if CUI markings already exist, ask if they should be replaced/changed?
-  if (!is.null(y) & force == FALSE) {
-    cat("Your metadata already contains the CUI marking: ",
-        crayon::blue$bold(existing_cui_marking),
-        ".\n",
-        sep = "")
-      cat("Are you sure you want to change it?\n")
-      var1 <- .get_user_input()
-    if (var1 == 2) {
-      cat("Your original CUI marking has been retained")
+    #don't replace an existing CUI marking with the same marking
+    if (existing_cui_marking == cui_marking) {
+      if (force == FALSE) {
+        cat("Your metadata already have an existing CUI marking of ",
+            crayon::bold$blue(existing_cui_marking),
+            ".\n",
+            sep = "")
+        cat("Your metadata CUI marking was not updated.\n")
+      }
       return()
     }
 
+  #if CUI markings already exist, ask if they should be replaced/changed?
+    if (force == FALSE) {
+      cat("Your metadata already contains the CUI marking: ",
+          crayon::blue$bold(existing_cui_marking),
+          ".\n",
+          sep = "")
+      cat("Are you sure you want to change it?\n")
+      var1 <- .get_user_input()
+      if (var1 == 2) {
+        cat("Your original CUI marking has been retained")
+        return()
+      }
+    }
   }
-
   #extract CUI dissemination code
   cui <- add_meta[[x]][["metadata"]][["CUI"]]
 
