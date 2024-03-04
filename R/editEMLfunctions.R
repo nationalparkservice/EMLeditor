@@ -236,6 +236,7 @@ set_content_units <- function(eml_object, park_units,
   }
   # get geographic coverage from eml_object
   doc <- eml_object$dataset$coverage$geographicCoverage
+
   # Are there content unit links already specified?
   exist_units <- NULL
   for (i in seq_along(doc)) {
@@ -262,14 +263,14 @@ set_content_units <- function(eml_object, park_units,
       # if there is only one geo coverage:
       if (length(seq_along(doc[[1]])) == 1) {
         geocov2 <- EML::eml$geographicCoverage(
-          geographicDescription =
-            doc$geographicDescription,
-          boundingCoordinates =
-            doc$boundingCoordinates
+        geographicDescription =
+          doc$geographicDescription,
+        boundingCoordinates =
+          doc$boundingCoordinates
         )
         # add park unit connections and existing geo coverage (park units always on top!)
         unit_list<-append(unit_list, list(geocov2))
-        #insert into EML:
+      #insert into EML:
         eml_object$dataset$coverage$geographicCoverage <- unit_list
         #eml_object$dataset$coverage$geographicCoverage <- list(unit_list, (geocov2))
       }
@@ -348,7 +349,7 @@ set_content_units <- function(eml_object, park_units,
 
         for (i in seq_along(doc)) {
           if (suppressWarnings(
-            stringr::str_detect(doc[[i]][2],
+            stringr::str_detect(doc[[i]][1],
                                 "NPS Content Unit Link")) == FALSE) {
             no_units <- append(no_units, list(doc[[i]]))
           }
@@ -399,7 +400,7 @@ set_content_units <- function(eml_object, park_units,
       no_units <- NULL
       for (i in seq_along(doc)) {
         if (suppressWarnings(
-          stringr::str_detect(doc[[i]][2],
+          stringr::str_detect(doc[[i]][1],
                               "NPS Content Unit Link")) == FALSE) {
           no_units <- append(no_units, list(doc[[i]]))
         }
@@ -667,6 +668,9 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' eml_object <- set_cui_marking(eml_object, "PUBLIC")
+#' }
 set_cui_marking <- function (eml_object,
                           cui_marking = c("PUBLIC",
                                        "SP-NPSR",
