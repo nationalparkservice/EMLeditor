@@ -121,7 +121,7 @@ test_that("set_content_units retains input when told to", {
     new_meta2 <- set_content_units(new_meta,
                                    "YELL",
                                    force = FALSE)
-    geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
+    geo_desc <- arcticdatautils::eml_get_simple(new_meta2, "geographicDescription")
     expect_false("NPS Content Unit Link: YELL" %in% geo_desc)
   })
 })
@@ -136,7 +136,7 @@ test_that("set_content_units adds input when told to", {
     new_meta2 <- set_content_units(new_meta,
                                    "YELL",
                                    force = FALSE)
-    geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
+    geo_desc <- arcticdatautils::eml_get_simple(new_meta2, "geographicDescription")
     expect_true("NPS Content Unit Link: YELL" %in% geo_desc)
   })
 })
