@@ -484,7 +484,63 @@ test_that("set_abstract does not update abstract when requested not to", {
 
 # ---- test set_additional_info ----
 
+test_that("set_additional_info returns valid EML", {
+  add_info <- "Here is some text for the Notes section on DataStore."
+  new_meta <- set_additional_info(BICY_EMLed_meta,
+                                  additional_info = add_info,
+                                  force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
 
+test_that("set_additinal_info updates additional info", {
+  add_info <- "Here is some text for the Notes section on DataStore."
+  new_meta <- set_additional_info(BICY_EMLed_meta,
+                                  additional_info = add_info,
+                                  force = TRUE)
+  expect_equal(get_additional_info(new_meta), add_info)
+})
+
+test_that("set_additional_info updates additional info when none existed", {
+  add_info <- "Here is some text for the Notes section on DataStore."
+  new_meta <- set_additional_info(BICY_EMLed_meta,
+                                    additional_info = add_info,
+                                    force = FALSE)
+  expect_equal(get_additional_info(new_meta), add_info)
+})
+
+test_that("set_additional_info updates additional info when requested", {
+  add_info <- "Here is some text for the Notes section on DataStore."
+  add_info2 <- "alternate additional info text"
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_additional_info(BICY_EMLed_meta,
+                                    additional_info = add_info,
+                                    force = TRUE)
+    new_meta2 <- set_additional_info(new_meta,
+                                     additional_info = add_info2,
+                                     force = FALSE)
+    expect_equal(get_additional_info(new_meta2),
+                                     add_info2)
+    })
+})
+
+test_that("set_additional_info does not update additional info on request", {
+  add_info <- "Here is some text for the Notes section on DataStore."
+  add_info2 <- "alternate additional info text"
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_additional_info(BICY_EMLed_meta,
+                                    additional_info = add_info,
+                                    force = TRUE)
+    new_meta2 <- set_additional_info(new_meta,
+                                     additional_info = add_info2,
+                                     force = FALSE)
+    expect_equal(get_additional_info(new_meta),
+                 get_additional_info(new_meta2))
+  })
+})
+
+# ----- test set_methods ----
 
 # ----- test set_missing_data ----
 
