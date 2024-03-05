@@ -587,6 +587,53 @@ test_that("set_methods does not update methods when user requests not to", {
 
 # ----- test set_producing_units ----
 
+test_that("set_producing_units returns valid EML", {
+  prod_units <- c("ABCD", "EFGH")
+  new_meta <- set_producing_units(eml_object = BICY_EMLed_meta,
+                                  prod_units = prod_units,
+                                  force = TRUE,
+                                  NPS = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_producing_units updates producing units", {
+  prod_units <- c("ABCD", "EFGH")
+  new_meta <- set_producing_units(eml_object = BICY_EMLed_meta,
+                                  prod_units = prod_units,
+                                  force = TRUE,
+                                  NPS = TRUE)
+  expect_equal(sum(get_producing_units(new_meta) == prod_units), 2)
+})
+
+test_that("set_producing_units updates producing units when requested", {
+  prod_units <- c("ABCD", "EFGH")
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_producing_units(eml_object = BICY_EMLed_meta,
+                                    prod_units = prod_units,
+                                    force = FALSE,
+                                    NPS = TRUE)
+    expect_equal(sum(get_producing_units(new_meta) == prod_units), 2)
+    })
+})
+
+test_that("set_producing_units doesn't update producing units when requested", {
+  prod_units <- c("ABCD", "EFGH")
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_producing_units(eml_object = BICY_EMLed_meta,
+                                    prod_units = prod_units,
+                                    force = FALSE,
+                                    NPS = TRUE)
+    expect_equal(get_producing_units(new_meta),
+                 get_producing_units(BICY_EMLed_meta))
+  })
+})
+
+# ----- test set_language ----
+
+
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
