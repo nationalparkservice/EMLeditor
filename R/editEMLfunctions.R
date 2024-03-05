@@ -759,15 +759,14 @@ set_cui_marking <- function (eml_object,
       msg <- paste0("to choose a CUI marking that coincides",
                     " with your CUI dissemination code or use ")
       cat("Your CUI dissemination code is set to ", cui, ".\n", sep ="")
-      cat("The CUI dissemination code and CUI marking must coincide.",
-          sep= "\n")
+      msg2 <- "The CUI dissemination code and CUI marking must coincide."
       cat("Use ",
           crayon::green$bold("set_cui_marking() "),
           msg,
           crayon::green$bold("set_cui_code()"),
-          " to change your CUI dissemination code.", sep = "")
+          " to change your CUI dissemination code.\n", sep = "")
     }
-    return()
+    return(msg2)
   }
 
   #test that if cui_code is not public, cui_marking is not public.
@@ -776,15 +775,14 @@ set_cui_marking <- function (eml_object,
       msg <- paste0("to choose a CUI marking that coincides",
                     " with your CUI dissemination code or use ")
       cat("Your CUI dissemination code is set to ", cui, ".\n", sep = "")
-      cat("The CUI dissemination code and CUI marking must coincide.",
-          sep = "\n")
+      msg2 <- "The CUI dissemination code and CUI marking must coincide."
       cat("Use ",
           crayon::green$bold("set_cui_marking() "),
           msg,
           crayon::green$bold("set_cui_code()"),
-          " to change your CUI dissemination code.", sep = "")
+          " to change your CUI dissemination code\n.", sep = "")
     }
-    return()
+    return(msg2)
   }
 
   # at this point cui_code and cui_marking coincide
