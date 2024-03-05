@@ -363,14 +363,85 @@ test_that("set_cui_marking doesn't update with identical informatin", {
 
 test_that("set_drr returns valid metadata", {
   new_meta <- set_drr(BICY_EMLed_meta,
-                      12324567,
-                      "Test DRR Title",
+                      drr_ref_id = 12324567,
+                      drr_title = "Test DRR Title",
                       force = TRUE)
   expect_true(EML::eml_validate(new_meta)[1])
 })
 
+test_that("set_drr adds the DRR title to metadata", {
+  title <- "Test DRR Title"
+  new_meta <- set_drr(BICY_EMLed_meta,
+                      drr_ref_id = 12324567,
+                      drr_title = "Test DRR Title",
+                      force = TRUE)
+  expect_equal(title, get_drr_title(new_meta))
+})
 
+test_that("set_drr adds the DRR DOI to metadata", {
+  doi <- 1234567
+  new_meta <- set_drr(BICY_EMLed_meta,
+                      drr_ref_id = doi,
+                      drr_title = "Test DRR Title",
+                      force = TRUE)
+  expect_match(get_drr_doi(new_meta), as.character(doi))
+})
 
+test_that("set_drr adds DRR DOI when requested by user", {
+  title <- "Test DRR Title"
+  doi <- 1234567
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_drr(BICY_EMLed_meta,
+                        drr_ref_id = doi,
+                        drr_title = "Test DRR Title",
+                        force = FALSE)
+    expect_match(get_drr_doi(new_meta), as.character(doi))
+  })
+})
+
+test_that("set_drr adds DRR title when requested by user", {
+  title <- "Test DRR Title"
+  doi <- 1234567
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_drr(BICY_EMLed_meta,
+                        drr_ref_id = doi,
+                        drr_title = "Test DRR Title",
+                        force = FALSE)
+    expect_equal(get_drr_title(new_meta), title)
+  })
+})
+
+test_that("set_drr does not change title when requested not to", {
+  title <- "Test DRR Title"
+  doi <- 1234567
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_drr(BICY_EMLed_meta,
+                        drr_ref_id = doi,
+                        drr_title = "Test DRR Title",
+                        force = FALSE)
+    expect_equal(get_drr_title(BICY_EMLed_meta),
+                 get_drr_title(new_meta))
+    })
+})
+
+test_that("set_drr does not change DRR DOI when requested not to", {
+  title <- "Test DRR Title"
+  doi <- 1234567
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_drr(BICY_EMLed_meta,
+                        drr_ref_id = doi,
+                        drr_title = "Test DRR Title",
+                        force = FALSE)
+    expect_equal(get_drr_doi(BICY_EMLed_meta),
+                 get_drr_doi(new_meta))
+  })
+})
+
+# ---- test set_absract ----
 
 # ----- test set_missing_data ----
 
