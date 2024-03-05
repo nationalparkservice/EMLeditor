@@ -632,7 +632,57 @@ test_that("set_producing_units doesn't update producing units when requested", {
 
 # ----- test set_language ----
 
+test_that("set_language returns valid EML", {
+  language <- "english"
+  new_meta <- set_language(BICY_EMLed_meta,
+                           lang = language,
+                           force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
 
+test_that("set_language adds the language code to metadata", {
+  language <- "english"
+  new_meta <- set_language(BICY_EMLed_meta,
+                           lang = language,
+                           force = TRUE)
+  expect_equal(new_meta[["dataset"]][["language"]], "eng")
+})
+
+test_that("set_language updated language when requested by user", {
+  language <- "spanish"
+  language2 <- "english"
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_language(BICY_EMLed_meta,
+                             lang = language,
+                             force = TRUE)
+    new_meta2 <- set_language(new_meta,
+                              lang = language2,
+                              force = FALSE)
+    expect_equal(new_meta2[["dataset"]][["language"]], "eng")
+  })
+})
+
+test_that("set_language doesn't update language when requested not by user", {
+  language <- "spanish"
+  language2 <- "english"
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_language(BICY_EMLed_meta,
+                             lang = language,
+                             force = TRUE)
+    new_meta2 <- set_language(new_meta,
+                              lang = language2,
+                              force = FALSE)
+    expect_equal(new_meta2[["dataset"]][["language"]], "spa")
+  })
+})
+
+# ---- test set_protocol ----
+
+### This function is not really ready for prime time yet.
+
+# ---- test set_publisher ----
 
 # ----- test set_missing_data ----
 
@@ -650,7 +700,6 @@ local({mockr::local_mock(.get_user_input = return_val_1)
   validation <- EML::eml_validate(x)
   expect_equal(validation[1], TRUE)
   })
-
 })
 
 test_that("set_missing_data retruns valid EML, interactive2", {
