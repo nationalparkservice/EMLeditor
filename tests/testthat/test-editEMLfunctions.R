@@ -443,6 +443,49 @@ test_that("set_drr does not change DRR DOI when requested not to", {
 
 # ---- test set_absract ----
 
+test_that("set_abstract returns valid EML", {
+  new_abstract <- "This is a short test abstract"
+  new_meta <- set_abstract(BICY_EMLed_meta,
+                           abstract = new_abstract,
+                           force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_abstract updates the abstract", {
+  new_abstract <- "This is a short test abstract"
+  new_meta <- set_abstract(BICY_EMLed_meta,
+                           abstract = new_abstract,
+                           force = TRUE)
+  expect_equal(get_abstract(new_meta), new_abstract)
+})
+
+test_that("set abstract updates abstract on request", {
+  new_abstract <- "This is a short test abstract"
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_abstract(BICY_EMLed_meta,
+                             abstract = new_abstract,
+                             force = FALSE)
+    expect_equal(get_abstract(new_meta), new_abstract)
+  })
+})
+
+test_that("set_abstract does not update abstract when requested not to", {
+  new_abstract <- "This is a short test abstract"
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_abstract(BICY_EMLed_meta,
+                             abstract = new_abstract,
+                             force = FALSE)
+    expect_equal(get_abstract(new_meta),
+                 get_abstract(BICY_EMLed_meta))
+  })
+})
+
+# ---- test set_additional_info ----
+
+
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
