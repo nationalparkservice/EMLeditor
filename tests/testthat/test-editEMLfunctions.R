@@ -542,6 +542,51 @@ test_that("set_additional_info does not update additional info on request", {
 
 # ----- test set_methods ----
 
+test_that("set_methods returns valid EML", {
+  new_methods <- "Here are some methods we performed."
+  new_meta <- set_methods(BICY_EMLed_meta,
+                          method = new_methods,
+                          force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_methods updates methods", {
+  new_methods <- "Here are some methods we performed."
+  new_meta <- set_methods(BICY_EMLed_meta,
+                          method = new_methods,
+                          force = TRUE)
+  expect_match(new_methods, get_methods(new_meta)[[1]][[1]][[1]])
+})
+
+test_that("set_methods updates methods upon user request", {
+  new_methods <- "Here are some methods we performed."
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_methods(BICY_EMLed_meta,
+                            method = new_methods,
+                            force = FALSE)
+    expect_match(new_methods, get_methods(new_meta)[[1]][[1]][[1]])
+    })
+})
+
+test_that("set_methods does not update methods when user requests not to", {
+  new_methods <- "Here are some methods we performed."
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_methods(BICY_EMLed_meta,
+                            method = new_methods,
+                            force = FALSE)
+    expect_equal(get_methods(BICY_EMLed_meta),
+                 get_methods(new_meta))
+  })
+})
+
+# ----- test set_lit -----
+
+#### This function is not working yet!
+
+# ----- test set_producing_units ----
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
