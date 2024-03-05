@@ -361,6 +361,17 @@ test_that("set_cui_marking doesn't update with identical informatin", {
 
 # ----- test set_drr -----
 
+test_that("set_drr returns valid metadata", {
+  new_meta <- set_drr(BICY_EMLed_meta,
+                      12324567,
+                      "Test DRR Title",
+                      force = TRUE)
+  expect_true(EML::eml_validate(new_meta)[1])
+})
+
+
+
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
