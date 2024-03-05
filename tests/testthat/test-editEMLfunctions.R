@@ -294,6 +294,72 @@ test_that("set_cui_marking adds CUI marking to EML", {
   expect_equal(new_marking, "Your CUI marking is set to PUBLIC. This means the data do not contain CUI.")
 })
 
+test_that("set_cui_marking updates CUI marking interactively", {
+  code <- "PUBLIC"
+  code2 <- "NOCON"
+  marking <- "PUBLIC"
+  marking2 <- "SP-HISTP"
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+  new_meta <- (set_cui_code(BICY_EMLed_meta,
+                            cui_code = code,
+                            force = TRUE))
+  new_meta2 <- set_cui_marking(new_meta,
+                               cui_marking = marking,
+                               force = FALSE)
+  new_meta3 <- (set_cui_code(BICY_EMLed_meta,
+                            cui_code = code2,
+                            force = TRUE))
+  new_meta4 <- set_cui_marking(new_meta3,
+                               cui_marking = marking2,
+                               force = FALSE)
+  x <- get_cui_marking(new_meta2)
+  expect_equal(x, "Your CUI marking is set to PUBLIC. This means the data do not contain CUI.")
+  })
+})
+
+test_that("set_cui_marking does not update CUI marking when asked not to",
+          {
+  code <- "PUBLIC"
+  code2 <- "NOCON"
+  marking <- "PUBLIC"
+  marking2 <- "SP-HISTP"
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- (set_cui_code(BICY_EMLed_meta,
+                              cui_code = code,
+                              force = TRUE))
+    new_meta2 <- set_cui_marking(new_meta,
+                                 cui_marking = marking,
+                                 force = FALSE)
+    new_meta3 <- (set_cui_code(new_meta3,
+                               cui_code = code2,
+                               force = TRUE))
+    new_meta4 <- set_cui_marking(new_meta3,
+                                 cui_marking = marking2,
+                                 force = FALSE)
+    x <- get_cui_marking(new_meta4)
+    expect_equal(x, "Your CUI marking is set to SP-HISTP. This means the CUI in the data is related to the location character, or ownership of historic property.")
+  })
+})
+
+test_that("set_cui_marking doesn't update with identical informatin", {
+  code <- "PUBLIC"
+  marking <- "PUBLIC"
+  new_meta <- (set_cui_code(BICY_EMLed_meta,
+                            cui_code = code,
+                            force = TRUE))
+  new_meta2 <- set_cui_marking(new_meta,
+                               cui_marking = marking,
+                               force = TRUE)
+  new_meta2 <- set_cui_marking(new_meta,
+                               cui_marking = marking,
+                               force = FALSE)
+  x <- get_cui_marking(new_meta2)
+  expect_equal(x, "Your CUI marking is set to PUBLIC. This means the data do not contain CUI.")
+})
+
+# ----- test set_drr -----
 
 # ----- test set_missing_data ----
 
