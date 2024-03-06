@@ -684,6 +684,23 @@ test_that("set_language doesn't update language when requested not by user", {
 
 # ---- test set_publisher ----
 
+test_that("set_publisher returns valid EML", {
+  new_meta <- set_publisher(BICY_EMLed_meta,
+                "BroadLeaf",
+                "123 First Street",
+                "Second City",
+                "CO",
+                "12345",
+                "USA",
+                "https://www.organizationswebsite.com",
+                "contact@myorganization.com",
+                "https://ror.org/xxxxxxxxx",
+                for_or_by_NPS = FALSE,
+                force = TRUE,
+                NPS = FALSE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
