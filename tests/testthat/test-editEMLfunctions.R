@@ -1,10 +1,6 @@
 good_dir <- here::here("tests", "testthat", "good")
 bad_dir <- here::here("tests", "testhat", "bad")
 
-
-
-
-
 #load datasets etc to to test functions with
 BICY_EMLed_meta <- EML::read_eml(here::here("tests",
                                             "testthat",
@@ -700,6 +696,95 @@ test_that("set_publisher returns valid EML", {
                 NPS = FALSE)
   expect_equal(EML::eml_validate(new_meta)[1], TRUE)
 })
+
+test_that("set_publisher correctly updates publisher information", {
+  new_meta <- set_publisher(BICY_EMLed_meta,
+                            "BroadLeaf",
+                            "123 First Street",
+                            "Second City",
+                            "CO",
+                            "12345",
+                            "USA",
+                            "https://www.organizationswebsite.com",
+                            "contact@myorganization.com",
+                            "https://ror.org/xxxxxxxxx",
+                            for_or_by_NPS = FALSE,
+                            force = TRUE,
+                            NPS = FALSE)
+  expect_equal(names(get_publisher(new_meta)),
+               c("organizationName",
+                    "address",
+                    "onlineUrl",
+                    "electronicMailAddress",
+                    "userId"))
+})
+
+test_that("set_publisher correctly updates publisher information on request", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_publisher(BICY_EMLed_meta,
+                              "BroadLeaf",
+                              "123 First Street",
+                              "Second City",
+                              "CO",
+                              "12345",
+                              "USA",
+                              "https://www.organizationswebsite.com",
+                              "contact@myorganization.com",
+                              "https://ror.org/xxxxxxxxx",
+                              for_or_by_NPS = FALSE,
+                              force = TRUE,
+                              NPS = FALSE)
+    new_meta2 <- set_publisher(new_meta,
+                               "Leaf",
+                               "3 Street",
+                               "S City",
+                               "CO",
+                               "54321",
+                               "SUA",
+                               "https://www.organizationswebsite.com",
+                               "contact@mycompany.com",
+                               "https://ror.org/yyyyyyyy",
+                               for_or_by_NPS = FALSE,
+                               force = FALSE,
+                               NPS = FALSE)
+  expect_equal(get_publisher(new_meta2)[[1]], "Leaf")
+  })
+})
+
+test_that("set_publisher does not update publisher when asked not to", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_publisher(BICY_EMLed_meta,
+                              "BroadLeaf",
+                              "123 First Street",
+                              "Second City",
+                              "CO",
+                              "12345",
+                              "USA",
+                              "https://www.organizationswebsite.com",
+                              "contact@myorganization.com",
+                              "https://ror.org/xxxxxxxxx",
+                              for_or_by_NPS = FALSE,
+                              force = TRUE,
+                              NPS = FALSE)
+    new_meta2 <- set_publisher(new_meta,
+                               "Leaf",
+                               "3 Street",
+                               "S City",
+                               "CO",
+                               "54321",
+                               "SUA",
+                               "https://www.organizationswebsite.com",
+                               "contact@mycompany.com",
+                               "https://ror.org/yyyyyyyy",
+                               for_or_by_NPS = FALSE,
+                               force = FALSE,
+                               NPS = FALSE)
+    expect_equal(get_publisher(new_meta2)[[1]], "BroadLeaf")
+  })
+})
+
 
 # ----- test set_missing_data ----
 
