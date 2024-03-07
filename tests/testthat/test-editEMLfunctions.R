@@ -881,6 +881,49 @@ test_that("set_data_urls does not update urls upon user request not to", {
 
 # ----- test set_creator_orcids ----
 
+test_that("set_creator_orcids returns valid EML", {
+  creator_orcids <- c("1234-1234-1234-1234",
+                      "4321-4321-4321-4321")
+  new_meta <- set_creator_orcids(BICY_EMLed_meta,
+                                 orcids = creator_orcids,
+                                 force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_creator_orcids adds orcids to metadata", {
+  creator_orcids <- c("1234-1234-1234-1234")
+  new_meta <- set_creator_orcids(BICY_EMLed_meta,
+                                 orcids = creator_orcids,
+                                 force = TRUE)
+  expect_match(new_meta[["dataset"]][["creator"]][[1]][["userId"]][[1]][["userId"]], creator_orcids)
+})
+
+test_that("set_creator_orcids adds orcids when requested", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    creator_orcids <- c("1234-1234-1234-1234")
+    new_meta <- set_creator_orcids(BICY_EMLed_meta,
+                                   orcids = creator_orcids,
+                                   force = FALSE)
+    expect_match(new_meta[["dataset"]][["creator"]][[1]][["userId"]][[1]][["userId"]], creator_orcids)
+  })
+})
+
+test_that("set_creator_orcids does not add orcids when requested not to", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    creator_orcids <- c("1234-1234-1234-1234")
+    new_meta <- set_creator_orcids(BICY_EMLed_meta,
+                                   orcids = creator_orcids,
+                                   force = FALSE)
+    expect_equal(
+      new_meta[["dataset"]][["creator"]][[1]][["userId"]][[1]][["userId"]],
+      BICY_EMLed_meta[["dataset"]][["creator"]][[1]][["userId"]][[1]][["userId"]])
+  })
+})
+
+# ----- set_creator_orgs ----
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
