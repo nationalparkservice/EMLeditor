@@ -805,6 +805,82 @@ test_that("set_int_rights updates intellectual rights statement", {
     145)
 })
 
+test_that("set_int_rights updates intellectual rights when requested", {
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_cui_code(BICY_EMLed_meta, "PUBLIC", force = TRUE)
+    new_meta2 <- set_int_rights(new_meta,
+                                license = "public",
+                                force = FALSE)
+    expect_equal(stringr::str_length(
+      new_meta2[["dataset"]][["intellectualRights"]]),
+      145)
+  })
+})
+
+test_that("set_int_rights does not update when conflict exists:", {
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_cui_code(BICY_EMLed_meta, "PUBLIC", force = TRUE)
+    new_meta2 <- set_int_rights(new_meta,
+                                license = "restricted",
+                                force = FALSE)
+    expect_false(stringr::str_length(
+      new_meta2[["dataset"]][["intellectualRights"]]) ==
+      145)
+  })
+})
+
+# ----- test set_data_urls
+
+test_that("set_data_urls returns valid EML", {
+  doi <- 1234567
+  new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
+  new_meta2 <- set_data_urls(new_meta, force = TRUE)
+  expect_equal(EML::eml_validate(new_meta2)[1], TRUE)
+})
+
+test_that("set_data_urls updates urls", {
+  doi <- 1234567
+  new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
+  new_meta2 <- set_data_urls(new_meta, force = TRUE)
+  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]],
+               "https://irma.nps.gov/DataStore/Reference/Profile/1234567")
+})
+
+test_that("set_data_urls updates custom urls", {
+  doi <- 1234567
+  test_url <- "https://wwww.thisisatest.com"
+  new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
+  new_meta2 <- set_data_urls(new_meta, url = test_url, force = TRUE)
+  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]],
+               test_url)
+})
+
+test_that("set_data_urls updates urls upon user request", {
+  doi <- 1234567
+  return_val_1 <- function() {1}
+  local({mockr::local_mock(.get_user_input = return_val_1)
+    new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
+    new_meta2 <- set_data_urls(new_meta, force = FALSE)
+    expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]],
+                 "https://irma.nps.gov/DataStore/Reference/Profile/1234567")
+  })
+})
+
+test_that("set_data_urls does not update urls upon user request not to", {
+  doi <- 1234567
+  return_val_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input = return_val_2)
+    new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
+    new_meta2 <- set_data_urls(new_meta, force = FALSE)
+    expect_false(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]] ==
+                 BICY_EMLed_meta[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]])
+  })
+})
+
+# ----- test set_creator_orcids ----
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
