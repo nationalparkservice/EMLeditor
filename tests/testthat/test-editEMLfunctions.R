@@ -785,6 +785,25 @@ test_that("set_publisher does not update publisher when asked not to", {
   })
 })
 
+# ----- set_int_rights ----
+
+test_that("set_int_rights returns valid EML", {
+  new_meta <- set_cui_code(BICY_EMLed_meta, "PUBLIC", force = TRUE)
+  new_meta2 <- set_int_rights(new_meta,
+                             license = "public",
+                             force = TRUE)
+  expect_equal(EML::eml_validate(new_meta2)[1], TRUE)
+})
+
+test_that("set_int_rights updates intellectual rights statement", {
+  new_meta <- set_cui_code(BICY_EMLed_meta, "PUBLIC", force = TRUE)
+  new_meta2 <- set_int_rights(new_meta,
+                              license = "public",
+                              force = TRUE)
+  expect_equal(stringr::str_length(
+    new_meta2[["dataset"]][["intellectualRights"]]),
+    145)
+})
 
 # ----- test set_missing_data ----
 
