@@ -1,3 +1,5 @@
+
+# load directorys for accessing testing data/metadata
 good_dir <- here::here("tests", "testthat", "good")
 bad_dir <- here::here("tests", "testhat", "bad")
 
@@ -15,6 +17,10 @@ BUIS_EMLed_meta <- EML::read_eml(here::here("tests",
                                             "BUIS_Herps_test",
                                             "BUIS_EMLeditor_metadata.xml"),
                                  from="xml")
+
+# a couple of house-keeping functions for mockr interactivity:
+return_val_2 <- function() {2}
+return_val_1 <- function() {1}
 
 # ---- set_title ----
 test_that("set_title works on valid eml", {
@@ -924,6 +930,34 @@ test_that("set_creator_orcids does not add orcids when requested not to", {
 
 # ----- set_creator_orgs ----
 
+test_that("set_creator_orgs returns valid EML", {
+  new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                               "National Park Service",
+                               RORs="044zqqy65",
+                               force = TRUE)
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_creator_orgs adds organization to EML", {
+  new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                               "National Park Service",
+                               RORs="044zqqy65",
+                               force = TRUE)
+  expect_equal(length(seq_along(new_meta[["dataset"]][["creator"]])),
+               2)
+})
+
+test_that("set_creator_orgs adds organization when force = FALSE", {
+  new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                               "National Park Service",
+                               RORs="044zqqy65",
+                               force = FALSE)
+  expect_equal(length(seq_along(new_meta[["dataset"]][["creator"]])),
+               2)
+})
+
+# ----- test set_creator_order ----
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
@@ -988,3 +1022,5 @@ test_that("set_missing_data handles vectorized input", {
   validation <- EML::eml_validate(x)
   expect_equal(validation[1], TRUE)
 })
+
+
