@@ -2103,7 +2103,7 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #' @inheritParams set_title
 #' @param creator_orgs List. Defaults to NA. A list of one or more organizations.
 #' @param park_units List. Defaults to NA. A list of park units. If any park units are specified, it they will supersede anything listed under creator_orgs.
-#' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see https:/ror.org) that correspond to the organization in question. If an organization does not hae a ROR ID (or you don't know it), enter "NA".
+#' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see [https://ror.org](https://ror.org)) that correspond to the organization in question. If an organization does not have a ROR ID (or you don't know it), enter "NA".
 #'
 #' @return eml_object
 #' @export
@@ -2355,7 +2355,7 @@ set_creator_order <- function(eml_object,
 
 #' Adds a missing value code and definition to EML metadata
 #'
-#' @description Missing data must have a missing data code and missing data code definition. `set_missing_data()` can add a single missing value code and single missing value code definition. Missing data should be clearly indicated in the data with a missing data code (i.g "NA", "NaN", "Missing", "blank" etc.). It is generally a good idea to not use special characters for missing data codes (e.g. N/A is not advised). If it is absolutely necessary to leave a cell empty with no code, that cell still needs a missing value code and definition in the metadata. Acceptable codes in this case are "empty" and "blank" with a suitable definition that states the cells are purposefully left empty.
+#' @description Missing data must have a missing data code and missing data code definition. `set_missing_data()` can add a single missing value code and single missing value code definition. Missing data should be clearly indicated in the data with a missing data code (e.g "NA", "NaN", "Missing", "blank" etc.). It is generally a good idea to not use special characters for missing data codes (e.g. N/A is not advised). If it is absolutely necessary to leave a cell empty with no code, that cell still needs a missing value code and definition in the metadata. Acceptable codes in this case are "empty" and "blank" with a suitable definition that states the cells are purposefully left empty.
 #'
 #' @details The `set_missing_data()` be used on an individual column or can accept lists of files, column names, codes, and definitions. Make sure that each missing value has a file, column, single code, and single definition associated with it (if you need multiple missing value codes and definitions per column, please use the `set_more_missing()` function). If you have many missing value codes and definitions, you might consider constructing (or import) a dataframe to describe them:
 #'
