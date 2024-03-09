@@ -958,6 +958,71 @@ test_that("set_creator_orgs adds organization when force = FALSE", {
 
 # ----- test set_creator_order ----
 
+test_that("set_creator_order returns valid EML", {
+  new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                               "National Park Service",
+                               RORs="044zqqy65",
+                               force = TRUE)
+  new_meta2 <- set_creator_order(new_meta,
+                                 new_order = c(2,1),
+                                 force = TRUE)
+  expect_equal(EML::eml_validate(new_meta2)[1], TRUE)
+})
+
+test_that("set_creator_order updates creator order", {
+  new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                               "National Park Service",
+                               RORs="044zqqy65",
+                               force = TRUE)
+  new_meta2 <- set_creator_order(new_meta,
+                                 new_order = c(2,1),
+                                 force = TRUE)
+  expect_false(identical(new_meta2[["dataset"]][["creator"]],
+                         new_meta[["dataset"]][["creator"]]))
+})
+
+test_that("set_creator_order reorders creators upon request", {
+  return_val_list_2_1 <- function() {c("2, 1")}
+  local({mockr::local_mock(.get_user_input3 = return_val_list_2_1)
+    new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                                 "National Park Service",
+                                 RORs="044zqqy65",
+                                 force = TRUE)
+    new_meta2 <- set_creator_order(new_meta,
+                                   force = FALSE)
+    expect_false(identical(new_meta2[["dataset"]][["creator"]],
+                           new_meta[["dataset"]][["creator"]]))
+  })
+})
+
+test_that("set_creator_order retains order if asked to", {
+  return_val_list_1_2 <- function() {c("1, 2")}
+  local({mockr::local_mock(.get_user_input3 = return_val_list_1_2)
+    new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                                 "National Park Service",
+                                 RORs="044zqqy65",
+                                 force = TRUE)
+    new_meta2 <- set_creator_order(new_meta,
+                                   force = FALSE)
+    expect_equal(new_meta2[["dataset"]][["creator"]],
+                           new_meta[["dataset"]][["creator"]])
+  })
+})
+
+test_that("set_creator_order removes a creator when requested", {
+  return_val_list_2 <- function() {2}
+  local({mockr::local_mock(.get_user_input3 = return_val_list_2)
+    new_meta <- set_creator_orgs(BICY_EMLed_meta,
+                                 "National Park Service",
+                                 RORs="044zqqy65",
+                                 force = TRUE)
+    new_meta2 <- set_creator_order(new_meta,
+                                   force = FALSE)
+    expect_equal(length(seq_along(new_meta2[["dataset"]][["creator"]])),
+                 1)
+  })
+})
+
 # ----- test set_missing_data ----
 
 test_that("set_missing_data retruns valid EML, interactive1", {
