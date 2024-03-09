@@ -1,6 +1,6 @@
 #' Edit data package title
 #'
-#' @details The set_title function checks to see if there is an existing title and then asks the user if they would like to change the title. Some work is still needed on this function as get_eml() automatically returns all instances of a given tag. Specifying which title will be important for this function to work well.
+#' @details The `set_title()` function checks to see if there is an existing title and then asks the user if they would like to change the title. Some work is still needed on this function as `get_eml()` automatically returns all instances of a given tag. Specifying which title will be important for this function to work well.
 #'
 #' @param eml_object is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param data_package_title is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.
@@ -645,7 +645,8 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
 
 #' The function sets the CUI marking for the data package
 #'
-#' @description  The Controlled Unclassified Information (CUI) marking is different from the CUI dissemination code. The CUI dissemination code (set `set_cui_code()`) sets who can have access to the data package. The CUI marking set by `set_cui_marking()` specifies the reason (if any) that the data are being restricted.
+#' @description `r lifecycle::badge("experimental")`
+#' The Controlled Unclassified Information (CUI) marking is different from the CUI dissemination code. The CUI dissemination code (set `set_cui_code()`) sets who can have access to the data package. The CUI marking set by `set_cui_marking()` specifies the reason (if any) that the data are being restricted.
 #' If the CUI dissemination code is set to PUBLIC, the CUI marking must also be PUBLIC.
 #' If the CUI dissemination code is set to anything other than PUBLIC, the CUI marking must be set to SP-NPSR, SP-HISTP or SP-ARCHR.
 #'
