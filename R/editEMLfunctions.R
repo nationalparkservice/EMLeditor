@@ -1987,7 +1987,7 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 #' #only one creator:
 #' mymetadata <- set_creator_orcids(mymetadata, 1234-1234-1234-1234)
 #'
-#' #three creators, the second of which does not hae an ORCiD:
+#' #three creators, the second of which does not have an ORCiD:
 #' creator_orcids <- c("1234-1234-1234-1234", "NA", "4321-4321-4321-4321")
 #' mymetadata <- set_creator_orcids(mymetadata, creator_orcids)
 #' }
@@ -2294,10 +2294,13 @@ set_creator_order <- function(eml_object,
       if(nchar(var1)==0){
         cat("You cannot delete all creators.")
         cat("Please enter comma-separated numbers for the new creator order.\n")
-        var1 <- readline(prompt="")
+        var1 <-.get_user_input3()
       }
-      ord <- as.list(strsplit(var1, ","))[[1]]
-      ord <- trimws(ord)
+      var1 <- ord
+      if (nchar(ord) > 1) {
+        ord <- as.list(strsplit(ord, ","))[[1]]
+        ord <- trimws(ord)
+      }
       new_order <- as.numeric(ord)
     }
   }
