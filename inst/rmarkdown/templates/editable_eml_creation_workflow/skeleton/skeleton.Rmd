@@ -231,7 +231,7 @@ dissemination codes. Watch out for the spaces! These are:
 More information about these codes can be found at: [https://www.archives.gov/cui/registry/limited-dissemination](https://www.archives.gov/cui/registry/limited-dissemination)
 
 ```{r cui_dissemination}
-my_metadata <- EMLeditor::set_cui(my_metadata, "PUBLIC")
+my_metadata <- EMLeditor::set_cui_code(my_metadata, "PUBLIC")
 # note that in this case I have added the CUI code to the original R object, 
 # "my_metadata" but by giving it a new name, i.e. "my_meta2" I could have
 # created a new R object. Sometimes creating a new R object is preferable 
