@@ -95,13 +95,38 @@ get_abstract <- function(eml_object) {
   return(txt)
 }
 
-#' Get additional information (Notes on DataStore)
+#' Get methods
 #'
-#' @description `get_methods()` returns the text stored in the methods element of EML metadata. The returned text is not manipulated in any way. DataStore unlist the returned object (get rid of tags such as $methodStep, $methodStep$description and $methodStep$description$para and remove the numbers in brackets). the "\\n" character combination is interpretted as a line break (as are blank lines). However, DataStpre will not filter out stray characters such as &amp;#13;. Use the `set_methods()` function to edit and replace the text stored in the methods field.
+#' @description `get_methods()` returns the text stored in the methods element of EML metadata. The returned text is not manipulated in any way. DataStore unlists the returned object (get rid of tags such as $methodStep, $methodStep$description and $methodStep$description$para and remove the numbers in brackets). the "\\n" character combination is interpreted as a line break (as are blank lines). However, DataStore will not filter out stray characters such as &amp;#13;. Use the `set_methods()` function to edit and replace the text stored in the methods field.
 #'
 #' @inheritParams get_begin_date
 #'
 #' @return List
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_methods(eml_object)
+#' }
+#'
+#'
+get_methods <- function(eml_object){
+  doc <- eml_object$dataset$methods
+  if(is.null(doc)){
+    warning("Your EML lacks a methods section. Use set_methods() to add methods.")
+  }
+  return(doc)
+}
+
+
+
+#' Get additional information (Notes on DataStore)
+#'
+#' @description `get_additional_info()` returns the text in the additionalInformation element of EML. This text will be used to populate the "Notes" sectionon the DataStore reference page. There is no strict limit on what can and cannot go in to the additionalInformation/Notes section. However, DataStore will not filter out stray characters such as &amp;#13;. Use the `set_additional_info()` function to edit and replace the text stored in the additionalInformation (notes) field.
+#'
+#' @param eml_object
+#'
+#' @return String
 #' @export
 #'
 #' @examples
@@ -117,13 +142,6 @@ get_additional_info <- function(eml_object) {
 
 }
 
-get_methods <- function(eml_object){
-  doc <- eml_object$dataset$methods
-  if(is.null(doc)){
-    warning("Your EML lacks a methods section. Use set_methods() to add methods.")
-  }
-  return(doc)
-}
 
 
 
