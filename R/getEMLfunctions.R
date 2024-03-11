@@ -142,9 +142,6 @@ get_additional_info <- function(eml_object) {
 
 }
 
-
-
-
 #' returns the data package title
 #'
 #' @description get_title returns a text string that is the title of the data package
@@ -730,6 +727,19 @@ get_producing_units <- function(eml_object) {
   return(punit)
 }
 
+#' Returns the publisher information
+#'
+#' @description `get_publisher()` returns a list that includes all the information about the publisher stored in EML.
+#'
+#' @param eml_object
+#'
+#' @return List.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_publisher(eml_object)
+#' }
 get_publisher <- function(eml_object) {
   pub <- eml_object$dataset$publisher
 }
