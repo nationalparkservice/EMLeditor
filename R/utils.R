@@ -254,10 +254,13 @@ globalVariables(c("UnitCode",
 #'
 #' @description Does not prompt for user input. Takes any user input supplied and returns it.
 #'
-#' @return
+#' @return character, typically 1, 2, or 3 but could be any character string.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' var1 <- .get_user_input3()
+#' }
 .get_user_input3 <- function() {
   var1 <- readline(prompt = (""))
   return(var1)
