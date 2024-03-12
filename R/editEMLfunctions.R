@@ -441,8 +441,6 @@ set_content_units <- function(eml_object, park_units,
 #'
 #' For a more detailed explanation of the CUI dissemination codes, please see the national archives [CUI Registry: Limited Dissemination Controls](https://www.archives.gov/cui/registry/limited-dissemination) web page.
 #'
-#' @details
-#'
 #' @inheritParams set_title
 #' @param cui_code a string consisting of one of 7 potential CUI codes: PUBLIC, FED ONLY, FEDCON, DL ONLY, or NOCON
 
@@ -659,13 +657,10 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
 #'
 #' For more information on CUI markings, please visit the [CUI Markings](https://www.archives.gov/cui/registry/category-marking-list) list maintained by the National Archives.
 #'
+#' @inheritParams set_title
+#' @param cui_marking String. One of four options, "PUBLIC", "SP-NPSR", "SP-HISTP" or "SP-ARCHR" are available.
 #'
-#' @param eml_object
-#' @param cui_marking
-#' @param force
-#' @param NPS
-#'
-#' @return
+#' @return an EML-formatted R object
 #' @export
 #'
 #' @examples
@@ -2408,7 +2403,7 @@ set_creator_order <- function(eml_object,
 #'                          definitions = c("date not recorded",
 #'                                          "time not recorded",
 #'                                          "intentionally left blank - unable to identify))
-#'
+#'}
 set_missing_data <- function(eml_object,
                              files,
                              columns,
