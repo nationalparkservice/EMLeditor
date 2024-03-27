@@ -1,8 +1,8 @@
 #' Initiates a draft reference and inserts the reserved DOI into metadata
 #'
-#' @description `set_datastore_doi()` differs from `set_doi()` in that this function generates a draft reference on DataStore and uses that draft reference to auto-populate the DOI within metadata whereas the later requires manually initiating a draft reference in DataStore and providing the reference ID to insert the DOI into metadata.
+#' @description `set_datastore_doi()` differs from `set_doi()` in that this function generates a draft reference on DataStore and uses that draft reference to auto-populate the DOI within metadata whereas the latter requires manually initiating a draft reference in DataStore and providing the reference ID to insert the DOI into metadata.
 #'
-#' @details To prevent generating too many (unused) draft references, `set_datastore_doi()` checks your metadata contents prior to initiating a draft reference on DataStore. If you already have a DOI specified, it will ask if you really want to over-write the DOI **and** initiate a new draft reference. Setting force = TRUE will over-ride this aspect of the function, so use with care. the `set_datastore_doi()` function requires that your metadata already contain a data package title and if it is missing will prompt you to insert it and quit. Setting force = TRUE will not override this check. If R cannot successfully initiate a draft reference on DataStore, the function will remind you to log on to the VPN. If the problem persists, email [irma@nps.gov](mailto:irma@nps.gov).
+#' @details To prevent generating too many (unused) draft references, `set_datastore_doi()` checks your metadata contents prior to initiating a draft reference on DataStore. If you already have a DOI specified, it will ask if you really want to over-write the DOI **and** initiate a new draft reference. Setting force = TRUE will over-ride this aspect of the function, so use with care. the `set_datastore_doi()` function requires that your metadata already contain a data package title and if it is missing will prompt you to insert it and quit. Setting force = TRUE will not override this check. If R cannot successfully initiate a draft reference on DataStore, the function will remind you to log on to the VPN. If the problem persists, email [NRSS_DataStore@nps.gov ](mailto:NRSS_DataStore@nps.gov ).
 #'
 #' @details This function generates a draft reference on DataStore. If you run with force = FALSE (default), the function will report the draft reference URL and the draft title for the draft reference. Make sure you upload your data and metadata to the correct draft reference! Your draft reference title should read: "DRAFT: <your data package title>". This will be updated to your data package title when you upload your metadata.
 #'
@@ -34,10 +34,10 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE
   if(force == FALSE){
     # if there is NOT an existing DOI in metadata:
     if(length(seq_along(doc)) > 1 ){
-      cat("Your metadata does not have a previously specified DOI.\n", sep = "")
+      cat("Your metadata does not have a previously specified DOI.\n",
+          sep = "")
       cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
-      message("1: Yes")
-      var1 <- readline(prompt = "2: No \n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       if (var1 == 2){
         cat("Function terminated. You have not created a new draft reference on DataStore and a DOI has not been added to your metadata.")
         return()
@@ -81,8 +81,7 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE
       }
       #Ask if they really want a new DOI & new draft reference?
       cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
-      message("1: Yes")
-      var1 <- readline(prompt = "2: No\n")
+      var1 <- .get_user_input() # 1 = yes, 2 = no
       # if chooses not to add a new doi/generate a new draft reference:
       if (var1 == 2){
         cat("Function terminated. You have not created a new draft reference on DataStore and your original DOI has been retained.")
