@@ -27,7 +27,9 @@ assign("ds_dev_api", "https://irmadevservices.nps.gov/datastore-secure/v6/rest/"
 #this gets rid of the "no visible binding for global variable 'x'" error in build checks:
 globalVariables(c("UnitCode",
                   "Name",
-                  "Alpha_3_B"))
+                  "Alpha_3_B",
+                  "msg",
+                  "msg2"))
 
 
 #' inject NPS Publisher info into metadata
