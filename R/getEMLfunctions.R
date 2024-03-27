@@ -124,7 +124,7 @@ get_methods <- function(eml_object){
 #'
 #' @description `get_additional_info()` returns the text in the additionalInformation element of EML. This text will be used to populate the "Notes" sectionon the DataStore reference page. There is no strict limit on what can and cannot go in to the additionalInformation/Notes section. However, DataStore will not filter out stray characters such as &amp;#13;. Use the `set_additional_info()` function to edit and replace the text stored in the additionalInformation (notes) field.
 #'
-#' @param eml_object
+#' @inheritParams get_begin_date
 #'
 #' @return String
 #' @export
@@ -731,7 +731,7 @@ get_producing_units <- function(eml_object) {
 #'
 #' @description `get_publisher()` returns a list that includes all the information about the publisher stored in EML.
 #'
-#' @param eml_object
+#' @inheritParams get_begin_date
 #'
 #' @return List.
 #' @export
