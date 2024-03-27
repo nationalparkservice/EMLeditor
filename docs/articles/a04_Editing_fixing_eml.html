@@ -123,7 +123,7 @@ documentation on how to use each function along with examples.</p>
 <p>There are two main methods of loading your *_metadata.xml file in to
 R to work on it. You can either use the DPchecker
 <code>load_metadata()</code> function or you can use the EML
-<code><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml()</a></code> function. The main benefit of
+<code>read_eml()</code> function. The main benefit of
 <code>load_metadata()</code> is that you don’t need to specify the file
 name or type, so there is less typing. The downside to
 <code>load_metadata()</code> is that it is less flexible: if there are
@@ -137,14 +137,14 @@ multiple .xml files in the directory or the metadata file doesn’t end in
 <span><span class="co">#assuming your metadata file is in sub-directory of your current directory, "../other/directory":</span></span>
 <span><span class="va">dir</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"other"</span>, <span class="st">"directory"</span><span class="op">)</span></span>
 <span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">load_metadata</span><span class="op">(</span>directory <span class="op">=</span> <span class="va">dir</span><span class="op">)</span></span></code></pre></div>
-<p>Using <code><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml()</a></code>:</p>
+<p>Using <code>read_eml()</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#this assumes your metadata file is in your current working directory and is called 'filename_metadata.xml'</span></span>
-<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
+<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">read_eml</span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#or if your metadata is in a different directory, change to that directory:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"C:/Users/username/Documents/data_package_directory"</span><span class="op">)</span></span>
-<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://docs.ropensci.org/EML/reference/read_eml.html" class="external-link">read_eml</a></span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu">read_eml</span><span class="op">(</span><span class="st">"filename_metadata.xml"</span>, from <span class="op">=</span> <span class="st">"xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="examples-of-editing-metadata">Examples of editing metadata<a class="anchor" aria-label="anchor" href="#examples-of-editing-metadata"></a>
@@ -259,7 +259,7 @@ EML:</p>
 <p>Write your R object to .xml. Don’t forget that the filename must end
 in *_metadata.xml:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">metadata</span>, <span class="st">"filename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">write_eml</span><span class="op">(</span><span class="va">metadata</span>, <span class="st">"filename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, you should re-run the congruence checks to make sure
 your data package is still passes them all (or passes any previous
 warnings/errors you got):</p>

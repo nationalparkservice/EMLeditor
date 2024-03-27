@@ -137,9 +137,10 @@ NPSutils - as they are under constant development.</p>
 computers you may first need to run:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>download.file.method<span class="op">=</span><span class="st">"wininet"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co">#install packages</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"devtools"</span>, <span class="st">"tidyverse"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"nationalparkservice/NPSdataverse"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#install packages</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"devtools"</span>, <span class="st">"tidyverse"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># When loading packages, you may be advised to update to more recent versions</span></span>
 <span><span class="co"># of dependent packages. Most of these updates likely are not critical.  </span></span>
@@ -489,7 +490,7 @@ how to list those individuals TBD) * NOCON - Contains CUI. Federal,
 state, local, or tribal employees may have access, but contractors
 cannot. More information about these codes can be found at: <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link">https://www.archives.gov/cui/registry/limited-dissemination</a></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_cui.html">set_cui</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"PUBLIC"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_cui_code.html">set_cui_code</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"PUBLIC"</span><span class="op">)</span></span>
 <span><span class="co"># note that in this case I have added the CUI code to the original R object, </span></span>
 <span><span class="co"># "my_metadata" but by giving it a new name, i.e. "my_meta2" I could have</span></span>
 <span><span class="co"># created a new R object. Sometimes creating a new R object is preferable </span></span>

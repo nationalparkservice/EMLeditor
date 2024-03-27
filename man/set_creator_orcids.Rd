@@ -7,13 +7,13 @@
 set_creator_orcids(eml_object, orcids, force = FALSE, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
+\item{eml_object}{is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{orcids}{String. One or more ORCiDs listed in the same order as the corresponding creators. Use "NA" if a creator does not have an ORCiD. Do not include the full URL. Format as: xxxx-xxxx-xxxx-xxxx (the https://orcid.org/ prefix will be added for you).}
 
 \item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
-\item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
+\item{NPS}{Logical. Defaults to TRUE. \strong{Most NPS users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
 \value{
 eml_object
@@ -29,7 +29,7 @@ ORCiDs should be supplied as a list in the order in which the creators are liste
 #only one creator:
 mymetadata <- set_creator_orcids(mymetadata, 1234-1234-1234-1234)
 
-#three creators, the second of which does not hae an ORCiD:
+#three creators, the second of which does not have an ORCiD:
 creator_orcids <- c("1234-1234-1234-1234", "NA", "4321-4321-4321-4321")
 mymetadata <- set_creator_orcids(mymetadata, creator_orcids)
 }

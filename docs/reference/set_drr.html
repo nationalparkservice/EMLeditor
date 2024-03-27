@@ -74,7 +74,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>eml_object</dt>
-<dd><p>is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").</filename></p></dd>
+<dd><p>is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").</filename></p></dd>
 
 
 <dt>drr_ref_id</dt>
@@ -94,7 +94,7 @@
 
 
 <dt>NPS</dt>
-<dd><p>Logical. Defaults to TRUE. <strong>Most users should leave this as the default</strong>. Only under specific circumstances should it be set to FALSE: if you are <strong>not</strong> publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.</p></dd>
+<dd><p>Logical. Defaults to TRUE. <strong>Most NPS users should leave this as the default</strong>. Only under specific circumstances should it be set to FALSE: if you are <strong>not</strong> publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.</p></dd>
 
 </dl></div>
     <div class="section level2">

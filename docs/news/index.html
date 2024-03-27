@@ -55,9 +55,27 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.4" id="emleditor-v014">EMLeditor v0.1.4<a class="anchor" aria-label="anchor" href="#emleditor-v014"></a></h2>
+<div class="section level3">
+<h3 id="id_2024-0-1-4">2024-02-29<a class="anchor" aria-label="anchor" href="#id_2024-0-1-4"></a></h3>
+<ul><li>Add function <code><a href="../reference/get_cui_code.html">get_cui_code()</a></code>. Deprecate function <code><a href="../reference/get_cui.html">get_cui()</a></code>.</li>
+<li>Add function <code><a href="../reference/get_cui_marking.html">get_cui_marking()</a></code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2024-0-1-4-1">2024-02-22<a class="anchor" aria-label="anchor" href="#id_2024-0-1-4-1"></a></h3>
+<ul><li>Added function <code><a href="../reference/set_missing_data.html">set_missing_data()</a></code> which allows users to add missing data codes and missing data code definitions to metadata.</li>
+<li>Added utility functions <code><a href="../reference/dot-get_user_input.html">.get_user_input()</a></code> and <code><a href="../reference/dot-get_user_input3.html">.get_user_input3()</a></code>. Refactored all set_ class functions to use these sub-functions rather than readlines() to get user input.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="id_2024-0-1-4-2">2024-02-13<a class="anchor" aria-label="anchor" href="#id_2024-0-1-4-2"></a></h3>
+<ul><li>Deprecated <code><a href="../reference/set_cui.html">set_cui()</a></code> in favor of <code>set_cui_dissem()</code>, which does the exact same thing as <code><a href="../reference/set_cui.html">set_cui()</a></code> but the function name has been updated to distinguish the action of the function from the newly added <code><a href="../reference/set_cui_code.html">set_cui_code()</a></code> function.</li>
+<li>Updated the publisher contact email in <code>set_npspublisher()</code> from <a href="mailto:irma@nps.gov" class="email">irma@nps.gov</a> to <a href="mailto:nrss_datastore@nps.gov" class="email">nrss_datastore@nps.gov</a> to reflect DataStore changes in the contact email address.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.4" id="emleditor-v014-mackinac-island">EMLeditor v0.1.4 “Mackinac Island”<a class="anchor" aria-label="anchor" href="#emleditor-v014-mackinac-island"></a></h2>
 <div class="section level3">
-<h3 id="id_2024-0-1-4">2024-01-18<a class="anchor" aria-label="anchor" href="#id_2024-0-1-4"></a></h3>
+<h3 id="id_2024-0-1-4-3">2024-01-18<a class="anchor" aria-label="anchor" href="#id_2024-0-1-4-3"></a></h3>
 <ul><li>Added the function <code><a href="../reference/remove_datastore_files.html">remove_datastore_files()</a></code>, which can detach files from a DataStore Reference. In conjunction with <code><a href="../reference/upload_data_package.html">upload_data_package()</a></code> this allows a user to update and make changes to the files in a data package (for instance, in response to review of the data package) prior to activating the data package.</li>
 </ul></div>
 </div>
@@ -95,7 +113,7 @@
 <li>Fix examples in <code><a href="../reference/set_creator_orgs.html">set_creator_orgs()</a></code>
 </li>
 <li>Add function <code><a href="../reference/set_methods.html">set_methods()</a></code> allows user to add or replace existing methods sections.</li>
-<li>Add function <code>get_methods()</code> returns the methods section (as a list)</li>
+<li>Add function <code><a href="../reference/get_methods.html">get_methods()</a></code> returns the methods section (as a list)</li>
 <li>Add function <code>set_additiona_info()</code> allows the user to set or replace existing addtitionalInfo. AdditionalInfo becomes “Notes” on the DataStore landing page.</li>
 <li>Add function <code><a href="../reference/get_additional_info.html">get_additional_info()</a></code> returns the additionalInfo (“notes”) from metadata.</li>
 </ul></div>

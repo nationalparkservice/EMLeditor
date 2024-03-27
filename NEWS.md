@@ -1,4 +1,7 @@
-# EMLeditor v0.1.4
+# EMLeditor v0.1.4 "Little Bighorn"
+
+## 2024-03-12
+  * make `write_readme()` a non-exported function.
 
 ## 2024-02-29
   * Add function `get_cui_code()`. Deprecate function `get_cui()`.
@@ -149,7 +152,7 @@ Added a new function, `set_datastore_doi()` that will initiate a draft reference
 
 ## February 09, 2023
 
-# Summary
+### Summary
 
 Bug fixes, update `set_cui()` codes, flesh out `set_int_rights`. Update documentation.
 

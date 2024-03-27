@@ -12,7 +12,7 @@ set_cui(
 )
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
+\item{eml_object}{is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{cui_code}{a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
 FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
@@ -23,13 +23,14 @@ PUBLIC - Does NOT contain CUI.}
 
 \item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
-\item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
+\item{NPS}{Logical. Defaults to TRUE. \strong{Most NPS users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
 \value{
 an EML-formatted R object
 }
 \description{
-set_cui adds CUI codes to EML metadata
+#' \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+set_cui adds CUI dissemination codes to EML metadata
 }
 \details{
 set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.

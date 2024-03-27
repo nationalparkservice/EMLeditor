@@ -43,6 +43,12 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/dot-get_unit_polygon.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/dot-get_user_input.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/dot-get_user_input3.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/dot-set_for_by_nps.html</loc>
   </url>
   <url>
@@ -76,6 +82,12 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_cui.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/get_cui_code.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/get_cui_marking.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_doi.html</loc>
   </url>
   <url>
@@ -97,7 +109,13 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_lit.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/get_methods.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_producing_units.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/get_publisher.html</loc>
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/get_title.html</loc>
@@ -130,6 +148,12 @@
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_cui.html</loc>
   </url>
   <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/set_cui_code.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/set_cui_marking.html</loc>
+  </url>
+  <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_datastore_doi.html</loc>
   </url>
   <url>
@@ -152,6 +176,9 @@
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_methods.html</loc>
+  </url>
+  <url>
+    <loc>https://roblbaker.github.io/EMLeditor/reference/set_missing_data.html</loc>
   </url>
   <url>
     <loc>https://roblbaker.github.io/EMLeditor/reference/set_producing_units.html</loc>
