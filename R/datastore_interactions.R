@@ -254,7 +254,7 @@ upload_data_package <- function(directory = here::here(),
       return()
     }
     cat("Are you sure you want to upload your data package files to this reference?\n")
-    var1 <- readline(prompt = "1: Yes\n2: No\n")
+    var1 <- .get_user_input() # 1 = yes, 2 = no
     if (var1 == 2) {
       cat("Function terminated. You have not uploaded any files to DataStore.")
     }
@@ -523,7 +523,7 @@ remove_datastore_files <- function(data_store_reference,
         Reference?"
     x <- strwrap(x, width = 10000, simplify = TRUE)
     cat(x)
-    var1 <- readline(prompt = "1: Yes\n2: No\n")
+    var1 <- .get_user_input() # 1 = yes, 2 = no
     if (var1 == 2) {
       cat("You have not removed any files from the Reference.")
       return(invisible())
