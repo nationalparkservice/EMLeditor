@@ -179,7 +179,7 @@ test_that("set_cui_code returns valid EML", {
 test_that("set_cui_code updates CUI code in EML", {
   cui <- "NOCON"
   new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = TRUE)
-  x <- get_cui(new_meta)
+  x <- get_cui_code(new_meta)
   expect_equal(x, "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
 })
 
@@ -188,7 +188,7 @@ test_that("set_cui_code updates when requested", {
   local({mockr::local_mock(.get_user_input = return_val_1)
      cui <- "NOCON"
      new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = FALSE)
-     x <- get_cui(new_meta)
+     x <- get_cui_code(new_meta)
      expect_equal(x,
                   "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
    })
@@ -199,7 +199,7 @@ test_that("set_cui_code does not update when requested not to", {
   local({mockr::local_mock(.get_user_input = return_val_2)
     cui <- "NOCON"
     new_meta <- set_cui_code(BICY_EMLed_meta, cui_code = cui, force = FALSE)
-    x <- get_cui(new_meta)
+    x <- get_cui_code(new_meta)
     expect_equal(x,
                  "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
 )
