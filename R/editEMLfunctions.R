@@ -962,7 +962,8 @@ set_abstract <- function(eml_object,
 #'
 #' @examples
 #' \dontrun{
-#' eml_object <- set_additional_info(eml_object, "Here is some text for the Notes section on DataStore.")
+#' eml_object <- set_additional_info(eml_object,
+#'  "Some text for the Notes section on DataStore.")
 #' }
 set_additional_info <- function(eml_object,
                          additional_info,
@@ -2377,7 +2378,7 @@ set_creator_order <- function(eml_object,
 #'
 #'
 #' @inheritParams set_title
-#' @param filenames String or List of strings. These are the files that contain undocumented missing data, e.g "my_data_file1.csv".
+#' @param files String or List of strings. These are the files that contain undocumented missing data, e.g "my_data_file1.csv".
 #' @param columns String or List of strings. These are the columns with missing data for which you would like to add missing data codes and explanations in to the metadata, e.g. "scientificName".
 #' @param codes String or list of strings. These are the missing value codes you would like associated with the column in question, e.g. "missing" or "NA".
 #' @param definitions String or list of strings. These are the missing value code definitions associated with the missing value codes, e.g "not recorded" or "sample damaged when the lab flooded".
@@ -2386,23 +2387,24 @@ set_creator_order <- function(eml_object,
 #' @export
 #'
 #' @examples
-#' #' \dontrun{
-#' For a single column of data in a single file:
+#' \dontrun{
+#' #For a single column of data in a single file:
 #' meta2 <- set_missing_data(my_metadata,
 #'                           "table1.csv",
 #'                           "scientificName",
 #'                           "NA",
 #'                           "Unable to identify")
 #'
-#' For multiple columns of data, potentially across multiple files:
-#' (blank cells must have the missing value code of "blank" or "empty")
+#' #For multiple columns of data, potentially across multiple files:
+#' #(blank cells must have the missing value code of "blank" or "empty")
 #' meta2 <- set_missing_data(my_metadata,
 #'                          files = c("table1.csv", "table1.csv", "table2.csv"),
 #'                          columns = c("date", "time", "scientificName"),
 #'                          codes = c("NA", "missing", "blank"),
 #'                          definitions = c("date not recorded",
-#'                                          "time not recorded",
-#'                                          "intentionally left blank - unable to identify))
+#'                                        "time not recorded",
+#'                                        "intentionally left blank - missing")
+#'                                        )
 #'}
 set_missing_data <- function(eml_object,
                              files,
