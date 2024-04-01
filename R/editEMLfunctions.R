@@ -704,7 +704,7 @@ set_cui_marking <- function (eml_object,
           " to add a dissemination code to the metadata.",
           sep = "")
     }
-    stop()
+    return(invisible(eml_object))
   }
 
   #get location of CUI marking codes in additionalMetadata:
@@ -730,7 +730,7 @@ set_cui_marking <- function (eml_object,
             sep = "")
         cat("Your metadata CUI marking was not updated.\n")
       }
-      return()
+      return(invisible(eml_object))
     }
 
   #if CUI markings already exist, ask if they should be replaced/changed?
@@ -743,7 +743,7 @@ set_cui_marking <- function (eml_object,
       var1 <- .get_user_input()
       if (var1 == 2) {
         cat("Your original CUI marking has been retained")
-        return()
+        return(invisible(eml_object))
       }
     }
   }
@@ -763,7 +763,7 @@ set_cui_marking <- function (eml_object,
           crayon::green$bold("set_cui_code()"),
           " to change your CUI dissemination code.\n", sep = "")
     }
-    return()
+    return(invisible(eml_object))
   }
 
   #test that if cui_code is not public, cui_marking is not public.
@@ -779,7 +779,7 @@ set_cui_marking <- function (eml_object,
           crayon::green$bold("set_cui_code()"),
           " to change your CUI dissemination code\n.", sep = "")
     }
-    return(msg2)
+    return(invisible(eml_object))
   }
 
   # at this point cui_code and cui_marking coincide
@@ -794,7 +794,7 @@ set_cui_marking <- function (eml_object,
     eml_object$additionalMetadata[[x + 1]] <- my_cui
   } else {
     #otherwise, overwrite the existing CUI marking:
-    metadata2[["additionalMetadata"]][[y]] <- my_cui
+    eml_object[["additionalMetadata"]][[y]] <- my_cui
   }
 
   if (force == FALSE) {
