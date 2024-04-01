@@ -229,7 +229,7 @@ test_that("set_cui updates CUI code in EML", {
   new_meta <- suppressWarnings(set_cui_code(BICY_EMLed_meta,
                                             cui_code = cui,
                                             force = TRUE))
-  x <- get_cui(new_meta)
+  x <- get_cui_code(new_meta)
   expect_equal(x, "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
 })
 
@@ -240,7 +240,7 @@ test_that("set_cui updates when requested", {
     new_meta <- suppressWarnings(set_cui_code(BICY_EMLed_meta,
                                               cui_code = cui,
                                               force = FALSE))
-    x <- get_cui(new_meta)
+    x <- get_cui_code(new_meta)
     expect_equal(x,
                  "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.")
   })
@@ -253,7 +253,7 @@ test_that("set_cui does not update when requested not to", {
     new_meta <- suppressWarnings(set_cui_code(BICY_EMLed_meta,
                                               cui_code = cui,
                                               force = FALSE))
-    x <- get_cui(new_meta)
+    x <- get_cui_code(new_meta)
     expect_equal(x,
                  "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
     )
