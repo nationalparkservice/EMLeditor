@@ -121,7 +121,7 @@ test_that("set_content_units retains input when told to", {
 
 test_that("set_content_units adds input when told to", {
   return_val_2 <- function() {2}
-  local({mockr::local_mock(.get_user_input3 = return_val_1)
+  local({mockr::local_mock(.get_user_input3 = return_val_2)
     new_units <- c("PARA")
     new_meta <- set_content_units(BICY_EMLed_meta,
                                   new_units,
