@@ -60,7 +60,7 @@ globalVariables(c("UnitCode",
       country = "USA"
     ),
     onlineUrl = "http://www.nps.gov",
-    electronicMailAddress = "irma@nps.gov",
+    electronicMailAddress = "nrss_datastore@nps.gov",
     userId = list(directory = "https://ror.org/", userId = "https://ror.org/044zqqy65")
   )
 
