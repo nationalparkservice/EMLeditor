@@ -300,14 +300,14 @@ test_that("set_cui_marking updates CUI marking interactively", {
   new_meta2 <- set_cui_marking(new_meta,
                                cui_marking = marking,
                                force = FALSE)
-  new_meta3 <- (set_cui_code(BICY_EMLed_meta,
+  new_meta3 <- (set_cui_code(new_meta2,
                             cui_code = code2,
                             force = TRUE))
   new_meta4 <- set_cui_marking(new_meta3,
                                cui_marking = marking2,
                                force = FALSE)
-  x <- get_cui_marking(new_meta2)
-  expect_equal(x, "Your CUI marking is set to PUBLIC. This means the data do not contain CUI.")
+  x <- get_cui_marking(new_meta4)
+  expect_equal(x, "Your CUI marking is set to SP-HISTP. This means the CUI in the data is related to the location character, or ownership of historic property.")
   })
 })
 
@@ -325,14 +325,14 @@ test_that("set_cui_marking does not update CUI marking when asked not to",
     new_meta2 <- set_cui_marking(new_meta,
                                  cui_marking = marking,
                                  force = FALSE)
-    new_meta3 <- (set_cui_code(new_meta3,
+    new_meta3 <- (set_cui_code(new_meta2,
                                cui_code = code2,
                                force = TRUE))
     new_meta4 <- set_cui_marking(new_meta3,
                                  cui_marking = marking2,
                                  force = FALSE)
     x <- get_cui_marking(new_meta4)
-    expect_equal(x, "Your CUI marking is set to SP-HISTP. This means the CUI in the data is related to the location character, or ownership of historic property.")
+    expect_equal(x, "Your CUI marking is set to PUBLIC. This means the data do not contain CUI.")
   })
 })
 
