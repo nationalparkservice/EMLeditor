@@ -478,10 +478,11 @@ set_cui_code <- function(eml_object,
     #helps track lists of different lengths/hierarchies
     x <- length(doc)
 
-    # Is CUI already specified?
+    # Is CUI code already specified?
     exist_cui <- NULL
     for (i in seq_along(doc)) {
-      if (suppressWarnings(stringr::str_detect(doc[i], "CUI")) == TRUE) {
+      y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
+      if (suppressWarnings(stringr::str_detect(y, "CUI\\b")) == TRUE) {
         seq <- i
         exist_cui <- doc[[i]]$metadata$CUI
       }
