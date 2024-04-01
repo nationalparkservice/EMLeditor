@@ -7,6 +7,10 @@
 #' @param force logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.
 #' @param NPS Logical. Defaults to TRUE. **Most NPS users should leave this as the default**. Only under specific circumstances should it be set to FALSE: if you are **not** publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.
 #'
+#' # roxygen2 documentation imports packages into namespace for unit tests:
+#' @importFrom mockr local_mock
+#' @importFrom rlang local_options
+#'
 #' @return an EML-formatted R object
 #' @export
 #'
@@ -2294,7 +2298,7 @@ set_creator_order <- function(eml_object,
         cat("Please enter comma-separated numbers for the new creator order.\n")
         var1 <-.get_user_input3()
       }
-      var1 <- ord
+      ord <- var1
       if (nchar(ord) > 1) {
         ord <- as.list(strsplit(ord, ","))[[1]]
         ord <- trimws(ord)
