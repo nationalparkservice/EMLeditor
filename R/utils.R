@@ -1,3 +1,4 @@
+
 ## assign global package variables
 
 #initiate new environment accessible from within package:
