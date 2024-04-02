@@ -1,4 +1,4 @@
-# EMLeditor v0.1.4 "Little Bighorn"
+# EMLeditor v0.1.5 "Little Bighorn"
 
 ## 2024-04-01
   * Fix bug in `set_creator_orcids()`: no longer adds https://orcid.org/NA for creators without an orcid.
@@ -7,7 +7,7 @@
   * Updated the EML creation script to reference `set_cui_code()` as opposed to the (now deprecated) `set_cui()`.
 
 ## 2024-04-01
-  * Fix bug in `set_cui_code()` that was detecting both CUI code and CUI markign.
+  * Fix bug in `set_cui_code()` that was detecting both CUI code and CUI marking.
   * Fix bug in `set_cui_marking()`.
   * Fix bug in `set_creator_order()`.
 
