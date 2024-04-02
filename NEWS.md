@@ -1,5 +1,16 @@
 # EMLeditor v0.1.4 "Little Bighorn"
 
+## 2024-04-01
+  * Fix bug in `set_creator_orcids()`: no longer adds https://orcid.org/NA for creators without an orcid.
+  * Added checks in `set_creator_orcids()` such that users must specify NA (not "NA") and to check that the length of the orcid list supplied matches the length of the authors in metadata (excluding organizational authors).
+  * Updated `set_creator_orcids()` documentation to specify that the function can also be used to remove orcids from authors.
+  * Updated the EML creation script to reference `set_cui_code()` as opposed to the (now deprecated) `set_cui()`.
+
+## 2024-04-01
+  * Fix bug in `set_cui_code()` that was detecting both CUI code and CUI markign.
+  * Fix bug in `set_cui_marking()`.
+  * Fix bug in `set_creator_order()`.
+
 ## 2024-03-12
   * make `write_readme()` a non-exported function.
 
