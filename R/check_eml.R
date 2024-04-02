@@ -29,7 +29,6 @@ check_eml <- function(path = here::here()) {
 #' @param outfile is the name of the file you want to write, typically *.txt.
 #'
 #' @return a character string in readable format (saved to the given outfile)
-#' @export
 #'
 #' @examples
 #' \dontrun{

@@ -1,11 +1,14 @@
 #' Edit data package title
 #'
-#' @details The set_title function checks to see if there is an existing title and then asks the user if they would like to change the title. Some work is still needed on this function as get_eml() automatically returns all instances of a given tag. Specifying which title will be important for this function to work well.
+#' @details The `set_title()` function checks to see if there is an existing title and then asks the user if they would like to change the title. Some work is still needed on this function as `get_eml()` automatically returns all instances of a given tag. Specifying which title will be important for this function to work well.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param eml_object is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @param data_package_title is a character string that will become the new title for the data package. It can be specified directly in the function call or it can be a previously defined object that holds a character string.
 #' @param force logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.
-#' @param NPS Logical. Defaults to TRUE. **Most users should leave this as the default**. Only under specific circumstances should it be set to FALSE: if you are **not** publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.
+#' @param NPS Logical. Defaults to TRUE. **Most NPS users should leave this as the default**. Only under specific circumstances should it be set to FALSE: if you are **not** publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.
+#'
+#' @importFrom mockr local_mock
+#' @importFrom rlang local_options
 #'
 #' @return an EML-formatted R object
 #' @export
@@ -15,7 +18,10 @@
 #' data_package_title <- "New Title. Must match DataStore Reference title."
 #' eml_object <- set_title(eml_object, data_package_title)
 #' }
-set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE) {
+set_title <- function(eml_object,
+                      data_package_title,
+                      force = FALSE,
+                      NPS = TRUE) {
   # scripting route:
   if (force == TRUE) {
     eml_object$dataset$title <- data_package_title
@@ -31,8 +37,11 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
         sep = ""
       )
     } else {
-      cat("Your EML already has an title, ", crayon::blue$bold(doc), ".", sep = "")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Your EML already has an title, ",
+          crayon::blue$bold(doc),
+          ".\n", sep = "")
+      cat("Are you sure you want to replace it?\n")
+      var1 <- .get_user_input()
       # if User opts to retain DOI, retain it
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -77,7 +86,8 @@ set_title <- function(eml_object, data_package_title, force = FALSE, NPS = TRUE)
 set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   # scripting route:
   if (force == TRUE) {
-    eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
+    eml_object$dataset$alternateIdentifier <- paste0(
+      "doi: https://doi.org/10.57830/", ds_ref)
     # update data URLs to correspond to new DOI:
     data_table <- EML::eml_get(eml_object, "dataTable")
     data_table <- within(data_table, rm("@context"))
@@ -97,67 +107,48 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   # interactive route:
   if (force == FALSE) {
     # Look for an existing data package DOI:
-    doc <- arcticdatautils::eml_get_simple(
-      eml_object,
-      "alternateIdentifier"
-    )
+    doi <- eml_object$dataset$alternateIdentifier
 
     # If there is no existing DOI, add a DOI to the metadata
-    if (is.null(doc)) {
+    if (is.null(doi)) {
       eml_object$dataset$alternateIdentifier <- paste0(
         "doi: https://doi.org/10.57830/",
         ds_ref
       )
-      doc <- arcticdatautils::eml_get_simple(
-        eml_object,
-        "alternateIdentifier"
-      )
-      doc <- sub(".*? ", "", doc)
+      #get new doi:
+      doi <- eml_object$dataset$alternateIdentifier
+      doi <- sub(".*? ", "", doi)
       # print the new DOI to the screen:
       cat("No DOI detected.")
       cat("Your newly specified DOI is: ",
-        crayon::blue$bold(doc),
+        crayon::blue$bold(doi),
         sep = ""
       )
     }
 
     # If there is a DOI, find the correct doi by searching for the text "doi: ".
     else {
-      my_list <- NULL
-
-      # hopefully deals with case when there are multiple DOIs specified under alternateIdentifier tags. Haven't run into this yet and so this remains untested.
-      if (length(doc) > 1) {
-        for (i in seq_along(doc)) {
-          if (stringr::str_detect(doc[i], "doi:")) {
-            my_list <- append(my_list, doc[i])
-          }
-        }
-      }
-      # if there is only one alternateIdentifier:
-      else {
-        my_list <- doc
-      }
-      doi <- my_list[[1]]
-
       # If a DOI exists, ask the user what to do about it:
-      cat("Your EML already has a DOI specified in the <alternateIdentifier> tag:\n")
-      cat(crayon::blue$bold(doc),
+      cat("Your EML already has a DOI:\n")
+      cat(crayon::blue$bold(doi),
         "\n\n",
         sep = ""
       )
-      var1 <- readline(prompt = cat("Enter 1 to retain this DOI\nEnter 2 to overwrite this DOI"))
+      cat("Are you sure you want to replace your DOI?\n")
+      var1 <- .get_user_input()
       # if User opts to retain DOI, retain it
-      if (var1 == 1) {
+      if (var1 == 2) {
         # print the existing DOI to the screen:
         doi <- sub(".*? ", "", doi)
         cat("Your DOI remains: ", crayon::blue$bold(doi), sep = "")
       }
       # if User opts to change DOI, change it:
-      if (var1 == 2) {
-        eml_object$dataset$alternateIdentifier <- paste0("doi: https://doi.org/10.57830/", ds_ref)
+      if (var1 == 1) {
+        eml_object$dataset$alternateIdentifier <- paste0(
+          "doi: https://doi.org/10.57830/", ds_ref)
         # get the new DOI:
-        doc <- arcticdatautils::eml_get_simple(eml_object, "alternateIdentifier")
-        doc <- sub(".*? ", "", doc)
+        doi <- eml_object$dataset$alternateIdentifier
+        doi <- sub(".*? ", "", doi)
 
         # update data URLs to correspond to new DOI:
         data_table <- EML::eml_get(eml_object, "dataTable")
@@ -176,7 +167,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
             }
         }
         # print the new DOI to the screen:
-        cat("Your newly specified DOI is: ", crayon::blue$bold(doc),
+        cat("Your newly specified DOI is: ", crayon::blue$bold(doi),
             ".\n", sep = "")
         cat("Your data files url also been updated to: ",
             crayon::blue$bold(data_url), ".\n", sep = "")
@@ -196,7 +187,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
 
 #' Add Park Unit Connections to metadata
 #'
-#' @description `set_content_units()` adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore. Invalid park unit codes will return an error and the function will terminate. If you don't know a park unit code, see [get_park_code()](https://nationalparkservice.github.io/NPSutils/reference/get_park_code.html) from the [NPSutils](https://nationalparkservice.github.io/NPSutils/index.html) package].
+#' @description `set_content_units()` adds all specified park units and their N, E, S, W bounding boxes to <geographicCoverage>. This information will be used to fill in the Content Unit Links field in DataStore. Invalid park unit codes will return an error and the function will terminate. If you don't know a park unit code, see [`get_park_code()`](https://nationalparkservice.github.io/NPSutils/reference/get_park_code.html) from the [NPSutils](https://nationalparkservice.github.io/NPSutils/index.html) package].
 #'
 #' @details Adds the Content Unit Link(s) to a geographicCoverage. Content Unit Links(s) are the (typically) four-letter codes describing the park unit(s) where data were collected (e.g. ROMO, not ROMN). Each park unit is given a separate geographicCoverage element. For each content unit link, the unit name will be listed under geographicDescription and prefaced with "NPS Content Unit Link:". The geographicCoverage element will be given the attribute "system = content unit link". Required child elements (bounding coordinates) are auto populated to produce a rectangle that encompasses the park unit in question. If the default force=FALSE option is retained, the user will be shown existing content unit links (if any exist) and asked to 1) retain them 2) add to them or 3) replace them. If the force is set to TRUE, the interactive components will be skipped and the existing content unit links will be replaced.
 #'
@@ -217,13 +208,13 @@ set_content_units <- function(eml_object, park_units,
   # test whether park units are actually park units:
   null_units <- NULL
   for(i in seq_along(park_units)){
-    is_unit <- .get_unit_polygon(park_units[i])
+    is_unit <- .get_unit_polygon(park_units[i]) #
     null_units <- append(null_units, is_unit)
   }
-  # if any park unit is not valid, and exit function.
-  if(!identical(seq_along(null_units), seq_along(park_units))){
+  if (is.null(null_units)) {
     return()
   }
+
   # add text to indicate that these are park unit connections.
   units <- paste0("NPS Content Unit Link: ", park_units)
   #generate new geographic coverage for NPS Content Unit Links:
@@ -248,44 +239,46 @@ set_content_units <- function(eml_object, park_units,
   }
   # get geographic coverage from eml_object
   doc <- eml_object$dataset$coverage$geographicCoverage
+
   # Are there content unit links already specified?
   exist_units <- NULL
   for (i in seq_along(doc)) {
-    myMap <- purrr::map(doc, 1)[[i]]
-    if (suppressWarnings(stringr::str_detect(myMap,
-                                             "NPS Content Unit Link")) == TRUE) {
-      exist_units <- append(exist_units, myMap)
+    doc2 <- unlist(doc)
+    if (suppressWarnings(
+      stringr::str_detect(doc2[i],
+                          "NPS Content Unit Link")) == TRUE) {
+      exist_units <- append(exist_units, doc2[[i]])
     }
   }
-  # interactive route:
-  if (force == FALSE) {
-    # if there is no content unit links add it directly to eml_object
-    if (is.null(exist_units)) {
-      if (is.null(doc)) {
-        eml_object$dataset$coverage$geographicCoverage <- unit_list
-      } else {
-        #if there are multiple existing geographic coverages:
-        if (length(seq_along(doc[[1]])) > 1) {
-          # combine new and old geo coverages (new always at the top!)
-          doc <- append(unit_list, doc)
-          # write over the existing geographic coverage
-          eml_object$dataset$coverage$geographicCoverage <- doc
-        }
-        # if there is only one geo coverage:
-        if (length(seq_along(doc[[1]])) == 1) {
-          geocov2 <- EML::eml$geographicCoverage(
-            geographicDescription =
-              doc$geographicDescription,
-            boundingCoordinates =
-              doc$boundingCoordinates
-          )
-          # add park unit connections and existing geo coverage (park units always on top!)
-          unit_list<-append(unit_list, list(geocov2))
-          #insert into EML:
-          eml_object$dataset$coverage$geographicCoverage <- unit_list
-          #eml_object$dataset$coverage$geographicCoverage <- list(unit_list, (geocov2))
-        }
+
+  # if there is no content unit links add it directly to eml_object
+  if (is.null(exist_units)) {
+    if (is.null(doc)) {
+      eml_object$dataset$coverage$geographicCoverage <- unit_list
+    } else {
+      #if there are multiple existing geographic coverages:
+      if (length(seq_along(doc[[1]])) > 1) {
+        # combine new and old geo coverages (new always at the top!)
+        doc <- append(unit_list, doc)
+        # write over the existing geographic coverage
+        eml_object$dataset$coverage$geographicCoverage <- doc
       }
+      # if there is only one geo coverage:
+      if (length(seq_along(doc[[1]])) == 1) {
+        geocov2 <- EML::eml$geographicCoverage(
+        geographicDescription =
+          doc$geographicDescription,
+        boundingCoordinates =
+          doc$boundingCoordinates
+        )
+        # add park unit connections and existing geo coverage (park units always on top!)
+        unit_list<-append(unit_list, list(geocov2))
+      #insert into EML:
+        eml_object$dataset$coverage$geographicCoverage <- unit_list
+        #eml_object$dataset$coverage$geographicCoverage <- list(unit_list, (geocov2))
+      }
+    }
+    if (force == FALSE) {
       cat("No previous Content Unit Links Detected\n")
       cat("Your Content Unit Links have been set to:\n")
       for(i in seq_along(park_units)){
@@ -293,13 +286,17 @@ set_content_units <- function(eml_object, park_units,
         sep = ""
       }
     }
-    # if there already content unit links:
-    if (!is.null(exist_units)) {
+  }
+  # if there already content unit links:
+  if (!is.null(exist_units)) {
+    if (force == FALSE) {
       cat("Your metadata already has the following Content Unit Links Specified:\n")
       for (i in seq_along(exist_units)) {
         cat(crayon::blue$bold(exist_units[i]), "\n")
       }
-      var1 <- readline(prompt = "Do you want to\n\n 1: Retain the existing Unit Connections\n 2: Add to the exsiting Unit Connections\n 3: Replace the existing Unit Connections")
+      cat("Do you want to:\n\n 1: Retain the existing Unit Connections\n 2: Add to the exsiting Unit Connections\n 3: Replace the existing Unit Connections")
+      var1 <- .get_user_input3()
+
       # Do nothing:
       if (var1 == 1) {
         cat("Your existing Unit Connections were retained.")
@@ -352,13 +349,12 @@ set_content_units <- function(eml_object, park_units,
         }
         #get all geographic coverage that is NOT content unit links:
         no_units <- NULL
+
         for (i in seq_along(doc)) {
-          myMap2 <- purrr::map(doc, 1)[[i]]
-          if (suppressWarnings(stringr::str_detect(
-            myMap2,
-            "NPS Content Unit Link"
-          )) == FALSE) {
-            no_units <- append(no_units, doc[i])
+          if (suppressWarnings(
+            stringr::str_detect(doc[[i]][1],
+                                "NPS Content Unit Link")) == FALSE) {
+            no_units <- append(no_units, list(doc[[i]]))
           }
         }
         # if the only geo unit was a previous connection, replace it:
@@ -368,14 +364,11 @@ set_content_units <- function(eml_object, park_units,
         #if there are geographic units other than content units, add to those:
         if (!is.null(no_units)) {
           #if there is only one non-content unit geographic coverage element:
-          unit_list<-append(unit_list, no_units)
+          unit_list <- append(unit_list, no_units)
           #insert into EML:
+
           eml_object$dataset$coverage$geographicCoverage <- unit_list
-          }
-          if (length(no_units) > 1) {
-            my_list <- append(unit_list, no_units)
-            eml_object$dataset$coverage$geographicCoverage <- my_list
-          }
+        }
           # get new geo units:
           newgeo <- eml_object$dataset$coverage$geographicCoverage
           exist_units <- NULL
@@ -396,53 +389,36 @@ set_content_units <- function(eml_object, park_units,
             cat(crayon::blue$bold(exist_units[i]), "\n")
           }
         }
-      }
     }
+  }
   # scripting route
   if (force == TRUE) {
-    # if the only geo unit was not a previous connection, add connections:
-    if (is.null(exist_units)) {
-      #if no geographic coverage at all:
-      if (is.null(doc)) {
-        eml_object$dataset$coverage$geographicCoverage <- unit_list
-      }
-      if (!is.null(doc)){
-        unit_list <- append(unit_list, doc)
-        eml_object$dataset$coverage$geographicCoverage <- unit_list
-      }
-    }
-    else {
-        # make sure everything is nested to the same hierarchical level:
+      #if there is only one item in geoCov, it is not nested as deeply as when
+      #there are multiple. Re-nest single items so that all geoCov are at the
+      #same level of nesting:
       if(!is.null(names(doc))){
-          doc <- list(doc)
+        doc <- list(doc)
       }
-        #get all geographic coverage that is NOT content unit links:
+      #get all geographic coverage that is NOT content unit links:
       no_units <- NULL
       for (i in seq_along(doc)) {
-        myMap2 <- purrr::map(doc, 1)[[i]]
-        if (suppressWarnings(stringr::str_detect(
-          myMap2,
-          "NPS Content Unit Link"
-        )) == FALSE) {
-          no_units <- append(no_units, doc[i])
+        if (suppressWarnings(
+          stringr::str_detect(doc[[i]][1],
+                              "NPS Content Unit Link")) == FALSE) {
+          no_units <- append(no_units, list(doc[[i]]))
         }
       }
-        # if the only geo unit was a previous connection, replace it:
+      # if the only geo unit was a previous connection, replace it:
       if (is.null(no_units)) {
         eml_object$dataset$coverage$geographicCoverage <- unit_list
-       }
-        #if there are geographic units other than content units, add to those:
+      }
+      #if there are geographic units other than content units, add to those:
       if (!is.null(no_units)) {
         #if there is only one non-content unit geographic coverage element:
-        unit_list<-append(unit_list, no_units)
+        unit_list <- append(unit_list, no_units)
         #insert into EML:
         eml_object$dataset$coverage$geographicCoverage <- unit_list
       }
-      if (length(no_units) > 1) {
-        my_list <- append(unit_list, no_units)
-        eml_object$dataset$coverage$geographicCoverage <- my_list
-      }
-    }
   }
   # Set NPS publisher, if it doesn't already exist
   if (NPS == TRUE) {
@@ -453,9 +429,123 @@ set_content_units <- function(eml_object, park_units,
   return(eml_object)
 }
 
+#' Adds CUI dissemination codes to metadata
+#'
+#' @description
+#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to public domain (or CC0; see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
+#'
+#' @details `set_cui_code()` adds a CUI dissemination code to the tag CUI under additionalMetadata/metadata. The available choices for CUI dissemination codes at NPS are (pay attention to the spaces!):
+#'
+#' PUBLIC: The data contain no CUI, dissemination is not restricted.
+#' FED ONLY: Contains CUI. Only federal employees should have access (similar to the "internal only" setting in DataStore)
+#' FEDCON: Contains CUI Only federal employees and federal contractors should have access to the data (again, very similar to the DataStore "internal only" setting)
+#' DL ONLY: Contains CUI. Should only be available to a named list of individuals. (where and how to supply that list TBD)
+#' NOCON - Contains CUI. Federal, state, local, or tribal employees may have access, but contractors cannot.
+#'
+#' For a more detailed explanation of the CUI dissemination codes, please see the national archives [CUI Registry: Limited Dissemination Controls](https://www.archives.gov/cui/registry/limited-dissemination) web page.
+#'
+#' @inheritParams set_title
+#' @param cui_code a string consisting of one of 7 potential CUI codes: PUBLIC, FED ONLY, FEDCON, DL ONLY, or NOCON
+
+#' @returns an EML-formatted R object
+#' @export
+#' @examples
+#' \dontrun{
+#' set_cui_dissem(eml_object, "PUBLIC")
+#' }
+set_cui_code <- function(eml_object,
+                           cui_code = c("PUBLIC",
+                                        "NOCON",
+                                        "DL ONLY",
+                                        "FEDCON",
+                                        "FED ONLY"),
+                           force = FALSE,
+                           NPS = TRUE) {
+
+  cui_code <- toupper(cui_code)
+  # verify CUI code entry; stop if does not equal one of six valid codes listed above:
+  cui_code <- match.arg(cui_code)
+
+  # Generate new CUI element for additionalMetadata
+  my_cui <- list(metadata = list(CUI = cui_code), id = "CUI")
+
+  # get existing additionalMetadata elements:
+  doc <- eml_object$additionalMetadata
+
+  #if no additional metadata at all....
+  if(is.null(doc)){
+    eml_object$additionalMetadata <- list(my_cui)
+  }
+  if(!is.null(doc)){
+
+    #helps track lists of different lengths/hierarchies
+    x <- length(doc)
+
+    # Is CUI code already specified?
+    exist_cui <- NULL
+    for (i in seq_along(doc)) {
+      y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
+      if (suppressWarnings(stringr::str_detect(y, "CUI\\b")) == TRUE) {
+        seq <- i
+        exist_cui <- doc[[i]]$metadata$CUI
+      }
+    }
+
+    # scripting route:
+    if (force == TRUE) {
+      #what is [[seq]]? It works but...
+      eml_object$additionalMetadata[[seq]] <- my_cui
+    }
+
+    # interactive route:
+    if (force == FALSE) {
+      # If no existing CUI, add it in:
+      if (is.null(exist_cui)) {
+        if (x == 1) {
+          eml_object$additionalMetadata <- list(my_cui,
+                                                eml_object$additionalMetadata)
+        }
+        if (x > 1) {
+          eml_object$additionalMetadata[[x + 1]] <- my_cui
+        }
+        cat("No previous CUI was detected. Your CUI has been set to ",
+            crayon::bold$blue(cui_code), ".", sep = "")
+      }
+      # If existing CUI, stop.
+      if (!is.null(exist_cui)) {
+        cat("CUI has previously been specified as ",
+            crayon::bold$blue(exist_cui),
+            ".\n", sep = "")
+        cat("Are you sure you want to reset it?")
+        var1 <- .get_user_input() #1 = yes, 2 = no
+        if (var1 == 1) {
+          eml_object$additionalMetadata[[seq]] <- my_cui
+          cat("Your CUI code has been rest to ",
+              crayon::blue$bold(cui_code), ".", sep = "")
+        }
+        if (var1 == 2) {
+          cat("Your original CUI code was retained")
+        }
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/updated EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+
 #' Adds CUI to metadata
 #'
-#' @description set_cui adds CUI codes to EML metadata
+#' @description
+#' #' `r lifecycle::badge("deprecated")`
+#'  set_cui adds CUI dissemination codes to EML metadata
 #'
 #' @details set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.
 #'
@@ -476,6 +566,9 @@ set_content_units <- function(eml_object, park_units,
 set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
                                              "FEDCON", "FED ONLY"),
                     force = FALSE, NPS = TRUE) {
+  #add in deprecation
+  lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_dissem()")
+
   cui_code <- toupper(cui_code)
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
   cui_code <- match.arg(cui_code)
@@ -521,15 +614,15 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
         if (x > 1) {
           eml_object$additionalMetadata[[x + 1]] <- my_cui
         }
-        cat("No previous CUI was detected. Your CUI has been set to ",
+        cat("No previous CUI code was detected. Your CUI code has been set to ",
             crayon::bold$blue(cui_code), ".", sep = "")
       }
       # If existing CUI, stop.
       if (!is.null(exist_cui)) {
-        cat("CUI has previously been specified as ",
+        cat("CUI code has previously been specified as ",
             crayon::bold$blue(exist_cui),
             ".\n", sep = "")
-        var1 <- readline(prompt = "Are you sure you want to reset it? \n\n 1: Yes\n 2: No\n")
+        var1 <- .get_user_input() #1 = yes, 2 = no
         if (var1 == 1) {
           eml_object$additionalMetadata[[seq]] <- my_cui
           cat("Your CUI code has been rest to ",
@@ -550,6 +643,177 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
   eml_object <- .set_version(eml_object)
 
   return(eml_object)
+}
+
+#' The function sets the CUI marking for the data package
+#'
+#' @description `r lifecycle::badge("experimental")`
+#' The Controlled Unclassified Information (CUI) marking is different from the CUI dissemination code. The CUI dissemination code (set `set_cui_code()`) sets who can have access to the data package. The CUI marking set by `set_cui_marking()` specifies the reason (if any) that the data are being restricted.
+#' If the CUI dissemination code is set to PUBLIC, the CUI marking must also be PUBLIC.
+#' If the CUI dissemination code is set to anything other than PUBLIC, the CUI marking must be set to SP-NPSR, SP-HISTP or SP-ARCHR.
+#'
+#' @details CUI markings are the legal justification for why data are being restricted from the public. If data contain no CUI, the CUI marking must be set to PUBLIC (and the CUI dissemination code must be set to PUBLIC and the license must be set to CC0 or Public Domain). If the data contain CUI (i.e. the CUI dissemination code is not PUBLIC), you must use the CUI marking to provide a legal justification for why the data are restricted. Only one CUI marking can be applied. At NPS, the following markings are available:
+#'
+#' PUBLIC: The data contain no CUI, dissemination is not restricted.
+#' SP-NPSR: "National Park System Resources" - This material contains information concerning the nature and specific location of a National Park System resource that is endangered, threatened, rare, or commercially valuable, of mineral or paleontological objects within System units, or of objects of cultural patrimony within System units.
+#' SP-HISTP: "Historic Properties" - This material contains information related to the location, character, or ownership of historic property.
+#' SP-ARCHR: "Archaeological Resources" - This material contains information related to information about the nature and location of any archaeological resource for which the excavation or removal requires a permit or other permission.
+#'
+#' For more information on CUI markings, please visit the [CUI Markings](https://www.archives.gov/cui/registry/category-marking-list) list maintained by the National Archives.
+#'
+#' @inheritParams set_title
+#' @param cui_marking String. One of four options, "PUBLIC", "SP-NPSR", "SP-HISTP" or "SP-ARCHR" are available.
+#'
+#' @return an EML-formatted R object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' eml_object <- set_cui_marking(eml_object, "PUBLIC")
+#' }
+set_cui_marking <- function (eml_object,
+                          cui_marking = c("PUBLIC",
+                                       "SP-NPSR",
+                                       "SP-HISTP",
+                                       "SP-ARCHR"),
+                          force = FALSE,
+                          NPS = TRUE) {
+
+  cui_marking <- toupper(cui_marking)
+  # verify CUI code entry; stop if does not equal one of six valid codes listed above:
+  cui_marking <- match.arg(cui_marking)
+
+  # Generate new CUI element for additionalMetadata
+  my_cui <- list(metadata = list(CUImarking = cui_marking), id = "CUImarking")
+
+  # get existing additionalMetadata elements:
+  add_meta <- eml_object$additionalMetadata
+
+  #get the location of CUI dissemination codes in additionalMetadata:
+  x <- NULL
+  for (i in 1:length(seq_along(add_meta))) {
+    if (names(add_meta[[i]][["metadata"]]) == "CUI") {
+      x <- i
+      break
+    }
+  }
+
+  #if no CUI dissemination code exit the function; warn if force == FALSE
+  if (is.null(x)) {
+    if (force == FALSE) {
+      cat("Your metadata does not contain a CUI dissemination code.")
+      cat("Use ",
+          crayon::bold$green("set_cui_code()"),
+          " to add a dissemination code to the metadata.",
+          sep = "")
+    }
+    return(invisible(eml_object))
+  }
+
+  #get location of CUI marking codes in additionalMetadata:
+  y <- NULL
+  for (i in 1:length(seq_along(add_meta))) {
+    if(names(add_meta[[i]][["metadata"]]) == "CUImarking") {
+      y <- i
+      break
+    }
+  }
+
+  #if CUI marking already exists:
+  if (!is.null(y)) {
+    #get existing CUI marking:
+    existing_cui_marking <- add_meta[[y]][["metadata"]][["CUImarking"]]
+
+    #don't replace an existing CUI marking with the same marking
+    if (existing_cui_marking == cui_marking) {
+      if (force == FALSE) {
+        cat("Your metadata already have an existing CUI marking of ",
+            crayon::bold$blue(existing_cui_marking),
+            ".\n",
+            sep = "")
+        cat("Your metadata CUI marking was not updated.\n")
+      }
+      return(invisible(eml_object))
+    }
+
+  #if CUI markings already exist, ask if they should be replaced/changed?
+    if (force == FALSE) {
+      cat("Your metadata already contains the CUI marking: ",
+          crayon::blue$bold(existing_cui_marking),
+          ".\n",
+          sep = "")
+      cat("Are you sure you want to change it?\n")
+      var1 <- .get_user_input()
+      if (var1 == 2) {
+        cat("Your original CUI marking has been retained")
+        return(invisible(eml_object))
+      }
+    }
+  }
+  #extract CUI dissemination code
+  cui <- add_meta[[x]][["metadata"]][["CUI"]]
+
+  #test that cui code and cui marking are both public:
+  if (cui == "PUBLIC" & cui_marking != "PUBLIC") {
+    if (force == FALSE){
+      msg <- paste0("to choose a CUI marking that coincides",
+                    " with your CUI dissemination code or use ")
+      cat("Your CUI dissemination code is set to ", cui, ".\n", sep ="")
+      cat("The CUI dissemination code and CUI marking must coincide.\n")
+      cat("Use ",
+          crayon::green$bold("set_cui_marking() "),
+          msg,
+          crayon::green$bold("set_cui_code()"),
+          " to change your CUI dissemination code.\n", sep = "")
+    }
+    return(invisible(eml_object))
+  }
+
+  #test that if cui_code is not public, cui_marking is not public.
+  if (cui != "PUBLIC" & cui_marking == "PUBLIC") {
+    if (force == FALSE){
+      msg <- paste0("to choose a CUI marking that coincides",
+                    " with your CUI dissemination code or use ")
+      cat("Your CUI dissemination code is set to ", cui, ".\n", sep = "")
+      cat("The CUI dissemination code and CUI marking must coincide.\n")
+      cat("Use ",
+          crayon::green$bold("set_cui_marking() "),
+          msg,
+          crayon::green$bold("set_cui_code()"),
+          " to change your CUI dissemination code\n.", sep = "")
+    }
+    return(invisible(eml_object))
+  }
+
+  # at this point cui_code and cui_marking coincide
+  # add cui_marking and put it back in additional metadata
+
+  # Generate new CUI element for additionalMetadata
+  my_cui <- list(metadata = list(CUImarking = cui_marking), id = "CUI marking")
+
+  # if there was no CUImarking, add one:
+  if (is.null(y)) {
+    x <- length(eml_object$additionalMetadata)
+    eml_object$additionalMetadata[[x + 1]] <- my_cui
+  } else {
+    #otherwise, overwrite the existing CUI marking:
+    eml_object[["additionalMetadata"]][[y]] <- my_cui
+  }
+
+  if (force == FALSE) {
+    cat("Your CUI marking has been set to ", crayon::blue$bold(cui_marking))
+  }
+
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/updated EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+
 }
 
 #' adds DRR connection
@@ -600,7 +864,8 @@ set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force =
         ".\n",
         sep = ""
       )
-      var1 <- readline(prompt = "Are you sure you want to change it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to change it?\n")
+      var1 <- .get_user_input() #1 = Yes; 2 = No
       if (var1 == 1) {
         eml_object$dataset$usageCitation <- cite
         cat("Your new DRR is: ", crayon::blue$bold(doc$title), ".\n", sep = "")
@@ -660,7 +925,8 @@ set_abstract <- function(eml_object,
       cat("View the current abstract using get_abstract.")
     } else {
       cat("Your EML already has an abstract.\n")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -700,7 +966,8 @@ set_abstract <- function(eml_object,
 #'
 #' @examples
 #' \dontrun{
-#' eml_object <- set_additional_info(eml_object, "Here is some text for the Notes section on DataStore.")
+#' eml_object <- set_additional_info(eml_object,
+#'  "Some text for the Notes section on DataStore.")
 #' }
 set_additional_info <- function(eml_object,
                          additional_info,
@@ -723,7 +990,8 @@ set_additional_info <- function(eml_object,
       cat("View the current additionalInfo using get_additional_info.")
     } else {
       cat("Your EML already has additionalInfo.\n")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -790,7 +1058,8 @@ set_methods <- function(eml_object,
       cat("View the current methods using get_methods.")
     } else {
       cat("Your EML already has a Methods section.\n")
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace abstract:
       if (var1 == 1) {
         # print the existing DOI to the screen:
@@ -847,6 +1116,7 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
       cat("You have already specified literature cited.\n")
       cat("To view yourcurrent literature, use get_lit\n")
       var1 <- readline(prompt = "Would you like to:\n\n 1: Make no changes\n 2: Replace your literature cited\n 3: add to your literature cited\n\n")
+      var1 <- .get_user_input3() #
       if (var1 == 1) {
         print("No changes were made to literature cited.")
       }
@@ -927,7 +1197,8 @@ set_producing_units <- function(eml_object,
     if (!is.null(doc)) {
       cat("Your metadata already contains the following Producing Unit(s):\n")
       cat(crayon::blue$bold(get_producing_units(eml_object)), "\n")
-      var1 <- readline(prompt = "Are you sure you want to replace them? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace them?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
       # if User opts to replace metadataProvider, replace it:
       if (var1 == 1) {
         eml_object$dataset$metadataProvider <- plist
@@ -1030,7 +1301,8 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
       }
 
       # does the user want to change the language?
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n 1: Yes\n 2: No\n")
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1 = yes, 2 = no
 
       # if yes, change the language and report the change:
       if (var1 == 1) {
@@ -1132,10 +1404,8 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
         crayon::bold$blue(doc$title), ".",
         sep = ""
       )
-
-      var1 <- readline(prompt = "Are you sure you want to replace it? \n\n
-                     1: Yes\n 2: No\n")
-
+      cat("Are you sure you want to replace it?\n\n")
+      var1 <- .get_user_input() #1=yes, 2=no
       # if yes, change the project:
       if (var1 == 1) {
         eml_object$dataset$project <- proj
@@ -1365,7 +1635,8 @@ set_publisher <- function(eml_object,
             "\n\n",
             sep = ""
           )
-          var1 <- readline(prompt = "Would you like to replace your existing publisher? \n\n 1: Yes\n 2: No\n")
+          cat("Would you like to replace your existing publisher?\n\n")
+          var1 <- .get_user_input() #1: Yes; 2: No\n")
           if (var1 == 1) {
             eml_object$dataset$publisher <- pubset
             cat("Your new publisher is:\n\n")
@@ -1451,7 +1722,8 @@ set_publisher <- function(eml_object,
             "\n\n",
             sep = ""
           )
-          var2 <- readline(prompt = "Would you like to replace your agency? \n\n 1: Yes\n 2: No\n")
+          cat("Would you like to replace your agency?\n\n")
+          var2 <- .get_user_input() #1 = yes, 2 = no
           if (var2 == 1) {
             # Since there are existing additionalMetadata elements:
             if (length(add_meta) == 1) {
@@ -1701,9 +1973,9 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 
 #' Allows user to add ORCids to the creator
 #'
-#' @description `set_creator_orcids()` allows users to add ORCiDs to creators or edit/update existing ORCiDs associated with creators. ORCiDs are persistent digital identifiers associated with individual people and remain constant despite name changes. They can help disambiguate creators with similar names and associated all the products of one creator in one space despite variations in how the name was used (e.g. Rob Baker and Robert Baker and. Robert L. Baker but NOT any of the 15 million or so other Robert Bakers). To register an ORCiD or manage your ORCiD profile, go to [https://orcid.org/](https://orcid.org/).
+#' @description `set_creator_orcids()` allows users to add (or remove) ORCiDs to creators or edit/update existing ORCiDs associated with creators. ORCiDs are persistent digital identifiers associated with individual people and remain constant despite name changes. They can help disambiguate creators with similar names and associated all the products of one creator in one space despite variations in how the name was used (e.g. Rob Baker and Robert Baker and. Robert L. Baker but NOT any of the 15 million or so other Robert Bakers). To register an ORCiD or manage your ORCiD profile, go to [https://orcid.org/](https://orcid.org/).
 #'
-#' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put "NA" in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs; this will automatically be inserted for you.
+#' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put NA (NO quotes around NA!) in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs; this will automatically be inserted for you.
 #'
 #' @inheritParams set_title
 #' @param orcids String. One or more ORCiDs listed in the same order as the corresponding creators. Use "NA" if a creator does not have an ORCiD. Do not include the full URL. Format as: xxxx-xxxx-xxxx-xxxx (the https://orcid.org/ prefix will be added for you).
@@ -1716,18 +1988,28 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 #' #only one creator:
 #' mymetadata <- set_creator_orcids(mymetadata, 1234-1234-1234-1234)
 #'
-#' #three creators, the second of which does not hae an ORCiD:
-#' creator_orcids <- c("1234-1234-1234-1234", "NA", "4321-4321-4321-4321")
+#' #three creators, the second of which does not have an ORCiD:
+#' creator_orcids <- c("1234-1234-1234-1234", NA, "4321-4321-4321-4321")
 #' mymetadata <- set_creator_orcids(mymetadata, creator_orcids)
 #' }
 set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
+  #if NA supplied as "NA":
+  if (sum(stringr::str_detect(na.exclude(orcids), "NA")) > 0) {
+    if (force == FALSE) {
+      cat("It appears some authors do not have orcids.\n")
+      cat("Please specify these as NA (without quotes).")
+    }
+    return(invisible(eml_object))
+  }
 
   #make sure they didn't include URLs:
-  if(sum(grep("https://orcid.org/", orcids)) > 0){
-    cat("The ORCiD(s) you supplied appear to be incorrectly formatted.\n")
-    cat("Please supply ORCiDs in the following format: xxxx-xxxx-xxxx-xxxx",
-        " (No URLs).\n", sep="")
-    return()
+  if (sum(grep("https://orcid.org/", orcids)) > 0) {
+    if (force == FALSE) {
+      cat("The ORCiD(s) you supplied appear to be incorrectly formatted.\n")
+      cat("Please supply ORCiDs in the following format: xxxx-xxxx-xxxx-xxxx",
+          " (No URLs).\n", sep="")
+    }
+    return(invisible(eml_object))
   }
 
   #get creators
@@ -1735,25 +2017,37 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 
   # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
   names_list <- c("individualName", "organizationName", "positionName")
-  if(sum(names_list %in% names(creator)) > 0){
+  if (sum(names_list %in% names(creator)) > 0) {
     creator <- list(creator)
   }
 
   #get existing orcids (should this be its own function?):
   surName <- NULL
   existing_orcid <- NULL
-  for(i in seq_along(creator)){
-    if("individualName" %in% names(creator[[i]])){
+  for (i in seq_along(creator)) {
+    if ("individualName" %in% names(creator[[i]])) {
       #check for orcid directory id:
-      surName <- append(surName, creator[[i]][["individualName"]][["surName"]])
-      existing_orcid <- append(existing_orcid, creator[[i]][["userId"]][["userId"]])
+      surName <- append(surName,
+                        creator[[i]][["individualName"]][["surName"]])
+      #what if there is no orcid?
+      existing_orcid <- append(existing_orcid,
+                               creator[[i]][["userId"]][["userId"]])
     }
   }
 
+  # make sure provided list of orcids is the same length as the authors
+  if (length(seq_along(surName)) != length(seq_along(orcids))) {
+    if (force == FALSE) {
+      cat("The list of orcids and existing authors must be the same length.\n")
+      cat("Use NA (no quotes) to indicate an author does not have an orcid.")
+    }
+    return(invisible(eml_object))
+  }
+
   #if verbose route:
-  if(force == FALSE){
+  if (force == FALSE) {
     #if there are already orcids:
-    if(!is.null(existing_orcid)){
+    if (!is.null(existing_orcid)) {
       #construct tibble of existing orcids:
       current_orcids <- tibble::tibble(surName, existing_orcid)
       #construct tibble of replacement orcids:
@@ -1762,23 +2056,29 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
       cat(format(tibble::as_tibble(current_orcids))[c(-3L, -1L)], sep = "\n")
       cat("\nAre you sure you want to replace the existing ORCiDs with the following:\n\n")
       cat(format(tibble::as_tibble(new_orcids))[c(-3L, -1L)], sep = "\n")
-      var1 <- readline(prompt = cat("\n\n1: Yes\n2: No\n\n"))
+      var1 <- .get_user_input() #1: Yes; 2: No
 
       if(var1 == 2){
         cat("Your original ORCiDs were retained.")
-        return()
+        return(invisible(eml_object))
       }
     }
   }
 
   #generate list of new orcids:
   author_order <- 1
-  for(i in seq_along(creator)){
-    if("individualName" %in% names(creator[[i]])){
-      replace_orcid <- paste0("https://orcid.org/", orcids[author_order])
+  for (i in seq_along(creator)) {
+    if ("individualName" %in% names(creator[[i]])) {
+      if (!is.na(orcids[author_order])) {
+        replace_orcid <- paste0("https://orcid.org/", orcids[author_order])
+        userId2 <- list(list(userId = replace_orcid),
+                        directory = "https://orcid.org")
+        creator[[i]][["userId"]] <- userId2
+      } else {
+        # if user specified NA for orcid, get rid of that field
+        creator[[i]][["userId"]] <- NULL
+      }
       author_order <- author_order +1
-      userId2 <- list(list(userId = replace_orcid), directory = "https://orcid.org")
-      creator[[i]][["userId"]] <- userId2
     }
   }
 
@@ -1786,21 +2086,23 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
   eml_object[["dataset"]][["creator"]] <- creator
 
   #if verbose route, display new orcids:
-  if(force == FALSE){
-    #get new orcids - should this be it's own function?
-    creator <- eml_object[["dataset"]][["creator"]]
-    names_list <- c("individualName", "organizationName", "positionName")
-    if(sum(names_list %in% names(creator)) > 0){
-      creator <- list(creator)
-    }
-
+  if (force == FALSE) {
+    new_creator <- eml_object[["dataset"]][["creator"]]
+    #get existing orcids (should this be its own function?):
     surName <- NULL
     existing_orcid <- NULL
-    for(i in seq_along(creator)){
-      if("individualName" %in% names(creator[[i]])){
+    for (i in seq_along(new_creator)) {
+      if ("individualName" %in% names(new_creator[[i]])) {
         #check for orcid directory id:
-        surName <- append(surName, creator[[i]][["individualName"]][["surName"]])
-        existing_orcid <- append(existing_orcid, creator[[i]][["userId"]][[1]][["userId"]])
+        surName <- append(surName,
+                          new_creator[[i]][["individualName"]][["surName"]])
+        next_orcid <- new_creator[[i]][["userId"]][[1]][["userId"]]
+        if (!is.null(next_orcid)) {
+          existing_orcid <- append(existing_orcid,
+                                 next_orcid)
+        } else {
+          existing_orcid <- append(existing_orcid, "NULL")
+        }
       }
     }
     #construct tibble of existing orcids:
@@ -1831,7 +2133,7 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 #' @inheritParams set_title
 #' @param creator_orgs List. Defaults to NA. A list of one or more organizations.
 #' @param park_units List. Defaults to NA. A list of park units. If any park units are specified, it they will supersede anything listed under creator_orgs.
-#' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see https:/ror.org) that correspond to the organization in question. If an organization does not hae a ROR ID (or you don't know it), enter "NA".
+#' @param RORs List. Defaults to NA. An optional list of one or more ROR IDs (see [https://ror.org](https://ror.org)) that correspond to the organization in question. If an organization does not have a ROR ID (or you don't know it), enter "NA".
 #'
 #' @return eml_object
 #' @export
@@ -2018,15 +2320,18 @@ set_creator_order <- function(eml_object,
       cat("Please enter comma-separated numbers for the new creator order.\n")
       cat("Example: put 5 creators in reverse order, enter: 5, 4, 3, 2, 1\n")
       cat("Example: remove the 3rd item (out of 5) enter: 1, 2, 4, 5\n\n")
-      var1 <- readline(prompt="")
+      var1 <- .get_user_input3() # waits for any user input
       #don't allow user to remove all creators!
       if(nchar(var1)==0){
         cat("You cannot delete all creators.")
         cat("Please enter comma-separated numbers for the new creator order.\n")
-        var1 <- readline(prompt="")
+        var1 <-.get_user_input3()
       }
-      ord <- as.list(strsplit(var1, ","))[[1]]
-      ord <- trimws(ord)
+      ord <- var1
+      if (nchar(ord) > 1) {
+        ord <- as.list(strsplit(ord, ","))[[1]]
+        ord <- trimws(ord)
+      }
       new_order <- as.numeric(ord)
     }
   }
@@ -2078,20 +2383,141 @@ set_creator_order <- function(eml_object,
   return(eml_object)
 }
 
+#' Adds a missing value code and definition to EML metadata
+#'
+#' @description Missing data must have a missing data code and missing data code definition. `set_missing_data()` can add a single missing value code and single missing value code definition. Missing data should be clearly indicated in the data with a missing data code (e.g "NA", "NaN", "Missing", "blank" etc.). It is generally a good idea to not use special characters for missing data codes (e.g. N/A is not advised). If it is absolutely necessary to leave a cell empty with no code, that cell still needs a missing value code and definition in the metadata. Acceptable codes in this case are "empty" and "blank" with a suitable definition that states the cells are purposefully left empty.
+#'
+#' @details The `set_missing_data()` be used on an individual column or can accept lists of files, column names, codes, and definitions. Make sure that each missing value has a file, column, single code, and single definition associated with it (if you need multiple missing value codes and definitions per column, please use the `set_more_missing()` function). If you have many missing value codes and definitions, you might consider constructing (or import) a dataframe to describe them:
+#'
+#' Example data frame:
+#' df <- data.frame(files       = c("table1.csv",
+#'                                  "table2.csv",
+#'                                  "table3.csv",
+#'                                  "table4.csv"),
+#'                  columns     = c("EventDate",
+#'                                  "scientificName",
+#'                                  "eventID",
+#'                                  "decimalLatitude"),
+#'                  codes       = c("NA", "NA", "missing", "blank"),
+#'                  definitions = c("not recorded",
+#'                                  "not identified",
+#'                                  "not recorded",
+#'                                  "intentionally left blank - not recorded"))
+#'
+#' meta2 <- set_missing_data(eml_object = metadata,
+#'                           files = df$files,
+#'                           columns = df$columns,
+#'                           codes = df$codes,
+#'                           definitions = df$definitions)
+#'
+#'
+#' @inheritParams set_title
+#' @param files String or List of strings. These are the files that contain undocumented missing data, e.g "my_data_file1.csv".
+#' @param columns String or List of strings. These are the columns with missing data for which you would like to add missing data codes and explanations in to the metadata, e.g. "scientificName".
+#' @param codes String or list of strings. These are the missing value codes you would like associated with the column in question, e.g. "missing" or "NA".
+#' @param definitions String or list of strings. These are the missing value code definitions associated with the missing value codes, e.g "not recorded" or "sample damaged when the lab flooded".
+#'
+#' @return eml_object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' #For a single column of data in a single file:
+#' meta2 <- set_missing_data(my_metadata,
+#'                           "table1.csv",
+#'                           "scientificName",
+#'                           "NA",
+#'                           "Unable to identify")
+#'
+#' #For multiple columns of data, potentially across multiple files:
+#' #(blank cells must have the missing value code of "blank" or "empty")
+#' meta2 <- set_missing_data(my_metadata,
+#'                          files = c("table1.csv", "table1.csv", "table2.csv"),
+#'                          columns = c("date", "time", "scientificName"),
+#'                          codes = c("NA", "missing", "blank"),
+#'                          definitions = c("date not recorded",
+#'                                        "time not recorded",
+#'                                        "intentionally left blank - missing")
+#'                                        )
+#'}
+set_missing_data <- function(eml_object,
+                             files,
+                             columns,
+                             codes,
+                             definitions,
+                             force = FALSE,
+                             NPS = TRUE) {
 
+  #test that the number of data files, columns, codes, and definitions match:
+  lists <- list(files, columns, codes, definitions)
+  if (sum(seq_along(unique(lapply(lists, seq_along))) != 1) > 0) {
+    if (force == FALSE) {
+      msg <- paste0("The number of filenames, columns, codes, ",
+                    "and defintions must be the same.")
+      cat(msg)
+    }
+    return()
+  }
+  #tun user input into a dataframe for easier manipulation later on:
+  user_df <- data.frame(files, columns, codes, definitions)
+  #get dataTable from metadata
+  data_tbl <- eml_object$dataset$dataTable
+  # If there's only one csv, data_tbl ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  if ("attributeList" %in% names(data_tbl)) {
+    data_tbl <- list(data_tbl)
+  }
+  #get the attribute list for each file:
+  for (i in seq_along(unique(files))) {
+    for(j in seq_along(data_tbl)) {
+      if (data_tbl[[j]][["physical"]][["objectName"]] == unique(files[i])) {
+        attrs <- data_tbl[[j]][["attributeList"]][["attribute"]]
+        #if only one attribute, renest so the code works consistently:
+        if (!is.null(names(attrs))) {
+          attrs <- list(attrs)
+        }
+        #get the new missing codes for that file:
+        df <- user_df[which(user_df$files == files[i]),]
+        #find the correct attribute for each column:
+        for (k in seq_along(df$columns)) {
+          for (l in seq_along(attrs)) {
+            if (attrs[[l]][["attributeName"]] == df$columns[k]) {
+              #extract that specific attribute
+              attr_add_missing <- attrs[[l]]
+              # if it already has a missing value code, ask before replacing:
+              if (!is.null(attr_add_missing[["missingValueCode"]])) {
+                if (force == FALSE) {
+                  cat("File ", crayon::blue$bold(files[i]),
+                      " column ", crayon::blue$bold(df$columns[k]),
+                      " already has a missing value code.\n", sep ="")
+                  cat("Would you like to replace it?\n")
+                  var1 <- .get_user_input() #1 = yes, 2 = no
+                  if (var1 == 2) { next } # Skip this column
+                }
+              }
+              #add/replace the missing value codes:
+              attr_add_missing$missingValueCode <- list(
+                code = df$codes[k],
+                codeExplanation = df$definitions[k])
+              #put new attr_add_missing back into attrs:
+              attrs[[l]] <- attr_add_missing
+            }
+          }
+        }
+        # put new attrs back into data_tbl:
+        data_tbl[[j]][["attributeList"]][["attribute"]] <- attrs
+      }
+    }
+    # put new data_tbl back into EML:
+    eml_object$dataset$dataTable <- data_tbl
+  }
+  #add NPS publisher & for or by nps
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadataa
+  eml_object <- .set_version(eml_object)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return(eml_object)
+}
 
 

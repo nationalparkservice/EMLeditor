@@ -1,3 +1,31 @@
+# EMLeditor v0.1.5 "Little Bighorn"
+
+## 2024-04-01
+  * Fix bug in `set_creator_orcids()`: no longer adds https://orcid.org/NA for creators without an orcid.
+  * Added checks in `set_creator_orcids()` such that users must specify NA (not "NA") and to check that the length of the orcid list supplied matches the length of the authors in metadata (excluding organizational authors).
+  * Updated `set_creator_orcids()` documentation to specify that the function can also be used to remove orcids from authors.
+  * Updated the EML creation script to reference `set_cui_code()` as opposed to the (now deprecated) `set_cui()`.
+
+## 2024-04-01
+  * Fix bug in `set_cui_code()` that was detecting both CUI code and CUI marking.
+  * Fix bug in `set_cui_marking()`.
+  * Fix bug in `set_creator_order()`.
+
+## 2024-03-12
+  * make `write_readme()` a non-exported function.
+
+## 2024-02-29
+  * Add function `get_cui_code()`. Deprecate function `get_cui()`.
+  * Add function `get_cui_marking()`.
+
+## 2024-02-22
+  * Added function `set_missing_data()` which allows users to add missing data codes and missing data code definitions to metadata.
+  * Added utility functions `.get_user_input()` and `.get_user_input3()`. Refactored all set_ class functions to use these sub-functions rather than readlines() to get user input.
+
+## 2024-02-13
+  * Deprecated `set_cui()` in favor of `set_cui_dissem()`, which does the exact same thing as `set_cui()` but the function name has been updated to distinguish the action of the function from the newly added `set_cui_code()` function.
+  * Updated the publisher contact email in `set_npspublisher()` from irma@nps.gov to nrss_datastore@nps.gov to reflect DataStore changes in the contact email address.
+
 # EMLeditor v0.1.4 "Mackinac Island"
 
 ## 2024-01-18
@@ -135,7 +163,7 @@ Added a new function, `set_datastore_doi()` that will initiate a draft reference
 
 ## February 09, 2023
 
-# Summary
+### Summary
 
 Bug fixes, update `set_cui()` codes, flesh out `set_int_rights`. Update documentation.
 

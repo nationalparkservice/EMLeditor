@@ -7,13 +7,13 @@
 set_additional_info(eml_object, additional_info, force = FALSE, NPS = TRUE)
 }
 \arguments{
-\item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
+\item{eml_object}{is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
 \item{additional_info}{String. Will become the "notes" on the DataStore landing page.}
 
 \item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
-\item{NPS}{Logical. Defaults to TRUE. \strong{Most users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS by not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
+\item{NPS}{Logical. Defaults to TRUE. \strong{Most NPS users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
 \value{
 an EML-formated R object
@@ -28,6 +28,7 @@ At this time, \code{set_additional_info()} does not support complex formatting s
 }
 \examples{
 \dontrun{
-eml_object <- set_additional_info(eml_object, "Here is some text for the Notes section on DataStore.")
+eml_object <- set_additional_info(eml_object,
+ "Some text for the Notes section on DataStore.")
 }
 }

@@ -1,3 +1,4 @@
+
 ## assign global package variables
 
 #initiate new environment accessible from within package:
@@ -27,7 +28,10 @@ assign("ds_dev_api", "https://irmadevservices.nps.gov/datastore-secure/v6/rest/"
 #this gets rid of the "no visible binding for global variable 'x'" error in build checks:
 globalVariables(c("UnitCode",
                   "Name",
-                  "Alpha_3_B"))
+                  "Alpha_3_B",
+                  "msg",
+                  "msg2",
+                  "na.exclude"))
 
 
 #' inject NPS Publisher info into metadata
@@ -60,7 +64,7 @@ globalVariables(c("UnitCode",
       country = "USA"
     ),
     onlineUrl = "http://www.nps.gov",
-    electronicMailAddress = "irma@nps.gov",
+    electronicMailAddress = "nrss_datastore@nps.gov",
     userId = list(directory = "https://ror.org/", userId = "https://ror.org/044zqqy65")
   )
 
@@ -170,7 +174,7 @@ globalVariables(c("UnitCode",
     error = function(e) {
       message(
         paste0(crayon::bold$red(unit_code),
-               " is not a valid park unit. Please supply valid park units"))
+               " is not a valid park unit. Please supply valid park units."))
     }
     )
   return(park_polygon)
@@ -232,4 +236,36 @@ globalVariables(c("UnitCode",
     }
   }
   return(eml_object)
+}
+
+
+#' Get Binary User Input
+#'
+#' Prompts for, gets, and returns binary user input (1 or 2)
+#'
+#' @return Factor. 1 or 2.
+#'
+#' @examples
+#' \dontrun{
+#' var1 <- .get_user_input()
+#' }
+.get_user_input <- function () {
+  var1 <- readline(prompt = "1: Yes\n2: No\n")
+  return(var1)
+}
+
+#' Get open ended user input
+#'
+#' @description Does not prompt for user input. Takes any user input supplied and returns it.
+#'
+#' @return character, typically 1, 2, or 3 but could be any character string.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' var1 <- .get_user_input3()
+#' }
+.get_user_input3 <- function() {
+  var1 <- readline(prompt = (""))
+  return(var1)
 }

@@ -1,6 +1,6 @@
 Package: EMLeditor
 Title: View and Edit EML Metadata
-Version: 0.1.4
+Version: 0.1.5
 Authors@R: c(
     person(given="Robert", family="Baker", email="robert_baker@nps.gov",
            role = c("aut", "cre"),
@@ -19,7 +19,7 @@ License: MIT + file LICENSE
 BugReports: https://github.com/nationalparkservice/EMLeditor/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Remotes: 
     NCEAS/arcticdatautils,
     nationalparkservice/DPchecker
@@ -29,26 +29,27 @@ Imports:
     sf,
     utils,
     EML,
-    arcticdatautils,
     magrittr,
     stringr,
-    gdata,
-    stargazer,
     lubridate,
-    ISOcodes,
     crayon,
     dplyr,
     stats,
     lifecycle,
     here,
     DPchecker (>= 0.1.0),
-    purrr,
     jsonlite,
     tibble,
-    cli, 
+    cli,
     XML,
-    curl
-Suggests: 
+    curl,
+    mockr,
+    rlang,
+    ISOcodes,
+    gdata
+Suggests:
+    arcticdatautils,
+    stargazer,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)

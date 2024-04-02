@@ -95,13 +95,38 @@ get_abstract <- function(eml_object) {
   return(txt)
 }
 
-#' Get additional information (Notes on DataStore)
+#' Get methods
 #'
-#' @description `get_methods()` returns the text stored in the methods element of EML metadata. The returned text is not manipulated in any way. DataStore unlist the returned object (get rid of tags such as $methodStep, $methodStep$description and $methodStep$description$para and remove the numbers in brackets). the "\\n" character combination is interpretted as a line break (as are blank lines). However, DataStpre will not filter out stray characters such as &amp;#13;. Use the `set_methods()` function to edit and replace the text stored in the methods field.
+#' @description `get_methods()` returns the text stored in the methods element of EML metadata. The returned text is not manipulated in any way. DataStore unlists the returned object (get rid of tags such as $methodStep, $methodStep$description and $methodStep$description$para and remove the numbers in brackets). the "\\n" character combination is interpreted as a line break (as are blank lines). However, DataStore will not filter out stray characters such as &amp;#13;. Use the `set_methods()` function to edit and replace the text stored in the methods field.
 #'
 #' @inheritParams get_begin_date
 #'
 #' @return List
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_methods(eml_object)
+#' }
+#'
+#'
+get_methods <- function(eml_object){
+  doc <- eml_object$dataset$methods
+  if(is.null(doc)){
+    warning("Your EML lacks a methods section. Use set_methods() to add methods.")
+  }
+  return(doc)
+}
+
+
+
+#' Get additional information (Notes on DataStore)
+#'
+#' @description `get_additional_info()` returns the text in the additionalInformation element of EML. This text will be used to populate the "Notes" sectionon the DataStore reference page. There is no strict limit on what can and cannot go in to the additionalInformation/Notes section. However, DataStore will not filter out stray characters such as &amp;#13;. Use the `set_additional_info()` function to edit and replace the text stored in the additionalInformation (notes) field.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return String
 #' @export
 #'
 #' @examples
@@ -116,16 +141,6 @@ get_additional_info <- function(eml_object) {
   return(doc)
 
 }
-
-get_methods <- function(eml_object){
-  doc <- eml_object$dataset$methods
-  if(is.null(doc)){
-    warning("Your EML lacks a methods section. Use set_methods() to add methods.")
-  }
-  return(doc)
-}
-
-
 
 #' returns the data package title
 #'
@@ -405,11 +420,11 @@ get_content_units <- function(eml_object) {
   return(list_units)
 }
 
-#' returns a CUI statement
+#' returns a CUI dissemination code statement
 #'
-#' @description `get_cui()` returns an English-language translation of the CUI codes
+#' @description `get_cui_code()` returns an English-language translation of the CUI dissemination codes. It supersedes `get_cui()`, which has been deprecated.
 #'
-#' @details `get_cui()` accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
+#' @details `get_cui_code()` accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
 #'
 #' @inheritParams get_begin_date
 #'
@@ -419,7 +434,7 @@ get_content_units <- function(eml_object) {
 #' \dontrun{
 #' get_cui(eml_object)
 #' }
-get_cui <- function(eml_object) {
+get_cui_code <- function(eml_object) {
   cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
   if (is.null(cui)) {
     cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
@@ -444,6 +459,131 @@ get_cui <- function(eml_object) {
     cui <- NA
   }
   return(cui)
+}
+
+#' returns a CUI statement
+#'
+#' @description
+#' #' `r lifecycle::badge("deprecated")`
+#' Deprecated in favor of `get_cui_code()`. `get_cui()` returns an English-language translation of the CUI codes
+#'
+#' @details `get_cui()` accesses the contents of the Controlled Unclassified Information (CUI) tag, <CUI> and returns an appropriate string of english-language text based on the properties of the CUI code. If thee <CUI> tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return a text string
+#' @export
+#' @examples
+#' \dontrun{
+#' get_cui(eml_object)
+#' }
+get_cui <- function(eml_object) {
+  #add in deprecation
+  lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_dissem()")
+
+  cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
+  if (is.null(cui)) {
+    cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
+    cui <- "No CUI specified."
+  } else if (cui == "FED ONLY") {
+    cui <- "Contains CUI. Only federal employees should have access (similar to \"internal only\" in DataStore)."
+  } else if (cui == "FEDCON") {
+    cui <- "Contains CUI. Only federal employees and federal contractors should have access (also very much like current \"internal only\" setting in DataStore)."
+  } else if (cui == "DL ONLY") {
+    cui <- "Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)."
+  } else if (cui == "NOCON") {
+    cui <- "Contains  CUI. Federal, state, local, or tribal employees may have access, but contractors cannot."
+  } else if (cui == "PUBVER") {
+    cui <- "Does NOT contain CUI. The original data contained CUI, but in this data package CUI have been obscured so that it no longer contains CUI."
+  } else if (cui == "PUBFUL") {
+    cui <- "Does NOT contain CUI. The original data contained no CUI. No data were obscured or altered to generate the data package."
+  } else if (cui == "PUBLIC") {
+    cui <- "Does NOT contain CUI"
+  }
+  else {
+    warning("CUI not properly specified. Use set_cui() to update the CUI code.")
+    cui <- NA
+  }
+  return(cui)
+}
+
+#' Returns the CUI marking
+#'
+#' @description
+#' For data with controlled unclassified information (CUI), `get_cui_marking()` eturns the specific marking and the english language explanation of the marking. For data without CUI, it informs that there is no CUI and returns the code "PUBLIC".
+#'
+#' @details
+#' CUI markings are defined by the U.S. National Archives (nara.gov). NPS users can designate one of three CUI markings, plus the code "PUBLIC" (essentially, no marking necessary). The three markings are: SP-NPSR, SP-HISTP or SP-ARCHR.
+#' For more information on CUI markings, please visit the [CUI Markings](https://www.archives.gov/cui/registry/category-marking-list) list maintained by the National Archives.
+#'
+#'
+##' @inheritParams get_begin_date
+#'
+#' @return String (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_cui_marking(eml_object)
+#' }
+get_cui_marking <- function(eml_object) {
+  # get existing additionalMetadata elements:
+  add_meta <- eml_object$additionalMetadata
+
+  #get location of CUI markings from addtiional metadata
+  y <- NULL
+  for (i in 1:length(seq_along(add_meta))) {
+    if(names(add_meta[[i]][["metadata"]]) == "CUImarking") {
+      y <- i
+      break
+    }
+  }
+  #if there is not yet any CUI marking:
+  if (is.null(y)) {
+    cat("Your metadata do not yet contain a CUI marking.\n")
+    cat("Please use ",
+        crayon::green$bold("set_cui_marking"),
+        " to add the appropriate CUI marking to your metadata.",
+        sep = "")
+    return(invisible())
+  }
+
+  #if CUI marking exists:
+  if (!is.null(y)) {
+    #get existing CUI marking:
+    existing_cui_marking <- add_meta[[y]][["metadata"]][["CUImarking"]]
+    if(existing_cui_marking == "PUBLIC") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue("PUBLIC"),
+                    ". This means the data do not contain CUI.")
+    } else if (existing_cui_marking == "SP-NPSR") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue$bold(existing_cui_marking),
+                    ". This means the CUI in the data is related to",
+                    " information concerning the nature and specific location",
+                    " of a National Park System resource that is endangered, ",
+                    "threatened, rare, or commercially valuable, of mineral",
+                    " or paleontological objects within System units, or of",
+                    " objects of cultural patrimony within System unit")
+    } else if (existing_cui_marking == "SP-HISTP") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue$bold(existing_cui_marking),
+                    ". This means the CUI in the data is related to the",
+                    " location character, or ownership of historic property.")
+    } else if (existing_cui_marking == "SP-ARCHR") {
+      msg <- paste0("Your CUI marking is set to ",
+                    crayon::blue$bold(existing_cui_marking),
+                    ". This means the CUI in the data is related to ",
+                    "information about the nature and location of any",
+                    " archaeological resource for which the excavation or",
+                    " removal requires a permit or other permission.")
+    } else {
+      warning("CUI marking is not properly set. Please use set_cui_marking to fix it.")
+      msg <- NA
+    }
+  }
+  cat(msg)
+  return(invisible(msg))
 }
 
 
@@ -587,6 +727,19 @@ get_producing_units <- function(eml_object) {
   return(punit)
 }
 
+#' Returns the publisher information
+#'
+#' @description `get_publisher()` returns a list that includes all the information about the publisher stored in EML.
+#'
+#' @inheritParams get_begin_date
+#'
+#' @return List.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_publisher(eml_object)
+#' }
 get_publisher <- function(eml_object) {
   pub <- eml_object$dataset$publisher
 }

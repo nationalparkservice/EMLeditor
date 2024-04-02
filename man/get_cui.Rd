@@ -13,7 +13,8 @@ get_cui(eml_object)
 a text string
 }
 \description{
-\code{get_cui()} returns an English-language translation of the CUI codes
+#' \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+Deprecated in favor of \code{get_cui_code()}. \code{get_cui()} returns an English-language translation of the CUI codes
 }
 \details{
 \code{get_cui()} accesses the contents of the Controlled Unclassified Information (CUI) tag, \if{html}{\out{<CUI>}} and returns an appropriate string of english-language text based on the properties of the CUI code. If thee \if{html}{\out{<CUI>}} tag is empty or does not exist, get_cui alerts the user and suggests specifying CUI using the set_cui() funciton.

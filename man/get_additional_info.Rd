@@ -10,10 +10,10 @@ get_additional_info(eml_object)
 \item{eml_object}{is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 }
 \value{
-List
+String
 }
 \description{
-\code{get_methods()} returns the text stored in the methods element of EML metadata. The returned text is not manipulated in any way. DataStore unlist the returned object (get rid of tags such as $methodStep, $methodStep$description and $methodStep$description$para and remove the numbers in brackets). the "\\n" character combination is interpretted as a line break (as are blank lines). However, DataStpre will not filter out stray characters such as &#13;. Use the \code{set_methods()} function to edit and replace the text stored in the methods field.
+\code{get_additional_info()} returns the text in the additionalInformation element of EML. This text will be used to populate the "Notes" sectionon the DataStore reference page. There is no strict limit on what can and cannot go in to the additionalInformation/Notes section. However, DataStore will not filter out stray characters such as &#13;. Use the \code{set_additional_info()} function to edit and replace the text stored in the additionalInformation (notes) field.
 }
 \examples{
 \dontrun{
