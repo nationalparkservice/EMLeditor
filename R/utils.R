@@ -30,7 +30,8 @@ globalVariables(c("UnitCode",
                   "Name",
                   "Alpha_3_B",
                   "msg",
-                  "msg2"))
+                  "msg2",
+                  "na.exclude"))
 
 
 #' inject NPS Publisher info into metadata
