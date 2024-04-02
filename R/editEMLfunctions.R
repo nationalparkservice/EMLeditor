@@ -1976,7 +1976,7 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 #'
 #' @description `set_creator_orcids()` allows users to add ORCiDs to creators or edit/update existing ORCiDs associated with creators. ORCiDs are persistent digital identifiers associated with individual people and remain constant despite name changes. They can help disambiguate creators with similar names and associated all the products of one creator in one space despite variations in how the name was used (e.g. Rob Baker and Robert Baker and. Robert L. Baker but NOT any of the 15 million or so other Robert Bakers). To register an ORCiD or manage your ORCiD profile, go to [https://orcid.org/](https://orcid.org/).
 #'
-#' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put "NA" in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs; this will automatically be inserted for you.
+#' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put NA (NO quotes around NA!) in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs; this will automatically be inserted for you.
 #'
 #' @inheritParams set_title
 #' @param orcids String. One or more ORCiDs listed in the same order as the corresponding creators. Use "NA" if a creator does not have an ORCiD. Do not include the full URL. Format as: xxxx-xxxx-xxxx-xxxx (the https://orcid.org/ prefix will be added for you).
@@ -1990,17 +1990,27 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 #' mymetadata <- set_creator_orcids(mymetadata, 1234-1234-1234-1234)
 #'
 #' #three creators, the second of which does not have an ORCiD:
-#' creator_orcids <- c("1234-1234-1234-1234", "NA", "4321-4321-4321-4321")
+#' creator_orcids <- c("1234-1234-1234-1234", NA, "4321-4321-4321-4321")
 #' mymetadata <- set_creator_orcids(mymetadata, creator_orcids)
 #' }
 set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
+  #if NA supplied as "NA":
+  if (sum(stringr::str_detect(na.exclude(orcids), "NA")) > 0) {
+    if (force == FALSE) {
+      cat("It appears some authors do not have orcids.\n")
+      cat("Please specify these as NA (without quotes).")
+    }
+    return(invisible(eml_object))
+  }
 
   #make sure they didn't include URLs:
-  if(sum(grep("https://orcid.org/", orcids)) > 0){
-    cat("The ORCiD(s) you supplied appear to be incorrectly formatted.\n")
-    cat("Please supply ORCiDs in the following format: xxxx-xxxx-xxxx-xxxx",
-        " (No URLs).\n", sep="")
-    return()
+  if (sum(grep("https://orcid.org/", orcids)) > 0) {
+    if (force == FALSE) {
+      cat("The ORCiD(s) you supplied appear to be incorrectly formatted.\n")
+      cat("Please supply ORCiDs in the following format: xxxx-xxxx-xxxx-xxxx",
+          " (No URLs).\n", sep="")
+    }
+    return(invisible(eml_object))
   }
 
   #get creators
@@ -2008,25 +2018,37 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 
   # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
   names_list <- c("individualName", "organizationName", "positionName")
-  if(sum(names_list %in% names(creator)) > 0){
+  if (sum(names_list %in% names(creator)) > 0) {
     creator <- list(creator)
   }
 
   #get existing orcids (should this be its own function?):
   surName <- NULL
   existing_orcid <- NULL
-  for(i in seq_along(creator)){
-    if("individualName" %in% names(creator[[i]])){
+  for (i in seq_along(creator)) {
+    if ("individualName" %in% names(creator[[i]])) {
       #check for orcid directory id:
-      surName <- append(surName, creator[[i]][["individualName"]][["surName"]])
-      existing_orcid <- append(existing_orcid, creator[[i]][["userId"]][["userId"]])
+      surName <- append(surName,
+                        creator[[i]][["individualName"]][["surName"]])
+      #what if there is no orcid?
+      existing_orcid <- append(existing_orcid,
+                               creator[[i]][["userId"]][["userId"]])
     }
   }
 
+  # make sure provided list of orcids is the same length as the authors
+  if (length(seq_along(surName)) != length(seq_along(orcids))) {
+    if (force == FALSE) {
+      cat("The list of orcids and existing authors must be the same length.\n")
+      cat("Use NA (no quotes) to indicate an author does not have an orcid.")
+    }
+    return(invisible(eml_object))
+  }
+
   #if verbose route:
-  if(force == FALSE){
+  if (force == FALSE) {
     #if there are already orcids:
-    if(!is.null(existing_orcid)){
+    if (!is.null(existing_orcid)) {
       #construct tibble of existing orcids:
       current_orcids <- tibble::tibble(surName, existing_orcid)
       #construct tibble of replacement orcids:
@@ -2039,19 +2061,25 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
 
       if(var1 == 2){
         cat("Your original ORCiDs were retained.")
-        return()
+        return(invisible(eml_object))
       }
     }
   }
 
   #generate list of new orcids:
   author_order <- 1
-  for(i in seq_along(creator)){
-    if("individualName" %in% names(creator[[i]])){
-      replace_orcid <- paste0("https://orcid.org/", orcids[author_order])
+  for (i in seq_along(creator)) {
+    if ("individualName" %in% names(creator[[i]])) {
+      if (!is.na(orcids[author_order])) {
+        replace_orcid <- paste0("https://orcid.org/", orcids[author_order])
+        userId2 <- list(list(userId = replace_orcid),
+                        directory = "https://orcid.org")
+        creator[[i]][["userId"]] <- userId2
+      } else {
+        # if user specified NA for orcid, get rid of that field
+        creator[[i]][["userId"]] <- NULL
+      }
       author_order <- author_order +1
-      userId2 <- list(list(userId = replace_orcid), directory = "https://orcid.org")
-      creator[[i]][["userId"]] <- userId2
     }
   }
 
@@ -2059,21 +2087,23 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
   eml_object[["dataset"]][["creator"]] <- creator
 
   #if verbose route, display new orcids:
-  if(force == FALSE){
-    #get new orcids - should this be it's own function?
-    creator <- eml_object[["dataset"]][["creator"]]
-    names_list <- c("individualName", "organizationName", "positionName")
-    if(sum(names_list %in% names(creator)) > 0){
-      creator <- list(creator)
-    }
-
+  if (force == FALSE) {
+    new_creator <- eml_object[["dataset"]][["creator"]]
+    #get existing orcids (should this be its own function?):
     surName <- NULL
     existing_orcid <- NULL
-    for(i in seq_along(creator)){
-      if("individualName" %in% names(creator[[i]])){
+    for (i in seq_along(new_creator)) {
+      if ("individualName" %in% names(new_creator[[i]])) {
         #check for orcid directory id:
-        surName <- append(surName, creator[[i]][["individualName"]][["surName"]])
-        existing_orcid <- append(existing_orcid, creator[[i]][["userId"]][[1]][["userId"]])
+        surName <- append(surName,
+                          new_creator[[i]][["individualName"]][["surName"]])
+        next_orcid <- new_creator[[i]][["userId"]][[1]][["userId"]]
+        if (!is.null(next_orcid)) {
+          existing_orcid <- append(existing_orcid,
+                                 next_orcid)
+        } else {
+          existing_orcid <- append(existing_orcid, "NULL")
+        }
       }
     }
     #construct tibble of existing orcids:
