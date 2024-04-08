@@ -88,21 +88,6 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
   if (force == TRUE) {
     eml_object$dataset$alternateIdentifier <- paste0(
       "doi: https://doi.org/10.57830/", ds_ref)
-    # update data URLs to correspond to new DOI:
-    data_table <- EML::eml_get(eml_object, "dataTable")
-    data_table <- within(data_table, rm("@context"))
-    data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
-                       ds_ref)
-    #handle case when there is only one data table:
-    if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
-    }
-    # handle case when there are multiple data tables:
-    else {
-      for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
-      }
-    }
   }
   # interactive route:
   if (force == FALSE) {
@@ -115,6 +100,7 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         "doi: https://doi.org/10.57830/",
         ds_ref
       )
+
       #get new doi:
       doi <- eml_object$dataset$alternateIdentifier
       doi <- sub(".*? ", "", doi)
@@ -150,22 +136,6 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         doi <- eml_object$dataset$alternateIdentifier
         doi <- sub(".*? ", "", doi)
 
-        # update data URLs to correspond to new DOI:
-        data_table <- EML::eml_get(eml_object, "dataTable")
-        data_table <- within(data_table, rm("@context"))
-
-        data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
-                           ds_ref)
-        #handle case when there is only one data table:
-        if("physical" %in% names(data_table)){
-          eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
-        }
-        # handle case when there are multiple data tables:
-        else {
-            for(i in seq_along(data_table)){
-              eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
-            }
-        }
         # print the new DOI to the screen:
         cat("Your newly specified DOI is: ", crayon::blue$bold(doi),
             ".\n", sep = "")
@@ -174,6 +144,26 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
       }
     }
   }
+  # update data URLs to correspond to new DOI
+  # (this should probably be a separate function)
+  data_table <- EML::eml_get(eml_object, "dataTable")
+  data_table <- within(data_table, rm("@context"))
+
+  data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                     ds_ref)
+  #handle case when there is only one data table:
+  if("physical" %in% names(data_table)){
+    eml_object$dataset$dataTable$physical$distribution$online$url <-
+      data_url
+  }
+  # handle case when there are multiple data tables:
+  else {
+    for(i in seq_along(data_table)){
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
+        data_url
+    }
+  }
+
   # Set NPS publisher, if it doesn't already exist
   if (NPS == TRUE) {
     eml_object <- .set_npspublisher(eml_object)
