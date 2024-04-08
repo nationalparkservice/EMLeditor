@@ -139,8 +139,6 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
         # print the new DOI to the screen:
         cat("Your newly specified DOI is: ", crayon::blue$bold(doi),
             ".\n", sep = "")
-        cat("Your data files url also been updated to: ",
-            crayon::blue$bold(data_url), ".\n", sep = "")
       }
     }
   }
@@ -162,6 +160,10 @@ set_doi <- function(eml_object, ds_ref, force = FALSE, NPS = TRUE) {
       eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
         data_url
     }
+  }
+  if (force == FALSE) {
+    cat("Your data files url also been updated to: ",
+        crayon::blue$bold(data_url), ".\n", sep = "")
   }
 
   # Set NPS publisher, if it doesn't already exist
