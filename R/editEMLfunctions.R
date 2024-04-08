@@ -826,7 +826,12 @@ set_cui_marking <- function (eml_object,
 #' drr_title <- "Data Release Report for Data Package 1234"
 #' set_drr(eml_object, "2293234", drr_title)
 #' }
-set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force = FALSE, NPS = TRUE) {
+set_drr <- function(eml_object,
+                    drr_ref_id,
+                    drr_title,
+                    org_name = "NPS",
+                    force = FALSE,
+                    NPS = TRUE) {
   doi <- paste0("DRR: https://doi.org/10.36967/", drr_ref_id)
 
   cite <- EML::eml$usageCitation(
@@ -849,9 +854,11 @@ set_drr <- function(eml_object, drr_ref_id, drr_title, org_name = "NPS", force =
     if (is.null(doc) == TRUE) {
       cat("No previous DRR was detected")
       eml_object$dataset$usageCitation <- cite
-      cat("Your DRR, ", crayon::blue$bold(drr_title), " has been added.", sep = "")
+      cat("Your DRR, ", crayon::blue$bold(drr_title),
+          " has been added.", sep = "")
     } else {
-      cat("Your current DRR is: ", crayon::blue$bold(doc$title), ".\n", sep = "")
+      cat("Your current DRR is: ", crayon::blue$bold(doc$title),
+          ".\n", sep = "")
       cat("The current DOI is: ", crayon::blue$bold(doc$alternateIdentifier),
         ".\n",
         sep = ""
@@ -1346,13 +1353,16 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
   # get data to construct project:
 
   # get protocol profile via rest services:
-  ds_reference <- httr::content(httr::GET(paste0(.ds_api(), "Profile/", protocol_id)))
+  ds_reference <- httr::content(httr::GET(paste0(.ds_api(),
+                                                 "Profile/",
+                                                 protocol_id)))
 
   # extract project title
   proj_title <- ds_reference$bibliography$title
 
   # generate URL for the DataStore landing page:
-  url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/", protocol_id)
+  url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
+                protocol_id)
 
   # get DataStore ref number for the organization Name:
   ref <- ds_reference$series$referenceId
@@ -1582,12 +1592,17 @@ set_publisher <- function(eml_object,
         eml_object$dataset$publisher <- pubset
         cat("No publisher information was detected\n\n")
         cat("Your publisher has been set to:\n")
-        cat("Organization Name: ", crayon::blue$bold(pubset$organizationName), "\n", sep = "")
-        cat("Street address: ", crayon::blue$bold(pubset$address$deliveryPoint), "\n", sep = "")
+        cat("Organization Name: ", crayon::blue$bold(pubset$organizationName),
+            "\n", sep = "")
+        cat("Street address: ", crayon::blue$bold(pubset$address$deliveryPoint),
+            "\n", sep = "")
         cat("City: ", crayon::blue$bold(pubset$address$city), "\n", sep = "")
-        cat("State: ", crayon::blue$bold(pubset$address$administrativeArea), "\n", sep = "")
-        cat("Zip Code: ", crayon::blue$bold(pubset$address$postalCode), "\n", sep = "")
-        cat("Country: ", crayon::blue$bold(pubset$address$country), "\n", sep = "")
+        cat("State: ", crayon::blue$bold(pubset$address$administrativeArea),
+            "\n", sep = "")
+        cat("Zip Code: ", crayon::blue$bold(pubset$address$postalCode),
+            "\n", sep = "")
+        cat("Country: ", crayon::blue$bold(pubset$address$country),
+            "\n", sep = "")
         cat("URL: ", crayon::blue$bold(pubset$onlineUrl), "\n", sep = "")
         cat("email: ", crayon::blue$bold(pubset$email), "\n", sep = "")
         cat("ROR ID: ", crayon::blue$bold(pubset$userID), "\n", sep = "")
@@ -1812,7 +1827,8 @@ set_int_rights <- function(eml_object,
           if(license == "public"){
             eml_object$dataset$intellectualRights <- pub_domain
             eml_object$dataset$licensed$licenseName <- "Public Domain"
-            cat("Your license has been set to:", crayon::blue$bold("Public Domain"))
+            cat("Your license has been set to:",
+                crayon::blue$bold("Public Domain"))
           }
         }
         # warn user license not set, CUI and license don't agree:
@@ -1832,7 +1848,8 @@ set_int_rights <- function(eml_object,
         }
         if(cui2 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
-          eml_object$dataset$licensed$licenseName <- "No License/Controlled Unclassified Information"
+          eml_object$dataset$licensed$licenseName <-
+            "No License/Controlled Unclassified Information"
           cat("Your license has been set to ",
               crayon::bold$blue("Restricted"), ".", sep="")
         }
@@ -1936,7 +1953,8 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
     # handle case when there are multiple data tables:
     else {
       for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
+          data_url
       }
     }
     if(force == FALSE){
@@ -1951,7 +1969,8 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
     # handle case when there are multiple data tables:
     else {
       for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- url
+        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
+          url
       }
     }
   }
@@ -2182,7 +2201,8 @@ set_creator_orgs <- function(eml_object,
     result <- XML::xmlParse(file = f)
     dat <- XML::xmlToDataFrame(result) # xml to dataframe
 
-    alpha <- dat %>% dplyr::filter(grepl(paste(park_units, collapse = '|'), UnitCode, ignore.case = TRUE))
+    alpha <- dat %>% dplyr::filter(grepl(paste(park_units, collapse = '|'),
+                                         UnitCode, ignore.case = TRUE))
 
     park_name <- alpha$FullName
     creator_orgs <- append(creator_orgs, park_name)
@@ -2221,7 +2241,8 @@ set_creator_orgs <- function(eml_object,
         creator_list <- append(creator_list, creator_new[[i]][["individualName"]][["surName"]])
       }
       else{
-        creator_list <- append(creator_list, creator_new[[i]][["organizationName"]])
+        creator_list <- append(creator_list,
+                               creator_new[[i]][["organizationName"]])
       }
     }
     if(force == FALSE){
