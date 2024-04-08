@@ -26,7 +26,10 @@
 #' \dontrun{
 #' eml_object <- set_datastore_doi(eml_object)
 #' }
-set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE){
+set_datastore_doi <- function(eml_object,
+                              force = FALSE,
+                              NPS = TRUE,
+                              dev = FALSE){
   # check for existing DOI:
   doc <- utils::capture.output(EMLeditor::get_doi(eml_object))
   #get data package title from metadata:
@@ -36,10 +39,16 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE
     if(length(seq_along(doc)) > 1 ){
       cat("Your metadata does not have a previously specified DOI.\n",
           sep = "")
-      cat("Are you sure you want to create a new draft reference on DataStore and insert the corresponding DOI into your metadata?\n")
+      response <- paste0("Are you sure you want to create a new draft",
+                         " reference on DataStore and insert the",
+                         " corresponding DOI into your metadata?\n")
+      cat(response)
       var1 <- .get_user_input() #1 = yes, 2 = no
       if (var1 == 2){
-        cat("Function terminated. You have not created a new draft reference on DataStore and a DOI has not been added to your metadata.")
+        response <- paste0("Function terminated. You have not created a new",
+                          " draft reference on DataStore and a DOI has not",
+                          " been added to your metadata.\n")
+        cat(response)
         return()
       }
     }
@@ -54,7 +63,7 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE
 
       #if API call fails, alert user and remind them to log on to VPN:
       if(!status_code == 200){
-        stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+        stop("DataStore connection failed.")
       }
 
       test_json <- httr::content(test_req, "text")
@@ -153,7 +162,8 @@ set_datastore_doi <- function(eml_object, force = FALSE, NPS = TRUE, dev = FALSE
   # handle case when there is only one data table:
   else {
     for(i in seq_along(data_table)){
-      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <- data_url
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
+        data_url
     }
   }
   if(force == FALSE){

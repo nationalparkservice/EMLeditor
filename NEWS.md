@@ -1,3 +1,8 @@
+# EMLeditor v0.1.6 (in progress)
+
+## 2024-04-08
+  * Bug fix for `set_doi()`, which was not always updating dataTable URLs.
+
 # EMLeditor v0.1.5 "Little Bighorn"
 
 ## 2024-04-01
@@ -20,7 +25,7 @@
 
 ## 2024-02-22
   * Added function `set_missing_data()` which allows users to add missing data codes and missing data code definitions to metadata.
-  * Added utility functions `.get_user_input()` and `.get_user_input3()`. Refactored all set_ class functions to use these sub-functions rather than readlines() to get user input.
+  * Added utility functions `.get_user_input()` and `.get_user_input3()`. Refactored all set_ class functions to use these sub-functions rather than readLines() to get user input.
 
 ## 2024-02-13
   * Deprecated `set_cui()` in favor of `set_cui_dissem()`, which does the exact same thing as `set_cui()` but the function name has been updated to distinguish the action of the function from the newly added `set_cui_code()` function.
