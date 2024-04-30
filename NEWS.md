@@ -1,4 +1,6 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-04-29
+  * Bug fix for set_cui's deprecation message: now points to the correct updated function.
 
 ## 2024-04-08
   * Bug fix for `set_doi()`, which was not always updating dataTable URLs.

@@ -559,7 +559,7 @@ set_cui <- function(eml_object, cui_code = c("PUBLIC", "NOCON", "DL ONLY",
                                              "FEDCON", "FED ONLY"),
                     force = FALSE, NPS = TRUE) {
   #add in deprecation
-  lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_dissem()")
+  lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_code()")
 
   cui_code <- toupper(cui_code)
   # verify CUI code entry; stop if does not equal one of six valid codes listed above:
