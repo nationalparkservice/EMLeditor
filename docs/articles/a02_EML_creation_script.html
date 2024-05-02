@@ -475,20 +475,27 @@ DRR, etc. More information about these functions can be found at: <a href="https
 <div class="section level3">
 <h3 id="add-controlled-unclassified-information-cui-codes">Add Controlled Unclassified Information (CUI) codes<a class="anchor" aria-label="anchor" href="#add-controlled-unclassified-information-cui-codes"></a>
 </h3>
-<p>This is a required step. It is important to indicate not only that
+<p>This is a required step, using the function
+<code><a href="../reference/set_cui_code.html">set_cui_code()</a></code>. It is important to indicate not only that
 your data package contains CUI, but also to inform users if your data
 package does NOT contain CUI because empty fields can be ambiguous (does
-it not contain CUI or did the creators just miss that step?). You can
+it not contain CUI ordid the creators just miss that step?). You can
 choose from one of five CUI dissemination codes. Watch out for the
-spaces! These are: * PUBLIC - Does NOT contain CUI. * FED ONLY -
-Contains CUI. Only federal employees should have access (similar to
-“internal only” in DataStore). * FEDCON - Contains CUI. Only federal
-employees and federal contractors should have access (also very much
-like current “internal only” setting in DataStore). * DL ONLY - Contains
-CUI. Should only be available to a named list of individuals (where and
-how to list those individuals TBD) * NOCON - Contains CUI. Federal,
-state, local, or tribal employees may have access, but contractors
-cannot. More information about these codes can be found at: <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link">https://www.archives.gov/cui/registry/limited-dissemination</a></p>
+spaces! These are:</p>
+<ul>
+<li>PUBLIC - Does NOT contain CUI.</li>
+<li>FED ONLY - Contains CUI. Only federal employees should have access
+(similar to “internal only” in DataStore).</li>
+<li>FEDCON - Contains CUI. Only federal employees and federal
+contractors should have access (also very much like current “internal
+only” setting in DataStore).</li>
+<li>DL ONLY - Contains CUI. Should only be available to a named list of
+individuals (where and how to list those individuals TBD)</li>
+<li>NOCON - Contains CUI. Federal, state, local, or tribal employees may
+have access, but contractors cannot. More information about these codes
+can be found at: <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link">https://www.archives.gov/cui/registry/limited-dissemination</a>
+</li>
+</ul>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_cui_code.html">set_cui_code</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"PUBLIC"</span><span class="op">)</span></span>
 <span><span class="co"># note that in this case I have added the CUI code to the original R object, </span></span>
