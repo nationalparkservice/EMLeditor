@@ -1,6 +1,8 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-05-01
+  * Fix documentation: typo/formatting for the description of `set_int_rights()` in the EML Creation Script github.io page.
 ## 2024-04-29
-  * Bug fix for set_cui's deprecation message: now points to the correct updated function.
+  * Bug fix for `set_cui()` deprecation message: now points to the correct updated function (`set_cui_code()`).
 
 ## 2024-04-08
   * Bug fix for `set_doi()`, which was not always updating dataTable URLs.
