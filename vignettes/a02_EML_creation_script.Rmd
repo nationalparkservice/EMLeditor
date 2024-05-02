@@ -241,11 +241,12 @@ if your EML is not schema valid, the function will notify you of specific proble
 Now that you have valid EML metadata, you need to add NPS-specific elements and fields. For instance, unit connections, DOIs, referencing a DRR, etc. More information about these functions can be found at: [https://nationalparkservice.github.io/EMLeditor/](https://nationalparkservice.github.io/EMLeditor/).
 
 ## Add Controlled Unclassified Information (CUI) codes
-This is a required step. It is important to indicate not only that your data 
-package contains CUI, but also to inform users if your data package does NOT
-contain CUI because empty fields can be ambiguous (does it not contain CUI or
-did the creators just miss that step?). You can choose from one of five CUI
-dissemination codes. Watch out for the spaces! These are:
+This is a required step, using the function `set_cui_code()`. It is important to
+indicate not only that your data package contains CUI, but also to inform users
+if your data package does NOT contain CUI because empty fields can be ambiguous
+(does it not contain CUI ordid the creators just miss that step?). You can choose
+from one of five CUI dissemination codes. Watch out for the spaces! These are:
+
   * PUBLIC - Does NOT contain CUI.
   * FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore).
   * FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore).
