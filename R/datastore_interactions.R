@@ -252,8 +252,8 @@ upload_data_package <- function(directory = here::here(),
           crayon::blue$bold(substr(test_rjson$dateOfIssue, 1, 10)),
           ".\n\n", sep = "")
       if (test_rjson$fileCount > 0) {
-        cat("The existing Reference already has files attached.")
-        cat("Use EMLeditor::remove_reference_files() before uploading new files.")
+        cat("The existing Reference already has files attached. ")
+        cat("Use EMLeditor::remove_datastore_files() before uploading new files.")
         return()
       }
     }
