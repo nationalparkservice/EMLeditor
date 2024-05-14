@@ -241,11 +241,12 @@ if your EML is not schema valid, the function will notify you of specific proble
 Now that you have valid EML metadata, you need to add NPS-specific elements and fields. For instance, unit connections, DOIs, referencing a DRR, etc. More information about these functions can be found at: [https://nationalparkservice.github.io/EMLeditor/](https://nationalparkservice.github.io/EMLeditor/).
 
 ## Add Controlled Unclassified Information (CUI) codes
-This is a required step. It is important to indicate not only that your data 
-package contains CUI, but also to inform users if your data package does NOT
-contain CUI because empty fields can be ambiguous (does it not contain CUI or
-did the creators just miss that step?). You can choose from one of five CUI
-dissemination codes. Watch out for the spaces! These are:
+This is a required step, using the function `set_cui_code()`. It is important to
+indicate not only that your data package contains CUI, but also to inform users
+if your data package does NOT contain CUI because empty fields can be ambiguous
+(does it not contain CUI ordid the creators just miss that step?). You can choose
+from one of five CUI dissemination codes. Watch out for the spaces! These are:
+
   * PUBLIC - Does NOT contain CUI.
   * FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore).
   * FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore).
@@ -263,6 +264,7 @@ my_metadata <- EMLeditor::set_cui_code(my_metadata, "PUBLIC")
 
 ## Intellectual Rights
 EMLassemblyine and ezEML provide some attractive looking boilerplate for setting the intellectual rights. It looks reasonable and so is easy to just keep. However, NPS has some specific regulations about what can and cannot be in the intellectualRights tag. Use `set_int_rights()` to replace the text with NPS-approved text. Note: You must first add the CUI dissemination code using `set_cui()` as the dissemination code and license must agree. That is, you cannot give a data package with a PUBLIC dissemination code a "restricted" license (and vise versa: a restricted data package that contains CUI cannot have a public domain or CC0 license). You can choose from one of three options:
+
   * "restricted": If the data contains Controlled Unclassified Information (CUI), the intellectual rights must read: **"This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."**
 
   * "public": If the data do not contain CUI, the default is the public domain. The intellectual rights must read: **"This work is in the public domain. There is no copyright or license."**
