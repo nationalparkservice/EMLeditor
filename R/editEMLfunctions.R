@@ -443,7 +443,7 @@ set_content_units <- function(eml_object, park_units,
 #' @export
 #' @examples
 #' \dontrun{
-#' set_cui_dissem(eml_object, "PUBLIC")
+#' set_cui_code(eml_object, "PUBLIC")
 #' }
 set_cui_code <- function(eml_object,
                            cui_code = c("PUBLIC",
