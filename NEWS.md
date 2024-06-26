@@ -1,4 +1,6 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-06-26
+  * Added new function, `set_new_creator()` which can add one or more creators to EML.
 ## 2024-05-01
   * Fix documentation: typo/formatting for the description of `set_int_rights()` in the EML Creation Script github.io page.
 ## 2024-04-29

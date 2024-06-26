@@ -2344,7 +2344,7 @@ set_new_creator <- function(eml_object,
   if (NPS == TRUE) {
     eml_object <- .set_npspublisher(eml_object)
   }
-  # add/update EMLeditor and version to metadataa
+  # add/update EMLeditor and version to metadata
   eml_object <- .set_version(eml_object)
 
   return(eml_object)

@@ -2,7 +2,10 @@
 good_dir <- here::here("good")
 bad_dir <- here::here("bad")
 
-#load metadata to to test functions with. Note that this directory structire is necessary to pass Rstudio Build Checks but will not work for local test developmnet and test testing.
+#to test/debug the tests, use the following directory structure:
+#good_dir <- here::here("tests", "testthat", "good")
+
+#load metadata to to test functions with. Note that this directory structure is necessary to pass Rstudio Build Checks but will not work for local test development and test testing.
 BICY_EMLed_meta <- EML::read_eml(here::here(good_dir,
                                             "BICY",
                                             "BICY_EMLeditor_metadata.xml"),
@@ -919,7 +922,7 @@ test_that("set_creator_orcids does not add orcids when requested not to", {
   })
 })
 
-# ----- set_creator_orgs ----
+# ----- test set_creator_orgs ----
 
 test_that("set_creator_orgs returns valid EML", {
   new_meta <- set_creator_orgs(BICY_EMLed_meta,
@@ -945,6 +948,29 @@ test_that("set_creator_orgs adds organization when force = FALSE", {
                                force = FALSE)
   expect_equal(length(seq_along(new_meta[["dataset"]][["creator"]])),
                2)
+})
+
+# ----- test set_new_creator ----
+
+test_that("set_new_creator returns valid EML", {
+  new_meta <- set_new_creator(BICY_EMLed_meta,
+                                  last_name = c("Doe", "Smith"),
+                                  first_name = c("John", "Jane"),
+                                  middle_name = c(NA, "S."),
+                                  organization_name = c("NPS", "UCLA"),
+                                  email_address = c("john_doe@@nps.gov", NA))
+  expect_equal(EML::eml_validate(new_meta)[1], TRUE)
+})
+
+test_that("set_new_creator adds creators to EML", {
+  new_meta <- set_new_creator(BICY_EMLed_meta,
+                              last_name = c("Doe", "Smith"),
+                              first_name = c("John", "Jane"),
+                              middle_name = c(NA, "S."),
+                              organization_name = c("NPS", "UCLA"),
+                              email_address = c("john_doe@@nps.gov", NA))
+  creator <- new_meta[["dataset"]][["creator"]]
+  expect_equal(length(seq_along(creator)), 3)
 })
 
 # ----- test set_creator_order ----
