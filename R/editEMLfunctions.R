@@ -2261,6 +2261,95 @@ set_creator_orgs <- function(eml_object,
   return(eml_object)
 }
 
+#' Adds creators to EML
+#'
+#' @description Sometimes it is necessary to change the creators (authors) of a data package. If the data package and EML have already been created, it can be tedious to have to re-run all of the EMLassemblyline functions and then have to re-do all of the EMLeditor functions. This function allows the user to add in one or more creators without having to re-run the entire workflow. This will not over-write the or remove the existing creators, just add to the list of creators.
+#'
+#' @details Each creator must have at minimum a last name. You may also supply a first name and one middle name. If you are adding a list of creators, you must supply all fields for each creator; if one creator is for instance missing or does not use a first name, do not skip this but instead list it as NA. If you need to re-arrange creators or remove creators, you can do so using the `set_creator_order` function.Do NOT use this function to add organizations as creators. Instead use `set_creator_orgs`. If your new creator has an orcid, add the orcid in via `set_creator_orgs`
+#'
+#' @inheritParams set_title
+#' @param last_name String (or list of strings). The last name(s) of the creator(s) to add. You must supply a last name for each creator.
+#' @param first_name String (or list of strings). The first name(s) or initials of the creator(s) to add. Use NA if there is no first name.
+#' @param middle_name String (or list of strings). The middle name(s) or initial(s) of the creator(s) to add. Use NA if there is no middle name.
+#' @param organization_name String (or list of strings). The organizational affiliation of the creator(s) to add, e.g. "National Park Service". Use NA if there is no organizational affiliation.
+#' @param email_address String (or list of strings). The email address(es) of the creator(s) to add. Use NA if there are no email addresses.
+#'
+#' @return emlobject
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' meta2 <- set_new_creator(metadata, "Doe", "John", "D.", "NPS", "John_Doe@@nps.gov")
+
+#' meta2 <- set_new_creator(metadata,
+#'                          last_name = c("Doe", "Smith"),
+#'                          first_name = c("John", "Jane"),
+#'                          middle_name = c(NA, "S."),
+#'                          organization_name = c("NPS", "UCLA"),
+#'                          email_address = c("john_doe@@nps.gov", NA))
+#'}
+set_new_creator <- function(eml_object,
+                         last_name = NA,
+                         first_name = NA,
+                         middle_name = NA,
+                         organization_name = NA,
+                         email_address = NA,
+                         force = FALSE,
+                         NPS = TRUE) {
+  #make sure all creators have at least a last name:
+  if (sum(is.na(last_name)) > 0) {
+    cat("At a minimum, each creator requires a last name")
+    stop()
+  }
+  #get creators (what if there are none? does that even happen?)
+  existing_creators <- eml_object[["dataset"]][["creator"]]
+
+  # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
+  names_list <- c("individualName", "organizationName", "positionName")
+  if (sum(names_list %in% names(existing_creators)) > 0) {
+    existing_creators <- list(creator)
+  }
+
+  #### Add in new creator(s):
+  new_creators <- NULL
+  creator <- NULL
+  for (i in seq_along(last_name)) {
+    #generate a new creator
+    creator <- list(
+      individualName = list(
+        surName = last_name[i],
+        givenName = list(
+          if (!is.na(first_name[i])){first_name[i]} else {NULL},
+                         middle_name[i])),
+      organizationName = organization_name[i],
+      electronicMailAddress = email_address[i]#,
+
+      # could not get adding orcids to work; fixme later.
+      #if (!is.na(orcid[i])) {
+      #  userId = list(directory = 'https://orcid.org',
+      #                   userId = paste0("https://orcid.org/", orcid[i]))
+      #}
+    )
+    #remove any null elements
+    creator <- creator[!sapply(creator,is.null)]
+    #add newest creator to list of new creators:
+    new_creators <- append(new_creators, list(creator))
+  }
+  replace_creators <- append(existing_creators, new_creators)
+
+  #replace old creator list with new creator list
+  eml_object[["dataset"]][["creator"]] <- replace_creators
+
+  #add NPS publisher & for or by nps
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadataa
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
 #' Rearrange the order of creators (authors)
 #'
 #' @description The `set_creator_order()` requires that your metadata contain two or more creators. The function allows users to rearrange the order of creators (authors on DataStore) or delete a creator.
