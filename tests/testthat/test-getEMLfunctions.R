@@ -2,7 +2,7 @@
 good_dir <- here::here("good")
 bad_dir <- here::here("bad")
 
-#load metadata to to test functions with. Note that this directory structire is necessary to pass Rstudio Build Checks but will not work for local test developmnet and test testing.
+#load metadata to to test functions with. Note that this directory structure is necessary to pass Rstudio Build Checks but will not work for local test development and test testing.
 BICY_EMLed_meta <- EML::read_eml(here::here(good_dir,
                                             "BICY",
                                             "BICY_EMLeditor_metadata.xml"),

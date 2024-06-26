@@ -1,5 +1,5 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   a01_prereqs: a01_prereqs.html
@@ -7,7 +7,7 @@ articles:
   a03_Template_edits: a03_Template_edits.html
   a04_Editing_fixing_eml: a04_Editing_fixing_eml.html
   a05_advanced_functionality: a05_advanced_functionality.html
-last_built: 2024-05-02T04:11Z
+last_built: 2024-06-26T20:03Z
 urls:
   reference: https://nationalparkservice.github.io/EMLeditor/reference
   article: https://nationalparkservice.github.io/EMLeditor/articles
