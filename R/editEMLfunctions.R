@@ -2263,7 +2263,7 @@ set_creator_orgs <- function(eml_object,
 
 #' Adds creators to EML
 #'
-#' @description Sometimes it is necessary to change the creators (authors) of a data package. If the data pacakge and EML have already been created, it can be tedious to have to re-run all of the EMLassemblyline functions and then have to re-do all of the EMLeditor functions. This function allows the user to add in one or more creators without having to re-run the entire workflow.
+#' @description Sometimes it is necessary to change the creators (authors) of a data package. If the data package and EML have already been created, it can be tedious to have to re-run all of the EMLassemblyline functions and then have to re-do all of the EMLeditor functions. This function allows the user to add in one or more creators without having to re-run the entire workflow. This will not over-write the or remove the existing creators, just add to the list of creators.
 #'
 #' @details Each creator must have at minimum a last name. You may also supply a first name and one middle name. If you are adding a list of creators, you must supply all fields for each creator; if one creator is for instance missing or does not use a first name, do not skip this but instead list it as NA. If you need to re-arrange creators or remove creators, you can do so using the `set_creator_order` function.Do NOT use this function to add organizations as creators. Instead use `set_creator_orgs`. If your new creator has an orcid, add the orcid in via `set_creator_orgs`
 #'
@@ -2287,6 +2287,7 @@ set_creator_orgs <- function(eml_object,
 #'                          middle_name = c(NA, "S."),
 #'                          organization_name = c("NPS", "UCLA"),
 #'                          email_address = c("john_doe@@nps.gov", NA))
+#'}
 set_new_creator <- function(eml_object,
                          last_name = NA,
                          first_name = NA,
