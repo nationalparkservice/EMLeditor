@@ -10,10 +10,10 @@
 \item{unit_code}{a string (typically 4 characters) that is the park unit code.}
 }
 \value{
-a park polygon
+well known text (wkt) convex hull of an NPS park unit.
 }
 \description{
-.get_unit_polygon gets the polygon for a given park unit.
+.get_unit_polygon gets the polygon for a given park unit. The "polygon" pulled is a convexhull, the polygon is provided as in Well Known Text (WKT) format.
 }
 \details{
 retrieves a geoJSON string for a polygon of a park unit from NPS Rest services. Note: This is not the official boundary (erm... ok then what is it?!?).

@@ -5,13 +5,19 @@
 .pkgglobalenv <- new.env(parent=emptyenv())
 
 #data_store API base URL:
-assign("ds_api", "https://irmaservices.nps.gov/datastore/v6/rest/", envir=.pkgglobalenv)
+assign("ds_api",
+       "https://irmaservices.nps.gov/datastore/v6/rest/",
+       envir=.pkgglobalenv)
 
 #data_store secure API base URL:
-assign("ds_secure_api", "https://irmaservices.nps.gov/datastore-secure/v6/rest/", envir=.pkgglobalenv)
+assign("ds_secure_api",
+       "https://irmaservices.nps.gov/datastore-secure/v6/rest/",
+       envir=.pkgglobalenv)
 
 #data_store dev api (requires secure)
-assign("ds_dev_api", "https://irmadevservices.nps.gov/datastore-secure/v6/rest/", envir = .pkgglobalenv)
+assign("ds_dev_api",
+       "https://irmadevservices.nps.gov/datastore-secure/v6/rest/",
+       envir = .pkgglobalenv)
 
 .ds_api <- function(x){
   get("ds_api", envir = .pkgglobalenv)
@@ -65,7 +71,8 @@ globalVariables(c("UnitCode",
     ),
     onlineUrl = "http://www.nps.gov",
     electronicMailAddress = "nrss_datastore@nps.gov",
-    userId = list(directory = "https://ror.org/", userId = "https://ror.org/044zqqy65")
+    userId = list(directory = "https://ror.org/",
+                  userId = "https://ror.org/044zqqy65")
   )
 
   # if existing and desired publisher don't match, replace existing with desired.
@@ -139,7 +146,8 @@ globalVariables(c("UnitCode",
     # if no info on EMLeditor, add EMLeditor to additionalMetadata
     if (is.null(app)) {
       if (x == 1) {
-        eml_object$additionalMetadata <- list(eml_ed, eml_object$additionalMetadata)
+        eml_object$additionalMetadata <- list(eml_ed,
+                                              eml_object$additionalMetadata)
       }
       if (x > 1) {
         eml_object$additionalMetadata[[x + 1]] <- eml_ed
@@ -151,13 +159,13 @@ globalVariables(c("UnitCode",
 
 #' Get Park Unit Polygon
 #'
-#' @description .get_unit_polygon gets the polygon for a given park unit.
+#' @description .get_unit_polygon gets the polygon for a given park unit. The "polygon" pulled is a convexhull, the polygon is provided as in Well Known Text (WKT) format.
 #'
 #' @details retrieves a geoJSON string for a polygon of a park unit from NPS Rest services. Note: This is not the official boundary (erm... ok then what is it?!?).
 #'
 #' @param unit_code a string (typically 4 characters) that is the park unit code.
 #'
-#' @return a park polygon
+#' @return well known text (wkt) convex hull of an NPS park unit.
 #'
 #' @examples
 #' \dontrun{
@@ -165,7 +173,9 @@ globalVariables(c("UnitCode",
 #' }
 .get_unit_polygon <- function(unit_code) {
   # get geography from NPS Rest Services
-  units_url <- paste0("https://irmaservices.nps.gov/v2/rest/unit/", unit_code, "/geography")
+  units_url <- paste0("https://irmaservices.nps.gov/Unit/v2/api/",
+                      unit_code,
+                      "/geography")
   xml <- httr::content(httr::GET(units_url))
 
   # Create spatial feature from polygon info returned from NPS
@@ -228,7 +238,8 @@ globalVariables(c("UnitCode",
     # if no info on ForOrByNPS, add ForOrByNPS to additionalMetadata
     if (is.null(For_or_by_nps)) {
       if (x == 1) {
-        eml_object$additionalMetadata <- list(for_by, eml_object$additionalMetadata)
+        eml_object$additionalMetadata <- list(for_by,
+                                              eml_object$additionalMetadata)
       }
       if (x > 1) {
         eml_object$additionalMetadata[[x + 1]] <- for_by

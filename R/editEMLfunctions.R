@@ -2307,7 +2307,7 @@ set_new_creator <- function(eml_object,
   # If there's only one creator, creator ends up with one less level of nesting. Re-nest it so that the rest of the code works consistently
   names_list <- c("individualName", "organizationName", "positionName")
   if (sum(names_list %in% names(existing_creators)) > 0) {
-    existing_creators <- list(creator)
+    existing_creators <- list(existing_creators)
   }
 
   #### Add in new creator(s):

@@ -1,4 +1,6 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-07-01
+  * Updated `.get_park_polygon()` to use the latest version of the API rather than a legacy version.
 ## 2024-06-26
   * Added new function, `set_new_creator()` which can add one or more creators to EML.
 ## 2024-05-01
