@@ -1433,6 +1433,108 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
   return(eml_object)
 }
 
+#' Adds a reference to the DataStore Project housing the data package
+#'
+#' @description
+#' The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
+#'
+#' @details The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link.
+#'
+#' If you list more than one project, the data package will be added to multiple projects.
+#'
+#' DataStore only add links between data packages and projects. DataStore cannot not remove data packages from projects. If need to remove a link between a data package and a project (perhaps you supplied the incorrect project reference ID at first), you will need to manually remove the connection using the DataStore web interface.
+#'
+#' @inheritParams set_title
+#' @param project_reference_id String. The 7-digit number corresponding to the Project reference ID that the data package should be linked to.
+#' @param dev Logical. Defaults to FALSE, meaning the function will validate user input based on the DataStore production server. You can set dev = TRUE to test the function on the development server.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+set_project <- function(emlobject,
+                        project_reference_id,
+                        dev = FALSE,
+                        force = FALSE,
+                        NPS = TRUE){
+
+  if (nchar(project_reference_id) != 7) {
+    cat("You must supply a 7-digit project_reference_id")
+    stop()
+  }
+
+  if (dev == TRUE) {
+    get_url <- paste0(.ds_dev_api(),
+                       "Profile?q=",
+                       project_reference_id)
+  } else {
+    get_url <- paste0(.ds_api(),
+                       "Profile?q=",
+                       project_reference_id)
+  }
+
+  req <- httr::GET(get_url,
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'))
+
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+
+  #get project information:
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  # make sure the project_reference_id is a project:
+  if (rjson$referenceType != "Project") {
+    cat("The reference you supplied",
+        project_reference_id,
+        "is not a project.")
+    cat("Please supply a valid project reference code.")
+    stop()
+  }
+
+  #project title
+  title <- rjson$bibliography$title
+  organization <- rjson$bibliography$publisher$publisherName
+  role <- "a DataStore Project"
+
+  #gernerate URL (check whether project has DOI)
+  if (dev == TRUE) {
+    get_url <- paste0(.ds_dev_api(),
+                      "ReferenceCodeSearch?q=",
+                      project_reference_id)
+  } else {
+    get_url <- paste0(.ds_api(),
+                      "ReferenceCodeSearch?q=",
+                      project_reference_id)
+  }
+
+  req2 <- httr::GET(get_url,
+                   httr::authenticate(":", "", "ntlm"),
+                   httr::add_headers('Content-Type'='application/json'))
+  status_code <- httr::stop_for_status(req2)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+
+  #get project information:
+  json2 <- httr::content(req2, "text")
+  rjson2 <- jsonlite::fromJSON(json2)
+
+  url <- NULL
+  if (rjson2$isDOI == "TRUE") {
+    url <- paste0("https://doi.org/10.57830/", project_reference_id)
+  } else {
+    url <- rjson2$referenceUrl
+  }
+
+
+
+}
+
+
 #' Set Publisher
 #'
 #' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function. It's probably a good idea to run args(set_publisher) to make sure you have all the arguments, especially those with defaults, properly specified.
