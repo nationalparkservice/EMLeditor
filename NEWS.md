@@ -1,4 +1,6 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-07-02
+  * updated all API requests to user v6 API instead of v7.
 ## 2024-07-01
   * Updated `.get_park_polygon()` to use the latest version of the API rather than a legacy version.
 ## 2024-06-26
