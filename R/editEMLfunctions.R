@@ -1349,7 +1349,15 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 #' set_protocol(eml_object, 2222140)
 #' }
 #'
-set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
+set_protocol <- function(eml_object,
+                         protocol_id,
+                         force = FALSE,
+                         NPS = TRUE) {
+
+  ###### WARNING ######
+  # this function actually puts info into the project and not protocl
+  # needs re-written and soon.
+
   # get data to construct project:
 
   # get protocol profile via rest services:
@@ -1371,8 +1379,6 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
   org_name <- httr::content(
     httr::GET(paste0(.ds_api(), "Profile/", ref)))$bibliography$title
 
-  # Construct a project to inject into EML. Note 'role' is required but not sure what to put there.
-  # Also i find it confusing that onlineURL references projTitle not orgName but hopefully we will hash that out soon.
 
   proj <- list(
     title = proj_title,
@@ -1461,7 +1467,7 @@ set_project <- function(eml_object,
                         project_reference_id,
                         dev = FALSE,
                         force = FALSE,
-                        NPS = TRUE){
+                        NPS = TRUE) {
 
   if (nchar(project_reference_id) != 7) {
     cat("You must supply a 7-digit project_reference_id")
@@ -1505,9 +1511,9 @@ set_project <- function(eml_object,
   # to verify that the email address belongs to the user
 
   #project title
-  title <- rjson$bibliography$title
-  organization <- rjson$bibliography$publisher$publisherName
-  role <- "a DataStore Project"
+  project_title <- rjson$bibliography$title
+  project_org <- rjson$bibliography$publisher$publisherName
+  project_role <- "a DataStore Project"
 
   #generate URL (check whether project has DOI)
   if (dev == TRUE) {
@@ -1525,7 +1531,7 @@ set_project <- function(eml_object,
                    httr::add_headers('Content-Type'='application/json'))
 
   status_code <- httr::stop_for_status(req2$status_code)
-  if(!status_code == 200){
+  if (!status_code == 200) {
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
 
@@ -1533,16 +1539,35 @@ set_project <- function(eml_object,
   json2 <- httr::content(req2, "text")
   rjson2 <- jsonlite::fromJSON(json2)
 
-  url <- NULL
-  if (rjson2$isDOI == "TRUE") {
-    url <- paste0("https://doi.org/10.57830/", project_reference_id)
+  project_url <- NULL
+  if (rjson2$isDOI == "True") {
+    project_url <- paste0("https://doi.org/10.57830/", project_reference_id)
   } else {
-    url <- rjson2$referenceUrl
+    project_url <- rjson2$referenceUrl
   }
 
+  #create project:
+  proj <- list(
+    title = project_title,
+    personnel = list(
+      organizationName = project_org,
+      onlineUrl = project_url,
+      role = project_role
+    )
+  )
 
+  eml_object$dataset$project <- proj
 
-}
+  # Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+  # add/update EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+
+  }
 
 
 #' Set Publisher
