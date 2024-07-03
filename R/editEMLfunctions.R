@@ -1436,7 +1436,7 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
 #' Adds a reference to the DataStore Project housing the data package
 #'
 #' @description
-#' The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
+#' **This function is still under development - do not use ** The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
 #'
 #' @details The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link.
 #'
@@ -1448,11 +1448,16 @@ set_protocol <- function(eml_object, protocol_id, force = FALSE, NPS = TRUE) {
 #' @param project_reference_id String. The 7-digit number corresponding to the Project reference ID that the data package should be linked to.
 #' @param dev Logical. Defaults to FALSE, meaning the function will validate user input based on the DataStore production server. You can set dev = TRUE to test the function on the development server.
 #'
-#' @return
+#' @return eml_object
 #' @export
 #'
 #' @examples
-set_project <- function(emlobject,
+#' \dontrun{
+#' #this function is still under development - do not use!
+#' eml_object <- set_project(eml_object,
+#'                          1234567)
+#' }
+set_project <- function(eml_object,
                         project_reference_id,
                         dev = FALSE,
                         force = FALSE,
