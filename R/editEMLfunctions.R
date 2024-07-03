@@ -1495,12 +1495,16 @@ set_project <- function(emlobject,
     stop()
   }
 
+  # be great to test for ownership....but currently reference owners are
+  # listed by email address rather than username so it is hard/impossible
+  # to verify that the email address belongs to the user
+
   #project title
   title <- rjson$bibliography$title
   organization <- rjson$bibliography$publisher$publisherName
   role <- "a DataStore Project"
 
-  #gernerate URL (check whether project has DOI)
+  #generate URL (check whether project has DOI)
   if (dev == TRUE) {
     get_url <- paste0(.ds_dev_api(),
                       "ReferenceCodeSearch?q=",
@@ -1514,7 +1518,8 @@ set_project <- function(emlobject,
   req2 <- httr::GET(get_url,
                    httr::authenticate(":", "", "ntlm"),
                    httr::add_headers('Content-Type'='application/json'))
-  status_code <- httr::stop_for_status(req2)$status_code
+
+  status_code <- httr::stop_for_status(req2$status_code)
   if(!status_code == 200){
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
