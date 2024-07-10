@@ -33,7 +33,7 @@ set_new_creator(
 \item{NPS}{Logical. Defaults to TRUE. \strong{Most NPS users should leave this as the default}. Only under specific circumstances should it be set to FALSE: if you are \strong{not} publishing with NPS, if you need to set the publisher location to some place other than the Fort Collins Office (e.g. you are NOT working on a data package) or your product is "for" the NPS but not "by" the NPS and you need to specify a different agency, set NPS = FALSE. When NPS=TRUE, the function will over-write existing publisher info and inject NPS as the publisher along the the Central Office in Fort Collins as the location. Additionally, it sets the "for or by NPS" field to TRUE and specifies the originating agency as NPS.}
 }
 \value{
-emlobject
+eml_object
 }
 \description{
 Sometimes it is necessary to change the creators (authors) of a data package. If the data package and EML have already been created, it can be tedious to have to re-run all of the EMLassemblyline functions and then have to re-do all of the EMLeditor functions. This function allows the user to add in one or more creators without having to re-run the entire workflow. This will not over-write the or remove the existing creators, just add to the list of creators.
