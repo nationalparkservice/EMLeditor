@@ -23,6 +23,7 @@ RoxygenNote: 7.3.1
 Remotes: 
     NCEAS/arcticdatautils,
     nationalparkservice/DPchecker
+    nationalparkservice/QCkit
 Imports: 
     httr,
     readr,
@@ -52,7 +53,8 @@ Suggests:
     stargazer,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    QCkit
 Config/testthat/edition: 3
 URL: https://github.com/nationalparkservice/EMLeditor
 VignetteBuilder: knitr
