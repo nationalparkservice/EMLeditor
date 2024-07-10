@@ -1361,7 +1361,7 @@ set_protocol <- function(eml_object,
                          NPS = TRUE) {
 
   # test for properly formatted protocolID
-  if (nchar(project_reference_id) != 7) {
+  if (nchar(protocol_id) != 7) {
     cat("You must supply a valid 7-digit protocol_id")
     stop()
   }
@@ -1408,11 +1408,11 @@ set_protocol <- function(eml_object,
   if (dev == TRUE) {
     get_url <- paste0(.ds_dev_api(),
                       "ReferenceCodeSearch?q=",
-                      project_reference_id)
+                      protocol_id)
   } else {
     get_url <- paste0(.ds_api(),
                       "ReferenceCodeSearch?q=",
-                      project_reference_id)
+                      protocol_id)
   }
 
   req2 <- httr::GET(get_url,
