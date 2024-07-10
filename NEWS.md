@@ -1,4 +1,7 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-07-10
+  * add in the new function `set_project()` and attempt to update existing function, `set_protocol()`.
+  * update license from MIT to CC0.
 ## 2024-07-02
   * updated all API requests to user v6 API instead of v7.
 ## 2024-07-01
