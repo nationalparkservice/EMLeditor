@@ -1393,14 +1393,14 @@ set_protocol <- function(eml_object,
     stop()
   }
 
-  # extract project title
+  # extract protocol title
   protocol_title <- rjson$bibliography$title
 
   # get creator
   protocol_creator <- rjson$history$createdBy
   protocol_creator <- stringr::str_remove(protocol_creator, "@nps.gov")
 
-  #generate URL (check whether project has DOI)
+  #generate URL (check whether protocol has DOI)
   if (dev == TRUE) {
     get_url <- paste0(.ds_dev_api(),
                       "ReferenceCodeSearch?q=",
@@ -1459,7 +1459,7 @@ set_protocol <- function(eml_object,
       )
     }
 
-    # if an there is an existing project, ask whether to replace:
+    # if an there is an existing protocol, ask whether to replace:
     else {
       cat("you already have a protocol(s) with the Title:\n",
         crayon::bold$blue(exist_proto$title), ".",
@@ -1497,7 +1497,7 @@ set_protocol <- function(eml_object,
 #' @description
 #' The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
 #'
-#' @details The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link.
+#' @details The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
 #'
 #' Currently, the function only supports one project. Using the function will replace an project(s) currently in metadata, not add to them. If you want your data package linked to multiple projects, you will have to manually perform the additional linkages via the DataStore web GUI.
 #'
@@ -1575,7 +1575,7 @@ set_project <- function(eml_object,
     if (sum(grepl(email, ownership)) < 1) {
       cat(crayon::bold$yellow("WARNING: "),
           crayon::bold$blue(email),
-          " is not listed as an owner for project (reference ",
+          " is not listed as an owner for the project (reference ",
           crayon::bold$blue(project_reference_id), ").",
           sep = "")
       alert <- paste0("The person uploading to DataStore and extracting the ",
