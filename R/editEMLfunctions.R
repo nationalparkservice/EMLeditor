@@ -1340,8 +1340,9 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 #'
 #' @inheritParams set_title
 #' @param protocol_id a string. The 7-digit number identifying the DataStore reference number for the Project that describes your inventory or monitoring project.
+#' @param dev Logical. Defaults to FALSE, meaning all API calls will be to the production version of DataStore. To test the function, set dev = TRUE to use the development environment for DataStore.
 #'
-#' @return emlObject
+#' @return eml_object
 #' @export
 #'
 #' @examples
@@ -1351,56 +1352,108 @@ set_language <- function(eml_object, lang, force = FALSE, NPS = TRUE) {
 #'
 set_protocol <- function(eml_object,
                          protocol_id,
+                         dev = FALSE,
                          force = FALSE,
                          NPS = TRUE) {
 
-  ###### WARNING ######
-  # this function actually puts info into the project and not protocl
-  # needs re-written and soon.
+  # test for properly formatted protocolID
+  if (nchar(project_reference_id) != 7) {
+    cat("You must supply a valid 7-digit protocol_id")
+    stop()
+  }
 
-  # get data to construct project:
+  if (dev == TRUE) {
+    get_url <- paste0(.ds_dev_api(),
+                      "Profile?q=",
+                      protocol_id)
+  } else {
+    get_url <- paste0(.ds_api(),
+                      "Profile?q=",
+                      protocol_id)
+  }
 
-  # get protocol profile via rest services:
-  ds_reference <- httr::content(httr::GET(paste0(.ds_api(),
-                                                 "Profile/",
-                                                 protocol_id)))
+  req <- httr::GET(get_url,
+                   httr::authenticate(":", "", "ntlm"),
+                   httr::add_headers('Content-Type'='application/json'))
+
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+
+  #get project information:
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  #does reference exist/can user access it - errors are indistinguishable
+  if (length(seq_along(rjson)) == 0) {
+    permissions_msg <- paste0("The reference does not exist",
+                              " or you do not have permissions to access it.")
+    cat(permissions_msg)
+    stop()
+  }
 
   # extract project title
-  proj_title <- ds_reference$bibliography$title
+  protocol_title <- rjson$bibliography$title
 
-  # generate URL for the DataStore landing page:
-  url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
-                protocol_id)
+  # get creator
+  protocol_creator <- rjson$history$createdBy
+  protocol_creator <- stringr::str_remove(protocol_creator, "@nps.gov")
 
-  # get DataStore ref number for the organization Name:
-  ref <- ds_reference$series$referenceId
+  #generate URL (check whether project has DOI)
+  if (dev == TRUE) {
+    get_url <- paste0(.ds_dev_api(),
+                      "ReferenceCodeSearch?q=",
+                      project_reference_id)
+  } else {
+    get_url <- paste0(.ds_api(),
+                      "ReferenceCodeSearch?q=",
+                      project_reference_id)
+  }
 
-  # rest services call to get organization name info:
-  org_name <- httr::content(
-    httr::GET(paste0(.ds_api(), "Profile/", ref)))$bibliography$title
+  req2 <- httr::GET(get_url,
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'))
 
+  status_code <- httr::stop_for_status(req2$status_code)
+  if (!status_code == 200) {
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
 
-  proj <- list(
-    title = proj_title,
-    personnel = list(
-      organizationName = org_name,
-      onlineUrl = url,
-      role = "originator"
+  #get project information:
+  json2 <- httr::content(req2, "text")
+  rjson2 <- jsonlite::fromJSON(json2)
+
+  project_url <- NULL
+  if (rjson2$isDOI == "True") {
+    protocol_url <- paste0("https://doi.org/10.57830/", protocol_id)
+  } else {
+    protocol_url <- rjson2$referenceUrl
+  }
+
+  #build protocol element:
+  proto <- list(
+    title = protocol_title,
+    creator = list(
+      individualName = list(
+        surName = protocol_creator)),
+    distribution = list(
+      online = protocol_url)
     )
-  )
+
   # scripting route:
   if (force == TRUE) {
-    eml_object$dataset$project <- proj
+    eml_object[["protocol"]] <- proto
   }
   # interactive route:
   if (force == FALSE) {
     # get existing project (if any)
-    doc <- eml_object$dataset$project
+    exist_proto <- eml_object$dataset$protocol
 
     # if no previous project listed, add project
-    if (is.null(doc)) {
-      eml_object$dataset$project <- proj
-      cat("The current project is now ", crayon::bold$blue(proj$title),
+    if (is.null(exist_proto)) {
+      eml_object$protocol <- list(proto)
+      cat("The current protocol is now ", crayon::bold$blue(proto$title),
         ".",
         sep = ""
       )
@@ -1408,24 +1461,24 @@ set_protocol <- function(eml_object,
 
     # if an there is an existing project, ask whether to replace:
     else {
-      cat("you already have a project(s) with the Title:\n",
-        crayon::bold$blue(doc$title), ".",
+      cat("you already have a protocol(s) with the Title:\n",
+        crayon::bold$blue(exist_proto$title), ".",
         sep = ""
       )
       cat("Are you sure you want to replace it?\n\n")
       var1 <- .get_user_input() #1=yes, 2=no
       # if yes, change the project:
       if (var1 == 1) {
-        eml_object$dataset$project <- proj
-        cat("The current project is now ",
-          crayon::bold$blue(proj$title), ".",
+        eml_object$protocol <- list(proto)
+        cat("The current protocol is now ",
+          crayon::bold$blue(proto$title), ".",
           sep = ""
         )
       }
 
       # if no, retain the existing project:
       if (var1 == 2) {
-        cat("Your original project was retained.")
+        cat("Your original protocol was retained.")
       }
     }
   }
@@ -1442,11 +1495,11 @@ set_protocol <- function(eml_object,
 #' Adds a reference to the DataStore Project housing the data package
 #'
 #' @description
-#' **This function is still under development - do not use ** The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
+#' The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
 #'
 #' @details The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link.
 #'
-#' If you list more than one project, the data package will be added to multiple projects.
+#' Currently, the function only supports one project. Using the function will replace an project(s) currently in metadata, not add to them. If you want your data package linked to multiple projects, you will have to manually perform the additional linkages via the DataStore web GUI.
 #'
 #' DataStore only add links between data packages and projects. DataStore cannot not remove data packages from projects. If need to remove a link between a data package and a project (perhaps you supplied the incorrect project reference ID at first), you will need to manually remove the connection using the DataStore web interface.
 #'
@@ -1459,7 +1512,6 @@ set_protocol <- function(eml_object,
 #'
 #' @examples
 #' \dontrun{
-#' #this function is still under development - do not use!
 #' eml_object <- set_project(eml_object,
 #'                          1234567)
 #' }
@@ -1497,6 +1549,14 @@ set_project <- function(eml_object,
   json <- httr::content(req, "text")
   rjson <- jsonlite::fromJSON(json)
 
+  # if it doesn't exist or permissions are invalid:
+  if (length(seq_along(rjson)) == 0) {
+    cat("The project reference (",
+        project_reference_id,
+        ") does not exist or you do not have permissions to access it.")
+    stop()
+  }
+
   # make sure the project_reference_id is a project:
   if (rjson$referenceType != "Project") {
     cat("The reference you supplied",
@@ -1506,9 +1566,25 @@ set_project <- function(eml_object,
     stop()
   }
 
-  # be great to test for ownership....but currently reference owners are
-  # listed by email address rather than username so it is hard/impossible
-  # to verify that the email address belongs to the user
+  #test whether user has ownership permissions for the project.
+  #only run this test if NPS is true and force is false:
+  if (NPS == TRUE && force == FALSE) {
+    email <- QCkit::get_user_email()
+    ownership <- rjson$permissions$referenceOwners
+
+    if (sum(grepl(email, ownership)) < 1) {
+      cat(crayon::bold$yellow("WARNING: "),
+          crayon::bold$blue(email),
+          " is not listed as an owner for project (reference ",
+          crayon::bold$blue(project_reference_id), ").",
+          sep = "")
+      alert <- paste0("The person uploading to DataStore and extracting the ",
+                      "metadata must have ownership-level permissions to ",
+                      "succesfully link the data package to it's project.")
+      cat(alert)
+      cat("Project owners can add new owners via the DataStore GUI")
+    }
+  }
 
   #project title
   project_title <- rjson$bibliography$title
@@ -1587,7 +1663,7 @@ set_project <- function(eml_object,
 #' @param for_or_by_NPS Logical. Defaults to TRUE. If your digital product is NOT for or by the NPS, set to FALSE.
 #' @param NPS Logical. Defaults to TRUE. Set this to FALSE only if the party responsible for data collection and generation is *not* the NPS *or* the publisher is *not* the NPS central office in Fort Collins.
 #'
-#' @return emlObject
+#' @return eml_object
 #' @export
 #'
 #' @examples
@@ -2411,7 +2487,7 @@ set_creator_orgs <- function(eml_object,
 #' @param organization_name String (or list of strings). The organizational affiliation of the creator(s) to add, e.g. "National Park Service". Use NA if there is no organizational affiliation.
 #' @param email_address String (or list of strings). The email address(es) of the creator(s) to add. Use NA if there are no email addresses.
 #'
-#' @return emlobject
+#' @return eml_object
 #' @export
 #'
 #' @examples
