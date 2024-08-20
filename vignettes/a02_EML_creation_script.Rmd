@@ -19,12 +19,18 @@ knitr::opts_chunk$set(
 This page mirrors the editable EML Creation template that is included with the EMLeditor package (and has been installed if you installed either EMLeditor on its own or as part of the NPSdataverse). To access an editable version of this script, open R studio and select the "File" drop-down menu. Choose "New File" and select "R markdown" from the submenu. In the pop-up box, select "From Template" and then highlight "Editable_EML_Creation_Workflow {Emleditor}" (likely the first item in the list). Click "OK" to open the template.
 
 ```{r echo=FALSE, out.width='45%', fig.align="center"}
+#| fig.alt: >
+#|    a graphic showing the first steps used to access the template EML creation
+#|    script included with the EMLeditor package.
 knitr::include_graphics("../man/figures/open_rmd.png")
 
 ```
 
  
 ```{r echo=FALSE, out.width='45%', fig.show='hold', fig.align='center'}
+#| fig.alt: >
+#|    a graphic showing the final steps used to access the template EML creation
+#|    script included with the EMLeditor package.
 knitr::include_graphics("../man/figures/EMLtemplate.png")
 ```
 
