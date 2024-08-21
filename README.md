@@ -16,8 +16,8 @@ The goal of EMLeditor is to edit EML-formatted xml files. Specifically,
 EMLeditor provides many functions that will be useful to the U.S.
 National Park Service when generating metadata for statistical data
 packages uploaded to DataStore. NPS affiliation is assumed as default.
-However, some of the functions for viewing and editing metadata may be
-useful to people outside the NPS.
+However, the functions for viewing and editing metadata may be useful to
+people outside the NPS.
 
 ## Installation and updates
 
@@ -47,14 +47,19 @@ accompanying documentation includes information on:
     package functions
 2)  Adding in NPS specific and DataStore specific EML elements using the
     R/EMLeditor package functions
-3)  Checking the EML document to make sure it is schema-valid and passes
-    all the necessary tests for uploading to DataStore
-4)  Generating a draft data package reference on DataStore and
+3)  Generating a draft data package reference on DataStore and
     incorporating DOIs into the metadata
+4)  Checking the EML document to make sure it is schema-valid and passes
+    all the necessary tests for uploading to DataStore (using the
+    `run_congruence_checks()` function from the
+    [DPchecker](https://nationalparkservice.github.io/DPchecker/)
+    package)
 5)  Uploading a completed data package to DataStore
 
 Please *DO NOT ACTIVATE* the DataStore reference: prior to activation,
 data packages need to be reviewed via a yet-to-be-created process.
+
+## Accessing the EML creation script
 
 To access the EML creation script from within EMLeditor, install (or
 update) the EMLeditor package and restart R. From within Rstudio, select
@@ -62,6 +67,8 @@ the “File” drop-down menu and choose “New File” (the first option). From
 within the “New File” menu, select “Rmarkdown…”. In the pop-up menu,
 select “From Template on the left hand side. Then choose the
 template,”Editable_EML_Creation_Workflow {EMLeditor}” then click “OK”.
+
+## Additional considerations
 
 If you use EMLeditor functions to alter your metadata (e.g. “set” class
 functions) they will also silently add the National Park Service as a

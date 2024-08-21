@@ -1,16 +1,8 @@
-# load directories for accessing testing data/metadata. Note that this directory structure is necessary to pass Rstudio Build Checks but will not work for local test development and test testing.
-good_dir <- here::here("good")
-bad_dir <- here::here("bad")
-
-#to test/debug the tests, use the following directory structure:
-#good_dir <- here::here("tests", "testthat", "good")
-
-#load metadata to to test functions with. Note that this directory structure is necessary to pass Rstudio Build Checks but will not work for local test development and test testing.
-BICY_EMLed_meta <- EML::read_eml(here::here(good_dir,
+#load metadata to to test functions with.
+BICY_EMLed_meta <- EML::read_eml(testthat::test_path("good",
                                             "BICY",
                                             "BICY_EMLeditor_metadata.xml"),
                                  from="xml")
-
 
 # a couple of house-keeping functions for mockr interactivity:
 return_val_2 <- function() {2}

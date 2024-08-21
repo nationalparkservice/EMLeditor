@@ -1,4 +1,8 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-08-20
+  * add helper.R file with a test_path function to facilitate unit tests
+  * update unit test code to run both interactively and during build checks
+  * add yaml file to conduct github actions: build test
 ## 2024-07-10
   * add in the new function `set_project()` and attempt to update existing function, `set_protocol()`.
   * update license from MIT to CC0.
