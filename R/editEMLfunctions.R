@@ -1633,7 +1633,7 @@ set_project <- function(eml_object,
       organizationName = project_org,
       onlineUrl = project_url,
       role = project_role
-    )
+    ), id = "DataStore_project"
   )
 
   eml_object$dataset$project <- proj

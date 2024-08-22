@@ -1,5 +1,9 @@
-# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# Workflow derived from: https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at:
+# https://github.com/r-lib/actions#where-to-find-help
+# unix build check fix applied from:
+# https://forum.posit.co/t/libraptor2-dev-depends-libcurl4-gnutls-dev-but-it-is-not-installable-in-r-lib-actions-setup-r-dependencies-v2/181572/4
+
 on:
   push:
     branches: [main, master]
