@@ -1,4 +1,6 @@
 # EMLeditor v0.1.6 (in progress)
+## 2024-08-21
+  * add id tag to projects to help DataStore identify DataStore projects vs. other projects.
 ## 2024-08-20
   * add helper.R file with a test_path function to facilitate unit tests
   * update unit test code to run both interactively and during build checks
