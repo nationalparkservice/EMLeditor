@@ -1526,8 +1526,8 @@ set_project <- function(eml_object,
                         NPS = TRUE) {
 
   if (nchar(project_reference_id) != 7) {
-    cat("You must supply a 7-digit project_reference_id")
-    stop()
+    cli::cli_abort(c("x" = "You must supply a 7-digit project_reference_id"))
+    return(invisible())
   }
 
   if (dev == TRUE) {
@@ -1546,7 +1546,9 @@ set_project <- function(eml_object,
 
   status_code <- httr::stop_for_status(req)$status_code
   if(!status_code == 200){
-    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    cli::cli_abort(c("x" = "ERROR: DataStore connection failed.",
+                     " " = "Are you connected to the internet?"))
+    return(invisible())
   }
 
   #get project information:
@@ -1555,19 +1557,21 @@ set_project <- function(eml_object,
 
   # if it doesn't exist or permissions are invalid:
   if (length(seq_along(rjson)) == 0) {
-    cat("The project reference (",
-        project_reference_id,
-        ") does not exist or you do not have permissions to access it.")
-    stop()
+    cli::cli_abort(c("x" = "ERROR: Could not find the Project
+                     {.var {project_reference_id}} on DataStore.",
+                     "i" = "If {.var {project_reference_id}} is set to
+                     restricted, you must set it to Public to add it to
+                     metadata."))
+    return(invisible())
   }
 
   # make sure the project_reference_id is a project:
   if (rjson$referenceType != "Project") {
-    cat("The reference you supplied",
-        project_reference_id,
-        "is not a project.")
-    cat("Please supply a valid project reference code.")
-    stop()
+    cli::cli_abort(c("x" = "The reference {.var {project_reference_id}}
+                     is not a DataStore Project.",
+                     " " = "Please supply a valid DataStore Project
+                     reference code."))
+    return(invisible())
   }
 
   #test whether user has ownership permissions for the project.
@@ -1577,22 +1581,26 @@ set_project <- function(eml_object,
     ownership <- rjson$permissions$referenceOwners
 
     if (sum(grepl(email, ownership)) < 1) {
-      cat(crayon::bold$yellow("WARNING: "),
-          crayon::bold$blue(email),
-          " is not listed as an owner for the project (reference ",
-          crayon::bold$blue(project_reference_id), ").",
-          sep = "")
-      alert <- paste0("The person uploading to DataStore and extracting the ",
-                      "metadata must have ownership-level permissions to ",
-                      "succesfully link the data package to it's project.")
-      cat(alert)
-      cat("Project owners can add new owners via the DataStore GUI")
+      msg <- paste0("WARNING: {.email {email}} is not listed as an owner for ",
+                    "the project{.var {project_reference_id}}.")
+      info1 <- paste0("The person extracting the metadata on DataStore must ",
+                      "have ownership-level permissions to succesfully link ",
+                      "the data package to it's project.")
+      info2 <- "Project owners can add new owners via the DataStore GUI."
+      cli::cli_alert_warning(msg)
+      cli::cli_alert_info(info1)
+      cli::cli_alert_info(info2)
     }
   }
 
   #project title
   project_title <- rjson$bibliography$title
-  project_org <- rjson$bibliography$publisher$publisherName
+
+  if (sum(is.na(rjson$bibliography$publisher)) > 0) {
+    project_org <- "No publisher name supplied"
+  } else {
+    project_org <- rjson$bibliography$publisher$publisherName
+  }
   project_role <- "a DataStore Project"
 
   #generate URL (check whether project has DOI)
@@ -1612,7 +1620,9 @@ set_project <- function(eml_object,
 
   status_code <- httr::stop_for_status(req2$status_code)
   if (!status_code == 200) {
-    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    cli::cli_abort("ERROR: DataStore connection failed.
+                   Are you logged in to the VPN?\n")
+    return(invisible())
   }
 
   #get project information:
@@ -1644,6 +1654,17 @@ set_project <- function(eml_object,
   }
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
+
+  if (force == FALSE) {
+    msg1 <- paste0("The DataStore project {.var {project_reference_id}} with ",
+                   "the title {.var {project_title}} has been added to your ",
+                    "metadata.")
+    msg2 <- paste0("Your data package will be automatically linked to this ",
+                    "project when once it is uploaded to DataStore and the ",
+                    "metadata are extracted.")
+    cli::cli_inform(c("i" = msg1))
+    cli::cli_inform(c("i" = msg2))
+  }
 
   return(eml_object)
 
