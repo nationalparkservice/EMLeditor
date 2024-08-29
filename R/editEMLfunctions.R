@@ -2101,7 +2101,7 @@ set_int_rights <- function(eml_object,
         if(cui2 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
           eml_object$dataset$licensed$licenseName <-
-            "No License/Controlled Unclassified Information"
+            "Unlicensed (not for public dissemination)"
           cat("Your license has been set to ",
               crayon::bold$blue("Restricted"), ".", sep="")
         }
