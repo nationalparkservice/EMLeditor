@@ -486,7 +486,7 @@ not attempt to edit it by hand.</p>
 </h2>
 <p>Now that you have valid EML metadata, you need to add NPS-specific
 elements and fields. For instance, unit connections, DOIs, referencing a
-DRR, etc. More information about these functions can be found at: <a href="https://nationalparkservice.github.io/EMLeditor/" class="external-link">https://nationalparkservice.github.io/EMLeditor/</a>.</p>
+DRR, etc. More information about these functions can be found at: <a href="https://nationalparkservice.github.io/EMLeditor/" class="external-link uri">https://nationalparkservice.github.io/EMLeditor/</a>.</p>
 <div class="section level3">
 <h3 id="add-controlled-unclassified-information-cui-codes">Add Controlled Unclassified Information (CUI) codes<a class="anchor" aria-label="anchor" href="#add-controlled-unclassified-information-cui-codes"></a>
 </h3>
@@ -508,7 +508,7 @@ only” setting in DataStore).</li>
 individuals (where and how to list those individuals TBD)</li>
 <li>NOCON - Contains CUI. Federal, state, local, or tribal employees may
 have access, but contractors cannot. More information about these codes
-can be found at: <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link">https://www.archives.gov/cui/registry/limited-dissemination</a>
+can be found at: <a href="https://www.archives.gov/cui/registry/limited-dissemination" class="external-link uri">https://www.archives.gov/cui/registry/limited-dissemination</a>
 </li>
 </ul>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
@@ -531,7 +531,8 @@ text. Note: You must first add the CUI dissemination code using
 That is, you cannot give a data package with a PUBLIC dissemination code
 a “restricted” license (and vise versa: a restricted data package that
 contains CUI cannot have a public domain or CC0 license). You can choose
-from one of three options:</p>
+from one of three options, but <strong>for most public NPS data
+packages, the CC0 license is appropriate</strong>:</p>
 <ul>
 <li><p>“restricted”: If the data contains Controlled Unclassified
 Information (CUI), the intellectual rights must read: <strong>“This
@@ -557,7 +558,7 @@ without asking permission.”</strong></p></li>
 your license in a field in EML for DataStore harvesting.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># choose from "restricted", "public" or "CC0" (zero), see above:</span></span>
-<span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"public"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_int_rights.html">set_int_rights</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"CC0"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="add-a-data-package-doi">Add a data package DOI<a class="anchor" aria-label="anchor" href="#add-a-data-package-doi"></a>
@@ -610,7 +611,7 @@ data package and metadata are constructed in. Examples include English,
 Spanish, Navajo, etc. A full list of available languages is available
 from the Libraryof Congress. Please use the “English Name of Language”
 as an input. The function will then convert your input to the
-appropriate 3-character ISO 639-2 code.Available languages: <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php" class="external-link">https://www.loc.gov/standards/iso639-2/php/code_list.php</a></p>
+appropriate 3-character ISO 639-2 code.Available languages: <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php" class="external-link uri">https://www.loc.gov/standards/iso639-2/php/code_list.php</a></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_language.html">set_language</a></span><span class="op">(</span><span class="va">my_metadata</span>,</span>
 <span>                                       <span class="st">"English"</span><span class="op">)</span></span></code></pre></div>
