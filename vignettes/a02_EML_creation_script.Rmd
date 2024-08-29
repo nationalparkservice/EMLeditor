@@ -327,6 +327,18 @@ my_metadata <- EMLeditor::set_producing_units(my_metadata,
 my_metadata <- EMLeditor::set_producing_units(my_metadata,
                                               c("ROMN", "GRYN"))
 ```
+## Add a project (optional)
+You can add a DataStore project to your metadata. Once the metadata are extracted on DataStore, your data package will automatically be added to the DataStore project. A few things to keep in mind: 
+1) DataStore only supports one project connection and will use the first DataStore project in your metadata (although you can have many other projects).
+2) DataStore will only make connections between data packages and projects; it will not remove them. If you want to remove the connection you must do it manually via the web interface.
+3) The project must be public to add it to metadata.
+4) Whoever uploads and extracts the metadata on DataStore must have ownership level permissions on both the data package and the project.
+```{r add_project, eval = FALSE}
+# where "1234567" is the DataStore Reference id for the Project
+# that the data package should be linked to.
+my_metadata <- EMLeditor::set_project(my_metadata, 1234567)
+```
+
 
 ## Validate your EML 
 Almost done! This is another great time to validate your EML and make sure
