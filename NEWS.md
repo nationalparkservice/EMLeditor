@@ -1,5 +1,7 @@
 # EMLeditor v0.1.6 (in progress)
 ## 2024-08-29
+  * Update licenseName field on restricted references to read, "Unlicensed (not for public dissemination)"
+  * add github actions: build check
   * add `set_project` to the EMLscript template (.Rmd) and the github.io documentation pages.
   * update `set_project` so that it adds projects instead of replacing them.
   * update `set_project` to use cli errors/warnings
