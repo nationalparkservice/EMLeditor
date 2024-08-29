@@ -25,8 +25,8 @@ You can install and update the development version of EMLeditor from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("nationalparkservice/EMLeditor")
+# install.packages("pak")
+pak::pkg_install("nationalparkservice/EMLeditor")
 ```
 
 To install all the packages in the
@@ -34,7 +34,7 @@ To install all the packages in the
 (including EMLeditor):
 
 ``` r
-devtools::install_github("nationalparkservice/NPSdataverse")
+pak::pkg_install("nationalparkservice/NPSdataverse")
 ```
 
 ## Workflow outline
