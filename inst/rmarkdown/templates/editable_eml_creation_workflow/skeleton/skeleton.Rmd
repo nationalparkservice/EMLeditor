@@ -262,6 +262,12 @@ Add your data package's Digital Object Identifier (DOI) to the metadata. The `se
 my_metadata <- EMLeditor::set_datastore_doi(my_metadata)
 ```
 
+If you already have a draft reference on DataStore that you want to upload your data package to (for instance, durind peer review you noticed you needed to make some adjustments), you can add the DOI to metadata without creating a new draft reference using:
+```{r DS_manual_doi}
+my_metadata <- EMLeditor::set_doi(my_metadata, 1234567)
+```
+where the 1234567 number corresponds to the 7-digit DataStore reference ID.
+
 #### Add information about a DRR (optional) 
 If you are producing (or plan to produce) a DRR, add links to the DRR describing the data package.
 
@@ -290,7 +296,19 @@ This is the unit(s) responsible for generating the data package. It may be a sin
 # a single producing unit:
 my_metadata <- EMLeditor::set_producing_units(my_metadata, "ROMN")
 # alternatively, a list of producing units:
-my_metadata <- set_producing_units(my_metadata, c("ROMN", "GRYN"))
+my_metadata <- EMLeditor::set_producing_units(my_metadata, c("ROMN", "GRYN"))
+```
+
+#### Add your data package to a DataStore project (optional)
+You can add a project to your metadata. Once the metadata are extracted on DataStore, your data package will automatically be added to the DataStore project. A few things to keep in mind: 
+1) DataStore only supports one project connection and will use the first DataStore project in your metadata (although you can have many other projects).
+2) DataStore will only make connections between data packages and projects; it will not remove them. If you want to remove the connection you must do it manually via the web interface.
+3) The project must be public to add it to metadata.
+4) Whoever uploads and extracts the metadata on DataStore must have ownership level permissions on both the data package and the project.
+```{r add_project}
+# where "1234567" is the DataStore Reference id for the Project
+# that the data package should be linked to.
+my_metadata <- EMLeditor::set_project(my_metadata, 1234567)
 ```
 
 ## Validate your EML 
