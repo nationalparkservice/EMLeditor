@@ -618,11 +618,30 @@ different.</p>
 <span>                                              <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ROMN"</span>, <span class="st">"GRYN"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="add-a-project-optional">Add a project (optional)<a class="anchor" aria-label="anchor" href="#add-a-project-optional"></a>
+</h3>
+<p>You can add a DataStore project to your metadata. Once the metadata
+are extracted on DataStore, your data package will automatically be
+added to the DataStore project. A few things to keep in mind: 1)
+DataStore only supports one project connection and will use the first
+DataStore project in your metadata (although you can have many other
+projects). 2) DataStore will only make connections between data packages
+and projects; it will not remove them. If you want to remove the
+connection you must do it manually via the web interface. 3) The project
+must be public to add it to metadata. 4) Whoever uploads and extracts
+the metadata on DataStore must have ownership level permissions on both
+the data package and the project.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># where "1234567" is the DataStore Reference id for the Project</span></span>
+<span><span class="co"># that the data package should be linked to.</span></span>
+<span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/set_project.html">set_project</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="fl">1234567</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="validate-your-eml">Validate your EML<a class="anchor" aria-label="anchor" href="#validate-your-eml"></a>
 </h3>
 <p>Almost done! This is another great time to validate your EML and make
 sure Everything is schema valid. Run:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/emld/reference/eml_validate.html" class="external-link">eml_validate</a></span><span class="op">(</span><span class="va">my_metadata</span><span class="op">)</span></span></code></pre></div>
 <p>if your EML is valid you should see the following (admittedly
 crypitic):</p>
@@ -640,7 +659,7 @@ not attempt to edit it by hand.</p>
 </h2>
 <p>Now it’s time to convert your R object to an .xml file and save it.
 Keep in mind that the file name should end with “_metadata.xml”.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">EML</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/EML/reference/write_eml.html" class="external-link">write_eml</a></span><span class="op">(</span><span class="va">my_metadata</span>, <span class="st">"mymetadatafilename_metadata.xml"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -650,7 +669,7 @@ Keep in mind that the file name should end with “_metadata.xml”.</p>
 additional tests on your .xml metadata file using
 <code><a href="../reference/check_eml.html">check_eml()</a></code>. This function assumes there is only one .xml
 file in the directory:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.</span></span>
 <span><span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -665,7 +684,7 @@ upload to make sure that the package fits some minimal set of
 requirements and that the data and metadata are properly specified and
 coincide. This assumes that your data package is in the root of your R
 project.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this assumes that the data package is the working directory</span></span>
 <span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -684,7 +703,7 @@ package need to be in the same folder, there can be only one .xml file
 in .csv format. Each individual file should be &lt; 32Mb. If you have
 files &gt; 32Mb, you will need to upload them manually using the web
 interface on DataStore.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this assumes your data package is in the current working directory</span></span>
 <span><span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/upload_data_package.html">upload_data_package</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>

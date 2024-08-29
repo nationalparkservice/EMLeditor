@@ -2,7 +2,7 @@
 % Please edit documentation in R/editEMLfunctions.R
 \name{set_project}
 \alias{set_project}
-\title{Adds a reference to the DataStore Project housing the data package}
+\title{Adds a reference to a DataStore Project housing the data package}
 \usage{
 set_project(
   eml_object,
@@ -27,12 +27,10 @@ set_project(
 eml_object
 }
 \description{
-The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
+The function will add a single project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added/linked to the DataStore project indicated.
 }
 \details{
-The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
-
-Currently, the function only supports one project. Using the function will replace an project(s) currently in metadata, not add to them. If you want your data package linked to multiple projects, you will have to manually perform the additional linkages via the DataStore web GUI.
+This function will only add a project; it will not overwrite existing projects. To add a DataStore project to your metadata, the project must be publicly available. If you add multiple DataStore projects to metadata, only the first DataStore project will be used by DataStore. The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
 
 DataStore only add links between data packages and projects. DataStore cannot not remove data packages from projects. If need to remove a link between a data package and a project (perhaps you supplied the incorrect project reference ID at first), you will need to manually remove the connection using the DataStore web interface.
 }
