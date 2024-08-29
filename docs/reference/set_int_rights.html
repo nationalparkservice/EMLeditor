@@ -92,7 +92,7 @@
 
 
 <dt id="arg-license">license<a class="anchor" aria-label="anchor" href="#arg-license"></a></dt>
-<dd><p>String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBFUL or PUBVER. Restricted can only be used if CUI is set to any code that is NOT PUBFUL or PUBVER (see <code><a href="set_cui.html">set_cui()</a></code> for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights</p></dd>
+<dd><p>String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see <code><a href="set_cui_code.html">set_cui_code()</a></code> for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights</p></dd>
 
 
 <dt id="arg-force">force<a class="anchor" aria-label="anchor" href="#arg-force"></a></dt>
@@ -109,7 +109,7 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose <code>force = FALSE</code> option will warn the user if there is no CUI specified. set_int_rights checks to make sure the CUI code specified (see <code><a href="set_cui.html">set_cui()</a></code>) is appropriate for the license type chosen.</p>
+    <p>set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose <code>force = FALSE</code> option will warn the user if there is no CUI specified. <code>set_int_rights</code> checks to make sure the CUI code specified (see <code><a href="set_cui_code.html">set_cui_code()</a></code>) is appropriate for the license type chosen. For must public NPS dataset, the CC0 license is appropriate.</p>
     </div>
 
     <div id="ref-examples">
