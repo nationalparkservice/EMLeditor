@@ -1,5 +1,6 @@
 # EMLeditor v0.1.6 (in progress)
 ## 2024-08-29
+  * Update readme: add R-CMD-CHECK badge; use pak to install instead of devtools
   * Update licenseName field on restricted references to read, "Unlicensed (not for public dissemination)"
   * add github actions: build check
   * add `set_project` to the EMLscript template (.Rmd) and the github.io documentation pages.
