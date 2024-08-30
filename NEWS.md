@@ -1,4 +1,12 @@
-# EMLeditor v0.1.6 (in progress)
+# EMLeditor v0.1.6
+## 2024-08-29
+  * Update readme: add R-CMD-CHECK badge; use pak to install instead of devtools
+  * Update licenseName field on restricted references to read, "Unlicensed (not for public dissemination)"
+  * add github actions: build check
+  * add `set_project` to the EMLscript template (.Rmd) and the github.io documentation pages.
+  * update `set_project` so that it adds projects instead of replacing them.
+  * update `set_project` to use cli errors/warnings
+  * add minimal unit test for `set_project`
 ## 2024-08-21
   * add id tag to projects to help DataStore identify DataStore projects vs. other projects.
 ## 2024-08-20

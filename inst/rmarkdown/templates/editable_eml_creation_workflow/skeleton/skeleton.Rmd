@@ -239,18 +239,20 @@ my_metadata <- EMLeditor::set_cui_code(my_metadata, "PUBLIC")
 ```
 
 ## Intellectual Rights
-EMLassemblyine and ezEML provide some attractive looking boilerplate for setting the intellectual rights. It looks reasonable and so is easy to just keep. However, NPS has some specific regulations about what can and cannot be in the intellectualRights tag. Use `set_int_rights()` to replace the text with NPS-approved text. Note: You must first add the CUI dissemination code using `set_cui_code()` as the dissemination code and license must agree. That is, you cannot give a data package with a PUBLIC dissemination code a "restricted" license (and vise versa: a restricted data package that contains CUI cannot have a public domain or CC0 license). You can choose from one of three options:
+EMLassemblyine and ezEML provide some attractive looking boilerplate for setting the intellectual rights. It looks reasonable and so is easy to just keep. However, NPS has some specific regulations about what can and cannot be in the intellectualRights tag. Use `set_int_rights()` to replace the text with NPS-approved text. Note: You must first add the CUI dissemination code using `set_cui_code()` as the dissemination code and license must agree. That is, you cannot give a data package with a PUBLIC dissemination code a "restricted" license (and vise versa: a restricted data package that contains CUI cannot have a public domain or CC0 license). You can choose from one of three options, but for most public NPS data packages, the CC0 license is appropriate:
+
   * "restricted": If the data contains Controlled Unclassified Information (CUI), the intellectual rights must read: **"This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."**
+
+  * "CC0": If you need a license, for instance if you are working with a partner organization that requires a license, use CC0: **"The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."**
 
   * "public": If the data do not contain CUI, the default is the public domain. The intellectual rights must read: **"This work is in the public domain. There is no copyright or license."**
 
-  * "CC0": If you need a license, for instance if you are working with a partner organization that requires a license, use CC0: **"The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."**
 
 The `set_int_rights()` function will also put the name of your license in a field in EML for DataStore harvesting.
 
 ```{r int_rights}
 # choose from "restricted", "public" or "CC0" (zero), see above:
-my_metadata <- EMLeditor::set_int_rights(my_metadata, "public")
+my_metadata <- EMLeditor::set_int_rights(my_metadata, "CC0")
 ```
 
 #### Add a data package DOI 
@@ -261,6 +263,12 @@ Add your data package's Digital Object Identifier (DOI) to the metadata. The `se
 ```{r DS_doi}
 my_metadata <- EMLeditor::set_datastore_doi(my_metadata)
 ```
+
+If you already have a draft reference on DataStore that you want to upload your data package to (for instance, durind peer review you noticed you needed to make some adjustments), you can add the DOI to metadata without creating a new draft reference using:
+```{r DS_manual_doi}
+my_metadata <- EMLeditor::set_doi(my_metadata, 1234567)
+```
+where the 1234567 number corresponds to the 7-digit DataStore reference ID.
 
 #### Add information about a DRR (optional) 
 If you are producing (or plan to produce) a DRR, add links to the DRR describing the data package.
@@ -290,7 +298,19 @@ This is the unit(s) responsible for generating the data package. It may be a sin
 # a single producing unit:
 my_metadata <- EMLeditor::set_producing_units(my_metadata, "ROMN")
 # alternatively, a list of producing units:
-my_metadata <- set_producing_units(my_metadata, c("ROMN", "GRYN"))
+my_metadata <- EMLeditor::set_producing_units(my_metadata, c("ROMN", "GRYN"))
+```
+
+#### Add your data package to a DataStore project (optional)
+You can add a project to your metadata. Once the metadata are extracted on DataStore, your data package will automatically be added to the DataStore project. A few things to keep in mind: 
+1) DataStore only supports one project connection and will use the first DataStore project in your metadata (although you can have many other projects).
+2) DataStore will only make connections between data packages and projects; it will not remove them. If you want to remove the connection you must do it manually via the web interface.
+3) The project must be public to add it to metadata.
+4) Whoever uploads and extracts the metadata on DataStore must have ownership level permissions on both the data package and the project.
+```{r add_project}
+# where "1234567" is the DataStore Reference id for the Project
+# that the data package should be linked to.
+my_metadata <- EMLeditor::set_project(my_metadata, 1234567)
 ```
 
 ## Validate your EML 

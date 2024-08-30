@@ -668,7 +668,12 @@ test_that("set_language doesn't update language when requested not by user", {
 
 # ---- test set_protocol ----
 
-### This function is not really ready for prime time yet.
+test_that("set_protocol won't accept a poorly formatted project_reference_id",
+          {
+            expect_error(set_project(BICY_EMLed_meta, 1234))
+          })
+
+## Not sure how to add more tests; probably need snapshots to handle API calls.
 
 # ---- test set_publisher ----
 

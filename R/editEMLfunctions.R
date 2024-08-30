@@ -1496,14 +1496,12 @@ set_protocol <- function(eml_object,
   return(eml_object)
 }
 
-#' Adds a reference to the DataStore Project housing the data package
+#' Adds a reference to a DataStore Project housing the data package
 #'
 #' @description
-#' The function will add the project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added to the project indicated.
+#' The function will add a single project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added/linked to the DataStore project indicated.
 #'
-#' @details The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
-#'
-#' Currently, the function only supports one project. Using the function will replace an project(s) currently in metadata, not add to them. If you want your data package linked to multiple projects, you will have to manually perform the additional linkages via the DataStore web GUI.
+#' @details This function will only add a project; it will not overwrite existing projects. To add a DataStore project to your metadata, the project must be publicly available. If you add multiple DataStore projects to metadata, only the first DataStore project will be used by DataStore. The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
 #'
 #' DataStore only add links between data packages and projects. DataStore cannot not remove data packages from projects. If need to remove a link between a data package and a project (perhaps you supplied the incorrect project reference ID at first), you will need to manually remove the connection using the DataStore web interface.
 #'
@@ -1526,8 +1524,8 @@ set_project <- function(eml_object,
                         NPS = TRUE) {
 
   if (nchar(project_reference_id) != 7) {
-    cat("You must supply a 7-digit project_reference_id")
-    stop()
+    cli::cli_abort(c("x" = "You must supply a 7-digit project_reference_id"))
+    return(invisible())
   }
 
   if (dev == TRUE) {
@@ -1546,7 +1544,9 @@ set_project <- function(eml_object,
 
   status_code <- httr::stop_for_status(req)$status_code
   if(!status_code == 200){
-    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    cli::cli_abort(c("x" = "ERROR: DataStore connection failed.",
+                     " " = "Are you connected to the internet?"))
+    return(invisible())
   }
 
   #get project information:
@@ -1555,19 +1555,21 @@ set_project <- function(eml_object,
 
   # if it doesn't exist or permissions are invalid:
   if (length(seq_along(rjson)) == 0) {
-    cat("The project reference (",
-        project_reference_id,
-        ") does not exist or you do not have permissions to access it.")
-    stop()
+    cli::cli_abort(c("x" = "ERROR: Could not find the Project
+                     {.var {project_reference_id}} on DataStore.",
+                     "i" = "If {.var {project_reference_id}} is set to
+                     restricted, you must set it to Public to add it to
+                     metadata."))
+    return(invisible())
   }
 
   # make sure the project_reference_id is a project:
   if (rjson$referenceType != "Project") {
-    cat("The reference you supplied",
-        project_reference_id,
-        "is not a project.")
-    cat("Please supply a valid project reference code.")
-    stop()
+    cli::cli_abort(c("x" = "The reference {.var {project_reference_id}}
+                     is not a DataStore Project.",
+                     " " = "Please supply a valid DataStore project
+                     reference code."))
+    return(invisible())
   }
 
   #test whether user has ownership permissions for the project.
@@ -1577,22 +1579,26 @@ set_project <- function(eml_object,
     ownership <- rjson$permissions$referenceOwners
 
     if (sum(grepl(email, ownership)) < 1) {
-      cat(crayon::bold$yellow("WARNING: "),
-          crayon::bold$blue(email),
-          " is not listed as an owner for the project (reference ",
-          crayon::bold$blue(project_reference_id), ").",
-          sep = "")
-      alert <- paste0("The person uploading to DataStore and extracting the ",
-                      "metadata must have ownership-level permissions to ",
-                      "succesfully link the data package to it's project.")
-      cat(alert)
-      cat("Project owners can add new owners via the DataStore GUI")
+      msg <- paste0("WARNING: {.email {email}} is not listed as an owner for ",
+                    "the project{.var {project_reference_id}}.")
+      info1 <- paste0("The person extracting the metadata on DataStore must ",
+                      "have ownership-level permissions to succesfully link ",
+                      "the data package to it's project.")
+      info2 <- "Project owners can add new owners via the DataStore GUI."
+      cli::cli_alert_warning(msg)
+      cli::cli_alert_info(info1)
+      cli::cli_alert_info(info2)
     }
   }
 
   #project title
   project_title <- rjson$bibliography$title
-  project_org <- rjson$bibliography$publisher$publisherName
+
+  if (sum(is.na(rjson$bibliography$publisher)) > 0) {
+    project_org <- "No publisher name supplied"
+  } else {
+    project_org <- rjson$bibliography$publisher$publisherName
+  }
   project_role <- "a DataStore Project"
 
   #generate URL (check whether project has DOI)
@@ -1612,7 +1618,9 @@ set_project <- function(eml_object,
 
   status_code <- httr::stop_for_status(req2$status_code)
   if (!status_code == 200) {
-    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+    cli::cli_abort("ERROR: DataStore connection failed.
+                   Are you logged in to the VPN?\n")
+    return(invisible())
   }
 
   #get project information:
@@ -1626,7 +1634,7 @@ set_project <- function(eml_object,
     project_url <- rjson2$referenceUrl
   }
 
-  #create project:
+  #create DataStore project:
   proj <- list(
     title = project_title,
     personnel = list(
@@ -1636,7 +1644,25 @@ set_project <- function(eml_object,
     ), id = "DataStore_project"
   )
 
-  eml_object$dataset$project <- proj
+  #get existing projects:
+  existing_projects <- eml_object$dataset$project
+
+  if (is.null(existing_projects)) {
+    eml_object$dataset$project <- proj
+  } else {
+    #if there are multiple projects:
+    if (length(seq_along(existing_projects[[1]])) > 1) {
+      # combine new and old projects (with new DataStore project at the top)
+      proj <- append(list(proj), existing_projects)
+      # overwrite the existing projects in EML with new project list:
+      eml_object$dataset$project <- proj
+    }
+    #if there is only one existing project:
+    if (length(seq_along(existing_projects[[1]])) == 1) {
+      proj <- append(list(proj), list(existing_projects))
+      eml_object$dataset$project <- proj
+    }
+  }
 
   # Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
   if (NPS == TRUE) {
@@ -1645,9 +1671,18 @@ set_project <- function(eml_object,
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
 
-  return(eml_object)
-
+  if (force == FALSE) {
+    msg1 <- paste0("The DataStore project {.var {project_reference_id}} with ",
+                   "the title {.var {project_title}} has been added to your ",
+                    "metadata.")
+    msg2 <- paste0("Your data package will be automatically linked to this ",
+                    "project when once it is uploaded to DataStore and the ",
+                    "metadata are extracted.")
+    cli::cli_inform(c("i" = msg1))
+    cli::cli_inform(c("i" = msg2))
   }
+  return(eml_object)
+}
 
 
 #' Set Publisher
@@ -1983,11 +2018,11 @@ set_publisher <- function(eml_object,
 #'
 #' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
 #'
-#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. set_int_rights checks to make sure the CUI code specified (see `set_cui()`) is appropriate for the license type chosen.
+#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. `set_int_rights` checks to make sure the CUI code specified (see `set_cui_code()`) is appropriate for the license type chosen. For must public NPS dataset, the CC0 license is appropriate.
 
 #' @inheritParams set_title
 #'
-#' @param license String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBFUL or PUBVER. Restricted can only be used if CUI is set to any code that is NOT PUBFUL or PUBVER (see `set_cui()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
+#' @param license String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see `set_cui_code()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
 #'
 #' @importFrom stats complete.cases
 #'
@@ -2038,7 +2073,8 @@ set_int_rights <- function(eml_object,
         if(cui2 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
-            eml_object$dataset$licensed$licenseName <- "CC0 1.0 Universal"
+            cc_zero <- "Creative Commons Zero v1.0 Universal"
+            eml_object$dataset$licensed$licenseName <- cc_zero
             cat("Your license has been set to:", crayon::blue$bold("CC0"))
           }
           if(license == "public"){
@@ -2066,7 +2102,7 @@ set_int_rights <- function(eml_object,
         if(cui2 != "PUBLIC"){
           eml_object$dataset$intellectualRights <- restrict
           eml_object$dataset$licensed$licenseName <-
-            "No License/Controlled Unclassified Information"
+            "Unlicensed (not for public dissemination)"
           cat("Your license has been set to ",
               crayon::bold$blue("Restricted"), ".", sep="")
         }

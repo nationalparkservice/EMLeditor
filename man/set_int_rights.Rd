@@ -14,7 +14,7 @@ set_int_rights(
 \arguments{
 \item{eml_object}{is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
-\item{license}{String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBFUL or PUBVER. Restricted can only be used if CUI is set to any code that is NOT PUBFUL or PUBVER (see \code{set_cui()} for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights}
+\item{license}{String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see \code{set_cui_code()} for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights}
 
 \item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 
@@ -27,7 +27,7 @@ eml_object
 set_int_rights allows the intellectualRights field in EML to be surgically replaced.
 }
 \details{
-set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose \code{force = FALSE} option will warn the user if there is no CUI specified. set_int_rights checks to make sure the CUI code specified (see \code{set_cui()}) is appropriate for the license type chosen.
+set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose \code{force = FALSE} option will warn the user if there is no CUI specified. \code{set_int_rights} checks to make sure the CUI code specified (see \code{set_cui_code()}) is appropriate for the license type chosen. For must public NPS dataset, the CC0 license is appropriate.
 }
 \examples{
 \dontrun{
