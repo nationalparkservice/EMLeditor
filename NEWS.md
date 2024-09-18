@@ -1,4 +1,6 @@
 # EMLeditor v0.1.6
+## 2024-09-17
+  * Update `set_content_units` to have correct east and west GPS coordinates for bounding boxes.
 ## 2024-08-29
   * Update readme: add R-CMD-CHECK badge; use pak to install instead of devtools
   * Update licenseName field on restricted references to read, "Unlicensed (not for public dissemination)"
