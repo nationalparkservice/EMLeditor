@@ -216,8 +216,8 @@ set_content_units <- function(eml_object, park_units,
     poly <- as.data.frame(poly[[1]][1])
     N <- max(poly[, 2])
     S <- min(poly[, 2])
-    W <- max(poly[, 1])
-    E <- min(poly[, 1])
+    W <- min(poly[, 1])
+    E <- max(poly[, 1])
     geocov <- EML::eml$geographicCoverage(
       geographicDescription =
         paste0("NPS Content Unit Link: ", park_units[i]),
