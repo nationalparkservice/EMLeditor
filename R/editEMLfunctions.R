@@ -1575,7 +1575,7 @@ set_project <- function(eml_object,
   #test whether user has ownership permissions for the project.
   #only run this test if NPS is true and force is false:
   if (NPS == TRUE && force == FALSE) {
-    email <- QCkit::get_user_email()
+    email <- QCkit:::get_user_email()
     ownership <- rjson$permissions$referenceOwners
 
     if (sum(grepl(email, ownership)) < 1) {
