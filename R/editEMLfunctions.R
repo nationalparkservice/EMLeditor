@@ -2073,8 +2073,7 @@ set_int_rights <- function(eml_object,
         if(cui2 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
-            cc_zero <- "Creative Commons Zero v1.0 Universal"
-            eml_object$dataset$licensed$licenseName <- cc_zero
+            eml_object$dataset$licensed$licenseName <- "Creative Commons Zero v1.0 Universal"
             cat("Your license has been set to:", crayon::blue$bold("CC0"))
           }
           if(license == "public"){
