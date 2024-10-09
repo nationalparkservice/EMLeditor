@@ -2045,7 +2045,7 @@ set_int_rights <- function(eml_object,
   #set up license text:
   CCzero <- 'This product is released to the "public domain" under Creative Commons CC0 1.0 No Rights Reserved (see: https://creativecommons.org/publicdomain/zero/1.0/).'
   pub_domain <- 'This product is released to the "public domain" under U.S. Government Works No Rights Reserved (see: http://www.usa.gov/publicdomain/label/1.0/).'
-  restrict <- "This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."
+  restrict <- "This product has been determined to contain Controlled Unclassified Information (CUI) or to be otherwise restricted by the National Park Service, and is intended for specific purposes. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."
 
   # get CUI info from additionalMetadata:
   cui <- eml_object$additionalMetadata
