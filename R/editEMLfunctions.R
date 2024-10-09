@@ -2167,7 +2167,7 @@ set_int_rights <- function(eml_object,
 #'
 #' @description `set_data_urls()` inspects metadata and edits the online distribution url for each dataTable (data file) to correspond to the reference indicated by the DOI listed in the metadata. If your data files are stored on DataStore as part of the same reference as the data package, you do not need to supply a URL. If your data files will be stored to a different repository, you can supply that location.
 #'
-#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
+#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digits of the DOI correspond to the DataStore Reference ID.
 #'
 #' @inheritParams set_title
 #' @param url a string that identifies the online location of the data file (uniform resource locator)
