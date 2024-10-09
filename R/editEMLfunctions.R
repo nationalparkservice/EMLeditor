@@ -2014,15 +2014,15 @@ set_publisher <- function(eml_object,
   return(eml_object)
 }
 
-#' Set Intellectual Rights (and license name)
+#' Set Intellectual Rights (and License)
 #'
-#' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
+#' @description set_int_rights allows the intellectualRights and licenseName fields in EML to be surgically replaced.
 #'
-#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. `set_int_rights` checks to make sure the CUI code specified (see `set_cui_code()`) is appropriate for the license type chosen. For must public NPS dataset, the CC0 license is appropriate.
+#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. `set_int_rights` checks to make sure the CUI code specified (see `set_cui_code()`) is appropriate for the license type chosen. For most public NPS datasets, the CC0 license is appropriate.
 
 #' @inheritParams set_title
 #'
-#' @param license String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see `set_cui_code()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
+#' @param license String. Indicates the type of license to be used. The three potential options are "CC0", "public" and "restricted". CC0 and public can only be used if CUI is set to PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see `set_cui_code()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
 #'
 #' @importFrom stats complete.cases
 #'
