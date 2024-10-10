@@ -424,7 +424,7 @@ set_content_units <- function(eml_object, park_units,
 #' Adds CUI dissemination codes to metadata
 #'
 #' @description
-#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to public domain (or CC0; see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
+#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to CC0 or public domain (see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
 #'
 #' @details `set_cui_code()` adds a CUI dissemination code to the tag CUI under additionalMetadata/metadata. The available choices for CUI dissemination codes at NPS are (pay attention to the spaces!):
 #'
