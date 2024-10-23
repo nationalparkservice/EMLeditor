@@ -424,7 +424,7 @@ set_content_units <- function(eml_object, park_units,
 #' Adds CUI dissemination codes to metadata
 #'
 #' @description
-#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to public domain (or CC0; see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
+#'  `set_cui_code()` adds Controlled Unclassified Information (CUI) dissemination codes to EML metadata. These codes determine who can or cannot have access to the data. Unless you have a specific mandate to restrict data, all data should be available to the public. if the CUI dissemination code is PUBLIC, the CUI marking should also be PUBLIC (`see set_cui_marking()`) and the license should be set to CC0 or public domain (see `set_int_rights()`). If your data contains CUI and you need to set the CUI dissemination code to anything other than PUBLIC, please be prepared to provide a legal justification in the form of the appropriate CUI marking (see `set_cui_marking()`).
 #'
 #' @details `set_cui_code()` adds a CUI dissemination code to the tag CUI under additionalMetadata/metadata. The available choices for CUI dissemination codes at NPS are (pay attention to the spaces!):
 #'
@@ -542,7 +542,7 @@ set_cui_code <- function(eml_object,
 #' @details set_cui adds a CUI code to the tag CUI under additionalMetadata/metadata.
 #'
 #' @inheritParams set_title
-#' @param cui_code a string consisting of one of 7 potential CUI codes (defaults to "PUBFUL"). Pay attention to the spaces:
+#' @param cui_code a string consisting of one of 5 potential CUI codes. Pay attention to the spaces:
 #' FED ONLY - Contains CUI. Only federal employees should have access (similar to "internal only" in DataStore)
 #' FEDCON - Contains CUI. Only federal employees and federal contractors should have access (also very much like current "internal only" setting in DataStore)
 #' DL ONLY - Contains CUI. Should only be available to a names list of individuals (where and how to list those individuals TBD)
@@ -2014,15 +2014,15 @@ set_publisher <- function(eml_object,
   return(eml_object)
 }
 
-#' Set Intellectual Rights (and license name)
+#' Set Intellectual Rights (and License)
 #'
-#' @description set_int_rights allows the intellectualRights field in EML to be surgically replaced.
+#' @description set_int_rights allows the intellectualRights and licenseName fields in EML to be surgically replaced.
 #'
-#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. `set_int_rights` checks to make sure the CUI code specified (see `set_cui_code()`) is appropriate for the license type chosen. For must public NPS dataset, the CC0 license is appropriate.
+#' @details set_int_rights requires that CUI information be listed in additionalMetadata prior to being called. The verbose `force = FALSE` option will warn the user if there is no CUI specified. `set_int_rights` checks to make sure the CUI code specified (see `set_cui_code()`) is appropriate for the license type chosen. For most public NPS datasets, the CC0 license is appropriate.
 
 #' @inheritParams set_title
 #'
-#' @param license String. Indicates the type of license to be used. The three potential options are "CC0" (CC zero), "public" and "restricted". CC0 and public can only be used if CUI is set to either PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see `set_cui_code()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
+#' @param license String. Indicates the type of license to be used. The three potential options are "CC0", "public" and "restricted". CC0 and public can only be used if CUI is set to PUBLIC. Restricted can only be used if CUI is set to any code that is NOT set to PUBLIC (see `set_cui_code()` for a list of codes). To view the exact text that will be inserted for each license, please see https://nationalparkservice.github.io/NPS_EML_Script/stepbystep.html#intellectual-rights
 #'
 #' @importFrom stats complete.cases
 #'
@@ -2045,7 +2045,7 @@ set_int_rights <- function(eml_object,
   #set up license text:
   CCzero <- 'This product is released to the "public domain" under Creative Commons CC0 1.0 No Rights Reserved (see: https://creativecommons.org/publicdomain/zero/1.0/).'
   pub_domain <- 'This product is released to the "public domain" under U.S. Government Works No Rights Reserved (see: http://www.usa.gov/publicdomain/label/1.0/).'
-  restrict <- "This product has been determined to contain Controlled Unclassified Information (CUI) by the National Park Service, and is intended for internal use only. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."
+  restrict <- "This product has been determined to contain Controlled Unclassified Information (CUI) or to be otherwise restricted by the National Park Service, and is intended for specific purposes. It is not published under an open license. Unauthorized access, use, and distribution are prohibited."
 
   # get CUI info from additionalMetadata:
   cui <- eml_object$additionalMetadata
@@ -2073,8 +2073,7 @@ set_int_rights <- function(eml_object,
         if(cui2 == "PUBLIC"){
           if(license == "CC0"){
             eml_object$dataset$intellectualRights <- CCzero
-            cc_zero <- "Creative Commons Zero v1.0 Universal"
-            eml_object$dataset$licensed$licenseName <- cc_zero
+            eml_object$dataset$licensed$licenseName <- "Creative Commons Zero v1.0 Universal"
             cat("Your license has been set to:", crayon::blue$bold("CC0"))
           }
           if(license == "public"){
@@ -2168,7 +2167,7 @@ set_int_rights <- function(eml_object,
 #'
 #' @description `set_data_urls()` inspects metadata and edits the online distribution url for each dataTable (data file) to correspond to the reference indicated by the DOI listed in the metadata. If your data files are stored on DataStore as part of the same reference as the data package, you do not need to supply a URL. If your data files will be stored to a different repository, you can supply that location.
 #'
-#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digist of the DOI correspond to the DataStore Reference ID.
+#' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digits of the DOI correspond to the DataStore Reference ID.
 #'
 #' @inheritParams set_title
 #' @param url a string that identifies the online location of the data file (uniform resource locator)
@@ -2237,7 +2236,7 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 
 #' Allows user to add ORCids to the creator
 #'
-#' @description `set_creator_orcids()` allows users to add (or remove) ORCiDs to creators or edit/update existing ORCiDs associated with creators. ORCiDs are persistent digital identifiers associated with individual people and remain constant despite name changes. They can help disambiguate creators with similar names and associated all the products of one creator in one space despite variations in how the name was used (e.g. Rob Baker and Robert Baker and. Robert L. Baker but NOT any of the 15 million or so other Robert Bakers). To register an ORCiD or manage your ORCiD profile, go to [https://orcid.org/](https://orcid.org/).
+#' @description `set_creator_orcids()` allows users to add (or remove) ORCiDs to creators or edit/update existing ORCiDs associated with creators. ORCiDs are persistent digital identifiers associated with individual people and remain constant despite name changes. They can help disambiguate creators with similar names and associate all the products of one creator in one space despite variations in how the name was used (e.g. Rob Baker and Robert Baker and Robert L. Baker but NOT any of the 15 million or so other Robert Bakers). To register an ORCiD or manage your ORCiD profile, go to [https://orcid.org/](https://orcid.org/).
 #'
 #' @details ORCiDs should be supplied as a list in the order in which the creators are listed. If a creator does not have an ORCiD, put NA (NO quotes around NA!) in the list in that space. Only consider individual people who are creators (and not organizations, they will automatically be skipped). ORCiDs should be supplied as a 16-digit string with hyphens after every 4 digits: xxxx-xxxx-xxxx-xxxx. Please do not include the URL prefix for your ORCiDs; this will automatically be inserted for you.
 #'
