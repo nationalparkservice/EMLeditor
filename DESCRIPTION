@@ -27,7 +27,6 @@ Remotes:
 Imports: 
     httr,
     readr,
-    sf,
     utils,
     EML,
     magrittr,
@@ -46,15 +45,16 @@ Imports:
     curl,
     mockr,
     rlang,
-    ISOcodes,
-    gdata
 Suggests:
     arcticdatautils,
     stargazer,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    QCkit
+    QCkit,
+    ISOcodes,
+    gdata,
+    sf
 Config/testthat/edition: 3
 URL: https://github.com/nationalparkservice/EMLeditor
 VignetteBuilder: knitr

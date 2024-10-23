@@ -1,3 +1,9 @@
+# EMLeditor v0.1.7 (under development)
+## 2024-10-23
+  * updates and fixes to documentation including spelling, grammar, and clarity
+  * remove non-exported functions from documentation
+  * move several packages from Imports to Suggests (ISOcodes, sf, gdata)
+
 # EMLeditor v0.1.6
 ## 2024-09-17
   * Update `set_content_units` to have correct east and west GPS coordinates for bounding boxes.

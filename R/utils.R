@@ -49,6 +49,7 @@ globalVariables(c("UnitCode",
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
 #'
 #' @return eml_object
+#' @noRd
 #'
 #' @examples
 #' \dontrun{
@@ -93,6 +94,7 @@ globalVariables(c("UnitCode",
 #' @details .set_version adds the current version of EMLeditor to the metadata, specifically in the "additionalMetadata" element
 #'
 #' @inheritParams .set_npspublisher
+#' @noRd
 #'
 #' @return eml_object
 #'
@@ -167,6 +169,7 @@ globalVariables(c("UnitCode",
 #'
 #' @return well known text (wkt) convex hull of an NPS park unit.
 #'
+#' @noRd
 #' @examples
 #' \dontrun{
 #' poly <- .get_unit_polygon("BICY")
@@ -197,6 +200,7 @@ globalVariables(c("UnitCode",
 #' @inheritParams .set_npspublisher
 #'
 #' @return eml_object
+#' @noRd
 #'
 #' @examples
 #' \dontrun{
@@ -255,6 +259,7 @@ globalVariables(c("UnitCode",
 #' Prompts for, gets, and returns binary user input (1 or 2)
 #'
 #' @return Factor. 1 or 2.
+#' @noRd
 #'
 #' @examples
 #' \dontrun{
@@ -271,6 +276,7 @@ globalVariables(c("UnitCode",
 #'
 #' @return character, typically 1, 2, or 3 but could be any character string.
 #' @export
+#' @noRd
 #'
 #' @examples
 #' \dontrun{
