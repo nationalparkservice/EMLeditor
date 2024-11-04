@@ -1,4 +1,6 @@
 # EMLeditor v0.1.7 (under development)
+## 2024-11-04
+  * Fix documentation in EMLscript code chunk that can make it difficult/confusing to enter user input after running the `upload_data_package` function.
 ## 2024-10-23
   * updates and fixes to documentation including spelling, grammar, and clarity
   * remove non-exported functions from documentation
