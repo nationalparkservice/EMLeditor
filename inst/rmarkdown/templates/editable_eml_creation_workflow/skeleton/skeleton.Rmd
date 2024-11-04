@@ -357,10 +357,11 @@ DPchecker::run_congruence_checks()
 If everything checked out, you should be ready to upload your data package! We recommend using `upload_data_package()` to accomplish this. The function automatically checks your DOI and uploads to the correct reference on DataStore. All of your files for the data package need to be in the same folder, there can be only one .xml file (ending in "_metadata.xml") and all the other files should be data files in .csv format. Each individual file should be < 32Mb.  If you have files > 32Mb, you will need to upload them manually using the web interface on DataStore. 
 ```{r upload}
 # this assumes your data package is in the current working directory
-EMLeditor::upload_data_package()
 
 # If your data package is somewhere else, specify that:
 #upload_data_package("C:/Users/<yourusername>/Documents/my_data_package)
+
+EMLeditor::upload_data_package()
 ```
 
 From within DataStore you should be able to extract all the information from the metadata file to populate the relevant DataStore fields. In the upper right, select "Edit" from the drop down menu. Then click on the "Files and Links" tab. On the left side of the files list, select the radio button corresponding to your metadata. Then click the "Extract Metadata" button from the top right of box with the files listed in it. 
