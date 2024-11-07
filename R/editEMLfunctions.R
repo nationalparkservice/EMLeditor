@@ -2255,7 +2255,7 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 #' creator_orcids <- c("1234-1234-1234-1234", NA, "4321-4321-4321-4321")
 #' mymetadata <- set_creator_orcids(mymetadata, creator_orcids)
 #' }
-set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
+set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE) {
   #if NA supplied as "NA":
   if (sum(stringr::str_detect(na.exclude(orcids), "NA")) > 0) {
     if (force == FALSE) {
@@ -2293,8 +2293,12 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
       surName <- append(surName,
                         creator[[i]][["individualName"]][["surName"]])
       #what if there is no orcid?
+      if (is.null(creator[[i]][["userId"]][["userId"]])) {
+        existing_orcid <- append(existing_orcid, NA)
+      } else {
       existing_orcid <- append(existing_orcid,
                                creator[[i]][["userId"]][["userId"]])
+      }
     }
   }
 
@@ -2315,6 +2319,11 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
       current_orcids <- tibble::tibble(surName, existing_orcid)
       #construct tibble of replacement orcids:
       new_orcids <- tibble::tibble(surName, orcids)
+      for (i in 1:nrow(new_orcids)) {
+        if(!is.na(new_orcids[i,2])) {
+          new_orcids[i,2] <- paste0("https://orcid.org/", new_orcids[i,2])
+        }
+      }
       cat("Your data package contains ORCiDs for the following creators:\n\n")
       cat(format(tibble::as_tibble(current_orcids))[c(-3L, -1L)], sep = "\n")
       cat("\nAre you sure you want to replace the existing ORCiDs with the following:\n\n")
@@ -2364,12 +2373,13 @@ set_creator_orcids <- function(eml_object, orcids, force = FALSE, NPS = TRUE){
           existing_orcid <- append(existing_orcid,
                                  next_orcid)
         } else {
-          existing_orcid <- append(existing_orcid, "NULL")
+          existing_orcid <- append(existing_orcid, NA)
         }
       }
     }
     #construct tibble of existing orcids:
     new_orcids <- tibble::tibble(surName, existing_orcid)
+    names(new_orcids) <- c("surName", "new_orcids")
     cat("Your new ORCiDs are:\n")
     cat(format(tibble::as_tibble(new_orcids))[c(-3L, -1L)], sep = "\n")
   }
