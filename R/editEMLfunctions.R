@@ -1499,9 +1499,9 @@ set_protocol <- function(eml_object,
 #' Adds a reference to a DataStore Project housing the data package
 #'
 #' @description
-#' The function will add a single project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added/linked to the DataStore project indicated.
+#' The function will add a single project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added/linked to the DataStore project indicated.EML2.2.0 only supports a single project so `set_project()`will overwrite/replace an existing project element.
 #'
-#' @details This function will only add a project; it will not overwrite existing projects. To add a DataStore project to your metadata, the project must be publicly available. If you add multiple DataStore projects to metadata, only the first DataStore project will be used by DataStore. The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
+#' @details This function will overwrite existing projects. To add a DataStore project to your metadata, the project must be publicly available. The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
 #'
 #' DataStore only add links between data packages and projects. DataStore cannot not remove data packages from projects. If need to remove a link between a data package and a project (perhaps you supplied the incorrect project reference ID at first), you will need to manually remove the connection using the DataStore web interface.
 #'
@@ -1644,25 +1644,29 @@ set_project <- function(eml_object,
     ), id = "DataStore_project"
   )
 
-  #get existing projects:
-  existing_projects <- eml_object$dataset$project
+  #whenever EML 3.0.0 comes out (or mutliple projects are allowd) this can
+  #be uncommented to allow set_project to add to existing projects
+  #rather than replace them:
 
-  if (is.null(existing_projects)) {
+  #get existing projects:
+  #existing_projects <- eml_object$dataset$project
+
+  #if (is.null(existing_projects)) {
     eml_object$dataset$project <- proj
-  } else {
+  #} else {
     #if there are multiple projects:
-    if (length(seq_along(existing_projects[[1]])) > 1) {
+  #  if (length(seq_along(existing_projects[[1]])) > 1) {
       # combine new and old projects (with new DataStore project at the top)
-      proj <- append(list(proj), existing_projects)
+  #    proj <- append(list(proj), existing_projects)
       # overwrite the existing projects in EML with new project list:
-      eml_object$dataset$project <- proj
-    }
+  #    eml_object$dataset$project <- proj
+  #  }
     #if there is only one existing project:
-    if (length(seq_along(existing_projects[[1]])) == 1) {
-      proj <- append(list(proj), list(existing_projects))
-      eml_object$dataset$project <- proj
-    }
-  }
+  #  if (length(seq_along(existing_projects[[1]])) == 1) {
+  #    proj <- append(list(proj), list(existing_projects))
+  #    eml_object$dataset$project <- proj
+  #  }
+  #}
 
   # Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
   if (NPS == TRUE) {
