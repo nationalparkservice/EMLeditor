@@ -1649,24 +1649,45 @@ set_project <- function(eml_object,
   #rather than replace them:
 
   #get existing projects:
-  #existing_projects <- eml_object$dataset$project
+  existing_projects <- eml_object$dataset$project
 
-  #if (is.null(existing_projects)) {
+  if (is.null(existing_projects)) {
     eml_object$dataset$project <- proj
-  #} else {
-    #if there are multiple projects:
-  #  if (length(seq_along(existing_projects[[1]])) > 1) {
-      # combine new and old projects (with new DataStore project at the top)
-  #    proj <- append(list(proj), existing_projects)
-      # overwrite the existing projects in EML with new project list:
-  #    eml_object$dataset$project <- proj
-  #  }
-    #if there is only one existing project:
-  #  if (length(seq_along(existing_projects[[1]])) == 1) {
-  #    proj <- append(list(proj), list(existing_projects))
-  #    eml_object$dataset$project <- proj
-  #  }
-  #}
+    if (force == FALSE) {
+      msg1 <- paste0("The DataStore project {.var {project_reference_id}} with",
+                     " the title {.var {project_title}} has been added to your",
+                     " metadata.")
+      msg2 <- paste0("Your data package will be automatically linked to this ",
+                     "project when once it is uploaded to DataStore and the ",
+                     "metadata are extracted.")
+      cli::cli_inform(c("i" = msg1))
+      cli::cli_inform(c("i" = msg2))
+    }
+  } else {
+  if (!is.null(existing_projects)) {
+    cli::cli_alert_info("This metadata already contains a Project")
+    cli::cli_inform("Are you sure you want to replace the existing project?")
+    var1 <- .get_user_input() #1: Yes; 2: No\n"
+    if (var1 == 1) {
+      eml_object$dataset$project <- proj
+      if (force == FALSE) {
+        msg1 <- paste0("The DataStore project {.var {project_reference_id}} ",
+                       "with the title {.var {project_title}} has been added ",
+                       "to your metadata.")
+        msg2 <- paste0("Your data package will be automatically linked to this",
+                       " project when once it is uploaded to DataStore and the",
+                       " metadata are extracted.")
+        cli::cli_inform(c("i" = msg1))
+        cli::cli_inform(c("i" = msg2))
+      }
+    }
+    if (var1 == 2) {
+      if (force == FALSE) {
+        cli::cli_inform("Your original project was retained.")
+      }
+    }
+
+  }
 
   # Set NPS publisher, if it doesn't already exist. Also sets byorForNPS in additionalMetadata to TRUE.
   if (NPS == TRUE) {
@@ -1675,16 +1696,7 @@ set_project <- function(eml_object,
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
 
-  if (force == FALSE) {
-    msg1 <- paste0("The DataStore project {.var {project_reference_id}} with ",
-                   "the title {.var {project_title}} has been added to your ",
-                    "metadata.")
-    msg2 <- paste0("Your data package will be automatically linked to this ",
-                    "project when once it is uploaded to DataStore and the ",
-                    "metadata are extracted.")
-    cli::cli_inform(c("i" = msg1))
-    cli::cli_inform(c("i" = msg2))
-  }
+
   return(eml_object)
 }
 
