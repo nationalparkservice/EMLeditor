@@ -1,4 +1,4 @@
-pandoc: 3.1.11
+pandoc: '3.2'
 pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
@@ -7,4 +7,4 @@ articles:
   a03_Template_edits: a03_Template_edits.html
   a04_Editing_fixing_eml: a04_Editing_fixing_eml.html
   a05_advanced_functionality: a05_advanced_functionality.html
-last_built: 2024-11-04T20:37Z
+last_built: 2025-01-16T20:14Z

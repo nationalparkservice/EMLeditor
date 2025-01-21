@@ -1499,9 +1499,9 @@ set_protocol <- function(eml_object,
 #' Adds a reference to a DataStore Project housing the data package
 #'
 #' @description
-#' The function will add a single project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added/linked to the DataStore project indicated.
+#' The function will add a single project title and URL to the metadata corresponding to the DataStore Project reference that the data package should be linked to. Upon EML extraction on DataStore, the data package will automatically be added/linked to the DataStore project indicated.EML2.2.0 only supports a single project so `set_project()`will overwrite/replace an existing project element.
 #'
-#' @details This function will only add a project; it will not overwrite existing projects. To add a DataStore project to your metadata, the project must be publicly available. If you add multiple DataStore projects to metadata, only the first DataStore project will be used by DataStore. The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
+#' @details This function will overwrite existing projects. To add a DataStore project to your metadata, the project must be publicly available. The person uploading and extracting the EML must be an owner on both the data package and project references in order to have the correct permissions for DataStore to create the desired link. If you have set NPS = TRUE and force = FALSE (the default settings), the function will also test whether you have owner-level permissions for the project which is necessary for DataStore to automatically connect your data package with the project.
 #'
 #' DataStore only add links between data packages and projects. DataStore cannot not remove data packages from projects. If need to remove a link between a data package and a project (perhaps you supplied the incorrect project reference ID at first), you will need to manually remove the connection using the DataStore web interface.
 #'
@@ -1644,23 +1644,48 @@ set_project <- function(eml_object,
     ), id = "DataStore_project"
   )
 
+  #whenever EML 3.0.0 comes out (or mutliple projects are allowd) this can
+  #be uncommented to allow set_project to add to existing projects
+  #rather than replace them:
+
   #get existing projects:
   existing_projects <- eml_object$dataset$project
 
   if (is.null(existing_projects)) {
     eml_object$dataset$project <- proj
-  } else {
-    #if there are multiple projects:
-    if (length(seq_along(existing_projects[[1]])) > 1) {
-      # combine new and old projects (with new DataStore project at the top)
-      proj <- append(list(proj), existing_projects)
-      # overwrite the existing projects in EML with new project list:
-      eml_object$dataset$project <- proj
+    if (force == FALSE) {
+      msg1 <- paste0("The DataStore project {.var {project_reference_id}} with",
+                     " the title {.var {project_title}} has been added to your",
+                     " metadata.")
+      msg2 <- paste0("Your data package will be automatically linked to this ",
+                     "project when once it is uploaded to DataStore and the ",
+                     "metadata are extracted.")
+      cli::cli_inform(c("i" = msg1))
+      cli::cli_inform(c("i" = msg2))
     }
-    #if there is only one existing project:
-    if (length(seq_along(existing_projects[[1]])) == 1) {
-      proj <- append(list(proj), list(existing_projects))
-      eml_object$dataset$project <- proj
+  } else {
+    if (!is.null(existing_projects)) {
+      cli::cli_alert_info("This metadata already contains a Project")
+      cli::cli_inform("Are you sure you want to replace the existing project?")
+      var1 <- .get_user_input() #1: Yes; 2: No\n"
+      if (var1 == 1) {
+        eml_object$dataset$project <- proj
+        if (force == FALSE) {
+          msg1 <- paste0("The DataStore project {.var {project_reference_id}} ",
+                       "with the title {.var {project_title}} has been added ",
+                       "to your metadata.")
+          msg2 <- paste0("Your data package will be automatically linked to ",
+                         "this project when once it is uploaded to DataStore ",
+                         "and the metadata are extracted.")
+          cli::cli_inform(c("i" = msg1))
+          cli::cli_inform(c("i" = msg2))
+        }
+      }
+      if (var1 == 2) {
+        if (force == FALSE) {
+          cli::cli_inform("Your original project was retained.")
+        }
+      }
     }
   }
 
@@ -1671,16 +1696,7 @@ set_project <- function(eml_object,
   # add/update EMLeditor and version to metadata:
   eml_object <- .set_version(eml_object)
 
-  if (force == FALSE) {
-    msg1 <- paste0("The DataStore project {.var {project_reference_id}} with ",
-                   "the title {.var {project_title}} has been added to your ",
-                    "metadata.")
-    msg2 <- paste0("Your data package will be automatically linked to this ",
-                    "project when once it is uploaded to DataStore and the ",
-                    "metadata are extracted.")
-    cli::cli_inform(c("i" = msg1))
-    cli::cli_inform(c("i" = msg2))
-  }
+
   return(eml_object)
 }
 
@@ -2883,5 +2899,6 @@ set_missing_data <- function(eml_object,
 
   return(eml_object)
 }
+
 
 
