@@ -2055,7 +2055,7 @@ set_int_rights <- function(eml_object,
                           force = FALSE,
                           NPS = TRUE){
   # verify license type selection; stop if does not equal one of 3 valid codes:
-  license <- tolower(license)
+  # license <- tolower(license) #was causing issues with CC0 vs cc0.
   license <- match.arg(license)
 
   #set up license text:
