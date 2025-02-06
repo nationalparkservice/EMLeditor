@@ -1,4 +1,8 @@
-# EMLeditor v0.1.7 (under development)
+# EMLeditor v1.0.1(under development)
+## 2025-02-06
+  * Bug fix in `set_int_rights` that was affecting CC0 licenses.
+
+# EMLeditor v1.0.0
 ## 2025-01-16
   * Fix bug in `set_project` and update associated documentation.
 ## 2024-11-04
