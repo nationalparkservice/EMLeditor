@@ -1,12 +1,17 @@
 # EMLeditor v1.0.1(under development)
+## 2025-02-22
+  * Add `CONTRIBUTING.md` file
+  
 ## 2025-02-06
   * Bug fix in `set_int_rights` that was affecting CC0 licenses.
 
 # EMLeditor v1.0.0
 ## 2025-01-16
   * Fix bug in `set_project` and update associated documentation.
+
 ## 2024-11-04
   * Fix documentation in EMLscript code chunk that can make it difficult/confusing to enter user input after running the `upload_data_package` function.
+
 ## 2024-10-23
   * updates and fixes to documentation including spelling, grammar, and clarity
   * remove non-exported functions from documentation
@@ -15,6 +20,7 @@
 # EMLeditor v0.1.6
 ## 2024-09-17
   * Update `set_content_units` to have correct east and west GPS coordinates for bounding boxes.
+
 ## 2024-08-29
   * Update readme: add R-CMD-CHECK badge; use pak to install instead of devtools
   * Update licenseName field on restricted references to read, "Unlicensed (not for public dissemination)"
@@ -23,23 +29,31 @@
   * update `set_project` so that it adds projects instead of replacing them.
   * update `set_project` to use cli errors/warnings
   * add minimal unit test for `set_project`
+
 ## 2024-08-21
   * add id tag to projects to help DataStore identify DataStore projects vs. other projects.
+
 ## 2024-08-20
   * add helper.R file with a test_path function to facilitate unit tests
   * update unit test code to run both interactively and during build checks
   * add yaml file to conduct github actions: build test
+
 ## 2024-07-10
   * add in the new function `set_project()` and attempt to update existing function, `set_protocol()`.
   * update license from MIT to CC0.
+
 ## 2024-07-02
   * updated all API requests to user v6 API instead of v7.
+
 ## 2024-07-01
   * Updated `.get_park_polygon()` to use the latest version of the API rather than a legacy version.
+
 ## 2024-06-26
   * Added new function, `set_new_creator()` which can add one or more creators to EML.
+
 ## 2024-05-01
   * Fix documentation: typo/formatting for the description of `set_int_rights()` in the EML Creation Script github.io page.
+
 ## 2024-04-29
   * Bug fix for `set_cui()` deprecation message: now points to the correct updated function (`set_cui_code()`).
 
@@ -94,16 +108,17 @@
 
 ## 06 October 2023
   * Updated `set_datastore_doi()` and `upload_data_package()` functions to allow them to work with IRMA dev for testing and training purposes.
-* Updated `upload_data_package()` to prevent file upload if the reference already has files associated with it.
+  * Updated `upload_data_package()` to prevent file upload if the reference already has files associated with it.
 
 # EMLeditor v0.1.1 "Big South Fork"
 
 ## 29 August 2023
-  Updated all rest API services from v4/v5 to v6. Units services remain at v2.
+  * Updated all rest API services from v4/v5 to v6. Units services remain at v2.
 
 ## 15 August 2023
   * Fix bugs in `get_authors()`
   * Fix bugs in `get_abstract()`
+
 ## 19 July 2023
   * Fix examples in `set_creator_orgs()`
   * Add function `set_methods()` allows user to add or replace existing methods sections.
@@ -114,8 +129,10 @@
 ## 12 July 2023
   * Add global variable bindings
   * Fix how set_creator_orcids handles orcids; now takes a 19-char string as input and saves orcid as a 37-char string with "https://orcid.org/" prefix.
+
 ## 10 July 2023
   * Fixed minor typos in EML creation script.
+
 ## 30 June 2023
   * Added a "park_units" parameter to `set_creator_orgs()`. This takes a park unit (or list of park units) and uses the IRMA units service to populate the organizationName with the FullName of the park_unit specified. If you specify park_units, you cannot also specify "creator_orgs" - non-park unit organizations must be added as creators using a separate call to `set_creator_orgs()` (and the creators can subsequently be reorganized using `set_creator_order()`).
 
