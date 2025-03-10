@@ -1,4 +1,7 @@
-# EMLeditor v1.0.1(under development)
+# EMLeditor v1.0.1 (under development)
+## 2025-03-10
+  * Updated license to OSI-approved "Zero-Clause BSD" in support of JOSS submission.
+
 ## 2025-02-25
   * Update `CONTRIBUTING.md` file
 ## 2025-02-22
