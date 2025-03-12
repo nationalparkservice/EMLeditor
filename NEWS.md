@@ -1,5 +1,7 @@
 # EMLeditor v1.0.1 (under development)
 ## 2025-03-10
+  * refacter upload_data_package to not depend on `DPchecker::load_metadata`
+## 2025-03-10
   * Updated license to OSI-approved "Zero-Clause BSD" in support of JOSS submission.
 
 ## 2025-02-25
