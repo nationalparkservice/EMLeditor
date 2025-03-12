@@ -1,5 +1,6 @@
 # EMLeditor v1.0.1 (under development)
 ## 2025-03-12
+  * fix typos in skeleton.rmd and a02_EML_creation_script.Rmd
   * remove redundant `check_eml` function and update associated documentation
   * remove `DPchecker` as a dependency from DESCRIPTION
   * Update to MIT license which is JOSS, NPS, and R compatible!
