@@ -1,6 +1,11 @@
 # EMLeditor v1.0.1 (under development)
+## 2025-03-12
+  * remove redundant `check_eml` function and update associated documentation
+  * remove `DPchecker` as a dependency from DESCRIPTION
+  * Update to MIT license which is JOSS, NPS, and R compatible!
+  
 ## 2025-03-10
-  * refacter upload_data_package to not depend on `DPchecker::load_metadata`
+  * refactor upload_data_package to not depend on `DPchecker::load_metadata`
 ## 2025-03-10
   * Updated license to OSI-approved "Zero-Clause BSD" in support of JOSS submission.
 
