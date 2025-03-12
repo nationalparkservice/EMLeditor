@@ -118,8 +118,8 @@ data_sitename <- "Point_ID"
 #### Temporal information
 This should indicate collection date of the first and last data point in the data package (across all files) and does not include any planning, pre- or post-processing time. The format should be one that complies with the International Standards Organization's standard 8601. The recommended format for EML is: YYYY-MM-DD, where Y is the four digit year, M is the two digit month code (01 - 12 for example, January = 01), and D is the two digit day of the month (01 - 31). Using an alternate format or setting the date to the future will cause errors down the road!
 ```{r temp_info}
-startdate <- ymd("2010-01-26")
-enddate <- ymd("2013-01-04")
+startdate <- lubridate::ymd("2010-01-26")
+enddate <- lubridate::ymd("2013-01-04")
 ```
 
 ## EMLassemblyline Functions
@@ -333,7 +333,7 @@ EML::write_eml(my_metadata, "mymetadatafilename_metadata.xml")
 ```
 
 ## Check your .xml file  
-You're EML metadata file should be ready for upload. You can run some additional tests on your .xml metadata file. This function assumes there is only one .xml file in the directory:
+Your EML metadata file should be ready for upload. You can run some additional tests on your .xml metadata file. This function assumes there is only one .xml file in the directory:
 ```{r check_eml}
 # This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.
 DPchecker::run_congruence_checks(check_metadata_only = TRUE)

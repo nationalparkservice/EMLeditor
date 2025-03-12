@@ -678,7 +678,7 @@ You're EML metadata file should be ready for upload. You can run some additional
 DPchecker::run_congruence_checks(check_metadata_only = TRUE)
 
 # If you .xml file with metadata is in a different directory, you will have to specify that:
-# run_congruence_checks("C:/Users/<yourusername>/Documents/my_data_package", check_metadata_only = TRUE)
+# DPchecker::run_congruence_checks("C:/Users/<yourusername>/Documents/my_data_package", check_metadata_only = TRUE)
 ```
 
 # Check your data package
@@ -690,7 +690,7 @@ If your data package is now complete, you can run some test prior to upload to m
 DPchecker::run_congruence_checks()
 
 # if your data package is somewhere else, specify that:
-# run_congruence_checks("C:/Users/<yourusername>/Documents/my_data_package")
+# DPchecker::run_congruence_checks("C:/Users/<yourusername>/Documents/my_data_package")
 ```
 
 # Upload your data package
