@@ -22,7 +22,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Remotes: 
     NCEAS/arcticdatautils,
-    nationalparkservice/DPchecker,
     nationalparkservice/QCkit
 Imports: 
     httr,
@@ -37,7 +36,6 @@ Imports:
     stats,
     lifecycle,
     here,
-    DPchecker (>= 0.1.0),
     jsonlite,
     tibble,
     cli,
