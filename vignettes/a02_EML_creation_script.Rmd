@@ -671,25 +671,19 @@ EML::write_eml(my_metadata, "mymetadatafilename_metadata.xml")
 
 # Check your .xml file
 
-You're EML metadata file should be ready for upload. You can run some
-additional tests on your .xml metadata file using `check_eml()`. This
-function assumes there is only one .xml file in the directory:
+You're EML metadata file should be ready for upload. You can run some additional tests on your .xml metadata file. This function assumes there is only one .xml file in the directory:
 
-```{r check_eml, eval=FALSE}
+```{r check_eml, eval = FALSE}
 # This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.
-EMLeditor::check_eml()
+DPchecker::run_congruence_checks(check_metadata_only = TRUE)
 
 # If you .xml file with metadata is in a different directory, you will have to specify that:
-#check_eml("C:/Users/<yourusername>/Documents/your_data_package")
+# run_congruence_checks("C:/Users/<yourusername>/Documents/my_data_package", check_metadata_only = TRUE)
 ```
 
 # Check your data package
 
-If your data package is now complete, you can run some test prior to
-upload to make sure that the package fits some minimal set of
-requirements and that the data and metadata are properly specified and
-coincide. This assumes that your data package is in the root of your R
-project.
+If your data package is now complete, you can run some test prior to upload to make sure that the package fits some minimal set of requirements and that the data and metadata are properly specified and coincide. This assumes that your data package is in the root of your R project. It will run all of the checks in the code chunk directly above "check your .xml file" and then some!
 
 ```{r congruence_tests, eval=FALSE}
 # this assumes that the data package is the working directory
