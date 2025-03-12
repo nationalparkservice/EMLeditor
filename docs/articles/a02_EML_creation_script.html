@@ -697,15 +697,14 @@ Keep in mind that the file name should end with “_metadata.xml”.</p>
 <h2 id="check-your--xml-file">Check your .xml file<a class="anchor" aria-label="anchor" href="#check-your--xml-file"></a>
 </h2>
 <p>You’re EML metadata file should be ready for upload. You can run some
-additional tests on your .xml metadata file using
-<code><a href="../reference/check_eml.html">check_eml()</a></code>. This function assumes there is only one .xml
-file in the directory:</p>
+additional tests on your .xml metadata file. This function assumes there
+is only one .xml file in the directory:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.</span></span>
-<span><span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/check_eml.html">check_eml</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span>check_metadata_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># If you .xml file with metadata is in a different directory, you will have to specify that:</span></span>
-<span><span class="co">#check_eml("C:/Users/&lt;yourusername&gt;/Documents/your_data_package")</span></span></code></pre></div>
+<span><span class="co"># run_congruence_checks("C:/Users/&lt;yourusername&gt;/Documents/my_data_package", check_metadata_only = TRUE)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="check-your-data-package">Check your data package<a class="anchor" aria-label="anchor" href="#check-your-data-package"></a>
@@ -714,7 +713,8 @@ file in the directory:</p>
 upload to make sure that the package fits some minimal set of
 requirements and that the data and metadata are properly specified and
 coincide. This assumes that your data package is in the root of your R
-project.</p>
+project. It will run all of the checks in the code chunk directly above
+“check your .xml file” and then some!</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this assumes that the data package is the working directory</span></span>
 <span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span><span class="op">)</span></span>
