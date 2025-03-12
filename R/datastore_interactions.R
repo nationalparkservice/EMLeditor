@@ -216,8 +216,28 @@ set_datastore_doi <- function(eml_object,
 upload_data_package <- function(directory = here::here(),
                                 force = FALSE,
                                 dev = FALSE){
-  #load metadata
-  metadata <- DPchecker::load_metadata(directory = directory)
+
+  # get list of all files ending in metadata.xml
+  lf <- list.files(path = directory,
+                   pattern = "metadata.xml",
+                   ignore.case = TRUE)
+
+  metadata_file <- file.path(directory, lf)
+
+  if (length(metadata_file) == 1) {
+    metadata <- EML::read_eml(metadata_file, from = "xml")
+    if (is.null(metadata)) {
+      cli::cli_abort(c("x" = "Could not load metadata."))
+    }
+  } else if (length(metadata_file) < 1) {
+    # if no metadata file exists, stop the function and warn the user
+    cli::cli_abort(c
+                   ("x" = "No metadata found. Your metadata file name must end in {.file _metadata.xml}."))
+  } else if (length(metadata_file) > 1) {
+    # if multiple metadata files exist, stop the function and warn the user
+    cli::cli_abort(c("x" = "The data package format only allows one metadata file per data package. Please remove extraneous metadata files or combine them into a single file."))
+  }
+
   #get doi from metadata
   doi <- get_doi(metadata)
   #extract DS reference - assumes 7 digit DS reference code:

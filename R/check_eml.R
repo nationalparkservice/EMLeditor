@@ -1,24 +1,3 @@
-#' Run checks on EML
-#'
-#' @description Runs a series of checks on EML metadata based on functions in DPchecker's run_congruence_checks()`.
-#'
-#' @param path to the metadata file. Defaults to the current working directory. Make sure there is only one .xml file in the directory.
-#'
-#' @return message
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_eml()
-#' }
-check_eml <- function(path = here::here()) {
-  DPchecker::run_congruence_checks(
-    directory= path,
-    metadata = DPchecker::load_metadata(path),
-    check_metadata_only = TRUE)
-}
-
-
 #' Writes a README file
 #'
 #' @description write_readme writes a readme file based on the current metadata
