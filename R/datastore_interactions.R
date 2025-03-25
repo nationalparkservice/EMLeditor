@@ -301,7 +301,7 @@ upload_data_package <- function(directory = here::here(),
       else {
         #get list of files for terminal output (just names, not paths)
         files_names <- list.files(path = directory,
-                                  pattern = "*.csv",
+                                  pattern = "*\\.csv",
                                   ignore.case = TRUE)
         #add metadata
         files_names <- append(files_names,
@@ -309,7 +309,7 @@ upload_data_package <- function(directory = here::here(),
                                          pattern = "*metadata.xml"))
         #get list of .csvs for upload (names and paths)
         files <- list.files(path = directory,
-                            pattern = "*.csv",
+                            pattern = "*\\.csv",
                             full.names = TRUE,
                             ignore.case = TRUE)
         #add metadata
@@ -402,7 +402,7 @@ upload_data_package <- function(directory = here::here(),
     }
     #get list of .csvs
     files <- list.files(path = directory,
-                        pattern = "*.csv",
+                        pattern = "*\\.csv",
                         full.names = TRUE,
                         ignore.case = TRUE)
     #add metadata
