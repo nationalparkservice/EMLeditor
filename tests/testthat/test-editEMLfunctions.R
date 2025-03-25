@@ -1044,7 +1044,7 @@ return_val_1 <- function() {1}
 local({mockr::local_mock(.get_user_input = return_val_1)
 
   x <- set_missing_data(eml_object = BICY_EMLed_meta,
-                   file = "Mini_BICY_Veg_Transect_Cleaned.csv",
+                   files = "Mini_BICY_Veg_Transect_Cleaned.csv",
                    columns = "scientificName",
                    codes = "NA",
                    definitions = "unidentifiable",
@@ -1060,7 +1060,7 @@ test_that("set_missing_data retruns valid EML, interactive2", {
   local({mockr::local_mock(.get_user_input = return_val_2)
 
     x <- set_missing_data(eml_object = BICY_EMLed_meta,
-                          file = "Mini_BICY_Veg_Transect_Cleaned.csv",
+                          files = "Mini_BICY_Veg_Transect_Cleaned.csv",
                           columns = "scientificName",
                           codes = "NA",
                           definitions = "unidentifiable",
@@ -1074,7 +1074,7 @@ test_that("set_missing_data retruns valid EML, interactive2", {
 
 test_that("set_missing_data retruns valid EML, scripting method", {
   x <- set_missing_data(eml_object = BICY_EMLed_meta,
-                        file = "Mini_BICY_Veg_Transect_Cleaned.csv",
+                        files = "Mini_BICY_Veg_Transect_Cleaned.csv",
                         columns = "scientificName",
                         codes = "NA",
                         definitions = "unidentifiable",
@@ -1086,7 +1086,7 @@ test_that("set_missing_data retruns valid EML, scripting method", {
 
 test_that("set_missing_data handles vectorized input", {
   x <- set_missing_data(eml_object = BICY_EMLed_meta,
-                        file = c("Mini_BICY_Veg_Transect_Cleaned.csv",
+                        files = c("Mini_BICY_Veg_Transect_Cleaned.csv",
                                  "Mini_BICY_Veg_Transect_Cleaned.csv",
                                  "Mini_BICY_Veg_Geography.csv"),
                         columns = c("scientificName",
