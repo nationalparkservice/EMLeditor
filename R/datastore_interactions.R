@@ -219,7 +219,7 @@ upload_data_package <- function(directory = here::here(),
 
   # get list of all files ending in metadata.xml
   lf <- list.files(path = directory,
-                   pattern = "metadata.xml",
+                   pattern = "metadata\\.xml",
                    ignore.case = TRUE)
 
   metadata_file <- file.path(directory, lf)
@@ -301,20 +301,24 @@ upload_data_package <- function(directory = here::here(),
       else {
         #get list of files for terminal output (just names, not paths)
         files_names <- list.files(path = directory,
-                                  pattern = "*.csv")
+                                  pattern = "*\\.csv",
+                                  ignore.case = TRUE)
         #add metadata
         files_names <- append(files_names,
                               list.files(path = directory,
-                                         pattern = "*metadata.xml"))
+                                         pattern = "metadata\\.xml",
+                                         ignore.case = TRUE))
         #get list of .csvs for upload (names and paths)
         files <- list.files(path = directory,
-                            pattern = "*.csv",
-                            full.names = TRUE)
+                            pattern = "*\\.csv",
+                            full.names = TRUE,
+                            ignore.case = TRUE)
         #add metadata
         files <- append(files,
                         list.files(path = directory,
-                                   pattern = "*metadata.xml",
-                                   full.names = TRUE))
+                                   pattern = "metadata\\.xml",
+                                   full.names = TRUE,
+                                   ignore.case = TRUE))
         for (i in seq_along(files)) {
           #test for files <32Mb:
           file_size_error <- NULL
@@ -400,13 +404,15 @@ upload_data_package <- function(directory = here::here(),
     }
     #get list of .csvs
     files <- list.files(path = directory,
-                        pattern = "*.csv",
-                        full.names = TRUE)
+                        pattern = "*\\.csv",
+                        full.names = TRUE,
+                        ignore.case = TRUE)
     #add metadata
     files <- append(files,
                     list.files(path = directory,
-                               pattern = "*metadata.xml",
-                               full.names = TRUE))
+                               pattern = "metadata\\.xml",
+                               full.names = TRUE,
+                               ignore.case = TRUE))
     for (i in seq_along(files)) {
       #test for files <32Mb:
       file_size_error <- NULL

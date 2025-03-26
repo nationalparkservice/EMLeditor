@@ -1,7 +1,7 @@
 #load metadata to to test functions with.
 BICY_EMLed_meta <- EML::read_eml(testthat::test_path("good",
                                             "BICY",
-                                            "BICY_EMLeditor_metadata.xml"),
+                                            "BICY_EMLeditor_metadata.XML"),
                                  from="xml")
 
 # a couple of house-keeping functions for mockr interactivity:
