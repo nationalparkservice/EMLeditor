@@ -743,3 +743,135 @@ get_producing_units <- function(eml_object) {
 get_publisher <- function(eml_object) {
   pub <- eml_object$dataset$publisher
 }
+
+#' Creates attribute tables from an XML file path or EMLD object
+#'
+#' @description `get_attribute_tables` takes an EMLD object or the path to an XML file
+#' and returns a nested table of all the attribute tables pulled from the metadata.
+#' It can also write each attribute table into the working directory as a tab delimited txt file,
+#' which EMLassemblyline recognizes in its make_eml function.
+#'
+#' @param xml_file either a path to an EML file or an emld type object read in using EML::read_eml()
+#' @param write defaults to TRUE. A logical value that indicates whether or not the attribute tables
+#' should be written as tab delimited txt files to the working directory.
+#' @param path defaults to the working directory. This path determines where the txt files will be written.
+#' @returns a nested table with one attribute table for each data table in the EML file
+#' @export
+#' @examples
+#' \dontrun{
+#' get_attribute_tables(example_XML)
+#' get_attribute_tables(example_XML, write = FALSE)
+#' get_attribute_tables("my_example_metadata_path.xml")
+#' }
+
+get_attribute_tables <- function(xml_file, write = TRUE, path = here::here()) {
+  # check class of xml_file parameter
+  # if xml_file is "emld" class (class(xml_file) will be "list" AND "emld"), use that as the metadata object
+  if ("emld" %in% class(xml_file)) {
+    metadata_obj <- xml_file
+    # if xml_file is a string ending in ".xml", read XML file at specified path
+  } else if (class(xml_file) == "character" & stringr::str_sub(xml_file, -4) == ".xml") {
+    metadata_obj <- EML::read_eml(here::here(xml_file), from ="xml")
+    # print message if path or metadata file are not recognized
+  } else {stop("EML object not found")}
+
+  # create table object to store all attributes in metadata object
+  tables <- metadata_obj$dataset$dataTable
+
+  # create empty list that will become a nested list of all attribute tables
+  all_attribute_tables <- NULL
+
+  # if there is only one data table, tables[[1]] will be a string object, not a list of all the data tables
+  # in this case, do not iterate over tables, make one attribute table and iterate over each attribute in tables
+  if (class(tables[[1]]) != "list") {
+    # assign table names to the name of the one data table
+    table_names <- stringr::str_remove(tables$physical$objectName, ".csv")
+    # name the attribute table
+    attribute_table_names <- stringr::str_c("attributes_", table_names)
+    # create empty attribute table
+    attributeTable <- data.frame(attributeName=character(),
+                                 attributeDefinition=character(),
+                                 class=character(),
+                                 unit=character(),
+                                 dateTimeFormatString=character(),
+                                 missingValueCode=character(),
+                                 missingValueCodeExplanation=character(),
+                                 stringsAsFactors=FALSE)
+    # for each attribute, populate the attribute table with name, definition, class, unit, dttm format, missing value codes, and missing value code definitions
+    for (i in seq_along(tables$attributeList$attribute)) {
+      attributeTable[i,] <- c(tables$attributeList$attribute[[i]]$attributeName,
+                              tables$attributeList$attribute[[i]]$attributeDefinition,
+                              dplyr::case_when((!is.null(tables$attributeList$attribute[[i]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) ~ "categorical",
+                                               tables$attributeList$attribute[[i]]$storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                               tables$attributeList$attribute[[i]]$storageType == "string" ~ "character",
+                                               tables$attributeList$attribute[[i]]$storageType == "date" ~ "Date",
+                                               TRUE ~ NA),
+                              ifelse(tables$attributeList$attribute[[i]]$storageType %in% c("float", "double", "long", "int"), tables$attributeList$attribute[[i]]$measurementScale$ratio$unit[[1]], ""),
+                              ifelse(tables$attributeList$attribute[[i]]$storageType == "date", tables$attributeList$attribute[[i]]$measurementScale$dateTime$formatString, ""),
+                              ifelse((!is.null(tables$attributeList$attribute[[i]]$missingValueCode$code)), tables$attributeList$attribute[[i]]$missingValueCode$code, ""),
+                              ifelse((!is.null(tables$attributeList$attribute[[i]]$missingValueCode$code)), tables$attributeList$attribute[[i]]$missingValueCode$codeExplanation, "")
+      )
+      # add the attribute table created above to a nested list
+      all_attribute_tables[[1]] <- attributeTable
+    }
+  }
+
+
+  # if there are multiple data tables, tables[[1]] will be a list
+  # in this case, iterate over every data table in tables, and for each of those tables, iterate over the attribute list
+  if (class(tables[[1]]) == "list") {
+    # create table_names list and populate with names of data tables
+    table_names = NULL
+
+    for (i in seq_along(tables)) {
+      table_names = append(table_names, stringr::str_remove(tables[[i]]$physical$objectName, ".csv"))
+    }
+
+    # create attribute_table_names list and populate with names of attribute tables
+    attribute_table_names <- NULL
+
+    for (i in seq_along(table_names)) {
+      attribute_table_name <- stringr::str_c("attributes_", table_names[[i]])
+      attribute_table_names <- append(attribute_table_names, attribute_table_name)
+    }
+
+    # create an attribute table for each data table in the metadata
+    for (i in seq_along(tables)) {
+      attributeTable <- data.frame(attributeName=character(),
+                                   attributeDefinition=character(),
+                                   class=character(),
+                                   unit=character(),
+                                   dateTimeFormatString=character(),
+                                   missingValueCode=character(),
+                                   missingValueCodeExplanation=character(),
+                                   stringsAsFactors=FALSE)
+      # for each attribute, populate the attribute table with name, definition, class, unit, dttm format, missing value codes, and missing value code definitions
+      for (j in seq_along(tables[[i]]$attributeList$attribute)) {
+        attributeTable[j,] <- c(tables[[i]]$attributeList$attribute[[j]]$attributeName,
+                                tables[[i]]$attributeList$attribute[[j]]$attributeDefinition,
+                                dplyr::case_when((!is.null(tables[[i]]$attributeList$attribute[[j]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) ~ "categorical",
+                                                 tables[[i]]$attributeList$attribute[[j]]$storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                                 tables[[i]]$attributeList$attribute[[j]]$storageType == "string" ~ "character",
+                                                 tables[[i]]$attributeList$attribute[[j]]$storageType == "date" ~ "Date",
+                                                 TRUE ~ NA),
+                                ifelse(tables[[i]]$attributeList$attribute[[j]]$storageType %in% c("float", "double", "long", "int"), tables[[i]]$attributeList$attribute[[j]]$measurementScale$ratio$unit[[1]], ""),
+                                ifelse(tables[[i]]$attributeList$attribute[[j]]$storageType == "date", tables[[i]]$attributeList$attribute[[j]]$measurementScale$dateTime$formatString, ""),
+                                ifelse((!is.null(tables[[i]]$attributeList$attribute[[j]]$missingValueCode$code)), tables[[i]]$attributeList$attribute[[j]]$missingValueCode$code, ""),
+                                ifelse((!is.null(tables[[i]]$attributeList$attribute[[j]]$missingValueCode$code)), tables[[i]]$attributeList$attribute[[j]]$missingValueCode$codeExplanation, "")
+        )
+      }
+      # add the attribute table created above to a nested list
+      all_attribute_tables[[i]] <- attributeTable
+    }
+  }
+  names(all_attribute_tables) <- attribute_table_names
+
+  # if write == TRUE, write tables to txt files in working directory
+  if (isTRUE(write)) {
+    for (i in seq_along(all_attribute_tables)) {
+      write.table(all_attribute_tables[[i]], paste0(path, "/", attribute_table_names[[i]], ".txt"), sep = "\t", row.names = FALSE)
+    }
+  }
+  return(all_attribute_tables)
+}
+
