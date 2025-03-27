@@ -214,3 +214,42 @@ test_that("bad path input throws error", {
   expect_error(get_attribute_tables("bad_metadata_path.xml", write = FALSE))
 })
 
+# ---- get_catvar_tables ----
+
+
+# test output class when input is an emld object
+test_that("object input returns list output", {
+  expect_equal(class(get_catvar_tables(BICY_EMLed_meta, write = FALSE)), "list")
+})
+
+# test output class when input is a path to an XML file
+test_that("path input returns list output", {
+  expect_equal(class(get_catvar_tables(testthat::test_path(testthat::test_path("good",
+                                                                               "BICY",
+                                                                               "BICY_EMLeditor_metadata.XML")), write = FALSE)), "list")
+})
+
+# test length of nested attribute table, should be equal to the number of csv files in the data package
+test_that("output table length equals number of csvs in data package", {
+  expect_equal(length(get_catvar_tables(BICY_EMLed_meta, write = FALSE)), length(list.files(testthat::test_path("good",
+                                                                                                                "BICY")), pattern = "csv"))
+})
+
+# test that default write input writes as many catvars text files as data tables
+test_that("default write parameters writes same number of txt files as catvar tables", {
+  temp_path <- withr::local_tempdir()
+  get_catvar_tables(BICY_EMLed_meta, path = temp_path)
+  expect_equal(length(list.files(temp_path, pattern = "catvars")), length(list.files(testthat::test_path("good",
+                                                                                                         "BICY")), pattern = "csv"))
+})
+
+# test bad eml object
+test_that("bad object input throws error", {
+  expect_error(get_catvar_tables(bad_metadata_object, write = FALSE))
+})
+
+# test bad path
+test_that("bad path input throws error", {
+  expect_error(get_catvar_tables("bad_metadata_path.xml", write = FALSE))
+})
+
