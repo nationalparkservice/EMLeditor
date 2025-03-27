@@ -185,15 +185,15 @@ test_that("object input returns list output", {
 
 # test output class when input is a path to an XML file
 test_that("path input returns list output", {
-  expect_equal(class(get_attribute_tables(testthat::test_path(testthat::test_path("good",
-                                                                                  "BICY",
-                                                                                  "BICY_EMLeditor_metadata.XML")), write = FALSE)), "list")
+  expect_equal(class(get_attribute_tables(testthat::test_path("good",
+                                                              "BICY",
+                                                              "BICY_EMLeditor_metadata.XML"), write = FALSE)), "list")
 })
 
 # test length of nested attribute table, should be equal to the number of csv files in the data package
 test_that("output table length equals number of csvs in data package", {
   expect_equal(length(get_attribute_tables(BICY_EMLed_meta, write = FALSE)), length(list.files(testthat::test_path("good",
-                                                                                                                   "BICY")), pattern = "csv"))
+                                                                                                                   "BICY"), pattern = "csv")))
 })
 
 # test that default write input writes as many attributes text files as data tables
@@ -201,7 +201,7 @@ test_that("default write parameters writes same number of txt files as catvar ta
   temp_path <- withr::local_tempdir()
   get_attribute_tables(BICY_EMLed_meta, path = temp_path)
   expect_equal(length(list.files(temp_path, pattern = "attributes")), length(list.files(testthat::test_path("good",
-                                                                                                            "BICY")), pattern = "csv"))
+                                                                                                            "BICY"), pattern = "csv")))
 })
 
 # test bad eml object
@@ -224,15 +224,15 @@ test_that("object input returns list output", {
 
 # test output class when input is a path to an XML file
 test_that("path input returns list output", {
-  expect_equal(class(get_catvar_tables(testthat::test_path(testthat::test_path("good",
-                                                                               "BICY",
-                                                                               "BICY_EMLeditor_metadata.XML")), write = FALSE)), "list")
+  expect_equal(class(get_catvar_tables(testthat::test_path("good",
+                                                           "BICY",
+                                                           "BICY_EMLeditor_metadata.XML"), write = FALSE)), "list")
 })
 
 # test length of nested attribute table, should be equal to the number of csv files in the data package
 test_that("output table length equals number of csvs in data package", {
   expect_equal(length(get_catvar_tables(BICY_EMLed_meta, write = FALSE)), length(list.files(testthat::test_path("good",
-                                                                                                                "BICY")), pattern = "csv"))
+                                                                                                                "BICY"), pattern = "csv")))
 })
 
 # test that default write input writes as many catvars text files as data tables
@@ -240,7 +240,7 @@ test_that("default write parameters writes same number of txt files as catvar ta
   temp_path <- withr::local_tempdir()
   get_catvar_tables(BICY_EMLed_meta, path = temp_path)
   expect_equal(length(list.files(temp_path, pattern = "catvars")), length(list.files(testthat::test_path("good",
-                                                                                                         "BICY")), pattern = "csv"))
+                                                                                                         "BICY"), pattern = "csv")))
 })
 
 # test bad eml object
