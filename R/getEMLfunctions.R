@@ -875,3 +875,136 @@ get_attribute_tables <- function(xml_file, write = TRUE, path = here::here()) {
   return(all_attribute_tables)
 }
 
+#' Creates categorical variable tables from an XML file path or EMLD object
+#'
+#' @description `get_catvar_tables` takes an EMLD object or the path to an XML file
+#' and returns a nested table of all the categorical variable tables pulled from the metadata.
+#' It can also write each categorical variable table into the working directory as a tab delimited
+#' txt file, which EMLassemblyline recognizes in its make_eml function.
+#'
+#' @param xml_file either a path to an EML file or an emld type object read in using EML::read_eml()
+#' @param write defaults to TRUE. A logical value that indicates whether or not the catvars tables
+#' should be written as tab delimited txt files to the working directory.
+#' @param path defaults to the working directory. This path determines where the txt files will be written.
+#' @returns a nested table with one catvars table for each data table in the EML file
+#' @export
+#' @examples
+#' \dontrun{
+#' get_catvar_tables(example_XML)
+#' get_catvar_tables(example_XML, write = FALSE)
+#' get_catvar_tables("my_example_metadata_path.xml")
+#' }
+
+get_catvar_tables <- function(xml_file, write = TRUE, path = here::here()) {
+  # check class of xml_file parameter
+  # if xml_file is "emld" class (class(xml_file) will be "list" AND "emld"), use that as the metadata object
+  if ("emld" %in% class(xml_file)) {
+    metadata_obj <- xml_file
+    # if xml_file is a string ending in ".xml", read XML file at specified path
+  } else if (class(xml_file) == "character" & stringr::str_sub(xml_file, -4) == ".xml") {
+    metadata_obj <- EML::read_eml(here::here(xml_file), from ="xml")
+    # print message if path or metadata file are not recognized
+  } else {stop("EML object not found")}
+
+  # create table object to store all attributes in metadata object
+  tables <- metadata_obj$dataset$dataTable
+
+  all_catvar_tables <- NULL
+
+  # if there is only one data table, tables[[1]] will be a string object, not a list of all the data tables
+  # in this case, do not iterate over tables, make one catvars table and iterate over each attribute in tables
+  if (class(tables[[1]]) != "list") {
+    # assign table names to the name of the one data table
+    table_names <- stringr::str_remove(tables$physical$objectName, ".csv")
+    # name the catvars table
+    catvar_table_names <- stringr::str_c("catvars_", table_names)
+    # create empty catvars table
+    catVars <- data.frame(attributeName=character(),
+                          code=character(),
+                          definition=character(),
+                          stringsAsFactors=FALSE)
+
+    for (i in seq_along(tables$attributeList$attribute)) {
+      cv_list <- tables$attributeList$attribute[[i]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain
+      # if cv_list is null, the attribute is not categorical
+      if (is.null(cv_list)) next
+      else {
+        for (j in seq_along(cv_list$codeDefinition)) {
+          # if cv_list$codeDefinition$definition is null, there is more than one categorical variable
+          if (is.null(cv_list$codeDefinition$definition)) {
+            catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables$attributeList$attribute[[i]]$attributeName,
+                                                                   code = cv_list$codeDefinition[[j]]$code,
+                                                                   definition = cv_list$codeDefinition[[j]]$definition))
+            # otherwise if there is only one categorical variable, use a different index
+          } else {
+            catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables$attributeList$attribute[[i]]$attributeName,
+                                                                   code = cv_list$codeDefinition$code,
+                                                                   definition = cv_list$codeDefinition$definition))
+          }
+        }
+      }
+      all_catvar_tables[[1]] <- catVars
+    }
+  }
+  # if there are multiple tables, iterate over each table and create a catvars table for each data table
+  # if there are multiple data tables, tables[[1]] will be a list
+  # in this case, iterate over each table and create a catvars table for each data table
+  if (class(tables[[1]]) == "list") {
+    # create table_names list and populate with names of data tables
+    table_names = NULL
+
+    # for each categorical variable, populate the catvars table with attribute name, code, and definition
+    for (i in seq_along(tables)) {
+      table_names = append(table_names, stringr::str_remove(tables[[i]]$physical$objectName, ".csv"))
+    }
+
+    # create catvars_table_names list and populate with names of catvar tables
+    catvar_table_names <- NULL
+
+    for (i in seq_along(table_names)) {
+      catvar_table_name <- stringr::str_c("catvars_", table_names[[i]])
+      catvar_table_names <- append(catvar_table_names, catvar_table_name)
+    }
+
+    # create an catvars table for each data table in the metadata
+    for (i in seq_along(tables)) {
+      catVars <- data.frame(attributeName=character(),
+                            code=character(),
+                            definition=character(),
+                            stringsAsFactors=FALSE)
+      # for each categorical variable, populate the catvars table with attribute name, code, and definition
+      for (j in seq_along(tables[[i]]$attributeList$attribute)) {
+        cv_list <- tables[[i]]$attributeList$attribute[[j]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain
+        # if cv_list is null, the attribute is not categorical
+        if (is.null(cv_list)) next
+        else {
+          for (k in seq_along(cv_list$codeDefinition)) {
+            # if cv_list$codeDefinition$definition is null, there is more than one categorical variable
+            if (is.null(cv_list$codeDefinition$definition)) {
+              catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables[[i]]$attributeList$attribute[[j]]$attributeName,
+                                                                     code = cv_list$codeDefinition[[k]]$code,
+                                                                     definition = cv_list$codeDefinition[[k]]$definition))
+              # otherwise if there is only one categorical variable, use a different index
+            } else {
+              catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables[[i]]$attributeList$attribute[[j]]$attributeName,
+                                                                     code = cv_list$codeDefinition$code,
+                                                                     definition = cv_list$codeDefinition$definition))
+            }
+          }
+        }
+      }
+      all_catvar_tables[[i]] <- catVars
+    }
+  }
+  names(all_catvar_tables) <- catvar_table_names
+
+  # if write == TRUE, write tables to txt files in working directory
+  if (isTRUE(write)) {
+    for (i in seq_along(all_catvar_tables)) {
+      write.table(all_catvar_tables[[i]], paste0(path, "/", catvar_table_names[[i]], ".txt"), sep = "\t", row.names = FALSE)
+    }
+  }
+
+  return(all_catvar_tables)
+
+}
