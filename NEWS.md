@@ -1,4 +1,7 @@
 # EMLeditor v1.0.1 (under development)
+## 2025-04-01
+  * update `set_data_urls` to set dataset urls in addition to dataTable urls. Confirmed that this fixes/removes the function = "download" tag inserted by ezEML.
+
 ## 2025-03-12
   * fix typos in skeleton.rmd and a02_EML_creation_script.Rmd
   * remove redundant `check_eml` function and update associated documentation
