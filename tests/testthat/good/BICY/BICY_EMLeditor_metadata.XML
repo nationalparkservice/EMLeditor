@@ -16770,7 +16770,7 @@
       <entityName>Example Geographic Coverage</entityName>
       <entityDescription>Aggregated coordinates from the observation tables. Used for metadata coverage, NOT intended for analysis or mapping.</entityDescription>
       <physical>
-        <objectName>Mini_BICY_Veg_Geography.csv</objectName>
+        <objectName>Mini_BICY_Veg_Geography.CSV</objectName>
         <size unit="bytes">31549</size>
         <authentication method="MD5">9c3c24a106e50fca2231b63c4dba12cf</authentication>
         <dataFormat>
