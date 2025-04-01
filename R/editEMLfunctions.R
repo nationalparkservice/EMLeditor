@@ -2214,6 +2214,9 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
 
+    #update dataset online url. Should remove "function = "download" from ezEML.
+    eml_object$dataset$distribution$online$url <- data_url
+
     #handle case when there is only one data table:
     if("physical" %in% names(data_table)){
       eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
