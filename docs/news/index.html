@@ -43,8 +43,9 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.1" id="emleditor-v101-under-development">EMLeditor v1.0.1 (under development)<a class="anchor" aria-label="anchor" href="#emleditor-v101-under-development"></a></h2>
 <div class="section level3">
-<h3 id="id_2025-1-0-1">2025-04-01<a class="anchor" aria-label="anchor" href="#id_2025-1-0-1"></a></h3>
-<ul><li>update <code>set_data_urls</code> to set dataset urls in addition to dataTable urls. Confirmed that this fixes/removes the function = “download” tag inserted by ezEML.</li>
+<h3 id="id_2025-1-0-1">2025-04-07<a class="anchor" aria-label="anchor" href="#id_2025-1-0-1"></a></h3>
+<ul><li>update <code>set_data_urls</code> to set dataset urls in addition to dataTable urls. <code>set_data_urls</code> now adds a function = “information” tag to urls because they do not lead to direct file download links. It will overwrite all function = “download” tags added by ezEML.</li>
+<li>update <code>set_data_urls</code> unit tests; add test for function = “information”.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="id_2025-1-0-1-1">2025-03-25<a class="anchor" aria-label="anchor" href="#id_2025-1-0-1-1"></a></h3>
