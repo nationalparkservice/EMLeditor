@@ -841,8 +841,16 @@ test_that("set_data_urls updates urls", {
   doi <- 1234567
   new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
   new_meta2 <- set_data_urls(new_meta, force = TRUE)
-  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]],
+  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][[1]],
                "https://irma.nps.gov/DataStore/Reference/Profile/1234567")
+})
+
+test_that("set_data_urls adds function = \"information\" tag", {
+  doi <- 1234567
+  new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
+  new_meta2 <- set_data_urls(new_meta, force = TRUE)
+  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][[2]],
+               "information")
 })
 
 test_that("set_data_urls updates custom urls", {
@@ -850,7 +858,7 @@ test_that("set_data_urls updates custom urls", {
   test_url <- "https://wwww.thisisatest.com"
   new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
   new_meta2 <- set_data_urls(new_meta, url = test_url, force = TRUE)
-  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]],
+  expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][[1]],
                test_url)
 })
 
@@ -860,7 +868,7 @@ test_that("set_data_urls updates urls upon user request", {
   local({mockr::local_mock(.get_user_input = return_val_1)
     new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
     new_meta2 <- set_data_urls(new_meta, force = FALSE)
-    expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]],
+    expect_equal(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][[1]],
                  "https://irma.nps.gov/DataStore/Reference/Profile/1234567")
   })
 })
@@ -871,8 +879,8 @@ test_that("set_data_urls does not update urls upon user request not to", {
   local({mockr::local_mock(.get_user_input = return_val_2)
     new_meta <- set_doi(BICY_EMLed_meta, 1234567, force = TRUE)
     new_meta2 <- set_data_urls(new_meta, force = FALSE)
-    expect_false(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]] ==
-                 BICY_EMLed_meta[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]])
+    expect_false(new_meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][[1]] ==
+                 BICY_EMLed_meta[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][[1]])
   })
 })
 
