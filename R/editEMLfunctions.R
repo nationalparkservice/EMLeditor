@@ -2186,7 +2186,8 @@ set_int_rights <- function(eml_object,
 #' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digits of the DOI correspond to the DataStore Reference ID.
 #'
 #' @inheritParams set_title
-#' @param url a string that identifies the online location of the data file (uniform resource locator)
+#' @param url a string that identifies the online location of the data file (uniform resource locator). Defaults to NULL for DataStore references where the URL will be automatically generated via the DOI in metadata.
+#' @param tag a string. Must take the values of either "information" or "download". Defines the nature of the url being set. For direct download links use "download". For anything else, use "information". Defaults to "information" as this is the value that should be used for all DataStore urls.
 #'
 #' @return eml_object
 #' @export
@@ -2198,7 +2199,27 @@ set_int_rights <- function(eml_object,
 #'
 #' # If data files are NOT on (or going to be on) DataStore, you must supply their location:
 #' my_metadata <- set_data_urls(my_metadata, "https://my_custom_repository.com/data_files")}
-set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
+set_data_urls <- function(eml_object,
+                          url = NULL,
+                          tag = "information",
+                          force = FALSE,
+                          NPS = TRUE) {
+
+  # enforce DataStore URL will have "information" tag, not "download"
+  if (is.null(url)) {
+    tag <- "information"
+  }
+
+  # make sure tag options are either "information" or "download".
+  # error and msg user about required values of tag if they differ.
+  tag_options <- c("information", "downoad")
+  tryCatch({tag <- match.arg(tag, choices = tag_options)},
+                  error = function(e){
+                    message("The tag parameter must be either \"information\" or \"download\"")
+                    print(e)
+                  }
+                  )
+
   #get data tables:
   data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
