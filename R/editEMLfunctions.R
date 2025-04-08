@@ -2217,7 +2217,7 @@ set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
 
     # update dataset online url. Should add `"function = "information"`
     # and replace inaccurate `function = "download"` from from ezEML.
-    url <- list(url = data_url, `function` <- "information")
+    url <- list(url = data_url, `function` = "information")
     names(url) <- c("url", "function")
 
     # ezEML adds online distribution to the dataset; update that if it exists:
