@@ -2238,23 +2238,24 @@ set_data_urls <- function(eml_object,
 
     # update dataset online url. Should add `"function = "information"`
     # and replace inaccurate `function = "download"` from from ezEML.
-    url <- list(url = data_url, `function` = "information")
-    names(url) <- c("url", "function")
+    eml_data_url <- list(url = data_url, `function` = "information")
+    names(eml_data_url) <- c("url", "function")
 
     # ezEML adds online distribution to the dataset; update that if it exists:
     if (!is.null(eml_object$dataset$distribution$online$url)) {
-      eml_object$dataset$distribution$online$url <- url
+      eml_object$dataset$distribution$online$url <- eml_data_url
     }
 
     #handle case when there is only one data table:
     if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <- url
+      eml_object$dataset$dataTable$physical$distribution$online$url <-
+        eml_data_url
     }
     # handle case when there are multiple data tables:
     else {
       for(i in seq_along(data_table)){
         eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
-          url
+          eml_data_url
       }
     }
     if(force == FALSE){
@@ -2264,13 +2265,14 @@ set_data_urls <- function(eml_object,
   else{
     #handle case when there is only one data table:
     if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <- url
+      eml_object$dataset$dataTable$physical$distribution$online$url <-
+        eml_data_url
     }
     # handle case when there are multiple data tables:
     else {
       for(i in seq_along(data_table)){
         eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
-          url
+          eml_data_url
       }
     }
   }
