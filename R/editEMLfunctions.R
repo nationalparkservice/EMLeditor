@@ -2225,9 +2225,9 @@ set_data_urls <- function(eml_object,
   data_table <- within(data_table, rm("@context"))
 
   #default: no URL supplied; assumes NPS DataStore URLs:
-  if(is.null(url)){
+  if (is.null(url)) {
     doi <- EMLeditor::get_doi(eml_object)
-    if(is.na(doi)){
+    if (is.na(doi)) {
         return()
     }
     # to do: check DOI formatting to make sure it is an NPS doi
@@ -2235,47 +2235,37 @@ set_data_urls <- function(eml_object,
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
 
-
     # update dataset online url. Should add `"function = "information"`
     # and replace inaccurate `function = "download"` from from ezEML.
     eml_data_url <- list(url = data_url, `function` = "information")
     names(eml_data_url) <- c("url", "function")
+  } else {
+    # if custom url is supplied:
+    eml_data_url <- list(url = url, `fucntion` = tag)
+    names(eml_data_url) <- c("url", tag)
+  }
 
-    # ezEML adds online distribution to the dataset; update that if it exists:
-    if (!is.null(eml_object$dataset$distribution$online$url)) {
-      eml_object$dataset$distribution$online$url <- eml_data_url
-    }
+  # ezEML adds online distribution to the dataset; update that if it exists:
+  if (!is.null(eml_object$dataset$distribution$online$url)) {
+    eml_object$dataset$distribution$online$url <- eml_data_url
+  }
 
-    #handle case when there is only one data table:
-    if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <-
+  #handle case when there is only one data table:
+  if ("physical" %in% names(data_table)) {
+    eml_object$dataset$dataTable$physical$distribution$online$url <-
+      eml_data_url
+  }
+  # handle case when there are multiple data tables:
+  else {
+    for (i in seq_along(data_table)) {
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
         eml_data_url
     }
-    # handle case when there are multiple data tables:
-    else {
-      for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
-          eml_data_url
-      }
-    }
-    if(force == FALSE){
+  }
+  if (force == FALSE) {
       cat("The online URL listed for your digital files has been updated to correspond to the DOI in metadata.\n")
-    }
   }
-  else{
-    #handle case when there is only one data table:
-    if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <-
-        eml_data_url
-    }
-    # handle case when there are multiple data tables:
-    else {
-      for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
-          eml_data_url
-      }
-    }
-  }
+
   if (NPS == TRUE) {
     eml_object <- .set_npspublisher(eml_object)
   }
