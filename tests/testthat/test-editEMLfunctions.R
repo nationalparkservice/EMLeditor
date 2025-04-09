@@ -884,6 +884,10 @@ test_that("set_data_urls does not update urls upon user request not to", {
   })
 })
 
+test_that("set_data_urls only accepts information or download for tag element", {
+  expect_error(set_data_urls(BICY_EMLed_meta, url = "https://tst.com", tag = "test_tag"), "Error: The tag parameter must be either \"information\" or \"download\"")
+})
+
 # ----- test set_creator_orcids ----
 
 test_that("set_creator_orcids returns valid EML", {
