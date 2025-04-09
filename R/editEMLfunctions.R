@@ -2212,13 +2212,15 @@ set_data_urls <- function(eml_object,
 
   # make sure tag options are either "information" or "download".
   # error and msg user about required values of tag if they differ.
-  tag_options <- c("information", "downoad")
-  tryCatch({tag <- match.arg(tag, choices = tag_options)},
-                  error = function(e){
-                    message("The tag parameter must be either \"information\" or \"download\"")
-                    print(e)
-                  }
-                  )
+
+  tag_options <- c("information", "download")
+  tag <- tryCatch(match.arg(tag, choices = tag_options),
+           error = function(e) {
+             cli::cli_abort("Error: The tag parameter must be either \"information\" or \"download\".")
+             })
+  if (inherits(tag, "error")) {
+    return()
+  }
 
   #get data tables:
   data_table <- EML::eml_get(eml_object, "dataTable")
@@ -2263,7 +2265,9 @@ set_data_urls <- function(eml_object,
     }
   }
   if (force == FALSE) {
-      cat("The online URL listed for your digital files has been updated to correspond to the DOI in metadata.\n")
+    msg <- paste0("The online URL listed for your digital files has been ",
+                  "updated to correspond to the DOI in metadata.\n")
+    cat(msg)
   }
 
   if (NPS == TRUE) {
