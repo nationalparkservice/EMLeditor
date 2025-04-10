@@ -2241,7 +2241,7 @@ set_data_urls <- function(eml_object,
     names(eml_data_url) <- c("url", "function")
   } else {
     # if custom url is supplied:
-    eml_data_url <- list(url = url, `fucntion` = tag)
+    eml_data_url <- list(url = url, `function` = tag)
     names(eml_data_url) <- c("url", tag)
   }
 
