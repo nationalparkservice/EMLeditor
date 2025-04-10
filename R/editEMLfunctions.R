@@ -2218,9 +2218,6 @@ set_data_urls <- function(eml_object,
            error = function(e) {
              cli::cli_abort("Error: The tag parameter must be either \"information\" or \"download\".")
              })
-  if (inherits(tag, "error")) {
-    return()
-  }
 
   #get data tables:
   data_table <- EML::eml_get(eml_object, "dataTable")
@@ -2230,7 +2227,8 @@ set_data_urls <- function(eml_object,
   if (is.null(url)) {
     doi <- EMLeditor::get_doi(eml_object)
     if (is.na(doi)) {
-        return()
+      cat("Either add a DataStore DOI to metadata or supply a custom URL.")
+      return()
     }
     # to do: check DOI formatting to make sure it is an NPS doi
     ds_ref <- stringr::str_sub(doi, -7, -1)
