@@ -884,8 +884,26 @@ test_that("set_data_urls does not update urls upon user request not to", {
   })
 })
 
-test_that("set_data_urls only accepts information or download for tag element", {
-  expect_error(set_data_urls(BICY_EMLed_meta, url = "https://tst.com", tag = "test_tag"), "Error: The tag parameter must be either \"information\" or \"download\"")
+test_that("set_data_urls only accepts information or download for tag element",{
+  expect_error(set_data_urls(BICY_EMLed_meta,
+                             url = "https://test.com",
+                             tag = "test_tag"),
+               "Error: The tag parameter must be either \"information\" or \"download\"")
+})
+
+test_that("set_data_urls sets custom url with download tag successfully", {
+  meta2 <- set_data_urls(BICY_EMLed_meta,
+                         url = "https://test.com",
+                         tag = "download")
+  expect_equal(meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][["url"]], "https://test.com")
+  expect_equal(meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][["download"]], "download")
+})
+
+test_that("set_data_urls resets the tag to \"information\" when url = NULL", {
+  meta2 <- set_data_urls(BICY_EMLed_meta,
+                         url = NULL,
+                         tag = "download")
+  expect_equal(meta2[["dataset"]][["dataTable"]][[1]][["physical"]][["distribution"]][["online"]][["url"]][["function"]], "information")
 })
 
 # ----- test set_creator_orcids ----
