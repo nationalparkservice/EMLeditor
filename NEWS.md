@@ -1,4 +1,7 @@
 # EMLeditor v1.0.1 (under development)
+## 2025-04-11
+  * add `get_eml_simple` function and associated unit test.
+  
 ## 2025-04-09
   * update `set_data_urls` to set dataset urls in addition to dataTable urls. `set_data_urls` now adds a function = "information" tag to urls because they do not lead to direct file download links. It will overwrite all function = "download" tags added by ezEML.
   * update `set_data_urls` unit tests; add test for function = "information".
