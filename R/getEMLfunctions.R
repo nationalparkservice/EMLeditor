@@ -1,3 +1,24 @@
+#' Returns a simple list of eml elements
+#'
+#' This function wraps EML::get_eml and returns the requested object in a much simpler format. It works best with eml elements that do not have child elements.
+#'
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EmL::read_eml(<filename>, from="xml").
+#' @param eml_element is a string indicating the element within the eml_object that should be accessed and returned.
+#'
+#' @returns a list of values
+#' @export
+#' @examples
+#' \dontrun{
+#' get_eml_simple(eml_object, "geographicDescription")
+#' }
+get_eml_simple <- function(eml_object, eml_element){
+  out <- EML::eml_get(eml_object, eml_element, from = "list")
+  out$`@context` <- NULL
+  attributes(out) <- NULL
+  out <- unlist(out)
+  return(out)
+}
+
 #' returns the first date
 #'
 #' @description get_begin_date returns the date of the earliest data point in the data package
