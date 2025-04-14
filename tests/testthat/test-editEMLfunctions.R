@@ -87,7 +87,7 @@ test_that("set_doi does not replace doi when user says not to", {
 test_that("set_content_units works on valid eml", {
   new_units <- c("JOTR", "DEVA")
   new_meta <- set_content_units(BICY_EMLed_meta, new_units, force=TRUE)
-  geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
+  geo_desc <- get_eml_simple(new_meta, "geographicDescription")
   expect_true(all(c("NPS Content Unit Link: JOTR", "NPS Content Unit Link: DEVA") %in% geo_desc))
 })
 
@@ -95,7 +95,7 @@ test_that("set_content_units works with a single input", {
   # Try it with a single unit that is not a capital-P park
   new_units <- c("PARA")
   new_meta <- set_content_units(BICY_EMLed_meta, new_units, force=TRUE)
-  geo_desc <- arcticdatautils::eml_get_simple(new_meta, "geographicDescription")
+  geo_desc <- get_eml_simple(new_meta, "geographicDescription")
   expect_true("NPS Content Unit Link: PARA" %in% geo_desc)
 })
 
@@ -109,7 +109,7 @@ test_that("set_content_units retains input when told to", {
     new_meta2 <- set_content_units(new_meta,
                                    "YELL",
                                    force = FALSE)
-    geo_desc <- arcticdatautils::eml_get_simple(new_meta2, "geographicDescription")
+    geo_desc <- get_eml_simple(new_meta2, "geographicDescription")
     expect_false("NPS Content Unit Link: YELL" %in% geo_desc)
   })
 })
@@ -124,7 +124,7 @@ test_that("set_content_units adds input when told to", {
     new_meta2 <- set_content_units(new_meta,
                                    "YELL",
                                    force = FALSE)
-    geo_desc <- arcticdatautils::eml_get_simple(new_meta2, "geographicDescription")
+    geo_desc <- get_eml_simple(new_meta2, "geographicDescription")
     expect_true("NPS Content Unit Link: YELL" %in% geo_desc)
   })
 })
@@ -139,7 +139,7 @@ test_that("set_content_units replaces input when told to", {
     new_meta2 <- set_content_units(new_meta,
                                    "YELL",
                                    force = FALSE)
-    geo_desc <- arcticdatautils::eml_get_simple(new_meta2, "geographicDescription")
+    geo_desc <- get_eml_simple(new_meta2, "geographicDescription")
     expect_true("NPS Content Unit Link: YELL" %in% geo_desc)
   })
 })

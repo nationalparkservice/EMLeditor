@@ -1108,7 +1108,7 @@ set_lit <- function(eml_object, bibtex_file, force = FALSE, NPS = TRUE) {
   }
   # interactive route:
   if (force == FALSE) {
-    lit <- arcticdatautils::eml_get_simple(eml_object, "literatureCited")
+    lit <- get_eml_simple(eml_object, "literatureCited")
     if (is.null(lit)) {
       eml_object$dataset$literatureCited$bibtex <- bibtex_citation
     } else {
