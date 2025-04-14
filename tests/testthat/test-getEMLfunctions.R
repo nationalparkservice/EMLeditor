@@ -8,6 +8,13 @@ BICY_EMLed_meta <- EML::read_eml(testthat::test_path("good",
 return_val_2 <- function() {2}
 return_val_1 <- function() {1}
 
+# ---- get_eml_simple ----
+
+test_that("get_eml_simple returns a simple vector of values", {
+  simple_list <- get_eml_simple(BICY_EMLed_meta, "geographicDescription")
+  expect_equal(simple_list, c("NPS Unit Connections: BICY", "BICY"))
+})
+
 # ---- get_begin_date ----
 
 test_that("get_begin_date gets the beginning date of EML document", {
