@@ -796,33 +796,33 @@ get_attribute_tables <- function(eml_object) {
       # add a unit column if none exists
       if (is.null(attr_temp$unit)) {
         attr_temp_cleaned <- attr_temp_cleaned %>%
-          mutate(unit = "")
+          dplyr::mutate(unit = "")
       }
       # add a formatString column if none exists
       if (is.null(attr_temp$formatString)) {
         attr_temp_cleaned <- attr_temp_cleaned %>%
-          mutate(formatString = "")
+          dplyr::mutate(formatString = "")
       }
       # add a missingValueCode column if none exists
       if (is.null(attr_temp$missingValueCode)) {
         attr_temp_cleaned <- attr_temp_cleaned %>%
-          mutate(missingValueCode = "")
+          dplyr::mutate(missingValueCode = "")
       }
       # add a missingValueCodeExplanation column if none exists
       if (is.null(attr_temp$missingValueCodeExplanation)) {
         attr_temp_cleaned <- attr_temp_cleaned %>%
-          mutate(missingValueCodeExplanation = "")
+          dplyr::mutate(missingValueCodeExplanation = "")
       }
       # add a class column
       # rename dttm format column
       attr_temp_cleaned <- attr_temp_cleaned %>%
-        mutate(class = case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
-                                 (storageType == "string" & domain == "textDomain") ~ "character",
-                                 (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
-                                 storageType == "date" ~ "Date",
-                                 TRUE ~ "")) %>%
-        rename(dateTimeFormatString = formatString) %>%
-        select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
+        dplyr::mutate(class = dplyr::case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                               (storageType == "string" & domain == "textDomain") ~ "character",
+                                               (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
+                                               storageType == "date" ~ "Date",
+                                               TRUE ~ "")) %>%
+        dplyr::rename(dateTimeFormatString = formatString) %>%
+        dplyr::select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
       # replace NAs with blanks
       attr_temp_cleaned[is.na(attr_temp_cleaned)] <- ""
       # add attributes table into nested table
@@ -838,33 +838,33 @@ get_attribute_tables <- function(eml_object) {
     # add a unit column if none exists
     if (is.null(attr_temp$unit)) {
       attr_temp_cleaned <- attr_temp_cleaned %>%
-        mutate(unit = "")
+        dplyr::mutate(unit = "")
     }
     # add a formatString column if none exists
     if (is.null(attr_temp$formatString)) {
       attr_temp_cleaned <- attr_temp_cleaned %>%
-        mutate(formatString = "")
+        dplyr::mutate(formatString = "")
     }
     # add a missingValueCode column if none exists
     if (is.null(attr_temp$missingValueCode)) {
       attr_temp_cleaned <- attr_temp_cleaned %>%
-        mutate(missingValueCode = "")
+        dplyr::mutate(missingValueCode = "")
     }
     # add a missingValueCodeExplanation column if none exists
     if (is.null(attr_temp$missingValueCodeExplanation)) {
       attr_temp_cleaned <- attr_temp_cleaned %>%
-        mutate(missingValueCodeExplanation = "")
+        dplyr::mutate(missingValueCodeExplanation = "")
     }
     # add a class column
     # rename dttm format column
     attr_temp_cleaned <- attr_temp_cleaned %>%
-      mutate(class = case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
-                               (storageType == "string" & domain == "textDomain") ~ "character",
-                               (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
-                               storageType == "date" ~ "Date",
-                               TRUE ~ "")) %>%
-      rename(dateTimeFormatString = formatString) %>%
-      select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
+      dplyr::mutate(class = dplyr::case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                             (storageType == "string" & domain == "textDomain") ~ "character",
+                                             (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
+                                             storageType == "date" ~ "Date",
+                                             TRUE ~ "")) %>%
+      dplyr::rename(dateTimeFormatString = formatString) %>%
+      dplyr::select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
     # replace NAs with blanks
     attr_temp_cleaned[is.na(attr_temp_cleaned)] <- ""
     # add attributes table into nested table
@@ -921,7 +921,7 @@ get_catvar_tables <- function(eml_object) {
       catvars_temp <- EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$factors
       # select necessary columns
       catvars_temp_cleaned <- catvars_temp %>%
-        select(attributeName, code, definition)
+        dplyr::select(attributeName, code, definition)
       # add attributes table into nested table
       catvars[[table_name]] <- catvars_temp_cleaned
     }
@@ -933,7 +933,7 @@ get_catvar_tables <- function(eml_object) {
     catvars_temp <- EML::get_attributes(eml_object$dataset$dataTable$attributeList)$factors
     # select necessary columns
     catvars_temp_cleaned <- catvars_temp %>%
-      select(attributeName, code, definition)
+      dplyr::select(attributeName, code, definition)
     # add attributes table into nested table
     catvars[[table_name]] <- catvars_temp_cleaned
   }
