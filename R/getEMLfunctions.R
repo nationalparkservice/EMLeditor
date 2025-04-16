@@ -765,267 +765,198 @@ get_publisher <- function(eml_object) {
   pub <- eml_object$dataset$publisher
 }
 
-#' Creates attribute tables from an XML file path or EMLD object
+
+
+#' Creates attribute tables from an EML object
 #'
-#' @description `get_attribute_tables` takes an EMLD object or the path to an XML file
-#' and returns a nested table of all the attribute tables pulled from the metadata.
-#' It can also write each attribute table into the working directory as a tab delimited txt file,
-#' which EMLassemblyline recognizes in its make_eml function.
-#'
-#' @param xml_file either a path to an EML file or an emld type object read in using EML::read_eml()
-#' @param write defaults to TRUE. A logical value that indicates whether or not the attribute tables
-#' should be written as tab delimited txt files to the working directory.
-#' @param path defaults to the working directory. This path determines where the txt files will be written.
+#' @description `get_attribute_tables` takes an EML object and returns a nested table of
+#' all the attribute tables pulled from the metadata, using EML::get_attributes()
+
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
 #' @returns a nested table with one attribute table for each data table in the EML file
 #' @export
 #' @examples
 #' \dontrun{
-#' get_attribute_tables(example_XML)
-#' get_attribute_tables(example_XML, write = FALSE)
-#' get_attribute_tables("my_example_metadata_path.xml")
+#' get_attribute_tables(example_EML)
 #' }
 
-get_attribute_tables <- function(xml_file, write = TRUE, path = here::here()) {
-  # check class of xml_file parameter
-  # if xml_file is "emld" class (class(xml_file) will be "list" AND "emld"), use that as the metadata object
-  if ("emld" %in% class(xml_file)) {
-    metadata_obj <- xml_file
-    # if xml_file is a string ending in ".xml", read XML file at specified path
-  } else if (class(xml_file) == "character" & stringr::str_sub(xml_file, -4) == ".xml") {
-    metadata_obj <- EML::read_eml(here::here(xml_file), from ="xml")
-    # print message if path or metadata file are not recognized
-  } else {stop("EML object not found")}
+get_attribute_tables <- function(eml_object) {
 
-  # create table object to store all attributes in metadata object
-  tables <- metadata_obj$dataset$dataTable
+  # create empty attributes table
+  attributes <- NULL
 
-  # create empty list that will become a nested list of all attribute tables
-  all_attribute_tables <- NULL
-
-  # if there is only one data table, tables[[1]] will be a string object, not a list of all the data tables
-  # in this case, do not iterate over tables, make one attribute table and iterate over each attribute in tables
-  if (class(tables[[1]]) != "list") {
-    # assign table names to the name of the one data table
-    table_names <- stringr::str_remove(tables$physical$objectName, ".csv")
-    # name the attribute table
-    attribute_table_names <- stringr::str_c("attributes_", table_names)
-    # create empty attribute table
-    attributeTable <- data.frame(attributeName=character(),
-                                 attributeDefinition=character(),
-                                 class=character(),
-                                 unit=character(),
-                                 dateTimeFormatString=character(),
-                                 missingValueCode=character(),
-                                 missingValueCodeExplanation=character(),
-                                 stringsAsFactors=FALSE)
-    # for each attribute, populate the attribute table with name, definition, class, unit, dttm format, missing value codes, and missing value code definitions
-    for (i in seq_along(tables$attributeList$attribute)) {
-      attributeTable[i,] <- c(tables$attributeList$attribute[[i]]$attributeName,
-                              tables$attributeList$attribute[[i]]$attributeDefinition,
-                              dplyr::case_when((!is.null(tables$attributeList$attribute[[i]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) ~ "categorical",
-                                               tables$attributeList$attribute[[i]]$storageType %in% c("float", "double", "long", "int") ~ "numeric",
-                                               tables$attributeList$attribute[[i]]$storageType == "string" ~ "character",
-                                               tables$attributeList$attribute[[i]]$storageType == "date" ~ "Date",
-                                               TRUE ~ NA),
-                              ifelse(tables$attributeList$attribute[[i]]$storageType %in% c("float", "double", "long", "int"), tables$attributeList$attribute[[i]]$measurementScale$ratio$unit[[1]], ""),
-                              ifelse(tables$attributeList$attribute[[i]]$storageType == "date", tables$attributeList$attribute[[i]]$measurementScale$dateTime$formatString, ""),
-                              ifelse((!is.null(tables$attributeList$attribute[[i]]$missingValueCode$code)), tables$attributeList$attribute[[i]]$missingValueCode$code, ""),
-                              ifelse((!is.null(tables$attributeList$attribute[[i]]$missingValueCode$code)), tables$attributeList$attribute[[i]]$missingValueCode$codeExplanation, "")
-      )
-      # add the attribute table created above to a nested list
-      all_attribute_tables[[1]] <- attributeTable
-    }
-  }
-
-
-  # if there are multiple data tables, tables[[1]] will be a list
-  # in this case, iterate over every data table in tables, and for each of those tables, iterate over the attribute list
-  if (class(tables[[1]]) == "list") {
-    # create table_names list and populate with names of data tables
-    table_names = NULL
-
-    for (i in seq_along(tables)) {
-      table_names = append(table_names, stringr::str_remove(tables[[i]]$physical$objectName, ".csv"))
-    }
-
-    # create attribute_table_names list and populate with names of attribute tables
-    attribute_table_names <- NULL
-
-    for (i in seq_along(table_names)) {
-      attribute_table_name <- stringr::str_c("attributes_", table_names[[i]])
-      attribute_table_names <- append(attribute_table_names, attribute_table_name)
-    }
-
-    # create an attribute table for each data table in the metadata
-    for (i in seq_along(tables)) {
-      attributeTable <- data.frame(attributeName=character(),
-                                   attributeDefinition=character(),
-                                   class=character(),
-                                   unit=character(),
-                                   dateTimeFormatString=character(),
-                                   missingValueCode=character(),
-                                   missingValueCodeExplanation=character(),
-                                   stringsAsFactors=FALSE)
-      # for each attribute, populate the attribute table with name, definition, class, unit, dttm format, missing value codes, and missing value code definitions
-      for (j in seq_along(tables[[i]]$attributeList$attribute)) {
-        attributeTable[j,] <- c(tables[[i]]$attributeList$attribute[[j]]$attributeName,
-                                tables[[i]]$attributeList$attribute[[j]]$attributeDefinition,
-                                dplyr::case_when((!is.null(tables[[i]]$attributeList$attribute[[j]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) ~ "categorical",
-                                                 tables[[i]]$attributeList$attribute[[j]]$storageType %in% c("float", "double", "long", "int") ~ "numeric",
-                                                 tables[[i]]$attributeList$attribute[[j]]$storageType == "string" ~ "character",
-                                                 tables[[i]]$attributeList$attribute[[j]]$storageType == "date" ~ "Date",
-                                                 TRUE ~ NA),
-                                ifelse(tables[[i]]$attributeList$attribute[[j]]$storageType %in% c("float", "double", "long", "int"), tables[[i]]$attributeList$attribute[[j]]$measurementScale$ratio$unit[[1]], ""),
-                                ifelse(tables[[i]]$attributeList$attribute[[j]]$storageType == "date", tables[[i]]$attributeList$attribute[[j]]$measurementScale$dateTime$formatString, ""),
-                                ifelse((!is.null(tables[[i]]$attributeList$attribute[[j]]$missingValueCode$code)), tables[[i]]$attributeList$attribute[[j]]$missingValueCode$code, ""),
-                                ifelse((!is.null(tables[[i]]$attributeList$attribute[[j]]$missingValueCode$code)), tables[[i]]$attributeList$attribute[[j]]$missingValueCode$codeExplanation, "")
-        )
+  # data packages with multiple tables
+  if (is.null(eml_object$dataset$dataTable$attributeList)) {
+    for (i in seq_along(eml_object$dataset$dataTable)) {
+      # get table name
+      table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
+      # use EML function to get attributes
+      attr_temp <- EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$attributes
+      attr_temp_cleaned <- attr_temp
+      # add a unit column if none exists
+      if (is.null(attr_temp$unit)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          mutate(unit = "")
       }
-      # add the attribute table created above to a nested list
-      all_attribute_tables[[i]] <- attributeTable
+      # add a formatString column if none exists
+      if (is.null(attr_temp$formatString)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          mutate(formatString = "")
+      }
+      # add a missingValueCode column if none exists
+      if (is.null(attr_temp$missingValueCode)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          mutate(missingValueCode = "")
+      }
+      # add a missingValueCodeExplanation column if none exists
+      if (is.null(attr_temp$missingValueCodeExplanation)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          mutate(missingValueCodeExplanation = "")
+      }
+      # add a class column
+      # rename dttm format column
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        mutate(class = case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                 (storageType == "string" & domain == "textDomain") ~ "character",
+                                 (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
+                                 storageType == "date" ~ "Date",
+                                 TRUE ~ "")) %>%
+        rename(dateTimeFormatString = formatString) %>%
+        select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
+      # replace NAs with blanks
+      attr_temp_cleaned[is.na(attr_temp_cleaned)] <- ""
+      # add attributes table into nested table
+      attributes[[table_name]] <- attr_temp_cleaned
     }
-  }
-  names(all_attribute_tables) <- attribute_table_names
-
-  # if write == TRUE, write tables to txt files in working directory
-  if (isTRUE(write)) {
-    for (i in seq_along(all_attribute_tables)) {
-      write.table(all_attribute_tables[[i]], paste0(path, "/", attribute_table_names[[i]], ".txt"), sep = "\t", row.names = FALSE)
+  } # data packages with just one table
+  else {
+    # get table name
+    table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
+    # use EML function to get attributes
+    attr_temp <- EML::get_attributes(eml_object$dataset$dataTable$attributeList)$attributes
+    attr_temp_cleaned <- attr_temp
+    # add a unit column if none exists
+    if (is.null(attr_temp$unit)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        mutate(unit = "")
     }
+    # add a formatString column if none exists
+    if (is.null(attr_temp$formatString)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        mutate(formatString = "")
+    }
+    # add a missingValueCode column if none exists
+    if (is.null(attr_temp$missingValueCode)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        mutate(missingValueCode = "")
+    }
+    # add a missingValueCodeExplanation column if none exists
+    if (is.null(attr_temp$missingValueCodeExplanation)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        mutate(missingValueCodeExplanation = "")
+    }
+    # add a class column
+    # rename dttm format column
+    attr_temp_cleaned <- attr_temp_cleaned %>%
+      mutate(class = case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                               (storageType == "string" & domain == "textDomain") ~ "character",
+                               (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
+                               storageType == "date" ~ "Date",
+                               TRUE ~ "")) %>%
+      rename(dateTimeFormatString = formatString) %>%
+      select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
+    # replace NAs with blanks
+    attr_temp_cleaned[is.na(attr_temp_cleaned)] <- ""
+    # add attributes table into nested table
+    attributes[[table_name]] <- attr_temp_cleaned
   }
-  return(all_attribute_tables)
+  return(attributes)
 }
 
-#' Creates categorical variable tables from an XML file path or EMLD object
+#' Writes attribute tables from an EML object
 #'
-#' @description `get_catvar_tables` takes an EMLD object or the path to an XML file
-#' and returns a nested table of all the categorical variable tables pulled from the metadata.
-#' It can also write each categorical variable table into the working directory as a tab delimited
-#' txt file, which EMLassemblyline recognizes in its make_eml function.
+#' @description `write_attribute_tables` takes an EML object and writes each attribute table
+#' pulled from the metadata to the working directory or a specified path.
 #'
-#' @param xml_file either a path to an EML file or an emld type object read in using EML::read_eml()
-#' @param write defaults to TRUE. A logical value that indicates whether or not the catvars tables
-#' should be written as tab delimited txt files to the working directory.
-#' @param path defaults to the working directory. This path determines where the txt files will be written.
-#' @returns a nested table with one catvars table for each data table in the EML file
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param path default to the working directory. This path determines where the txt files will be written.
 #' @export
 #' @examples
 #' \dontrun{
-#' get_catvar_tables(example_XML)
-#' get_catvar_tables(example_XML, write = FALSE)
-#' get_catvar_tables("my_example_metadata_path.xml")
+#' write_attribute_tables(example_EML)
 #' }
 
-get_catvar_tables <- function(xml_file, write = TRUE, path = here::here()) {
-  # check class of xml_file parameter
-  # if xml_file is "emld" class (class(xml_file) will be "list" AND "emld"), use that as the metadata object
-  if ("emld" %in% class(xml_file)) {
-    metadata_obj <- xml_file
-    # if xml_file is a string ending in ".xml", read XML file at specified path
-  } else if (class(xml_file) == "character" & stringr::str_sub(xml_file, -4) == ".xml") {
-    metadata_obj <- EML::read_eml(here::here(xml_file), from ="xml")
-    # print message if path or metadata file are not recognized
-  } else {stop("EML object not found")}
-
-  # create table object to store all attributes in metadata object
-  tables <- metadata_obj$dataset$dataTable
-
-  all_catvar_tables <- NULL
-
-  # if there is only one data table, tables[[1]] will be a string object, not a list of all the data tables
-  # in this case, do not iterate over tables, make one catvars table and iterate over each attribute in tables
-  if (class(tables[[1]]) != "list") {
-    # assign table names to the name of the one data table
-    table_names <- stringr::str_remove(tables$physical$objectName, ".csv")
-    # name the catvars table
-    catvar_table_names <- stringr::str_c("catvars_", table_names)
-    # create empty catvars table
-    catVars <- data.frame(attributeName=character(),
-                          code=character(),
-                          definition=character(),
-                          stringsAsFactors=FALSE)
-
-    for (i in seq_along(tables$attributeList$attribute)) {
-      cv_list <- tables$attributeList$attribute[[i]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain
-      # if cv_list is null, the attribute is not categorical
-      if (is.null(cv_list)) next
-      else {
-        for (j in seq_along(cv_list$codeDefinition)) {
-          # if cv_list$codeDefinition$definition is null, there is more than one categorical variable
-          if (is.null(cv_list$codeDefinition$definition)) {
-            catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables$attributeList$attribute[[i]]$attributeName,
-                                                                   code = cv_list$codeDefinition[[j]]$code,
-                                                                   definition = cv_list$codeDefinition[[j]]$definition))
-            # otherwise if there is only one categorical variable, use a different index
-          } else {
-            catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables$attributeList$attribute[[i]]$attributeName,
-                                                                   code = cv_list$codeDefinition$code,
-                                                                   definition = cv_list$codeDefinition$definition))
-          }
-        }
-      }
-      all_catvar_tables[[1]] <- catVars
-    }
+write_attribute_tables <- function(eml_object, path = here::here()) {
+  attribute_table <- get_attribute_tables(eml_object)
+  for (i in seq_along(attribute_table)) {
+    write.table(attribute_table[[i]], paste0(path, "/", "attributes_", names(attribute_table)[[i]], ".txt"), sep = "\t", row.names = FALSE)
   }
-  # if there are multiple tables, iterate over each table and create a catvars table for each data table
-  # if there are multiple data tables, tables[[1]] will be a list
-  # in this case, iterate over each table and create a catvars table for each data table
-  if (class(tables[[1]]) == "list") {
-    # create table_names list and populate with names of data tables
-    table_names = NULL
-
-    # for each categorical variable, populate the catvars table with attribute name, code, and definition
-    for (i in seq_along(tables)) {
-      table_names = append(table_names, stringr::str_remove(tables[[i]]$physical$objectName, ".csv"))
-    }
-
-    # create catvars_table_names list and populate with names of catvar tables
-    catvar_table_names <- NULL
-
-    for (i in seq_along(table_names)) {
-      catvar_table_name <- stringr::str_c("catvars_", table_names[[i]])
-      catvar_table_names <- append(catvar_table_names, catvar_table_name)
-    }
-
-    # create an catvars table for each data table in the metadata
-    for (i in seq_along(tables)) {
-      catVars <- data.frame(attributeName=character(),
-                            code=character(),
-                            definition=character(),
-                            stringsAsFactors=FALSE)
-      # for each categorical variable, populate the catvars table with attribute name, code, and definition
-      for (j in seq_along(tables[[i]]$attributeList$attribute)) {
-        cv_list <- tables[[i]]$attributeList$attribute[[j]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain
-        # if cv_list is null, the attribute is not categorical
-        if (is.null(cv_list)) next
-        else {
-          for (k in seq_along(cv_list$codeDefinition)) {
-            # if cv_list$codeDefinition$definition is null, there is more than one categorical variable
-            if (is.null(cv_list$codeDefinition$definition)) {
-              catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables[[i]]$attributeList$attribute[[j]]$attributeName,
-                                                                     code = cv_list$codeDefinition[[k]]$code,
-                                                                     definition = cv_list$codeDefinition[[k]]$definition))
-              # otherwise if there is only one categorical variable, use a different index
-            } else {
-              catVars <- tibble::add_row(catVars, tibble::tibble_row(attributeName = tables[[i]]$attributeList$attribute[[j]]$attributeName,
-                                                                     code = cv_list$codeDefinition$code,
-                                                                     definition = cv_list$codeDefinition$definition))
-            }
-          }
-        }
-      }
-      all_catvar_tables[[i]] <- catVars
-    }
-  }
-  names(all_catvar_tables) <- catvar_table_names
-
-  # if write == TRUE, write tables to txt files in working directory
-  if (isTRUE(write)) {
-    for (i in seq_along(all_catvar_tables)) {
-      write.table(all_catvar_tables[[i]], paste0(path, "/", catvar_table_names[[i]], ".txt"), sep = "\t", row.names = FALSE)
-    }
-  }
-
-  return(all_catvar_tables)
-
 }
+
+
+#' Creates categorical variable tables from an EML object
+#'
+#' @description `get_catvars_tables` takes an EML object and returns a nested table of
+#' all the categorical variable tables pulled from the metadata, using EML::get_attributes()
+#'
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @returns a nested table with one catvar table for each data table in the EML file
+#' @export
+#' @examples
+#' \dontrun{
+#' get_catvar_tables(example_EML)
+#' }
+
+get_catvar_tables <- function(eml_object) {
+
+  # create empty attributes table
+  catvars <- NULL
+
+  # data packages with multiple tables
+  if (is.null(eml_object$dataset$dataTable$attributeList)) {
+    for (i in seq_along(eml_object$dataset$dataTable)) {
+      # get table name
+      table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
+      # use EML function to get attributes
+      catvars_temp <- EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$factors
+      # select necessary columns
+      catvars_temp_cleaned <- catvars_temp %>%
+        select(attributeName, code, definition)
+      # add attributes table into nested table
+      catvars[[table_name]] <- catvars_temp_cleaned
+    }
+  } # data packages with just one table
+  else {
+    # get table name
+    table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
+    # use EML function to get attributes
+    catvars_temp <- EML::get_attributes(eml_object$dataset$dataTable$attributeList)$factors
+    # select necessary columns
+    catvars_temp_cleaned <- catvars_temp %>%
+      select(attributeName, code, definition)
+    # add attributes table into nested table
+    catvars[[table_name]] <- catvars_temp_cleaned
+  }
+  return(catvars)
+}
+
+#' Writes categorical variable tables from an EML object
+#'
+#' @description `write_catvar_tables` takes an EML object and writes each categorical variable
+#' table pulled from the metadata to the working directory or a specified path.
+#'
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param path default to the working directory. This path determines where the txt files will be written.
+#' @export
+#' @examples
+#' \dontrun{
+#' write_attribute_tables(example_EML)
+#' }
+
+write_catvar_tables <- function(eml_object, path = here::here()) {
+  catvar_table <- get_catvar_tables(eml_object)
+  for (i in seq_along(catvar_table)) {
+    write.table(catvar_table[[i]], paste0(path, "/", "catvars_", names(catvar_table)[[i]], ".txt"), sep = "\t", row.names = FALSE)
+  }
+}
+
