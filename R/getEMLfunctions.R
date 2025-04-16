@@ -950,7 +950,7 @@ get_catvar_tables <- function(eml_object) {
 #' @export
 #' @examples
 #' \dontrun{
-#' write_attribute_tables(example_EML)
+#' write_catvar_tables(example_EML)
 #' }
 
 write_catvar_tables <- function(eml_object, path = here::here()) {
