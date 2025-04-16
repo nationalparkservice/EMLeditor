@@ -12,6 +12,7 @@ This package will be of most use to the U.S. National Park Service data scientis
 Useful links:
 \itemize{
   \item \url{https://github.com/nationalparkservice/EMLeditor}
+  \item \url{https://nationalparkservice.github.io/EMLeditor/}
   \item Report bugs at \url{https://github.com/nationalparkservice/EMLeditor/issues}
 }
 

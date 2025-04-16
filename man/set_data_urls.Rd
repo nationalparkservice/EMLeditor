@@ -4,12 +4,20 @@
 \alias{set_data_urls}
 \title{Update (or add) data table URLs}
 \usage{
-set_data_urls(eml_object, url = NULL, force = FALSE, NPS = TRUE)
+set_data_urls(
+  eml_object,
+  url = NULL,
+  tag = "information",
+  force = FALSE,
+  NPS = TRUE
+)
 }
 \arguments{
 \item{eml_object}{is an EML-formatted R object, either generated in R or imported (typically from an EML-formatted .xml file) using EML::read_eml(\if{html}{\out{<filename>}}, from="xml").}
 
-\item{url}{a string that identifies the online location of the data file (uniform resource locator)}
+\item{url}{a string that identifies the online location of the data file (uniform resource locator). Defaults to NULL for DataStore references where the URL will be automatically generated via the DOI in metadata.}
+
+\item{tag}{a string. Must take the values of either "information" or "download". Defines the nature of the url being set. For direct download links use "download". For anything else, use "information". Defaults to "information" as this is the value that should be used for all DataStore urls.}
 
 \item{force}{logical. Defaults to false. If set to FALSE, a more interactive version of the function requesting user input and feedback. Setting force = TRUE facilitates scripting.}
 

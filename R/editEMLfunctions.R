@@ -2186,7 +2186,8 @@ set_int_rights <- function(eml_object,
 #' @details `set_data_urls()` sets the online distribution URL for all dataTables (data files in a data package) to the same URL. If you do not supply a URL, your metadata must include a DOI (use `set_doi()` or `set_datastore_doi()` to add a DOI - these will automatically update your data table urls to match the new DOI). `set_data_urls()` assumes that DOIs refer to digital objects on DataStore and that the last 7 digits of the DOI correspond to the DataStore Reference ID.
 #'
 #' @inheritParams set_title
-#' @param url a string that identifies the online location of the data file (uniform resource locator)
+#' @param url a string that identifies the online location of the data file (uniform resource locator). Defaults to NULL for DataStore references where the URL will be automatically generated via the DOI in metadata.
+#' @param tag a string. Must take the values of either "information" or "download". Defines the nature of the url being set. For direct download links use "download". For anything else, use "information". Defaults to "information" as this is the value that should be used for all DataStore urls.
 #'
 #' @return eml_object
 #' @export
@@ -2198,50 +2199,75 @@ set_int_rights <- function(eml_object,
 #'
 #' # If data files are NOT on (or going to be on) DataStore, you must supply their location:
 #' my_metadata <- set_data_urls(my_metadata, "https://my_custom_repository.com/data_files")}
-set_data_urls <- function(eml_object, url = NULL, force = FALSE, NPS = TRUE){
+set_data_urls <- function(eml_object,
+                          url = NULL,
+                          tag = "information",
+                          force = FALSE,
+                          NPS = TRUE) {
+
+  # enforce DataStore URL will have "information" tag, not "download"
+  if (is.null(url)) {
+    tag <- "information"
+  }
+
+  # make sure tag options are either "information" or "download".
+  # error and msg user about required values of tag if they differ.
+
+  tag_options <- c("information", "download")
+  tag <- tryCatch(match.arg(tag, choices = tag_options),
+           error = function(e) {
+             cli::cli_abort("Error: The tag parameter must be either \"information\" or \"download\".")
+             })
+
   #get data tables:
   data_table <- EML::eml_get(eml_object, "dataTable")
   data_table <- within(data_table, rm("@context"))
 
   #default: no URL supplied; assumes NPS DataStore URLs:
-  if(is.null(url)){
+  if (is.null(url)) {
     doi <- EMLeditor::get_doi(eml_object)
-    if(is.na(doi)){
-        return()
+    if (is.na(doi)) {
+      cat("Either add a DataStore DOI to metadata or supply a custom URL.")
+      return()
     }
     # to do: check DOI formatting to make sure it is an NPS doi
     ds_ref <- stringr::str_sub(doi, -7, -1)
     data_url <- paste0("https://irma.nps.gov/DataStore/Reference/Profile/",
                      ds_ref)
 
-    #handle case when there is only one data table:
-    if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <- data_url
-    }
-    # handle case when there are multiple data tables:
-    else {
-      for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
-          data_url
-      }
-    }
-    if(force == FALSE){
-      cat("The online URL listed for your digital files has been updated to correspond to the DOI in metadata.\n")
+    # update dataset online url. Should add `"function = "information"`
+    # and replace inaccurate `function = "download"` from from ezEML.
+    eml_data_url <- list(url = data_url, `function` = "information")
+    names(eml_data_url) <- c("url", "function")
+  } else {
+    # if custom url is supplied:
+    eml_data_url <- list(url = url, `function` = tag)
+    names(eml_data_url) <- c("url", tag)
+  }
+
+  # ezEML adds online distribution to the dataset; update that if it exists:
+  if (!is.null(eml_object$dataset$distribution$online$url)) {
+    eml_object$dataset$distribution$online$url <- eml_data_url
+  }
+
+  #handle case when there is only one data table:
+  if ("physical" %in% names(data_table)) {
+    eml_object$dataset$dataTable$physical$distribution$online$url <-
+      eml_data_url
+  }
+  # handle case when there are multiple data tables:
+  else {
+    for (i in seq_along(data_table)) {
+      eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
+        eml_data_url
     }
   }
-  else{
-    #handle case when there is only one data table:
-    if("physical" %in% names(data_table)){
-      eml_object$dataset$dataTable$physical$distribution$online$url <- url
-    }
-    # handle case when there are multiple data tables:
-    else {
-      for(i in seq_along(data_table)){
-        eml_object$dataset$dataTable[[i]]$physical$distribution$online$url <-
-          url
-      }
-    }
+  if (force == FALSE) {
+    msg <- paste0("The online URL listed for your digital files has been ",
+                  "updated to correspond to the DOI in metadata.\n")
+    cat(msg)
   }
+
   if (NPS == TRUE) {
     eml_object <- .set_npspublisher(eml_object)
   }
