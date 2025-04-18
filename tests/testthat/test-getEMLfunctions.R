@@ -247,4 +247,24 @@ test_that("bad object input throws error", {
 })
 
 
+# ---- write_catvar_tables ----
+
+# test that write function writes as many catvar text files as data tables that contain catvars
+test_that("writes same number of txt files as data tables with catvars", {
+  temp_path <- withr::local_tempdir()
+  write_catvar_tables(BICY_EMLed_meta, path = temp_path)
+  tables_with_catvars <- NULL
+  # if a table contains categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (!is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_with_catvars <- append(tables_with_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # get unique list of tables with categorical variables
+  tables_with_catvars <- unique(tables_with_catvars)
+  expect_equal(length(list.files(temp_path, pattern = "catvars")), length(tables_with_catvars))
+})
 
