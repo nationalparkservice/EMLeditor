@@ -772,7 +772,8 @@ get_publisher <- function(eml_object) {
 #' @description `get_attribute_tables` takes an EML object and returns a nested table of
 #' all the attribute tables pulled from the metadata, using EML::get_attributes()
 
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#' using EML::read_eml(<filename>, from="xml").
 #' @returns a nested table with one attribute table for each data table in the EML file
 #' @export
 #' @examples
@@ -875,11 +876,13 @@ get_attribute_tables <- function(eml_object) {
 
 #' Writes attribute tables from an EML object
 #'
-#' @description `write_attribute_tables` takes an EML object and writes each attribute table
-#' pulled from the metadata to the working directory or a specified path.
+#' @description `write_attribute_tables` takes an EML object and writes each attribute
+#' table pulled from the metadata to the working directory or a specified path.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
-#' @param path default to the working directory. This path determines where the txt files will be written.
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#' using EML::read_eml(<filename>, from="xml").
+#' @param path default to the working directory. This path determines where the txt
+#' files will be written.
 #' @export
 #' @examples
 #' \dontrun{
@@ -889,7 +892,11 @@ get_attribute_tables <- function(eml_object) {
 write_attribute_tables <- function(eml_object, path = here::here()) {
   attribute_table <- get_attribute_tables(eml_object)
   for (i in seq_along(attribute_table)) {
-    write.table(attribute_table[[i]], paste0(path, "/", "attributes_", names(attribute_table)[[i]], ".txt"), sep = "\t", row.names = FALSE)
+    write.table(attribute_table[[i]], paste0(path,
+                                             "/",
+                                             "attributes_",
+                                             names(attribute_table)[[i]], ".txt"),
+                sep = "\t", row.names = FALSE)
   }
 }
 
@@ -899,7 +906,8 @@ write_attribute_tables <- function(eml_object, path = here::here()) {
 #' @description `get_catvars_tables` takes an EML object and returns a nested table of
 #' all the categorical variable tables pulled from the metadata, using EML::get_attributes()
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#' using EML::read_eml(<filename>, from="xml").
 #' @returns a nested table with one catvar table for each data table in the EML file
 #' @export
 #' @examples
@@ -942,11 +950,13 @@ get_catvar_tables <- function(eml_object) {
 
 #' Writes categorical variable tables from an EML object
 #'
-#' @description `write_catvar_tables` takes an EML object and writes each categorical variable
-#' table pulled from the metadata to the working directory or a specified path.
+#' @description `write_catvar_tables` takes an EML object and writes each categorical
+#' variable table pulled from the metadata to the working directory or a specified path.
 #'
-#' @param eml_object is an R object imported (typically from an EML-formatted .xml file) using EML::read_eml(<filename>, from="xml").
-#' @param path default to the working directory. This path determines where the txt files will be written.
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#'  using EML::read_eml(<filename>, from="xml").
+#' @param path default to the working directory. This path determines where the
+#' txt files will be written.
 #' @export
 #' @examples
 #' \dontrun{
@@ -956,7 +966,11 @@ get_catvar_tables <- function(eml_object) {
 write_catvar_tables <- function(eml_object, path = here::here()) {
   catvar_table <- get_catvar_tables(eml_object)
   for (i in seq_along(catvar_table)) {
-    write.table(catvar_table[[i]], paste0(path, "/", "catvars_", names(catvar_table)[[i]], ".txt"), sep = "\t", row.names = FALSE)
+    write.table(catvar_table[[i]], paste0(path,
+                                          "/",
+                                          "catvars_",
+                                          names(catvar_table)[[i]], ".txt"),
+                sep = "\t", row.names = FALSE)
   }
 }
 
