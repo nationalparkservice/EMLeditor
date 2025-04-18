@@ -906,7 +906,7 @@ write_attribute_tables <- function(eml_object, path = here::here()) {
 
 #' Creates categorical variable tables from an EML object
 #'
-#' @description `get_catvars_tables` takes an EML object and returns a nested table of
+#' @description `get_catvar_tables` takes an EML object and returns a nested table of
 #' all the categorical variable tables pulled from the metadata, using EML::get_attributes()
 #'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
