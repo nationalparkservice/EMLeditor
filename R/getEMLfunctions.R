@@ -874,10 +874,13 @@ get_attribute_tables <- function(eml_object) {
   return(attributes)
 }
 
-#' Writes attribute tables from an EML object
+#' Writes attribute tables from an EML object as text files
 #'
-#' @description `write_attribute_tables` takes an EML object and writes each attribute
-#' table pulled from the metadata to the working directory or a specified path.
+#' @description `write_attribute_tables` is a wrapper around get_attribute_tables().
+#' It takes an EML object and writes one attribute table for each data table in the EML file.
+#' It writes the attribute tables as .txt files in the working directory or a specified path.
+#' This function is useful for recreating metadata with EMLassemblyline, when the
+#' user doesn't have access to the original text files.
 #'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
 #' using EML::read_eml(<filename>, from="xml").
@@ -948,10 +951,13 @@ get_catvar_tables <- function(eml_object) {
   return(catvars)
 }
 
-#' Writes categorical variable tables from an EML object
+#' Writes categorical variable tables from an EML object as text files
 #'
-#' @description `write_catvar_tables` takes an EML object and writes each categorical
-#' variable table pulled from the metadata to the working directory or a specified path.
+#' @description `write_catvar_tables` is a wrapper around get_catvar_tables().
+#' It takes an EML object and writes one categorical variable table for each data table
+#' in the EML file. It writes the attribute tables as .txt files in the working directory
+#' or a specified path. This function is useful for recreating metadata with EMLassemblyline,
+#' when the user doesn't have access to the original text files.
 #'
 #' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
 #'  using EML::read_eml(<filename>, from="xml").
