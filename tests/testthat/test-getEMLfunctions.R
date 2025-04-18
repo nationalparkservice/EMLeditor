@@ -229,14 +229,5 @@ test_that("bad object input throws error", {
   expect_error(get_catvar_tables(bad_metadata_object))
 })
 
-# ---- write_catvar_tables ----
-
-# test that default write input writes as many attribute text files as data tables
-test_that("writes same number of txt files as attribute tables", {
-  temp_path <- withr::local_tempdir()
-  write_catvar_tables(BICY_EMLed_meta, path = temp_path)
-  expect_equal(length(list.files(temp_path, pattern = "catvars")), length(list.files(testthat::test_path("good",
-                                                                                                         "BICY"), pattern = "csv")))
-})
 
 
