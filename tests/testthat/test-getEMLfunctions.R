@@ -206,7 +206,7 @@ test_that("bad object input throws error", {
 
 # ---- write_attribute_tables ----
 
-# test that default write input writes as many attribute text files as data tables
+# test that write function writes as many attribute text files as data tables
 test_that("writes same number of txt files as attribute tables", {
   temp_path <- withr::local_tempdir()
   write_attribute_tables(BICY_EMLed_meta, path = temp_path)
