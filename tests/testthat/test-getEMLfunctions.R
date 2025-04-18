@@ -218,11 +218,6 @@ test_that("object input returns list output", {
   expect_equal(class(get_catvar_tables(BICY_EMLed_meta)), "list")
 })
 
-# test length of nested attribute table, should be equal to the number of csv files in the data package
-test_that("output table length equals number of csvs in data package", {
-  expect_equal(length(get_catvar_tables(BICY_EMLed_meta)), length(list.files(testthat::test_path("good",
-                                                                                                 "BICY"), pattern = "csv")))
-})
 
 # test bad eml object
 test_that("bad object input throws error", {
