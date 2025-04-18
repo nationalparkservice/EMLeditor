@@ -791,7 +791,7 @@ get_attribute_tables <- function(eml_object) {
       # get table name
       table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
       # use EML function to get attributes
-      attr_temp <- EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$attributes
+      attr_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$attributes)
       attr_temp_cleaned <- attr_temp
       # add a unit column if none exists
       if (is.null(attr_temp$unit)) {
@@ -833,7 +833,7 @@ get_attribute_tables <- function(eml_object) {
     # get table name
     table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
     # use EML function to get attributes
-    attr_temp <- EML::get_attributes(eml_object$dataset$dataTable$attributeList)$attributes
+    attr_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable$attributeList)$attributes)
     attr_temp_cleaned <- attr_temp
     # add a unit column if none exists
     if (is.null(attr_temp$unit)) {
@@ -918,7 +918,7 @@ get_catvar_tables <- function(eml_object) {
       # get table name
       table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
       # use EML function to get attributes
-      catvars_temp <- EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$factors
+      catvars_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$factors)
       # select necessary columns
       catvars_temp_cleaned <- catvars_temp %>%
         dplyr::select(attributeName, code, definition)
@@ -930,7 +930,7 @@ get_catvar_tables <- function(eml_object) {
     # get table name
     table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
     # use EML function to get attributes
-    catvars_temp <- EML::get_attributes(eml_object$dataset$dataTable$attributeList)$factors
+    catvars_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable$attributeList)$factors)
     # select necessary columns
     catvars_temp_cleaned <- catvars_temp %>%
       dplyr::select(attributeName, code, definition)
