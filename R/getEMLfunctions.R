@@ -930,11 +930,18 @@ get_catvar_tables <- function(eml_object) {
       table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
       # use EML function to get attributes
       catvars_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$factors)
-      # select necessary columns
-      catvars_temp_cleaned <- catvars_temp %>%
-        dplyr::select(attributeName, code, definition)
-      # add attributes table into nested table
-      catvars[[table_name]] <- catvars_temp_cleaned
+      # print message if there are no categorical variables
+      if (is.null(catvars_temp)) {
+        table_name <- eml_object$dataset$dataTable[[i]]$physical$objectName
+        message(paste0("No categorical variables found for ", table_name))
+        next
+      } else {
+        # select necessary columns
+        catvars_temp_cleaned <- catvars_temp %>%
+          dplyr::select(attributeName, code, definition)
+        # add attributes table into nested table
+        catvars[[table_name]] <- catvars_temp_cleaned
+      }
     }
   } # data packages with just one table
   else {
@@ -942,11 +949,18 @@ get_catvar_tables <- function(eml_object) {
     table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
     # use EML function to get attributes
     catvars_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable$attributeList)$factors)
-    # select necessary columns
-    catvars_temp_cleaned <- catvars_temp %>%
-      dplyr::select(attributeName, code, definition)
-    # add attributes table into nested table
-    catvars[[table_name]] <- catvars_temp_cleaned
+    # print message if there are no categorical variables
+    if (is.null(catvars_temp)) {
+      table_name <- eml_object$dataset$dataTable$physical$objectName
+      message(paste0("No categorical variables found for ", table_name))
+      next
+    } else {
+      # select necessary columns
+      catvars_temp_cleaned <- catvars_temp %>%
+        dplyr::select(attributeName, code, definition)
+      # add attributes table into nested table
+      catvars[[table_name]] <- catvars_temp_cleaned
+    }
   }
   return(catvars)
 }
