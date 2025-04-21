@@ -241,6 +241,25 @@ test_that("output table length equals number of tables with catvars in data pack
   expect_equal(length(get_catvar_tables(BICY_EMLed_meta)), length(tables_with_catvars))
 })
 
+# test output message if there are data tables that do not contain catvars
+test_that("outputs message if there are no catvars", {
+  tables_without_catvars <- NULL
+  # if a table contains no categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_without_catvars <- append(tables_without_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # if there are any tables without catvars, expect message
+  if (!is.null(tables_without_catvars)) {
+    expect_message(get_catvar_tables(BICY_EMLed_meta), "No categorical variables found for ")
+  }
+}
+)
+
 # test bad eml object
 test_that("bad object input throws error", {
   expect_error(get_catvar_tables(bad_metadata_object))
