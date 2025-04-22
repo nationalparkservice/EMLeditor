@@ -221,7 +221,25 @@ test_that("writes same number of txt files as attribute tables", {
 
 # test output class when input is an emld object
 test_that("object input returns list output", {
-  expect_equal(class(get_catvar_tables(BICY_EMLed_meta)), "list")
+  tables_with_catvars <- NULL
+  # if a table contains categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (!is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_with_catvars <- append(tables_with_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # get unique list of tables with categorical variables
+  tables_with_catvars <- unique(tables_with_catvars)
+  # if there are any tables with categorical variables, the output type should be a list
+  if (!is.null(tables_with_catvars)) {
+    expect_equal(class(get_catvar_tables(BICY_EMLed_meta)), "list")
+  } else {
+      # if there are no tables with categorical variables, the output should be null
+    expect_null(get_catvar_tables(BICY_EMLed_meta))
+  }
 })
 
 # test length of nested catvars table, should be equal to the number of tables with catvars in the data package
