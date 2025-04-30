@@ -1,4 +1,7 @@
 # EMLeditor v1.0.1 (under development)
+## 2025-04-14
+  * remove all calls to arcticdatautils package; remove arcticdatautils from suggests and remotes.
+  
 ## 2025-04-11
   * add `get_eml_simple` function and associated unit test.
   

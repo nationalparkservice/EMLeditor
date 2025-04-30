@@ -34,7 +34,7 @@ get_eml_simple <- function(eml_object, eml_element){
 #' get_begin_date(eml_object)
 #' }
 get_begin_date <- function(eml_object) {
-  begin <- arcticdatautils::eml_get_simple(eml_object, "beginDate")
+  begin <- get_eml_simple(eml_object, "beginDate")
   if (is.null(begin)) {
     warning("Your metadata lacks a begining date.")
     begin <- NA # to do: test whether NA needs quotes for write.README.
@@ -59,7 +59,7 @@ get_begin_date <- function(eml_object) {
 #' get_end_date(eml_object)
 #' }
 get_end_date <- function(eml_object) {
-  end <- arcticdatautils::eml_get_simple(eml_object, "endDate")
+  end <- get_eml_simple(eml_object, "endDate")
   if (is.null(end)) {
     warning("Your metadata lacks an ending date.")
     end <- NA # to do: test whether NA needs quotes for write.README.
@@ -177,7 +177,7 @@ get_additional_info <- function(eml_object) {
 #' get_title(eml_object)
 #' }
 get_title <- function(eml_object) {
-  doc <- arcticdatautils::eml_get_simple(eml_object, "title")[1]
+  doc <- get_eml_simple(eml_object, "title")[1]
   if (is.null(doc)) {
     doc <- NA
   }
@@ -239,7 +239,7 @@ get_citation <- function(eml_object) {
 
   title <- get_title(eml_object)
 
-  pub_date <- arcticdatautils::eml_get_simple(eml_object, "pubDate")
+  pub_date <- get_eml_simple(eml_object, "pubDate")
   pub_date <- lubridate::parse_date_time(pub_date, orders = "Y-m-d")
   pub_year <- lubridate::year(pub_date)
 
@@ -407,7 +407,7 @@ get_doi <- function(eml_object) {
 #' get_content_units(eml_object)
 #' }
 get_content_units <- function(eml_object) {
-  units <- arcticdatautils::eml_get_simple(eml_object, "geographicDescription")
+  units <- get_eml_simple(eml_object, "geographicDescription")
   if (is.null(units)) {
     warning("No Park Unit Connections specified. Use the set_content_units() function to add Park Unit Connections.")
     punits <- NA # to do: test whether NA needs quotes for write.README.
@@ -456,7 +456,7 @@ get_content_units <- function(eml_object) {
 #' get_cui(eml_object)
 #' }
 get_cui_code <- function(eml_object) {
-  cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
+  cui <- get_eml_simple(eml_object, "CUI")
   if (is.null(cui)) {
     cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
     cui <- "No CUI specified."
@@ -502,7 +502,7 @@ get_cui <- function(eml_object) {
   #add in deprecation
   lifecycle::deprecate_soft(when = "0.1.5", "set_cui()", "set_cui_dissem()")
 
-  cui <- arcticdatautils::eml_get_simple(eml_object, "CUI")
+  cui <- get_eml_simple(eml_object, "CUI")
   if (is.null(cui)) {
     cat("No CUI specified. Use the set_cui() function to add a properly formatted CUI code.")
     cui <- "No CUI specified."
@@ -626,14 +626,14 @@ get_cui_marking <- function(eml_object) {
 #' }
 get_file_info <- function(eml_object) {
   # get file names
-  file_name <- arcticdatautils::eml_get_simple(eml_object, "objectName")
+  file_name <- get_eml_simple(eml_object, "objectName")
 
   if (is.null(file_name)) {
     warning("You have not specified data file names, sizes, or descriptions. If you used EMLassemblyline, double check for any issues generated after running make_eml. Missing data and undefined units will often cause this problem.")
     print("NA")
   } else {
     # get file sizes (assumes in bytes)
-    file_size <- arcticdatautils::eml_get_simple(eml_object, "size")
+    file_size <- get_eml_simple(eml_object, "size")
     file_size <- suppressWarnings(as.numeric(file_size))
     file_byte <- unique(file_size)
     file_byte <- file_byte[!is.na(file_byte)]
@@ -641,8 +641,7 @@ get_file_info <- function(eml_object) {
                                      standard = "Unix") %>% paste0("B")
 
     # get file descriptions
-    file_descript <- arcticdatautils::eml_get_simple(eml_object,
-                                                     "entityDescription")
+    file_descript <- get_eml_simple(eml_object, "entityDescription")
 
     # generate dataframe for display:
     dat <- data.frame(file_name, readable, file_descript)
@@ -726,7 +725,7 @@ get_drr_title <- function(eml_object) {
 #' get_lit(eml_object)
 #' }
 get_lit <- function(eml_object) {
-  lit <- arcticdatautils::eml_get_simple(eml_object, "literatureCited")
+  lit <- get_eml_simple(eml_object, "literatureCited")
   return(lit)
 }
 
@@ -744,7 +743,7 @@ get_lit <- function(eml_object) {
 #' get_producing_units(eml_object)
 #' }
 get_producing_units <- function(eml_object) {
-  punit <- arcticdatautils::eml_get_simple(eml_object, "metadataProvider")
+  punit <- get_eml_simple(eml_object, "metadataProvider")
   return(punit)
 }
 
