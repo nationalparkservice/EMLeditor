@@ -15,8 +15,10 @@
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/EMLeditor-package.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_abstract.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_additional_info.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_attribute_tables.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_author_list.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_begin_date.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_catvar_tables.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_citation.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_content_units.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_cui.html</loc></url>
@@ -26,6 +28,7 @@
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_drr_doi.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_drr_title.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_ds_id.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_eml_simple.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_end_date.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_file_info.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/get_lit.html</loc></url>
@@ -60,6 +63,8 @@
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/set_publisher.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/set_title.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/upload_data_package.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/EMLeditor/reference/write_attribute_tables.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/EMLeditor/reference/write_catvar_tables.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/EMLeditor/reference/write_readme.html</loc></url>
 </urlset>
 
