@@ -933,7 +933,6 @@ get_catvar_tables <- function(eml_object) {
       if (is.null(catvars_temp)) {
         table_name <- eml_object$dataset$dataTable[[i]]$physical$objectName
         message(paste0("No categorical variables found for ", table_name))
-        next
       } else {
         # select necessary columns
         catvars_temp_cleaned <- catvars_temp %>%
@@ -952,7 +951,6 @@ get_catvar_tables <- function(eml_object) {
     if (is.null(catvars_temp)) {
       table_name <- eml_object$dataset$dataTable$physical$objectName
       message(paste0("No categorical variables found for ", table_name))
-      next
     } else {
       # select necessary columns
       catvars_temp_cleaned <- catvars_temp %>%
