@@ -50,7 +50,8 @@ Suggests:
     QCkit,
     ISOcodes,
     gdata,
-    sf
+    sf,
+    withr
 Config/testthat/edition: 3
 URL: https://github.com/nationalparkservice/EMLeditor, https://nationalparkservice.github.io/EMLeditor/
 VignetteBuilder: knitr
