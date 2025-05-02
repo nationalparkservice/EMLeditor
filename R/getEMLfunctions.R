@@ -894,11 +894,10 @@ get_attribute_tables <- function(eml_object) {
 write_attribute_tables <- function(eml_object, path = here::here()) {
   attribute_table <- get_attribute_tables(eml_object)
   for (i in seq_along(attribute_table)) {
-    write.table(attribute_table[[i]], paste0(path,
+    readr::write_tsv(attribute_table[[i]], paste0(path,
                                              "/",
                                              "attributes_",
-                                             names(attribute_table)[[i]], ".txt"),
-                sep = "\t", row.names = FALSE)
+                                             names(attribute_table)[[i]], ".txt"))
   }
 }
 
@@ -983,11 +982,10 @@ get_catvar_tables <- function(eml_object) {
 write_catvar_tables <- function(eml_object, path = here::here()) {
   catvar_table <- get_catvar_tables(eml_object)
   for (i in seq_along(catvar_table)) {
-    write.table(catvar_table[[i]], paste0(path,
+    readr::write_tsv(catvar_table[[i]], paste0(path,
                                           "/",
                                           "catvars_",
-                                          names(catvar_table)[[i]], ".txt"),
-                sep = "\t", row.names = FALSE)
+                                          names(catvar_table)[[i]], ".txt"))
   }
 }
 
