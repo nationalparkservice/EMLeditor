@@ -47,7 +47,9 @@ globalVariables(c("UnitCode",
                   "attributeName",
                   "code",
                   "definition",
-                  "unit"
+                  "unit",
+                  "formatString",
+                  "attributeDefinition"
                   ))
 
 
