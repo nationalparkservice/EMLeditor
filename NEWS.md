@@ -1,4 +1,7 @@
 # EMLeditor v1.0.1 (under development)
+## 2025-05-02
+  * add functions `get_attribute_tables`, `write_attribute_tables`, `get_catvar_tables` and `write_catvar_tables` as well as unit tests for all four functions.
+
 ## 2025-04-14
   * remove all calls to arcticdatautils package; remove arcticdatautils from suggests and remotes.
   
