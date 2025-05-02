@@ -182,3 +182,126 @@ test_that("get_publisher gets the publisher information from EML", {
                  "userId")
   expect_equal(names(pub), pub_names)
 })
+
+# ---- get_attribute_tables ----
+
+# test output class when input is an emld object
+test_that("object input returns list output", {
+  expect_equal(class(get_attribute_tables(BICY_EMLed_meta)), "list")
+})
+
+# test length of nested attribute table, should be equal to the number of csv files in the data package
+test_that("output table length equals number of csvs in data package", {
+  expect_equal(length(get_attribute_tables(BICY_EMLed_meta)),
+               length(list.files(testthat::test_path("good",
+                                                     "BICY"),
+                                 pattern = "csv",
+                                 ignore.case = TRUE)))
+})
+
+# test bad eml object
+test_that("bad object input throws error", {
+  expect_error(get_attribute_tables(bad_metadata_object))
+})
+
+# ---- write_attribute_tables ----
+
+# test that write function writes as many attribute text files as data tables
+test_that("writes same number of txt files as attribute tables", {
+  temp_path <- withr::local_tempdir()
+  write_attribute_tables(BICY_EMLed_meta, path = temp_path)
+  expect_equal(length(list.files(temp_path, pattern = "attributes")),
+               length(list.files(testthat::test_path("good",
+                                                     "BICY"),
+                                 pattern = "csv",
+                                 ignore.case = TRUE)))
+})
+
+# ---- get_catvar_tables ----
+
+# test output class when input is an emld object
+test_that("object input returns list output", {
+  tables_with_catvars <- NULL
+  # if a table contains categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (!is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_with_catvars <- append(tables_with_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # get unique list of tables with categorical variables
+  tables_with_catvars <- unique(tables_with_catvars)
+  # if there are any tables with categorical variables, the output type should be a list
+  if (!is.null(tables_with_catvars)) {
+    expect_equal(class(get_catvar_tables(BICY_EMLed_meta)), "list")
+  } else {
+      # if there are no tables with categorical variables, the output should be null
+    expect_null(get_catvar_tables(BICY_EMLed_meta))
+  }
+})
+
+# test length of nested catvars table, should be equal to the number of tables with catvars in the data package
+test_that("output table length equals number of tables with catvars in data package", {
+  tables_with_catvars <- NULL
+  # if a table contains categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (!is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_with_catvars <- append(tables_with_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # get unique list of tables with categorical variables
+  tables_with_catvars <- unique(tables_with_catvars)
+  expect_equal(length(get_catvar_tables(BICY_EMLed_meta)), length(tables_with_catvars))
+})
+
+# test output message if there are data tables that do not contain catvars
+test_that("outputs message if there are no catvars", {
+  tables_without_catvars <- NULL
+  # if a table contains no categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_without_catvars <- append(tables_without_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # if there are any tables without catvars, expect message
+  if (!is.null(tables_without_catvars)) {
+    expect_message(get_catvar_tables(BICY_EMLed_meta), "No categorical variables found for ")
+  }
+}
+)
+
+# test bad eml object
+test_that("bad object input throws error", {
+  expect_error(get_catvar_tables(bad_metadata_object))
+})
+
+
+# ---- write_catvar_tables ----
+
+# test that write function writes as many catvar text files as data tables that contain catvars
+test_that("writes same number of txt files as data tables with catvars", {
+  temp_path <- withr::local_tempdir()
+  write_catvar_tables(BICY_EMLed_meta, path = temp_path)
+  tables_with_catvars <- NULL
+  # if a table contains categorical variables, add its name to a list
+  for (t in seq_along(BICY_EMLed_meta$dataset$dataTable)) {
+    attribute_tbls <- BICY_EMLed_meta$dataset$dataTable[[t]]$attributeList$attribute
+    for (a in seq_along(attribute_tbls)) {
+      if (!is.null(attribute_tbls[[a]]$measurementScale$nominal$nonNumericDomain$enumeratedDomain)) {
+        tables_with_catvars <- append(tables_with_catvars, BICY_EMLed_meta$dataset$dataTable[[t]]$physical$objectName)
+      }
+    }
+  }
+  # get unique list of tables with categorical variables
+  tables_with_catvars <- unique(tables_with_catvars)
+  expect_equal(length(list.files(temp_path, pattern = "catvars")), length(tables_with_catvars))
+})
+

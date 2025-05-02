@@ -763,3 +763,229 @@ get_producing_units <- function(eml_object) {
 get_publisher <- function(eml_object) {
   pub <- eml_object$dataset$publisher
 }
+
+
+
+#' Creates attribute tables from an EML object
+#'
+#' @description `get_attribute_tables` takes an EML object and returns a nested table of
+#' all the attribute tables pulled from the metadata, using EML::get_attributes()
+
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#' using EML::read_eml(<filename>, from="xml").
+#' @returns a nested table with one attribute table for each data table in the EML file
+#' @export
+#' @examples
+#' \dontrun{
+#' get_attribute_tables(example_EML)
+#' }
+
+get_attribute_tables <- function(eml_object) {
+
+  # create empty attributes table
+  attributes <- NULL
+
+  # data packages with multiple tables
+  if (is.null(eml_object$dataset$dataTable$attributeList)) {
+    for (i in seq_along(eml_object$dataset$dataTable)) {
+      # get table name
+      table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
+      # use EML function to get attributes
+      attr_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$attributes)
+      attr_temp_cleaned <- attr_temp
+      # add a unit column if none exists
+      if (is.null(attr_temp$unit)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          dplyr::mutate(unit = "")
+      }
+      # add a formatString column if none exists
+      if (is.null(attr_temp$formatString)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          dplyr::mutate(formatString = "")
+      }
+      # add a missingValueCode column if none exists
+      if (is.null(attr_temp$missingValueCode)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          dplyr::mutate(missingValueCode = "")
+      }
+      # add a missingValueCodeExplanation column if none exists
+      if (is.null(attr_temp$missingValueCodeExplanation)) {
+        attr_temp_cleaned <- attr_temp_cleaned %>%
+          dplyr::mutate(missingValueCodeExplanation = "")
+      }
+      # add a class column
+      # rename dttm format column
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        dplyr::mutate(class = dplyr::case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                               (storageType == "string" & domain == "textDomain") ~ "character",
+                                               (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
+                                               storageType == "date" ~ "Date",
+                                               TRUE ~ "")) %>%
+        dplyr::rename(dateTimeFormatString = formatString) %>%
+        dplyr::select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
+      # replace NAs with blanks
+      attr_temp_cleaned[is.na(attr_temp_cleaned)] <- ""
+      # add attributes table into nested table
+      attributes[[table_name]] <- attr_temp_cleaned
+    }
+  } # data packages with just one table
+  else {
+    # get table name
+    table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
+    # use EML function to get attributes
+    attr_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable$attributeList)$attributes)
+    attr_temp_cleaned <- attr_temp
+    # add a unit column if none exists
+    if (is.null(attr_temp$unit)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        dplyr::mutate(unit = "")
+    }
+    # add a formatString column if none exists
+    if (is.null(attr_temp$formatString)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        dplyr::mutate(formatString = "")
+    }
+    # add a missingValueCode column if none exists
+    if (is.null(attr_temp$missingValueCode)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        dplyr::mutate(missingValueCode = "")
+    }
+    # add a missingValueCodeExplanation column if none exists
+    if (is.null(attr_temp$missingValueCodeExplanation)) {
+      attr_temp_cleaned <- attr_temp_cleaned %>%
+        dplyr::mutate(missingValueCodeExplanation = "")
+    }
+    # add a class column
+    # rename dttm format column
+    attr_temp_cleaned <- attr_temp_cleaned %>%
+      dplyr::mutate(class = dplyr::case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+                                             (storageType == "string" & domain == "textDomain") ~ "character",
+                                             (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
+                                             storageType == "date" ~ "Date",
+                                             TRUE ~ "")) %>%
+      dplyr::rename(dateTimeFormatString = formatString) %>%
+      dplyr::select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
+    # replace NAs with blanks
+    attr_temp_cleaned[is.na(attr_temp_cleaned)] <- ""
+    # add attributes table into nested table
+    attributes[[table_name]] <- attr_temp_cleaned
+  }
+  return(attributes)
+}
+
+#' Writes attribute tables from an EML object as text files
+#'
+#' @description `write_attribute_tables` is a wrapper around get_attribute_tables().
+#' It takes an EML object and writes one attribute table for each data table in the EML file.
+#' It writes the attribute tables as .txt files in the working directory or a specified path.
+#' This function is useful for recreating metadata with EMLassemblyline, when the
+#' user doesn't have access to the original text files.
+#'
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#' using EML::read_eml(<filename>, from="xml").
+#' @param path default to the working directory. This path determines where the txt
+#' files will be written.
+#' @export
+#' @examples
+#' \dontrun{
+#' write_attribute_tables(example_EML)
+#' }
+
+write_attribute_tables <- function(eml_object, path = here::here()) {
+  attribute_table <- get_attribute_tables(eml_object)
+  for (i in seq_along(attribute_table)) {
+    readr::write_tsv(attribute_table[[i]], paste0(path,
+                                             "/",
+                                             "attributes_",
+                                             names(attribute_table)[[i]], ".txt"))
+  }
+}
+
+
+#' Creates categorical variable tables from an EML object
+#'
+#' @description `get_catvar_tables` takes an EML object and returns a nested table of
+#' all the categorical variable tables pulled from the metadata, using EML::get_attributes()
+#'
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#' using EML::read_eml(<filename>, from="xml").
+#' @returns a nested table with one catvar table for each data table in the EML file
+#' @export
+#' @examples
+#' \dontrun{
+#' get_catvar_tables(example_EML)
+#' }
+
+get_catvar_tables <- function(eml_object) {
+
+  # create empty attributes table
+  catvars <- NULL
+
+  # data packages with multiple tables
+  if (is.null(eml_object$dataset$dataTable$attributeList)) {
+    for (i in seq_along(eml_object$dataset$dataTable)) {
+      # get table name
+      table_name <- stringr::str_sub(eml_object$dataset$dataTable[[i]]$physical$objectName, 1, -5)
+      # use EML function to get attributes
+      catvars_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable[[i]]$attributeList)$factors)
+      # print message if there are no categorical variables
+      if (is.null(catvars_temp)) {
+        table_name <- eml_object$dataset$dataTable[[i]]$physical$objectName
+        message(paste0("No categorical variables found for ", table_name))
+      } else {
+        # select necessary columns
+        catvars_temp_cleaned <- catvars_temp %>%
+          dplyr::select(attributeName, code, definition)
+        # add attributes table into nested table
+        catvars[[table_name]] <- catvars_temp_cleaned
+      }
+    }
+  } # data packages with just one table
+  else {
+    # get table name
+    table_name <- stringr::str_sub(eml_object$dataset$dataTable$physical$objectName, 1, -5)
+    # use EML function to get attributes
+    catvars_temp <- suppressMessages(EML::get_attributes(eml_object$dataset$dataTable$attributeList)$factors)
+    # print message if there are no categorical variables
+    if (is.null(catvars_temp)) {
+      table_name <- eml_object$dataset$dataTable$physical$objectName
+      message(paste0("No categorical variables found for ", table_name))
+    } else {
+      # select necessary columns
+      catvars_temp_cleaned <- catvars_temp %>%
+        dplyr::select(attributeName, code, definition)
+      # add attributes table into nested table
+      catvars[[table_name]] <- catvars_temp_cleaned
+    }
+  }
+  return(catvars)
+}
+
+#' Writes categorical variable tables from an EML object as text files
+#'
+#' @description `write_catvar_tables` is a wrapper around get_catvar_tables().
+#' It takes an EML object and writes one categorical variable table for each data table
+#' in the EML file. It writes the attribute tables as .txt files in the working directory
+#' or a specified path. This function is useful for recreating metadata with EMLassemblyline,
+#' when the user doesn't have access to the original text files.
+#'
+#' @param eml_object is an R object imported (typically from an EML-formatted .xml file)
+#'  using EML::read_eml(<filename>, from="xml").
+#' @param path default to the working directory. This path determines where the
+#' txt files will be written.
+#' @export
+#' @examples
+#' \dontrun{
+#' write_catvar_tables(example_EML)
+#' }
+
+write_catvar_tables <- function(eml_object, path = here::here()) {
+  catvar_table <- get_catvar_tables(eml_object)
+  for (i in seq_along(catvar_table)) {
+    readr::write_tsv(catvar_table[[i]], paste0(path,
+                                          "/",
+                                          "catvars_",
+                                          names(catvar_table)[[i]], ".txt"))
+  }
+}
+

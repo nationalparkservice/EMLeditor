@@ -37,7 +37,20 @@ globalVariables(c("UnitCode",
                   "Alpha_3_B",
                   "msg",
                   "msg2",
-                  "na.exclude"))
+                  "na.exclude",
+                  "fromatString",
+                  "get_attribute_tables",
+                  "get_attribute_tables",
+                  "dateTimeFormatString",
+                  "missingValueCode",
+                  "missingValueCodeExplanation",
+                  "attributeName",
+                  "code",
+                  "definition",
+                  "unit",
+                  "formatString",
+                  "attributeDefinition"
+                  ))
 
 
 #' inject NPS Publisher info into metadata
