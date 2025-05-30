@@ -491,10 +491,10 @@ can be found at: <a href="https://www.archives.gov/cui/registry/limited-dissemin
 <div class="section level3">
 <h3 id="intellectual-rights">Intellectual Rights<a class="anchor" aria-label="anchor" href="#intellectual-rights"></a>
 </h3>
-<p>EMLassemblyine and ezEML provide some attractive looking boilerplate
-for setting the intellectual rights. It looks reasonable and so is easy
-to just keep. However, NPS has some specific regulations about what can
-and cannot be in the intellectualRights tag. Use
+<p>EMLassemblyine and ezEML provide some attractive boilerplate for
+setting the intellectual rights. It looks reasonable and so is easy to
+just keep. However, NPS has some specific regulations about what can and
+cannot be in the intellectualRights tag. Use
 <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> to replace the text with NPS-approved
 text. Note: You must first add the CUI dissemination code using
 <code><a href="../reference/set_cui.html">set_cui()</a></code> as the dissemination code and license must agree.
@@ -504,6 +504,16 @@ contains CUI cannot have a public domain or CC0 license). You can choose
 from one of three options, but <strong>for most public NPS data
 packages, the CC0 license is appropriate</strong>:</p>
 <ul>
+<li><p>“CC0”: This is the default license for all public NPS data
+packages: <strong>“The person who associated a work with this deed has
+dedicated the work to the public domain by waiving all of his or her
+rights to the work worldwide under copyright law, including all related
+and neighboring rights, to the extent allowed by law. You can copy,
+modify, distribute and perform the work, even for commercial purposes,
+all without asking permission.”</strong></p></li>
+<li><p>“public”: If the data do not contain CUI, you can use the public
+domain. The intellectual rights must read: <strong>“This work is in the
+public domain. There is no copyright or license.”</strong></p></li>
 <li><p>“restricted”: If the data contains Controlled Unclassified
 Information (CUI), the intellectual rights must read: <strong>“This
 product has been determined to contain Controlled Unclassified
@@ -511,18 +521,6 @@ Information (CUI) by the National Park Service, and is intended for
 internal use only. It is not published under an open license.
 Unauthorized access, use, and distribution are
 prohibited.”</strong></p></li>
-<li><p>“public”: If the data do not contain CUI, the default is the
-public domain. The intellectual rights must read: <strong>“This work is
-in the public domain. There is no copyright or
-license.”</strong></p></li>
-<li><p>“CC0”: If you need a license, for instance if you are working
-with a partner organization that requires a license, use CC0:
-<strong>“The person who associated a work with this deed has dedicated
-the work to the public domain by waiving all of his or her rights to the
-work worldwide under copyright law, including all related and
-neighboring rights, to the extent allowed by law. You can copy, modify,
-distribute and perform the work, even for commercial purposes, all
-without asking permission.”</strong></p></li>
 </ul>
 <p>The <code><a href="../reference/set_int_rights.html">set_int_rights()</a></code> function will also put the name of
 your license in a field in EML for DataStore harvesting.</p>
