@@ -2242,7 +2242,7 @@ set_data_urls <- function(eml_object,
   } else {
     # if custom url is supplied:
     eml_data_url <- list(url = url, `function` = tag)
-    names(eml_data_url) <- c("url", tag)
+    names(eml_data_url) <- c("url", "function")
   }
 
   # ezEML adds online distribution to the dataset; update that if it exists:
