@@ -1,4 +1,7 @@
 # EMLeditor v1.1.0
+## 2025-07-25
+  * bugfix for `set_data_urls` where giving the function a custom url caused it to create invalid metadata.
+
 ## 2025-04-14
   * remove all calls to arcticdatautils package; remove arcticdatautils from suggests and remotes.
   

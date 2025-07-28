@@ -28,6 +28,7 @@ Authors:
 Other contributors:
 \itemize{
   \item Issac Quevedo (\href{https://orcid.org/0000-0003-0129-981X}{ORCID}) [contributor]
+  \item Melina Kompella (\href{https://orcid.org/0009-0000-3730-8082}{ORCID}) [contributor]
   \item Amy Sherman (\href{https://orcid.org/0000-0002-9276-0087}{ORCID}) [contributor]
 }
 
