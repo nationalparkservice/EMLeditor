@@ -887,7 +887,7 @@ test_that("set_data_urls does not update urls upon user request not to", {
 test_that("set_data_urls only accepts information or download for tag element",{
   expect_error(set_data_urls(BICY_EMLed_meta,
                              url = "https://test.com",
-                             tag = "download"),
+                             tag = "file_location"),
                "Error: The tag parameter must be either \"information\" or \"download\"")
 })
 
