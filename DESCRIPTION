@@ -44,6 +44,7 @@ Imports:
     curl,
     mockr,
     rlang,
+    EMLassemblyline
 Suggests:
     stargazer,
     knitr,
