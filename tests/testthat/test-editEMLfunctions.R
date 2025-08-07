@@ -1133,3 +1133,151 @@ test_that("set_missing_data handles vectorized input", {
 })
 
 
+
+# ----- test combine_geographic_coverage ----
+
+# setup: temporary directory for writing txt file
+write_path <- withr::local_tempdir()
+
+# test that good input results in writing one file named "geographic_coverage.txt"
+# test with BISC (no NAs in the geography columns, multiple geography tables)
+test_that("combine_geographic_coverage with good inputs writes one text file", {
+  suppressMessages(
+    combine_geographic_coverage(
+      path = write_path,
+      data_path = "tests/testthat/good/BICY",
+      tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+      latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
+      longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
+      sitename = c("parkID", "locationID", "locationID"),
+      write = TRUE)
+  )
+  expect_equal(length(list.files(write_path, pattern = "geographic_coverage.txt")),
+               1)
+})
+
+# test that good input results in writing one file named "geographic_coverage.txt"
+# test with BUIS_herps (only one table, has NAs in the geography columns)
+test_that("combine_geographic_coverage with good inputs writes one text file", {
+  suppressMessages(
+    combine_geographic_coverage(
+      path = write_path,
+      data_path = "tests/testthat/good/BUIS_Herps_test",
+      tables = "BUIS_herp.csv",
+      latitude = "decimalLatitude",
+      longitude = "decimalLongitude",
+      sitename = "locality",
+      write = TRUE)
+  )
+  expect_equal(length(list.files(write_path, pattern = "geographic_coverage.txt")),
+               1)
+})
+
+# test that good input results in a message
+# adapted from EMLassemblyline unit tests
+test_that("combine_geographic_coverage with good inputs results in a message", {
+  expect_message(
+    combine_geographic_coverage(
+      path = write_path,
+      data_path = "tests/testthat/good/BICY",
+      tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+      latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
+      longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
+      sitename = c("parkID", "locationID", "locationID"),
+      write = TRUE),
+    regexp = "Templating geographic coverage"
+  )
+})
+
+# test message for bad input (mismatched character vector lengths)
+test_that("combine_geographic_coverage with mismatched input lengths results in an error", {
+  expect_error(
+    suppressMessages(
+      combine_geographic_coverage(
+        path = write_path,
+        data_path = "tests/testthat/good/BICY",
+        tables = c("Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+        latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
+        longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
+        sitename = c("parkID", "locationID", "locationID"),
+        write = FALSE),
+      regexp = "All input vectors must be the same length."
+    )
+  )
+})
+
+
+# test message for bad input (bad file names)
+test_that("combine_geographic_coverage with bad file names results in an error", {
+  expect_error(
+    suppressMessages(
+      combine_geographic_coverage(
+        path = write_path,
+        data_path = "tests/testthat/good/BICY",
+        tables = c("BAD_FILE_NAME1.csv", "BAD_FILE_NAME2.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+        latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
+        longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
+        sitename = c("parkID", "locationID", "locationID"),
+        write = FALSE),
+      regexp = "The following files do not exist at the specified path: "
+    )
+  )
+})
+
+
+# test message for bad input (bad latitude/longitude/sitename column names)
+test_that("combine_geographic_coverage with bad latitude column names results in an error", {
+  # test bad latitude input
+  expect_error(
+    suppressMessages(
+      combine_geographic_coverage(
+        path = write_path,
+        data_path = "tests/testthat/good/BICY",
+        tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+        latitude = c("BAD_Latitude", "custom_TransectStartLatitude", "decimalLatitude"),
+        longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
+        sitename = c("parkID", "locationID", "locationID"),
+        write = FALSE),
+      regexp = "Latitude column "
+    )
+  )
+  # test bad longitude input
+  expect_error(
+    suppressMessages(
+      combine_geographic_coverage(
+        path = write_path,
+        data_path = "tests/testthat/good/BICY",
+        tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+        latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
+        longitude = c("BAD_Longitude", "custom_TransectStartLongitude", "decimalLongitude"),
+        sitename = c("parkID", "locationID", "locationID"),
+        write = FALSE),
+      regexp = "Longitude column "
+    )
+  )
+  # test bad site name input
+  expect_error(
+    suppressMessages(
+      combine_geographic_coverage(
+        path = write_path,
+        data_path = "tests/testthat/good/BICY",
+        tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
+        latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
+        longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
+        sitename = c("BAD_sitename", "locationID", "locationID"),
+        write = FALSE),
+      regexp = "Site Name column "
+    )
+  )
+})
+
+
+# copied from EMLassemblyline unit tests
+unlink(
+  paste0(
+    write_path,
+    '/geographic_coverage.txt'
+  ),
+  force = TRUE
+)
+
