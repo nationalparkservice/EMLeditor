@@ -1138,6 +1138,11 @@ test_that("set_missing_data handles vectorized input", {
 
 # setup: temporary directory for writing txt file
 write_path <- withr::local_tempdir()
+read_path_BICY <- testthat::test_path("good",
+                                      "BICY")
+
+read_path_BUIS <- testthat::test_path("good",
+                                      "BUIS_Herps_test")
 
 # test that good input results in writing one file named "geographic_coverage.txt"
 # test with BISC (no NAs in the geography columns, multiple geography tables)
@@ -1145,7 +1150,7 @@ test_that("combine_geographic_coverage with good inputs writes one text file", {
   suppressMessages(
     combine_geographic_coverage(
       path = write_path,
-      data_path = "tests/testthat/good/BICY",
+      data_path = read_path_BICY,
       tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
       latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
       longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
@@ -1162,7 +1167,7 @@ test_that("combine_geographic_coverage with good inputs writes one text file", {
   suppressMessages(
     combine_geographic_coverage(
       path = write_path,
-      data_path = "tests/testthat/good/BUIS_Herps_test",
+      data_path = read_path_BUIS,
       tables = "BUIS_herp.csv",
       latitude = "decimalLatitude",
       longitude = "decimalLongitude",
@@ -1179,7 +1184,7 @@ test_that("combine_geographic_coverage with good inputs results in a message", {
   expect_message(
     combine_geographic_coverage(
       path = write_path,
-      data_path = "tests/testthat/good/BICY",
+      data_path = read_path_BICY,
       tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
       latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
       longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
@@ -1195,7 +1200,7 @@ test_that("combine_geographic_coverage with mismatched input lengths results in 
     suppressMessages(
       combine_geographic_coverage(
         path = write_path,
-        data_path = "tests/testthat/good/BICY",
+        data_path = read_path_BICY,
         tables = c("Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
         latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
         longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
@@ -1213,7 +1218,7 @@ test_that("combine_geographic_coverage with bad file names results in an error",
     suppressMessages(
       combine_geographic_coverage(
         path = write_path,
-        data_path = "tests/testthat/good/BICY",
+        data_path = read_path_BICY,
         tables = c("BAD_FILE_NAME1.csv", "BAD_FILE_NAME2.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
         latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
         longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
@@ -1232,7 +1237,7 @@ test_that("combine_geographic_coverage with bad latitude column names results in
     suppressMessages(
       combine_geographic_coverage(
         path = write_path,
-        data_path = "tests/testthat/good/BICY",
+        data_path = read_path_BICY,
         tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
         latitude = c("BAD_Latitude", "custom_TransectStartLatitude", "decimalLatitude"),
         longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
@@ -1246,7 +1251,7 @@ test_that("combine_geographic_coverage with bad latitude column names results in
     suppressMessages(
       combine_geographic_coverage(
         path = write_path,
-        data_path = "tests/testthat/good/BICY",
+        data_path = read_path_BICY,
         tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
         latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
         longitude = c("BAD_Longitude", "custom_TransectStartLongitude", "decimalLongitude"),
@@ -1260,7 +1265,7 @@ test_that("combine_geographic_coverage with bad latitude column names results in
     suppressMessages(
       combine_geographic_coverage(
         path = write_path,
-        data_path = "tests/testthat/good/BICY",
+        data_path = read_path_BICY,
         tables = c("Mini_BICY_Veg_Geography.CSV", "Mini_BICY_Veg_Intercept_Cleaned.csv", "Mini_BICY_Veg_Transect_Cleaned.csv"),
         latitude = c("decimalLatitude", "custom_TransectStartLatitude", "decimalLatitude"),
         longitude = c("decimalLongitude", "custom_TransectStartLongitude", "decimalLongitude"),
