@@ -49,7 +49,10 @@ globalVariables(c("UnitCode",
                   "definition",
                   "unit",
                   "formatString",
-                  "attributeDefinition"
+                  "attributeDefinition",
+                  "Latitude",
+                  "Longitude",
+                  "SiteName"
                   ))
 
 
