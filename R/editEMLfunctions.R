@@ -2927,4 +2927,120 @@ set_missing_data <- function(eml_object,
 }
 
 
+#' Creates a geographic coverage text file for a data package with location data
+#' in multiple tables.
+#'
+#' @description `combine_geographic_coverage` is a wrapper around EMLassemblyline::
+#' template_geographic_coverage, but allows multiple files with location data as
+#' inputs (much like EMLassemblyline::template_taxonomic_coverage). It writes a
+#' csv file with all location data to a temporary directory, then uses that csv
+#' as an input for EMLassemblyline::template_geographic_coverage to create the
+#' geographic coverage text file. The temporary directory is cleared when the R
+#' session ends, so the user doesn't have to remove the csv file and it does not
+#' interfere with the make_eml and run_congruence_checks functions.
+#'
+#' @param path defaults to the working directory. This is the path to  which the
+#' geography text file will be written.
+#' @param data_path defaults to the argument passed to path. This is the path to
+#' the tables with location data.
+#' @param tables is a character vector containing the table names (including the
+#' ".csv" ending) with location data.
+#' @param latitude is a character vector containing the column names with decimal
+#' latitude data in each table. It must be the same length as the tables argument
+#' and in the same order.
+#' @param longitude is a character vector containing the column names with decimal
+#' longitude data in each table. It must be the same length as the tables argument
+#' and in the same order.
+#' @param sitename is a character vector containing the column names with site name
+#' or site identifier data in each table. It must be the same length as the tables
+#' argument and in the same order.
+#' @param write defaults to TRUE. A logical value that indicates whether or not the
+#' geographic coverage table will be written as a tab delimited text file to the
+#' specified path.
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' combine_geographic_coverage(path = "data/2313987",
+#'                             tables = c("Sites.csv", "Subsites.csv"),
+#'                             latitude = c("Latitude", "Latitude"),
+#'                             longitude = c("Longitude", "Longitude"),
+#'                             sitename = c("SiteCode", "SubsiteCode"),
+#'                             write = TRUE)
+#' }
 
+combine_geographic_coverage <- function(path = getwd(),
+                                        data_path = path,
+                                        tables,
+                                        latitude,
+                                        longitude,
+                                        sitename,
+                                        write = TRUE) {
+
+  geography_table <- tibble::tibble(Latitude = numeric(),
+                                    Longitude = numeric(),
+                                    SiteName = character())
+
+  # first check that tables, lat, long, and sitename vectors are all the same length
+  if (length(unique(c(length(tables), length(latitude), length(longitude), length(sitename)))) == 1) {
+    # empty list to store bad file names
+    bad_file_names <- NULL
+    # make one long table of all points
+    for (i in seq_along(tables)) {
+      # check that data table exists at the given path
+      if (file.exists(paste0(data_path, "/", tables[[i]]))) {
+        temp_table <- suppressMessages(readr::read_csv(paste0(data_path, "/", tables[[i]]),
+                                                       guess_max = Inf))
+        # rename lat long and site ID columns
+        # check that input columns exist in the csv
+        if (!is.null(temp_table[[latitude[[i]]]])) {
+          temp_table[["Latitude"]] <- temp_table[[latitude[i]]]
+        } else {
+          stop(paste0("Latitude column named ", latitude[i], " not found in table ", tables[i]))
+        }
+        if (!is.null(temp_table[[longitude[[i]]]])) {
+          temp_table[["Longitude"]] <- temp_table[[longitude[i]]]
+        } else {
+          stop(paste0("Longitude column named ", longitude[i], " not found in table ", tables[i]))
+        }
+        if (!is.null(temp_table[[sitename[[i]]]])) {
+          temp_table[["SiteName"]] <- temp_table[[sitename[i]]]
+        } else {
+          stop(paste0("Site Name column named ", sitename[i], " not found in table ", tables[i]))
+        }
+        # keep only lat long and site name columns
+        temp_table <- temp_table |>
+          dplyr::select(Latitude, Longitude, SiteName)
+
+        # add geography data to long geography table
+        geography_table <- rbind(geography_table, temp_table)
+      } else {
+        bad_file_names <- append(bad_file_names, tables[i])
+      }
+    }
+    if (!is.null(bad_file_names)) {
+      stop(paste0("The following files do not exist at the specified path: ",
+                  (paste(bad_file_names, collapse = ", "))))
+
+    }
+    # get unique locations and site names, remove rows with NA in any column
+    geography_table <- geography_table |>
+      dplyr::filter(!is.na(Latitude) & !is.na(Longitude) & !is.na(SiteName)) |>
+      dplyr::distinct()
+
+    # write the geography table to a temporary directory
+    temp_path <- withr::local_tempdir()
+    readr::write_csv(geography_table, paste0(temp_path, "/geography_temp.csv"))
+
+    # make geographic coverage txt file
+    EMLassemblyline::template_geographic_coverage(path = path,
+                                                  data.path = temp_path,
+                                                  data.table = "geography_temp.csv",
+                                                  lat.col = "Latitude",
+                                                  lon.col = "Longitude",
+                                                  site.col = "SiteName",
+                                                  write.file = write)
+  } else {
+    stop("All input vectors must be the same length.")
+  }
+}
