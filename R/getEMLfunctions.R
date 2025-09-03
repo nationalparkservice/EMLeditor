@@ -858,10 +858,10 @@ get_attribute_tables <- function(eml_object) {
     # add a class column
     # rename dttm format column
     attr_temp_cleaned <- attr_temp_cleaned %>%
-      dplyr::mutate(class = dplyr::case_when(storageType %in% c("float", "double", "long", "int") ~ "numeric",
+      dplyr::mutate(class = dplyr::case_when(domain == "numericDomain" ~ "numeric",
                                              (storageType == "string" & domain == "textDomain") ~ "character",
                                              (storageType == "string" & domain == "enumeratedDomain") ~ "categorical",
-                                             storageType == "date" ~ "Date",
+                                             domain == "dateTimeDomain" ~ "Date",
                                              TRUE ~ "")) %>%
       dplyr::rename(dateTimeFormatString = formatString) %>%
       dplyr::select(attributeName, attributeDefinition, class, unit, dateTimeFormatString, missingValueCode, missingValueCodeExplanation)
