@@ -1,4 +1,6 @@
 # EMLeditor v1.1.0
+## 2025-09-15
+  * Update `set_creator_orgs` to use current Unit API endpoint (and move away from legacy/discontinued endpoint)
 ## 2025-07-25
   * bugfix for `set_data_urls` where giving the function a custom url caused it to create invalid metadata.
 
