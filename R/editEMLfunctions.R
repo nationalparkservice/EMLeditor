@@ -1644,7 +1644,7 @@ set_project <- function(eml_object,
     ), id = "DataStore_project"
   )
 
-  #whenever EML 3.0.0 comes out (or mutliple projects are allowd) this can
+  #whenever EML 3.0.0 comes out (or multiple projects are allowed) this can
   #be uncommented to allow set_project to add to existing projects
   #rather than replace them:
 
