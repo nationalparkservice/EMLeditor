@@ -1644,7 +1644,7 @@ set_project <- function(eml_object,
     ), id = "DataStore_project"
   )
 
-  #whenever EML 3.0.0 comes out (or mutliple projects are allowd) this can
+  #whenever EML 3.0.0 comes out (or multiple projects are allowed) this can
   #be uncommented to allow set_project to add to existing projects
   #rather than replace them:
 
@@ -2500,7 +2500,7 @@ set_creator_orgs <- function(eml_object,
     f <- file.path(tempdir(), "irmadownload.xml")
     if (!file.exists(f)) {
       # access all park codes from NPS xml file
-      curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+      curl::curl_download("https://irmaservices.nps.gov/Unit/v2/api/", f)
       }
     result <- XML::xmlParse(file = f)
     dat <- XML::xmlToDataFrame(result) # xml to dataframe
