@@ -1,4 +1,7 @@
 # EMLeditor v1.1.0
+## 2025-12-31
+  * Updated DataStore APIs to hit v8 API instead of now deprecated v7 API endponts
+  
 ## 2025-09-15
   * Update `set_creator_orgs` to use current Unit API endpoint (and move away from legacy/discontinued endpoint)
 ## 2025-07-25
