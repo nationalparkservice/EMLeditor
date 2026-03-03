@@ -1707,6 +1707,7 @@ set_project <- function(eml_object,
 #' @param cross_ref_id
 #' @param force
 #' @param NPS
+#' @param dev
 #'
 #' @returns
 #' @export
@@ -1714,6 +1715,7 @@ set_project <- function(eml_object,
 #' @examples
 set_cross_reference <- function(eml_object,
                                 cross_ref_id,
+                                dev = FALSE,
                                 force = FALSE,
                                 NPS = TRUE) {
   # First check that all cross-references are valid: ----
@@ -1764,69 +1766,72 @@ set_cross_reference <- function(eml_object,
   }
 
 
-  cui_code <- toupper(cui_code)
-  # verify CUI code entry; stop if does not equal one of six valid codes listed above:
-  cui_code <- match.arg(cui_code)
-
-  # Generate new CUI element for additionalMetadata
-  my_cui <- list(metadata = list(CUI = cui_code), id = "CUI")
+  # Generate new Cros Reference element for additionalMetadata
+  cross_refs <- list(metadata = list(crossRef = cross_ref_id),
+                     id = "Cross References")
 
   # get existing additionalMetadata elements:
   doc <- eml_object$additionalMetadata
 
   #if no additional metadata at all....
   if(is.null(doc)){
-    eml_object$additionalMetadata <- list(my_cui)
+    eml_object$additionalMetadata <- list(cross_refs)
   }
   if(!is.null(doc)){
-
     #helps track lists of different lengths/hierarchies
     x <- length(doc)
 
-    # Is CUI code already specified?
-    exist_cui <- NULL
+    # Is cross ref already specified?
+    exist_cross_ref <- NULL
     for (i in seq_along(doc)) {
       y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
-      if (suppressWarnings(stringr::str_detect(y, "CUI\\b")) == TRUE) {
+      if (suppressWarnings(stringr::str_detect(y, "crossRef\\b")) == TRUE) {
         seq <- i
-        exist_cui <- doc[[i]]$metadata$CUI
+        exist_cross_ref <- doc[[i]]$metadata$crossRef
       }
     }
 
     # scripting route:
     if (force == TRUE) {
       #what is [[seq]]? It works but...
-      eml_object$additionalMetadata[[seq]] <- my_cui
+      eml_object$additionalMetadata[[seq]] <- cross_refs
     }
 
     # interactive route:
     if (force == FALSE) {
       # If no existing CUI, add it in:
-      if (is.null(exist_cui)) {
+      if (is.null(exist_cross_ref)) {
         if (x == 1) {
-          eml_object$additionalMetadata <- list(my_cui,
+          eml_object$additionalMetadata <- list(cross_refs,
                                                 eml_object$additionalMetadata)
         }
         if (x > 1) {
-          eml_object$additionalMetadata[[x + 1]] <- my_cui
+          eml_object$additionalMetadata[[x + 1]] <- cross_refs
         }
-        cat("No previous CUI was detected. Your CUI has been set to ",
-            crayon::bold$blue(cui_code), ".", sep = "")
+      msg <- paste0("No previous cross references detected. The following ",
+                    "cross references have been added to ",
+                    "additionalMetadata: {.var {cross_ref_id}} and will ,",
+                    "automatically be added to your DataStore reference.")
+      cli::cli_inform(c("v" = msg))
       }
-      # If existing CUI, stop.
-      if (!is.null(exist_cui)) {
-        cat("CUI has previously been specified as ",
-            crayon::bold$blue(exist_cui),
-            ".\n", sep = "")
-        cat("Are you sure you want to reset it?")
+
+      # If existing cross ref, stop.
+      if (!is.null(exist_cross_ref)) {
+        msg <- paste0("Cross references have previously been specified as ",
+                      "{.var {exist_cross_ref}}")
+        cli::cli_alert(c("!" = msg))
+
+        cat("Do you you want to reset the cross references?")
         var1 <- .get_user_input() #1 = yes, 2 = no
         if (var1 == 1) {
-          eml_object$additionalMetadata[[seq]] <- my_cui
-          cat("Your CUI code has been rest to ",
-              crayon::blue$bold(cui_code), ".", sep = "")
+          eml_object$additionalMetadata[[seq]] <- cross_refs
+          msg <- paste0("The previously existing cross references have ",
+                        "been replaced with {.var {cross_ref_id}}.")
+          cli::cli_inform(c("*" = msg))
         }
         if (var1 == 2) {
-          cat("Your original CUI code was retained")
+          msg <- "Your originally specifiec corss references were retained"
+          cli::cli_inform(c("*" = msg))
         }
       }
     }
