@@ -1,3 +1,7 @@
+# EMLeditor v1.2.1 (Development version)
+## 2026-03-03
+  * Move ISOcodes from Suggests to Imports
+
 # EMLeditor v1.2.0
 ## 2026-02-26
   * Update authorlist 
