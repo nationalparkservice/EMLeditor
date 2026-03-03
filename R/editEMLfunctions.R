@@ -1701,6 +1701,149 @@ set_project <- function(eml_object,
 }
 
 
+#' Title
+#'
+#' @param eml_object
+#' @param cross_ref_id
+#' @param force
+#' @param NPS
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+set_cross_reference <- function(eml_object,
+                                cross_ref_id,
+                                force = FALSE,
+                                NPS = TRUE) {
+  # First check that all cross-references are valid: ----
+  bad_crossref_ids <- NULL
+  for (i in 1:cross_ref_id) {
+    if (dev == TRUE) {
+      get_url <- paste0(.ds_dev_api(),
+                        "Profile?q=",
+                        cross_ref_id[[i]])
+    } else {
+        get_url <- paste0(.ds_secure_api(),
+                          "Profile?q=",
+                          cross_ref_id[[i]])
+    }
+    req <- httr::GET(get_url,
+                       httr::authenticate(":", "", "ntlm"),
+                       httr::add_headers('Content-Type'='application/json'))
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+      return(invisible(NULL))
+    }
+    json <- httr::content(req, "text")
+    rjson <- jsonlite::fromJSON(json)
+
+    # if the reference doesn't exist:
+    if (length(seq_along(rjson)) == 0) {
+        bad_crossref_ids <- append(bad_crossref_ids, cross_ref_id[[i]])
+    }
+  }
+  # Notify user of cross-reference id check:
+  if (!is.null(bad_cross_ref_ids)) {
+    if (force == FALSE) {
+      msg <- paste0("The following cross reference IDs are invalid, inactive,",
+                    " or you lack the appropriate permissions to ",
+                    "access them: {.var {bad_crossref_ids}}.")
+      cli::cli_abort(c("x" = msg))
+      return(invisible(NULL))
+    } else {
+      #if cross ref ID check fails and force == TRUE, just abort, no error msg
+      return(invisible(NULL))
+    }
+  } else {
+    if (force == FALSE) {
+      msg <- paste0("All project ids are valid and activated.")
+      cli::cli_inform(c("v" = msg))
+    }
+  }
+
+
+  cui_code <- toupper(cui_code)
+  # verify CUI code entry; stop if does not equal one of six valid codes listed above:
+  cui_code <- match.arg(cui_code)
+
+  # Generate new CUI element for additionalMetadata
+  my_cui <- list(metadata = list(CUI = cui_code), id = "CUI")
+
+  # get existing additionalMetadata elements:
+  doc <- eml_object$additionalMetadata
+
+  #if no additional metadata at all....
+  if(is.null(doc)){
+    eml_object$additionalMetadata <- list(my_cui)
+  }
+  if(!is.null(doc)){
+
+    #helps track lists of different lengths/hierarchies
+    x <- length(doc)
+
+    # Is CUI code already specified?
+    exist_cui <- NULL
+    for (i in seq_along(doc)) {
+      y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
+      if (suppressWarnings(stringr::str_detect(y, "CUI\\b")) == TRUE) {
+        seq <- i
+        exist_cui <- doc[[i]]$metadata$CUI
+      }
+    }
+
+    # scripting route:
+    if (force == TRUE) {
+      #what is [[seq]]? It works but...
+      eml_object$additionalMetadata[[seq]] <- my_cui
+    }
+
+    # interactive route:
+    if (force == FALSE) {
+      # If no existing CUI, add it in:
+      if (is.null(exist_cui)) {
+        if (x == 1) {
+          eml_object$additionalMetadata <- list(my_cui,
+                                                eml_object$additionalMetadata)
+        }
+        if (x > 1) {
+          eml_object$additionalMetadata[[x + 1]] <- my_cui
+        }
+        cat("No previous CUI was detected. Your CUI has been set to ",
+            crayon::bold$blue(cui_code), ".", sep = "")
+      }
+      # If existing CUI, stop.
+      if (!is.null(exist_cui)) {
+        cat("CUI has previously been specified as ",
+            crayon::bold$blue(exist_cui),
+            ".\n", sep = "")
+        cat("Are you sure you want to reset it?")
+        var1 <- .get_user_input() #1 = yes, 2 = no
+        if (var1 == 1) {
+          eml_object$additionalMetadata[[seq]] <- my_cui
+          cat("Your CUI code has been rest to ",
+              crayon::blue$bold(cui_code), ".", sep = "")
+        }
+        if (var1 == 2) {
+          cat("Your original CUI code was retained")
+        }
+      }
+    }
+  }
+  # Set NPS publisher, if it doesn't already exist
+  if (NPS == TRUE) {
+    eml_object <- .set_npspublisher(eml_object)
+  }
+
+  # add/updated EMLeditor and version to metadata:
+  eml_object <- .set_version(eml_object)
+
+  return(eml_object)
+}
+
+
+
 #' Set Publisher
 #'
 #' @description set_publisher should only be used if the publisher Is **NOT the National Park Service** or if the contact address for the publisher is NOT the central office in Fort Collins. All data packages are published by the Fort Collins office, regardless of where they are collected or uploaded from. If you are working on metadata for a data package, *Do not use this function* unless you are very sure you need to (most NPS users will not want to use this function). If you want the publisher to be anything other than NPS out of the Fort Collins Office, if you want the originating agency to be something other than NPS, _or_ your product is *not* for or by the NPS, use this function. It's probably a good idea to run args(set_publisher) to make sure you have all the arguments, especially those with defaults, properly specified.
