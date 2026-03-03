@@ -1701,7 +1701,9 @@ set_project <- function(eml_object,
 }
 
 
-#' Title
+#' Add DataStore cross references to EML
+#'
+#' This function will take one or more DataStore reference IDs, check that each of the IDs is valid and (a real reference on DataStore) and add them to the EML metadata object under additionalMetadata.
 #'
 #' @param eml_object
 #' @param cross_ref_id
@@ -1720,7 +1722,7 @@ set_cross_reference <- function(eml_object,
                                 NPS = TRUE) {
   # First check that all cross-references are valid: ----
   bad_crossref_ids <- NULL
-  for (i in 1:cross_ref_id) {
+  for (i in 1:length(seq_along(cross_ref_id))) {
     if (dev == TRUE) {
       get_url <- paste0(.ds_dev_api(),
                         "Profile?q=",
@@ -1747,7 +1749,7 @@ set_cross_reference <- function(eml_object,
     }
   }
   # Notify user of cross-reference id check:
-  if (!is.null(bad_cross_ref_ids)) {
+  if (!is.null(bad_crossref_ids)) {
     if (force == FALSE) {
       msg <- paste0("The following cross reference IDs are invalid, inactive,",
                     " or you lack the appropriate permissions to ",
@@ -1799,7 +1801,7 @@ set_cross_reference <- function(eml_object,
 
     # interactive route:
     if (force == FALSE) {
-      # If no existing CUI, add it in:
+      # If no existing cross ref, add it in:
       if (is.null(exist_cross_ref)) {
         if (x == 1) {
           eml_object$additionalMetadata <- list(cross_refs,
@@ -1810,7 +1812,7 @@ set_cross_reference <- function(eml_object,
         }
       msg <- paste0("No previous cross references detected. The following ",
                     "cross references have been added to ",
-                    "additionalMetadata: {.var {cross_ref_id}} and will ,",
+                    "additionalMetadata: {.var {cross_ref_id}} and will ",
                     "automatically be added to your DataStore reference.")
       cli::cli_inform(c("v" = msg))
       }
@@ -1819,7 +1821,7 @@ set_cross_reference <- function(eml_object,
       if (!is.null(exist_cross_ref)) {
         msg <- paste0("Cross references have previously been specified as ",
                       "{.var {exist_cross_ref}}")
-        cli::cli_alert(c("!" = msg))
+        cli::cli_inform(c("!" = msg))
 
         cat("Do you you want to reset the cross references?")
         var1 <- .get_user_input() #1 = yes, 2 = no
@@ -1830,7 +1832,7 @@ set_cross_reference <- function(eml_object,
           cli::cli_inform(c("*" = msg))
         }
         if (var1 == 2) {
-          msg <- "Your originally specifiec corss references were retained"
+          msg <- "Your originally specifiec cross references were retained"
           cli::cli_inform(c("*" = msg))
         }
       }
