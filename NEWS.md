@@ -5,8 +5,8 @@
 
 # EMLeditor v1.2.0
 ## 2026-02-26
-  * Update authorlist 
-  * Update DESCRIPTIONto new version for API v8
+  * Update author list 
+  * Update DESCRIPTION to new version for API v8
   
 ## 2025-12-31
   * Updated DataStore APIs to hit v8 API instead of now deprecated v7 API endpoints
