@@ -1705,16 +1705,17 @@ set_project <- function(eml_object,
 #'
 #' This function will take one or more DataStore reference IDs, check that each of the IDs is valid and (a real reference on DataStore) and add them to the EML metadata object under additionalMetadata.
 #'
-#' @param eml_object
-#' @param cross_ref_id
-#' @param force
-#' @param NPS
-#' @param dev
+#' @inheritParams set_project
+#' @param cross_ref_id String. Integer. List. One or more DataStore reference IDs to be added to metadata as cross-references.
 #'
-#' @returns
+#' @returns the eml object
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' set_cross_reference (eml_object = metadata, cross_ref_id = 1234567)
+#' set_cross_reference (eml_object = metadata, cross_ref_id = c(1234567,
+#'                                                              7654321))}
 set_cross_reference <- function(eml_object,
                                 cross_ref_id,
                                 dev = FALSE,
