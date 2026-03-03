@@ -42,13 +42,13 @@ Imports:
     curl,
     mockr,
     rlang,
+    ISOcodes
 Suggests:
     stargazer,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
     QCkit,
-    ISOcodes,
     gdata,
     sf,
     withr
