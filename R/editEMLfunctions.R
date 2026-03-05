@@ -1836,10 +1836,6 @@ set_cross_reference <- function(eml_object,
                        id = "DataStoreCrossReference")
 #    cross_refs[["id"]] <-  "DataStoreCrossReference"
   }
-  #cross_refs <- append(cross_refs, id = "DataStoreCrossReference")
-
-  #cross_refs <- list(metadata = list(crossRef = cross_ref_id),
-  #                   id = "Cross References")
 
   # get existing additionalMetadata elements:
   doc <- eml_object$additionalMetadata
@@ -1856,9 +1852,14 @@ set_cross_reference <- function(eml_object,
     exist_cross_ref <- NULL
     for (i in seq_along(doc)) {
       y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
-      if (suppressWarnings(stringr::str_detect(y, "crossRef\\b")) == TRUE) {
+      if (suppressWarnings(
+        stringr::str_detect(y,
+                            "DataStoreCrossReference")) == TRUE) {
         seq <- i
-        exist_cross_ref <- doc[[i]]$metadata$crossRef
+        exist_cross_ref <- doc[[i]]$metadata
+        titles <- unlist(exist_cross_ref)[grepl('title',
+                                                names(unlist(exist_cross_ref)),
+                                                fixed=T)]
       }
     }
 
@@ -1881,15 +1882,16 @@ set_cross_reference <- function(eml_object,
         }
       msg <- paste0("No previous cross references detected. The following ",
                     "cross references have been added to ",
-                    "additionalMetadata: {.var {cross_ref_id}} and will ",
+                    "additionalMetadata: {.var {cross_ref_id}} \n and will ",
                     "automatically be added to your DataStore reference.")
       cli::cli_inform(c("v" = msg))
       }
 
       # If existing cross ref, stop.
       if (!is.null(exist_cross_ref)) {
+
         msg <- paste0("Cross references have previously been specified as ",
-                      "{.var {exist_cross_ref}}")
+                      "{.var {titles}}")
         cli::cli_inform(c("!" = msg))
 
         cat("Do you you want to reset the cross references?")
@@ -1901,7 +1903,7 @@ set_cross_reference <- function(eml_object,
           cli::cli_inform(c("*" = msg))
         }
         if (var1 == 2) {
-          msg <- "Your originally specifiec cross references were retained"
+          msg <- "Your originally specified cross references were retained"
           cli::cli_inform(c("*" = msg))
         }
       }
