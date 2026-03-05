@@ -1772,7 +1772,7 @@ set_cross_reference <- function(eml_object,
   cross_ref_url <- NULL
   cross_ref_type <- NULL
   cross_ref_title <- NULL
-  for (i in 1:seq_along(length(cross_ref_id))) {
+  for (i in 1:length(seq_along(cross_ref_id))) {
     if (dev == TRUE) {
       get_url <- paste0(.ds_dev_api(),
                         "ReferenceCodeSearch?q=",
@@ -1810,15 +1810,33 @@ set_cross_reference <- function(eml_object,
     cross_ref_type <- append(cross_ref_type, cross_type)
     cross_ref_title <- append(cross_ref_title, cross_title)
   }
-  cross_refs <- list()
+
   # generate cross reference additionalMetadata item ----
-  for (i in 1:length(seq_along(cross_ref_id))) {
-    cross_refs[i] <- list(metadata = list(onlineURL = cross_ref_url[i],
-                                          title = cross_ref_title[i],
-                                          type = cross_ref_type[i])
-                          )
+  cross_refs <- list()
+  if (length(seq_along(cross_ref_id)) == 1) {
+    cross_refs <-
+      list(metadata = list(crossReference_1
+                           = list(onlineURL = cross_ref_url,
+                                              title = cross_ref_title,
+                                              type = cross_ref_type)
+                           ),
+           id = "DataStoreCrossReference")
+  } else {
+    #if multiple cross references:
+    for (j in 1:length(seq_along(cross_ref_id))) {
+      build_cross_refs <- list(onlineURL = cross_ref_url[j],
+                                  title = cross_ref_title[j],
+                                  type = cross_ref_type[j])
+      build_cross_refs <- list(build_cross_refs)
+      names(build_cross_refs)[[1]] <- paste0("crossRefeference_",j)
+
+      cross_refs <- append(cross_refs, build_cross_refs)
+    }
+    cross_refs <- list(metadata = cross_refs,
+                       id = "DataStoreCrossReference")
+#    cross_refs[["id"]] <-  "DataStoreCrossReference"
   }
-  cross_refs <- append(cross_refs, id = "DataStoreCrossReference")
+  #cross_refs <- append(cross_refs, id = "DataStoreCrossReference")
 
   #cross_refs <- list(metadata = list(crossRef = cross_ref_id),
   #                   id = "Cross References")
