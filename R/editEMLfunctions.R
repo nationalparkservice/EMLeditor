@@ -1768,10 +1768,60 @@ set_cross_reference <- function(eml_object,
     }
   }
 
+  # get URLs, titles, and reference types for cross references ----
+  cross_ref_url <- NULL
+  cross_ref_type <- NULL
+  cross_ref_title <- NULL
+  for (i in 1:seq_along(length(cross_ref_id))) {
+    if (dev == TRUE) {
+      get_url <- paste0(.ds_dev_api(),
+                        "ReferenceCodeSearch?q=",
+                        cross_ref_id[i])
+      } else {
+        get_url <- paste0(.ds_api(),
+                          "ReferenceCodeSearch?q=",
+                          cross_ref_id[i])
+      }
 
-  # Generate new Cros Reference element for additionalMetadata
-  cross_refs <- list(metadata = list(crossRef = cross_ref_id),
-                     id = "Cross References")
+    req2 <- httr::GET(get_url,
+                      httr::authenticate(":", "", "ntlm"),
+                      httr::add_headers('Content-Type'='application/json'))
+
+    status_code <- httr::stop_for_status(req2$status_code)
+    if (!status_code == 200) {
+      msg <- paste0("ERROR: DataStore connection failed. ",
+                    "Are you logged in to the VPN?\n")
+      cli::cli_abort(c("x" = msg))
+      return(invisible())
+      }
+    #get project information:
+    json2 <- httr::content(req2, "text")
+    rjson2 <- jsonlite::fromJSON(json2)
+
+    if (rjson2$isDOI == "True") {
+      project_url <- paste0("https://doi.org/10.57830/", corss_ref_id[i])
+      } else {
+        cross_url <- rjson2$referenceUrl
+      }
+    cross_type <- rjson2$referenceType
+    cross_title <- rjson2$title
+
+    cross_ref_url <- append(cross_ref_url, cross_url)
+    cross_ref_type <- append(cross_ref_type, cross_type)
+    cross_ref_title <- append(cross_ref_title, cross_title)
+  }
+  cross_refs <- list()
+  # generate cross reference additionalMetadata item ----
+  for (i in 1:length(seq_along(cross_ref_id))) {
+    cross_refs[i] <- list(metadata = list(onlineURL = cross_ref_url[i],
+                                          title = cross_ref_title[i],
+                                          type = cross_ref_type[i])
+                          )
+  }
+  cross_refs <- append(cross_refs, id = "DataStoreCrossReference")
+
+  #cross_refs <- list(metadata = list(crossRef = cross_ref_id),
+  #                   id = "Cross References")
 
   # get existing additionalMetadata elements:
   doc <- eml_object$additionalMetadata
