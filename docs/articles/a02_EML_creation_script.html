@@ -331,7 +331,7 @@ the best way to update the license information is during a later step
 using <code><a href="../reference/set_int_rights.html">EMLeditor::set_int_rights()</a></code>. There is no need to edit
 this .txt file.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://ediorg.github.io/EMLassemblyline/reference/template_core_metadata.html" class="external-link">template_core_metadata</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
+<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/template_core_metadata.html" class="external-link">template_core_metadata</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                       license <span class="op">=</span> <span class="st">"CC0"</span><span class="op">)</span> <span class="co"># that '0' is a zero!</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -347,7 +347,7 @@ order or new/deleted fields) are modified from the previous year. NOTE
 that if these files already exist from a previous run, they are not
 overwritten.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://ediorg.github.io/EMLassemblyline/reference/template_table_attributes.html" class="external-link">template_table_attributes</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
+<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/template_table_attributes.html" class="external-link">template_table_attributes</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                          data.table <span class="op">=</span> <span class="va">data_files</span>, </span>
 <span>                          write.file <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -367,7 +367,7 @@ resulting file and you may want to add those manually). NOTE that if
 these files already exist from a previous run, they are not
 overwritten.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://ediorg.github.io/EMLassemblyline/reference/template_categorical_variables.html" class="external-link">template_categorical_variables</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
+<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/template_categorical_variables.html" class="external-link">template_categorical_variables</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                               data.path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                               write.file <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -387,7 +387,7 @@ coordinates are in UTM it is probably easiest to convert them first or
 create the geographic_coverage.txt file another way (see <a href="https://nationalparkservice.github.io/QCkit/" class="external-link">QCkit</a> for R
 functions that will convert UTM to lat/long).</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://ediorg.github.io/EMLassemblyline/reference/template_geographic_coverage.html" class="external-link">template_geographic_coverage</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
+<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/template_geographic_coverage.html" class="external-link">template_geographic_coverage</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                             data.path <span class="op">=</span> <span class="va">working_folder</span>,</span>
 <span>                             data.table <span class="op">=</span> <span class="va">data_coordinates_table</span>, </span>
 <span>                             lat.col <span class="op">=</span> <span class="va">data_latitude</span>, </span>
@@ -404,7 +404,7 @@ and 11 = GBIF. In the example below, the function will first try to find
 the scientific name at ITIS and if it fails will then look at GBIF. If
 you have lots of taxa, this could take some time to complete.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://ediorg.github.io/EMLassemblyline/reference/template_taxonomic_coverage.html" class="external-link">template_taxonomic_coverage</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
+<code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/template_taxonomic_coverage.html" class="external-link">template_taxonomic_coverage</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                            data.path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                            taxa.table <span class="op">=</span> <span class="va">data_taxa_tables</span>,</span>
 <span>                            taxa.col <span class="op">=</span> <span class="va">data_taxa_fields</span>, </span>
@@ -423,7 +423,7 @@ Run the function <code>issues()</code> at the end of the process to get
 feedback on items that might be missing or need attention. Fix these
 issues and then re-run the <code>make_eml()</code> function.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://ediorg.github.io/EMLassemblyline/reference/make_eml.html" class="external-link">make_eml</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>,</span>
+<code class="sourceCode R"><span><span class="va">my_metadata</span> <span class="op">&lt;-</span> <span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/make_eml.html" class="external-link">make_eml</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>,</span>
 <span>               dataset.title <span class="op">=</span> <span class="va">package_title</span>,</span>
 <span>               data.table <span class="op">=</span> <span class="va">data_files</span>,</span>
 <span>               data.table.name <span class="op">=</span> <span class="va">data_names</span>,</span>
@@ -669,7 +669,7 @@ additional tests on your .xml metadata file. This function assumes there
 is only one .xml file in the directory:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This assumes that you have written your metadata to an .xml file and that the .xml file is in the current working directory.</span></span>
-<span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span>check_metadata_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DPchecker/man/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span>check_metadata_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># If you .xml file with metadata is in a different directory, you will have to specify that:</span></span>
 <span><span class="co"># DPchecker::run_congruence_checks("C:/Users/&lt;yourusername&gt;/Documents/my_data_package", check_metadata_only = TRUE)</span></span></code></pre></div>
@@ -685,7 +685,7 @@ project. It will run all of the checks in the code chunk directly above
 “check your .xml file” and then some!</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this assumes that the data package is the working directory</span></span>
-<span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://nationalparkservice.github.io/DPchecker/reference/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">DPchecker</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DPchecker/man/run_congruence_checks.html" class="external-link">run_congruence_checks</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># if your data package is somewhere else, specify that:</span></span>
 <span><span class="co"># DPchecker::run_congruence_checks("C:/Users/&lt;yourusername&gt;/Documents/my_data_package")</span></span></code></pre></div>
