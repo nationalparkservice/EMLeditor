@@ -1799,7 +1799,7 @@ set_cross_reference <- function(eml_object,
     rjson2 <- jsonlite::fromJSON(json2)
 
     if (rjson2$isDOI == "True") {
-      project_url <- paste0("https://doi.org/10.57830/", corss_ref_id[i])
+      project_url <- paste0("https://doi.org/10.57830/", cross_ref_id[i])
       } else {
         cross_url <- rjson2$referenceUrl
       }
