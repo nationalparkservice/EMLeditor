@@ -1763,7 +1763,7 @@ set_cross_reference <- function(eml_object,
     }
   } else {
     if (force == FALSE) {
-      msg <- paste0("All project ids are valid and activated.")
+      msg <- paste0("All cross reference ids are valid and activated.")
       cli::cli_inform(c("v" = msg))
     }
   }
@@ -1906,7 +1906,7 @@ set_cross_reference <- function(eml_object,
             3) Make no changes to the existing cross references
             ")
         repeat {
-          var1 <- .get_user_input3 #1 = add 2 = replace, 3 = nothing
+          var1 <- .get_user_input3() #1 = add 2 = replace, 3 = nothing
           if (var1 != 1 & var1 != 2 & var1 != 3) {
             msg <- "Invalid input: Pleae enter 1, 2, or 3"
             cli::cli_inform(c("!" = msg))
