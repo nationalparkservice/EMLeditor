@@ -1831,6 +1831,7 @@ set_cross_reference <- function(eml_object,
                                   title = cross_ref_title[j],
                                   type = cross_ref_type[j])
       build_cross_refs <- list(build_cross_refs)
+      #names(build_cross_refs)[[1]] <- "crossReference"
       names(build_cross_refs)[[1]] <- paste0("crossReference_",j)
 
       cross_refs <- append(cross_refs, build_cross_refs)
