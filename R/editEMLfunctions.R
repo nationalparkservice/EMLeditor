@@ -1810,21 +1810,23 @@ set_cross_reference <- function(eml_object,
     cross_ref_type <- append(cross_ref_type, cross_type)
     cross_ref_title <- append(cross_ref_title, cross_title)
   }
-  cross_ref_description <- paste0("Cross references are an information on ",
-                                 "DataStore that is relevant to the ",
-                                 "data package. These are not necessarily ",
-                                 "works cited or works that use the data ",
-                                 "package.")
+  # cross_ref_description <- paste0("Cross references are an information on ",
+  #                                "DataStore that is relevant to the ",
+  #                                "data package. These are not necessarily ",
+  #                                "works cited or works that use the data ",
+  #                                "package.")
   # generate cross reference additionalMetadata item ----
   cross_refs <- list()
   if (length(seq_along(cross_ref_id)) == 1) {
     cross_refs <-
-      list(describes = cross_ref_description,
-           metadata = list(crossReference_1
-                           = list(onlineURL = cross_ref_url,
-                                              title = cross_ref_title,
-                                              type = cross_ref_type)
-                           ),
+      list(#describes = cross_ref_description,
+           metadata = list(crossReference =
+                             list(crossReferences_1 =
+                                    list(onlineURL = cross_ref_url,
+                                         title = cross_ref_title,
+                                         type = cross_ref_type)
+                           )
+           )
            id = "DataStoreCrossReference")
   } else {
     #if multiple cross references:
