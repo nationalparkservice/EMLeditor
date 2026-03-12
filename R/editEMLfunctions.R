@@ -1926,7 +1926,7 @@ set_cross_reference <- function(eml_object,
 
           exist_length <- length(exist_cross_ref[["crossReferences"]])
 
-          append(exist_cross_ref[[1]], new_cross_refs)
+          all_refs <- append(exist_cross_ref[[1]], new_cross_refs)
 
           new_names <- NULL
 
@@ -1940,8 +1940,9 @@ set_cross_reference <- function(eml_object,
 
           eml_object$additionalMetadata[[seq]] <- exist_cross_ref
 
-          msg <- paste0("The following cross reference(s) have been added to ",
-                        "the existing cross reference(s): {.var cross_ref_id}.")
+          msg <- paste0("The following cross reference(s) have been ",
+                        "added to the existing cross reference(s): ",
+                        "{.var {cross_ref_id}}.")
           cli::cli_inform(c("*" = msg))
         }
       }
