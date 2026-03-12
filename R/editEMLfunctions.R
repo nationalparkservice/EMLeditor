@@ -1815,7 +1815,7 @@ set_cross_reference <- function(eml_object,
   cross_refs <- list()
   if (length(seq_along(cross_ref_id)) == 1) {
     cross_refs <-
-      list(metadata = list(crossReference_1
+      list(metadata = list(crossReference
                            = list(onlineURL = cross_ref_url,
                                               title = cross_ref_title,
                                               type = cross_ref_type)
@@ -1828,15 +1828,13 @@ set_cross_reference <- function(eml_object,
                                   title = cross_ref_title[j],
                                   type = cross_ref_type[j])
       build_cross_refs <- list(build_cross_refs)
-      names(build_cross_refs)[[1]] <- paste0("crossRefeference_",j)
+      names(build_cross_refs)[[1]] <- "crossReference"
 
       cross_refs <- append(cross_refs, build_cross_refs)
     }
     cross_refs <- list(metadata = cross_refs,
                        id = "DataStoreCrossReference")
-#    cross_refs[["id"]] <-  "DataStoreCrossReference"
   }
-
   # get existing additionalMetadata elements:
   doc <- eml_object$additionalMetadata
 
