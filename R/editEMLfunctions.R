@@ -1861,7 +1861,7 @@ set_cross_reference <- function(eml_object,
       y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
       if (suppressWarnings(
         stringr::str_detect(y,
-                            "DataStoreCrossReference")) == TRUE) {
+                            "DataStore_crossReference")) == TRUE) {
         seq <- i
         exist_cross_ref <- doc[[i]]$metadata
         titles <- unlist(exist_cross_ref)[grepl('title',
@@ -1872,7 +1872,6 @@ set_cross_reference <- function(eml_object,
 
     # scripting route:
     if (force == TRUE) {
-      #what is [[seq]]? It works but...
       eml_object$additionalMetadata[[seq]] <- cross_refs
     }
 
@@ -1901,17 +1900,28 @@ set_cross_reference <- function(eml_object,
                       "{.var {titles}}")
         cli::cli_inform(c("!" = msg))
 
-        cat("Do you you want to reset the cross references?")
-        var1 <- .get_user_input() #1 = yes, 2 = no
-        if (var1 == 1) {
+        cat("Do you you want:\n
+            1) Add to the existing cross references
+            2) Replace the existing cross references
+            3) Make no changes to the existing cross references
+            ")
+        repeat {
+          var1 <- .get_user_input3 #1 = add 2 = replace, 3 = nothing
+          if (var1 != 1 & var1 != 2 & var1 != 3) {
+            msg <- "Invalid input: Pleae enter 1, 2, or 3"
+            cli::cli_inform(c("!" = msg))
+          }
+        }
+        if (var1 == 2) {
           eml_object$additionalMetadata[[seq]] <- cross_refs
           msg <- paste0("The previously existing cross references have ",
                         "been replaced with {.var {cross_ref_id}}.")
           cli::cli_inform(c("*" = msg))
-        }
-        if (var1 == 2) {
+        } else if (var1 == 3) {
           msg <- "Your originally specified cross references were retained"
           cli::cli_inform(c("*" = msg))
+        } else if (var1 == 1) {
+        cat ("testing phase")
         }
       }
     }
