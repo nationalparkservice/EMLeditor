@@ -279,9 +279,19 @@ globalVariables(c("UnitCode",
 #' var1 <- .get_user_input()
 #' }
 .get_user_input <- function () {
-
-  var1 <- readline(prompt = "1: Yes\n2: No\n")
-  return(var1)
+  repeat{
+    user_input <- readline(prompt = "1: Yes\n2: No\n")
+    num <- suppressWarnings(as.numeric(user_input))
+    msg <- "Invalid input: Please enter either a 1 or a 2"
+    if (is.na(num)) {
+      cli::cli_inform(c("!" = msg))
+    }
+    else if (num != 1 & num != 2) {
+      cli::cli_inform(c("!" = msg))
+    } else {
+    return(num)
+    }
+  }
 }
 
 #' Get open ended user input
