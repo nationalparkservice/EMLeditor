@@ -1763,22 +1763,92 @@ set_cross_reference <- function(eml_object,
     }
   } else {
     if (force == FALSE) {
-      msg <- paste0("All project ids are valid and activated.")
+      msg <- paste0("All cross reference ids are valid and activated.")
       cli::cli_inform(c("v" = msg))
     }
   }
 
+  # get URLs, titles, and reference types for cross references ----
+  cross_ref_url <- NULL
+  cross_ref_type <- NULL
+  cross_ref_title <- NULL
+  for (i in 1:length(seq_along(cross_ref_id))) {
+    if (dev == TRUE) {
+      get_url <- paste0(.ds_dev_api(),
+                        "ReferenceCodeSearch?q=",
+                        cross_ref_id[i])
+      } else {
+        get_url <- paste0(.ds_api(),
+                          "ReferenceCodeSearch?q=",
+                          cross_ref_id[i])
+      }
 
-  # Generate new Cros Reference element for additionalMetadata
-  cross_refs <- list(metadata = list(crossRef = cross_ref_id),
-                     id = "Cross References")
+    req2 <- httr::GET(get_url,
+                      httr::authenticate(":", "", "ntlm"),
+                      httr::add_headers('Content-Type'='application/json'))
 
-  # get existing additionalMetadata elements:
+    status_code <- httr::stop_for_status(req2$status_code)
+    if (!status_code == 200) {
+      msg <- paste0("ERROR: DataStore connection failed. ",
+                    "Are you logged in to the VPN?\n")
+      cli::cli_abort(c("x" = msg))
+      return(invisible())
+      }
+    #get project information:
+    json2 <- httr::content(req2, "text")
+    rjson2 <- jsonlite::fromJSON(json2)
+
+    if (rjson2$isDOI == "True") {
+        cross_url <- paste0("https://doi.org/10.57830/", cross_ref_id[i])
+      } else {
+        cross_url <- rjson2$referenceUrl
+      }
+    cross_type <- rjson2$referenceType
+    cross_title <- rjson2$title
+
+    cross_ref_url <- append(cross_ref_url, cross_url)
+    cross_ref_type <- append(cross_ref_type, cross_type)
+    cross_ref_title <- append(cross_ref_title, cross_title)
+  }
+
+  # generate cross reference additionalMetadata item ----
+  cross_refs <- list()
+  if (length(seq_along(cross_ref_id)) == 1) {
+    cross_refs <-
+      list(#describes = cross_ref_description,
+           metadata = list(crossReferences =
+                             list(crossReference_1 =
+                                    list(onlineURL = cross_ref_url,
+                                         title = cross_ref_title,
+                                         type = cross_ref_type)
+                           )
+           ),
+           id = "DataStore_crossReference")
+  } else {
+    #if multiple cross references:
+    for (j in 1:length(seq_along(cross_ref_id))) {
+      build_cross_refs <- list(onlineURL = cross_ref_url[j],
+                                  title = cross_ref_title[j],
+                                  type = cross_ref_type[j])
+      build_cross_refs <- list(build_cross_refs)
+      #names(build_cross_refs)[[1]] <- "crossReference"
+      names(build_cross_refs)[[1]] <- paste0("crossReference_",j)
+
+      cross_refs <- append(cross_refs, build_cross_refs)
+
+    }
+    #new code line
+    cross_refs_list <- list(crossReferences = cross_refs)
+    add_meta_cross_refs <- list(metadata = cross_refs_list,
+                       id = "DataStore_crossReference")
+#    cross_refs[["id"]] <-  "DataStoreCrossReference"
+  }
+
+  # get existing additionalMetadata elements ---
   doc <- eml_object$additionalMetadata
-
   #if no additional metadata at all....
   if(is.null(doc)){
-    eml_object$additionalMetadata <- list(cross_refs)
+    eml_object$additionalMetadata <- list( add_meta_cross_refs)
   }
   if(!is.null(doc)){
     #helps track lists of different lengths/hierarchies
@@ -1788,52 +1858,91 @@ set_cross_reference <- function(eml_object,
     exist_cross_ref <- NULL
     for (i in seq_along(doc)) {
       y <- suppressWarnings(stringr::str_replace_all(doc[i], " ", ""))
-      if (suppressWarnings(stringr::str_detect(y, "crossRef\\b")) == TRUE) {
+      if (suppressWarnings(
+        stringr::str_detect(y,
+                            "DataStore_crossReference")) == TRUE) {
         seq <- i
-        exist_cross_ref <- doc[[i]]$metadata$crossRef
+        exist_cross_ref <- doc[[i]]$metadata
+        titles <- unlist(exist_cross_ref)[grepl('title',
+                                                names(unlist(exist_cross_ref)),
+                                                fixed=T)]
       }
     }
-
     # scripting route:
     if (force == TRUE) {
-      #what is [[seq]]? It works but...
-      eml_object$additionalMetadata[[seq]] <- cross_refs
+      eml_object$additionalMetadata[[seq]] <-  add_meta_cross_refs
     }
-
     # interactive route:
     if (force == FALSE) {
       # If no existing cross ref, add it in:
       if (is.null(exist_cross_ref)) {
         if (x == 1) {
-          eml_object$additionalMetadata <- list(cross_refs,
+          eml_object$additionalMetadata <- list(add_meta_cross_refs,
                                                 eml_object$additionalMetadata)
         }
         if (x > 1) {
-          eml_object$additionalMetadata[[x + 1]] <- cross_refs
+          eml_object$additionalMetadata[[x + 1]] <- add_meta_cross_refs
         }
       msg <- paste0("No previous cross references detected. The following ",
                     "cross references have been added to ",
-                    "additionalMetadata: {.var {cross_ref_id}} and will ",
+                    "additionalMetadata: {.var {cross_ref_id}} \n and will ",
                     "automatically be added to your DataStore reference.")
       cli::cli_inform(c("v" = msg))
       }
 
       # If existing cross ref, stop.
       if (!is.null(exist_cross_ref)) {
-        msg <- paste0("Cross references have previously been specified as ",
-                      "{.var {exist_cross_ref}}")
-        cli::cli_inform(c("!" = msg))
 
-        cat("Do you you want to reset the cross references?")
-        var1 <- .get_user_input() #1 = yes, 2 = no
-        if (var1 == 1) {
-          eml_object$additionalMetadata[[seq]] <- cross_refs
-          msg <- paste0("The previously existing cross references have ",
-                        "been replaced with {.var {cross_ref_id}}.")
-          cli::cli_inform(c("*" = msg))
+        msg <- paste0("Cross references have previously been specified as ",
+                      "{.var {titles}}")
+        cli::cli_inform(c("*" = msg))
+
+        cat("Do you you want:\n
+            1) Add to the existing cross references
+            2) Replace the existing cross references
+            3) Make no changes to the existing cross references
+            ")
+        repeat {
+          var1 <- .get_user_input3() #1 = add 2 = replace, 3 = nothing
+          if (var1 != 1 & var1 != 2 & var1 != 3) {
+            msg <- "Invalid input: Pleae enter 1, 2, or 3"
+            cli::cli_inform(c("!" = msg))
+          } else {
+            break
+          }
         }
         if (var1 == 2) {
-          msg <- "Your originally specifiec cross references were retained"
+          eml_object$additionalMetadata[[seq]] <- add_meta_cross_refs
+          msg <- paste0("The previously existing cross reference(s) have ",
+                        "been replaced with {.var {cross_ref_id}}.")
+          cli::cli_inform(c("*" = msg))
+        } else if (var1 == 3) {
+          msg <- "Your originally specified cross reference(s) were retained"
+          cli::cli_inform(c("*" = msg))
+        } else if (var1 == 1) {
+          # add to existing cross refs... this should work if 1 existing
+          # and one new. Need to make robust to 1 and 1+ for each.
+          new_cross_refs <-  add_meta_cross_refs[["metadata"]][["crossReferences"]]
+
+          exist_length <- length(exist_cross_ref[["crossReferences"]])
+
+          all_refs <- append(exist_cross_ref[[1]], new_cross_refs)
+
+          new_names <- NULL
+
+           for (i in 1:length(all_refs)) {
+            new_names <- append(new_names, paste0("crossReference_", i))
+          }
+
+          names(all_refs) <- new_names
+
+          exist_cross_ref[["crossReferences"]] <- all_refs
+
+          eml_object$additionalMetadata[[seq]] <- exist_cross_ref
+
+          msg <- paste0("The following cross reference(s) have been ",
+                        "added to the existing cross reference(s): ",
+                        "{.var {cross_ref_id}}.")
           cli::cli_inform(c("*" = msg))
         }
       }

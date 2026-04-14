@@ -1,4 +1,7 @@
 # EMLeditor v1.2.1 (Development version)
+## 2026-03-05
+  * Update `set_cross_references` function to put more information in additionalMetadata and be more consistent with the way Projects are handled.
+  
 ## 2026-03-03
   * Move ISOcodes from Suggests to Imports
   * Add `set_cross_references` function
