@@ -1838,8 +1838,8 @@ set_cross_reference <- function(eml_object,
 
     }
     #new code line
-    cross_refs <- list(crossReferences = cross_refs)
-    cross_refs <- list(metadata = cross_refs,
+    cross_refs_list <- list(crossReferences = cross_refs)
+    add_meta_cross_refs <- list(metadata = cross_refs_list,
                        id = "DataStore_crossReference")
 #    cross_refs[["id"]] <-  "DataStoreCrossReference"
   }
@@ -1848,7 +1848,7 @@ set_cross_reference <- function(eml_object,
   doc <- eml_object$additionalMetadata
   #if no additional metadata at all....
   if(is.null(doc)){
-    eml_object$additionalMetadata <- list(cross_refs)
+    eml_object$additionalMetadata <- list( add_meta_cross_refs)
   }
   if(!is.null(doc)){
     #helps track lists of different lengths/hierarchies
@@ -1870,18 +1870,18 @@ set_cross_reference <- function(eml_object,
     }
     # scripting route:
     if (force == TRUE) {
-      eml_object$additionalMetadata[[seq]] <- cross_refs
+      eml_object$additionalMetadata[[seq]] <-  add_meta_cross_refs
     }
     # interactive route:
     if (force == FALSE) {
       # If no existing cross ref, add it in:
       if (is.null(exist_cross_ref)) {
         if (x == 1) {
-          eml_object$additionalMetadata <- list(cross_refs,
+          eml_object$additionalMetadata <- list(add_meta_cross_refs,
                                                 eml_object$additionalMetadata)
         }
         if (x > 1) {
-          eml_object$additionalMetadata[[x + 1]] <- cross_refs
+          eml_object$additionalMetadata[[x + 1]] <- add_meta_cross_refs
         }
       msg <- paste0("No previous cross references detected. The following ",
                     "cross references have been added to ",
@@ -1912,7 +1912,7 @@ set_cross_reference <- function(eml_object,
           }
         }
         if (var1 == 2) {
-          eml_object$additionalMetadata[[seq]] <- cross_refs
+          eml_object$additionalMetadata[[seq]] <- add_meta_cross_refs
           msg <- paste0("The previously existing cross reference(s) have ",
                         "been replaced with {.var {cross_ref_id}}.")
           cli::cli_inform(c("*" = msg))
@@ -1922,7 +1922,7 @@ set_cross_reference <- function(eml_object,
         } else if (var1 == 1) {
           # add to existing cross refs... this should work if 1 existing
           # and one new. Need to make robust to 1 and 1+ for each.
-          new_cross_refs <- cross_refs[["metadata"]][["crossReferences"]]
+          new_cross_refs <-  add_meta_cross_refs[["metadata"]][["crossReferences"]]
 
           exist_length <- length(exist_cross_ref[["crossReferences"]])
 
