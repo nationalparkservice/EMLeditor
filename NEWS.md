@@ -1,4 +1,7 @@
 # EMLeditor v1.2.1 (Development version)
+## 2026-04-22
+  * Add code.json file and update links, urls, etc in preparation for DGEC migration
+  
 ## 2026-03-05
   * Update `set_cross_references` function to put more information in additionalMetadata and be more consistent with the way Projects are handled.
   

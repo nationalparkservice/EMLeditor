@@ -46,7 +46,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/nationalparkservice/EMLeditor/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/doi-NPS/EMLeditor/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -63,7 +63,7 @@
       <h1>Pre-Requisites</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/EMLeditor/blob/HEAD/vignettes/a01_prereqs.Rmd" class="external-link"><code>vignettes/a01_prereqs.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/doi-NPS/EMLeditor/blob/HEAD/vignettes/a01_prereqs.Rmd" class="external-link"><code>vignettes/a01_prereqs.Rmd</code></a></small>
       <div class="d-none name"><code>a01_prereqs.Rmd</code></div>
     </div>
 
@@ -96,14 +96,14 @@ available in Software Center. See the <a href="https://doimspp.sharepoint.com/si
 Advisory Group’s website</a> for more information. You will also need to
 install the R package <a href="https://www.tidyverse.org/" class="external-link">tidyverse</a>
 as well as some other packages from CRAN. Many of these are available as
-part of the <a href="https://nationalparkservice.github.io/NPSdataverse/" class="external-link">NPSdataverse</a>
+part of the <a href="https://doi-nps.github.io/NPSdataverse/" class="external-link">NPSdataverse</a>
 package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#install packages:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"devtools"</span>, <span class="st">"tidyverse"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remotes"</span>, <span class="st">"tidyverse"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#the NPSdataverse includes EMLassemblyline, EMLeditor, and several other useful packages:</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"doi-nps/NPSdataverse"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nationalparkservice/NPSdataverse" class="external-link">NPSdataverse</a></span><span class="op">)</span></span></code></pre></div>

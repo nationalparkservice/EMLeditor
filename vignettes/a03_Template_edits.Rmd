@@ -171,13 +171,13 @@ Columns:
 * **eastBoundingCoordinate** East coordinate
 * **westBoundingCoordinate** West coordinate
 
-Coordinates must be in decimal degrees and include a minus sign (-) for latitudes south of the equator and longitudes west of the prime meridian. For points, repeat latitude and longitude coordinates in respective north/south and east/west columns. If you need to convert from UTMs, try using the `utm_to_ll()` function in the [R/QCkit](https://github.com/nationalparkservice/QCkit) package.
+Coordinates must be in decimal degrees and include a minus sign (-) for latitudes south of the equator and longitudes west of the prime meridian. For points, repeat latitude and longitude coordinates in respective north/south and east/west columns. If you need to convert from UTMs, try using the `utm_to_ll()` function in the [R/QCkit](https://github.com/doi-nps/QCkit) package.
 
-Currently EML handles points and rectangles well. At the least precise end of spectrum you could enter an entire park unit as geographic For a convenient way to get these coordinates, see the `get_park_polygon()` function in the [R/EMLeditor](https://github.com/nationalparkservice/EMLeditor) package.
+Currently EML handles points and rectangles well. At the least precise end of spectrum you could enter an entire park unit as geographic For a convenient way to get these coordinates, see the `get_park_polygon()` function in the [R/EMLeditor](https://github.com/doi-nps/EMLeditor) package.
 
 We strongly encourage you to be as precise as possible with your geographicCoverage and provide sampling points (e.g. along a transect) whenever possible. This information will (eventually) be displayed on a map on the DataStore Reference page for the data package and these points will also be directly discoverable through DataStore searches.
 
-If you have CUI concerns about the specific locations of your sites, consider fuzzing them rather than completely removing them. One good tool for fuzzing geographic coordinates is the `fuzz_location()` function in the  [R/QCkit](https://github.com/nationalparkservice/QCkit) package.
+If you have CUI concerns about the specific locations of your sites, consider fuzzing them rather than completely removing them. One good tool for fuzzing geographic coordinates is the `fuzz_location()` function in the  [R/QCkit](https://github.com/doi-nps/QCkit) package.
 
 ## taxonomic_coverage.txt
 

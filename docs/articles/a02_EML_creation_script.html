@@ -46,7 +46,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/nationalparkservice/EMLeditor/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/doi-NPS/EMLeditor/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -63,7 +63,7 @@
       <h1>EML Creation Script</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/EMLeditor/blob/HEAD/vignettes/a02_EML_creation_script.Rmd" class="external-link"><code>vignettes/a02_EML_creation_script.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/doi-NPS/EMLeditor/blob/HEAD/vignettes/a02_EML_creation_script.Rmd" class="external-link"><code>vignettes/a02_EML_creation_script.Rmd</code></a></small>
       <div class="d-none name"><code>a02_EML_creation_script.Rmd</code></div>
     </div>
 
@@ -124,8 +124,8 @@ computers you may first need to run:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>download.file.method<span class="op">=</span><span class="st">"wininet"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#install packages</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"devtools"</span>, <span class="st">"tidyverse"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"nationalparkservice/NPSdataverse"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"remotes"</span>, <span class="st">"tidyverse"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/remotes/man/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"doi-nps/NPSdataverse"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># When loading packages, you may be advised to update to more recent versions</span></span>
 <span><span class="co"># of dependent packages. Most of these updates likely are not critical.  </span></span>
@@ -255,8 +255,8 @@ geographic information skip this step. If the only geographic
 information you are supplying is the park units (and their bounding
 boxes) you can also skip this step; Park Units and the corresponding GPS
 coordinates for their bounding boxes will be added at a later step. If
-your coordinates are in UTMs and not GPS, try the <a href="https://nationalparkservice.github.io/QCkit/reference/convert_utm_to_ll.html" class="external-link"><code>convert_utm_to_ll()</code></a>
-function in the <a href="https://nationalparkservice.github.io/QCkit/" class="external-link">QCkit
+your coordinates are in UTMs and not GPS, try the <a href="https://doi-nps.github.io/QCkit/reference/convert_utm_to_ll.html" class="external-link"><code>convert_utm_to_ll()</code></a>
+function in the <a href="https://doi-nps.github.io/QCkit/" class="external-link">QCkit
 package</a></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_coordinates_table</span> <span class="op">&lt;-</span> <span class="st">"qry_Export_AA_points.csv"</span></span>
@@ -384,8 +384,8 @@ within a park, etc) please do.</p>
 <p>This function creates a geographic_coverage.txt file that lists your
 sites as points as long as your coordinates are in lat/long. If your
 coordinates are in UTM it is probably easiest to convert them first or
-create the geographic_coverage.txt file another way (see <a href="https://nationalparkservice.github.io/QCkit/" class="external-link">QCkit</a> for R
-functions that will convert UTM to lat/long).</p>
+create the geographic_coverage.txt file another way (see <a href="https://doi-nps.github.io/QCkit/" class="external-link">QCkit</a> for R functions that
+will convert UTM to lat/long).</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">EMLassemblyline</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/EMLassemblyline/man/template_geographic_coverage.html" class="external-link">template_geographic_coverage</a></span><span class="op">(</span>path <span class="op">=</span> <span class="va">working_folder</span>, </span>
 <span>                             data.path <span class="op">=</span> <span class="va">working_folder</span>,</span>
@@ -456,7 +456,7 @@ not attempt to edit it by hand.</p>
 </h2>
 <p>Now that you have valid EML metadata, you need to add NPS-specific
 elements and fields. For instance, unit connections, DOIs, referencing a
-DRR, etc. More information about these functions can be found at: <a href="https://nationalparkservice.github.io/EMLeditor/" class="uri">https://nationalparkservice.github.io/EMLeditor/</a>.</p>
+DRR, etc. More information about these functions can be found at: <a href="https://doi-nps.github.io/EMLeditor/" class="uri">https://doi-nps.github.io/EMLeditor/</a>.</p>
 <div class="section level3">
 <h3 id="add-controlled-unclassified-information-cui-codes">Add Controlled Unclassified Information (CUI) codes<a class="anchor" aria-label="anchor" href="#add-controlled-unclassified-information-cui-codes"></a>
 </h3>
@@ -699,9 +699,7 @@ accomplish this. The function automatically checks your DOI and uploads
 to the correct reference on DataStore. All of your files for the data
 package need to be in the same folder, there can be only one .xml file
 (ending in “_metadata.xml”) and all the other files should be data files
-in .csv format. Each individual file should be &lt; 32Mb. If you have
-files &gt; 32Mb, you will need to upload them manually using the web
-interface on DataStore.</p>
+in .csv format.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># this assumes your data package is in the current working directory</span></span>
 <span><span class="fu">EMLeditor</span><span class="fu">::</span><span class="fu"><a href="../reference/upload_data_package.html">upload_data_package</a></span><span class="op">(</span><span class="op">)</span></span>
