@@ -50,7 +50,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/nationalparkservice/EMLeditor/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/doi-NPS/EMLeditor/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -67,7 +67,7 @@
       <h1>Editing .txt Files</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/EMLeditor/blob/HEAD/vignettes/a03_Template_edits.Rmd" class="external-link"><code>vignettes/a03_Template_edits.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/doi-NPS/EMLeditor/blob/HEAD/vignettes/a03_Template_edits.Rmd" class="external-link"><code>vignettes/a03_Template_edits.Rmd</code></a></small>
       <div class="d-none name"><code>a03_Template_edits.Rmd</code></div>
     </div>
 
@@ -374,13 +374,11 @@ location.</li>
 for latitudes south of the equator and longitudes west of the prime
 meridian. For points, repeat latitude and longitude coordinates in
 respective north/south and east/west columns. If you need to convert
-from UTMs, try using the <code>utm_to_ll()</code> function in the <a href="https://github.com/nationalparkservice/QCkit" class="external-link">R/QCkit</a>
-package.</p>
+from UTMs, try using the <code>utm_to_ll()</code> function in the <a href="https://github.com/doi-nps/QCkit" class="external-link">R/QCkit</a> package.</p>
 <p>Currently EML handles points and rectangles well. At the least
 precise end of spectrum you could enter an entire park unit as
 geographic For a convenient way to get these coordinates, see the
-<code>get_park_polygon()</code> function in the <a href="https://github.com/nationalparkservice/EMLeditor" class="external-link">R/EMLeditor</a>
-package.</p>
+<code>get_park_polygon()</code> function in the <a href="https://github.com/doi-nps/EMLeditor" class="external-link">R/EMLeditor</a> package.</p>
 <p>We strongly encourage you to be as precise as possible with your
 geographicCoverage and provide sampling points (e.g. along a transect)
 whenever possible. This information will (eventually) be displayed on a
@@ -390,8 +388,7 @@ searches.</p>
 <p>If you have CUI concerns about the specific locations of your sites,
 consider fuzzing them rather than completely removing them. One good
 tool for fuzzing geographic coordinates is the
-<code>fuzz_location()</code> function in the <a href="https://github.com/nationalparkservice/QCkit" class="external-link">R/QCkit</a>
-package.</p>
+<code>fuzz_location()</code> function in the <a href="https://github.com/doi-nps/QCkit" class="external-link">R/QCkit</a> package.</p>
 </div>
 <div class="section level2">
 <h2 id="taxonomic_coverage-txt">taxonomic_coverage.txt<a class="anchor" aria-label="anchor" href="#taxonomic_coverage-txt"></a>

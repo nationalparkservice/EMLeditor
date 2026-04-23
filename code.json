@@ -1,0 +1,47 @@
+[
+  {
+    "name": "EMLeditor",
+    "organization": "NATIONAL PARK SERVICE",
+    "description": "This package will be of most use to the U.S. National Park Service data scientists and managers seeking to generate EML-formatted metadata for datapackages. EML-formatted .xml files are typically constructed using EDI's EMLassemblyline package and then imported as an R-object using the EML package. EMLeditor allows the user to view the contents of the R object and add/edit aspects of metadata crucial for publication in the U.S. National Park Service DataStore repository. For instance, a user can view and edit a DOI, a link to a DRR, Park Unit connections, information about Confidential Unclassified Information (CUI), and more.",
+    "version": "1.2.0",
+    "status": "ongoing development",
+    "permissions": {
+      "usageType": "openSource",
+      "licenses": [
+        {
+          "name": "Public Domain, CC0-1.0",
+          "URL": "https://github.com/DOI-NPS/EMLeditor"
+        }
+      ]
+    },
+    "homepageURL": "https://github.com/DOI-NPS/EMLeditor",
+    "downloadURL": "https://github.com/DOI-NPS/EMLeditor",
+    "disclaimerURL": "hhtps://github.com/DOI-NPS/EMLeditor/blob/main/LICENSE",
+    "repositoryURL": "https://github.com/DOI-NPS/EMLeditor",
+    "vcs": "git",
+    "laborHours": 1,
+    "tags": [
+      "NRSS",
+      "IMD",
+      "metadata",
+      "r",
+      "nps",
+      "r-package",
+      "ecological-metadata-language",
+      "eml-metadata",
+      "national-park-service",
+      "nps-datastore",
+      "npsdataverse"
+    ],
+    "languages": [
+      "R"
+    ],
+    "contact": {
+      "name": "Robert Baker",
+      "email": "robert_baker@nps.gov"
+    },
+    "date": {
+      "metadataLastUpdated": "2026-04-22"
+    }
+  }
+]

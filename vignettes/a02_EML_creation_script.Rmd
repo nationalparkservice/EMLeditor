@@ -85,8 +85,8 @@ options(download.file.method="wininet")
 
 ```{r package_install, eval=FALSE}
 #install packages
-install.packages(c("devtools", "tidyverse"))
-devtools::install_github("nationalparkservice/NPSdataverse")
+install.packages(c("remotes", "tidyverse"))
+remotes::install_github("doi-nps/NPSdataverse")
 ```
 
 ```{r load_packages, eval=FALSE}
@@ -225,9 +225,9 @@ information you are supplying is the park units (and their bounding
 boxes) you can also skip this step; Park Units and the corresponding GPS
 coordinates for their bounding boxes will be added at a later step. If
 your coordinates are in UTMs and not GPS, try the
-[`convert_utm_to_ll()`](https://nationalparkservice.github.io/QCkit/reference/convert_utm_to_ll.html)
+[`convert_utm_to_ll()`](https://doi-nps.github.io/QCkit/reference/convert_utm_to_ll.html)
 function in the [QCkit
-package](https://nationalparkservice.github.io/QCkit/)
+package](https://doi-nps.github.io/QCkit/)
 
 ```{r geo_info, eval=FALSE}
 data_coordinates_table <- "qry_Export_AA_points.csv"
@@ -370,7 +370,7 @@ This function creates a geographic_coverage.txt file that lists your
 sites as points as long as your coordinates are in lat/long. If your
 coordinates are in UTM it is probably easiest to convert them first or
 create the geographic_coverage.txt file another way (see
-[QCkit](https://nationalparkservice.github.io/QCkit/) for R functions
+[QCkit](https://doi-nps.github.io/QCkit/) for R functions
 that will convert UTM to lat/long).
 
 ```{r geo_cov, eval=FALSE}
@@ -451,7 +451,7 @@ not attempt to edit it by hand.
 Now that you have valid EML metadata, you need to add NPS-specific
 elements and fields. For instance, unit connections, DOIs, referencing a
 DRR, etc. More information about these functions can be found at:
-<https://nationalparkservice.github.io/EMLeditor/>.
+<https://doi-nps.github.io/EMLeditor/>.
 
 ## Add Controlled Unclassified Information (CUI) codes
 
@@ -700,9 +700,7 @@ The function automatically checks your DOI and uploads to the correct
 reference on DataStore. All of your files for the data package need to
 be in the same folder, there can be only one .xml file (ending in
 "\_metadata.xml") and all the other files should be data files in .csv
-format. Each individual file should be \< 32Mb. If you have files \>
-32Mb, you will need to upload them manually using the web interface on
-DataStore.
+format.
 
 ```{r upload, eval=FALSE}
 # this assumes your data package is in the current working directory

@@ -14,8 +14,7 @@ This script acts as a template file for end-to-end creation of EML metadata in R
 
 # Good additional references
 [EMLassemblyline](https://ediorg.github.io/EMLassemblyline/)
-[EMLeditor](https://nationalparkservice.github.io/EMLeditor/index.html)
-[EVER Veg Map AA dataset](https://github.com/nationalparkservice/NPS_EML_Script/tree/main/Example_files) (for testing purposes)
+[EMLeditor](https://doi-nps.github.io/EMLeditor/index.html)
 
 # Install and Load R Packages 
 Install packages. If you have not recently installed packages, please re-install them. You will want to make sure you have the latest versions of all the NPSdataverse packages - QCkit, EMLeditor, DPchecker, and NPSutils - as they are under constant development. If you run into errors installing packages from github on NPS computers you may first need to run:
@@ -24,8 +23,8 @@ options(download.file.method="wininet")
 ```
 ```{r package_install, eval=FALSE}
 #install packages
-install.packages(c("devtools", "tidyverse"))
-devtools::install_github("nationalparkservice/NPSdataverse")
+install.packages(c("remotes", "tidyverse"))
+remotes::install_github("nationalparkservice/NPSdataverse")
 ```
 ```{r load_packages}
 # When loading packages, you may be advised to update to more recent versions
@@ -107,7 +106,7 @@ data_taxa_fields <- "scientific_Name"
 ```
 
 #### Geographic information
-Specify the tables and fields that contain geographic coordinates and site names. This information will be used to fill out the geographic coverage elements of the metadata. If your data package does not have geographic information skip this step. If the only geographic information you are supplying is the park units (and their bounding boxes) you can also skip this step; Park Units and the corresponding GPS coordinates for their bounding boxes will be added at a later step. If your coordinates are in UTMs and not GPS, try the [`convert_utm_to_ll()`](https://nationalparkservice.github.io/QCkit/reference/convert_utm_to_ll.html) function in the [QCkit package](https://nationalparkservice.github.io/QCkit/)
+Specify the tables and fields that contain geographic coordinates and site names. This information will be used to fill out the geographic coverage elements of the metadata. If your data package does not have geographic information skip this step. If the only geographic information you are supplying is the park units (and their bounding boxes) you can also skip this step; Park Units and the corresponding GPS coordinates for their bounding boxes will be added at a later step. If your coordinates are in UTMs and not GPS, try the [`convert_utm_to_ll()`](https://doi-nps.github.io/QCkit/reference/convert_utm_to_ll.html) function in the [QCkit package](https://doi-nps.github.io/QCkit/)
 ```{r geo_info}
 data_coordinates_table <- "qry_Export_AA_points.csv"
 data_latitude <- "decimalLatitude"
@@ -160,7 +159,7 @@ If the only geographic coverage information you plan on using are park boundarie
 If you would like to add additional GPS coordinates (such as for specific site 
 locations, survey plots, or bounding boxes for locations within a park, etc) please do. 
 
-This function creates a geographic_coverage.txt file that lists your sites as points as long as your coordinates are in lat/long. If your coordinates are in UTM it is probably easiest to convert them first or create the geographic_coverage.txt file another way (see [QCkit](https://nationalparkservice.github.io/QCkit/) for R functions that will convert UTM to lat/long).
+This function creates a geographic_coverage.txt file that lists your sites as points as long as your coordinates are in lat/long. If your coordinates are in UTM it is probably easiest to convert them first or create the geographic_coverage.txt file another way (see [QCkit](https://doi-nps.github.io/QCkit/) for R functions that will convert UTM to lat/long).
 ```{r geo_cov}
 EMLassemblyline::template_geographic_coverage(path = working_folder, 
                              data.path = working_folder,
@@ -215,7 +214,7 @@ If your EML is valid you should see the following (admittedly cryptic) result:
 If your EML is not schema valid, the function will notify you of specific problems you need to address. We HIGHLY recommend that you use the EMLassemblyline and/or EMLeditor functions to fix your EML and do not attempt to edit it by hand.
 
 ## Add NPS specific fields to EML 
-Now that you have valid EML metadata, you need to add NPS-specific elements and fields. For instance, unit connections, DOIs, referencing a DRR, etc. More information about these functions can be found at: [https://nationalparkservice.github.io/EMLeditor/](https://nationalparkservice.github.io/EMLeditor/).
+Now that you have valid EML metadata, you need to add NPS-specific elements and fields. For instance, unit connections, DOIs, referencing a DRR, etc. More information about these functions can be found at: [https://doi-nps.github.io/EMLeditor/](https://doi-nps.github.io/EMLeditor/).
 
 #### Add Controlled Unclassified Information (CUI) codes
 This is a required step. It is important to indicate not only that your data 
