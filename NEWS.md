@@ -1,4 +1,7 @@
 # EMLeditor v1.2.1 (Development version)
+## 2026-05-05
+  * Updated EML script .rmd to include package names when suggesting running `issues()` function.
+  
 ## 2026-04-22
   * Add code.json file and update links, urls, etc in preparation for DGEC migration
   

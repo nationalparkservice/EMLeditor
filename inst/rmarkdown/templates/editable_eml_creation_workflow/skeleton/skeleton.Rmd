@@ -183,7 +183,7 @@ EMLassemblyline::template_taxonomic_coverage(path = working_folder,
 ```
 
 ## Create an EML File
-Run this (it may take a little while) and see if it validates (you should see 'Validation passed'). It will generate an R object called "my_metadata". The function may alert you of some issues that you need to review. Run the function `issues()` at the end of the process to get feedback on items that might be missing or need attention. Fix these issues and then re-run the `make_eml()` function.
+Run this (it may take a little while) and see if it validates (you should see 'Validation passed'). It will generate an R object called "my_metadata". The function may alert you of some issues that you need to review. Run the function `EMLassemblyling::issues()` at the end of the process to get feedback on items that might be missing or need attention. Fix these issues and then re-run the `EMLassemblyline::make_eml()` function.
 ```{r make_eml}
 my_metadata <- EMLassemblyline::make_eml(path = working_folder,
                dataset.title = package_title,
